@@ -23,6 +23,17 @@ android {
     }
 }
 
+
+repositories {
+    maven {
+        url 'https://repo.dairy.foundation/releases'
+    }
+}
+
 dependencies {
     implementation project(':FtcRobotController')
+    implementation 'org.ftclib.ftclib:core:2.1.1' // core
+    implementation 'dev.frozenmilk.dairy:CachingHardware:1.0.0'
 }
+
+//INSTALLED FTCLIB WITHOUT VISION, ID YOU'LL NEED VISION GO BACK THE THE INSTALLATION AND ADD THE SPECIFICATIONS FOR VISION
