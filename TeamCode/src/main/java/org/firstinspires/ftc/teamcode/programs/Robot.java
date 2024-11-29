@@ -9,7 +9,7 @@ public class Robot {
     public Intake intake = new Intake();
 
     public void initializeRobotHadrware(){
-        intake.initializeHardware(hardwareMap);
+        intake.initializeHardware();
     }
 
     public void initializeRobot(){
