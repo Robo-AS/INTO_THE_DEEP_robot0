@@ -6,8 +6,8 @@
 
 buildscript {
     repositories {
-        mavenCentral()
         google()
+        mavenCentral()
     }
     dependencies {
         // Note for FTC Teams: Do not modify this yourself.

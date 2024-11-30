@@ -8,6 +8,7 @@ public class Robot {
 
     public Intake intake = new Intake();
 
+
     public void initializeRobotHadrware(){
         intake.initializeHardware();
     }

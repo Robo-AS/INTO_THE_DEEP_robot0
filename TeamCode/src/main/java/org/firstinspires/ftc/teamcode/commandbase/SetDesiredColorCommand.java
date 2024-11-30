@@ -2,12 +2,12 @@ package org.firstinspires.ftc.teamcode.commandbase;
 
 import com.arcrobotics.ftclib.command.InstantCommand;
 
-import org.firstinspires.ftc.teamcode.subsystems.Intake;
+import org.firstinspires.ftc.teamcode.subsystems.Brush;
 
 public class SetDesiredColorCommand extends InstantCommand {
-    public SetDesiredColorCommand(Intake intake, Intake.DesiredSampleColor color){
+    public SetDesiredColorCommand(Brush.DesiredSampleColor color){
         super(
-                () -> intake.setDesiredSampleColor(color)
+                () -> Brush.getInstance().setDesiredSampleColor(color)
         );
     }
 }
