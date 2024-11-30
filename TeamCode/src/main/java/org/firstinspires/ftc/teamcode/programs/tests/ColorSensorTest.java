@@ -1,4 +1,4 @@
-package org.firstinspires.ftc.teamcode.tests;
+package org.firstinspires.ftc.teamcode.programs.tests;
 
 import com.arcrobotics.ftclib.gamepad.GamepadKeys;
 import com.qualcomm.hardware.rev.RevColorSensorV3;

@@ -1,9 +1,8 @@
-package org.firstinspires.ftc.teamcode.commandbase.BrushCommands;
+package org.firstinspires.ftc.teamcode.programs.commandbase.BrushCommands;
 
 import com.arcrobotics.ftclib.command.SequentialCommandGroup;
 
-import org.firstinspires.ftc.teamcode.programs.Globals;
-import org.firstinspires.ftc.teamcode.subsystems.Brush;
+import org.firstinspires.ftc.teamcode.programs.subsystems.Brush;
 
 public class BrushThrowingCommand extends SequentialCommandGroup {
     public BrushThrowingCommand(){

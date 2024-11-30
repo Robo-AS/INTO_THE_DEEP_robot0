@@ -1,14 +1,11 @@
-package org.firstinspires.ftc.teamcode.tests;
+package org.firstinspires.ftc.teamcode.programs.tests;
 
-import com.arcrobotics.ftclib.gamepad.GamepadKeys;
 import com.qualcomm.hardware.rev.RevColorSensorV3;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
-import com.qualcomm.robotcore.hardware.ColorSensor;
 import com.qualcomm.robotcore.hardware.Servo;
 
 import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
-import org.firstinspires.ftc.teamcode.subsystems.Intake;
 
 import dev.frozenmilk.dairy.cachinghardware.CachingServo;
 

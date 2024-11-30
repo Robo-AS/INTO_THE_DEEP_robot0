@@ -1,4 +1,4 @@
-package org.firstinspires.ftc.teamcode.subsystems;
+package org.firstinspires.ftc.teamcode.programs.subsystems;
 
 import com.arcrobotics.ftclib.command.SubsystemBase;
 import com.qualcomm.hardware.rev.RevColorSensorV3;
@@ -95,52 +95,61 @@ public class Brush extends SubsystemBase{
     }
 
 
-    public void setState(BrushState state){
+    public void updateBrushState(BrushState state){
         brushState = state;
     }
 
-    public void setDesiredSampleColor(DesiredSampleColor color){
+    public void updateDesiredSampleColor(DesiredSampleColor color){
         desiredSampleColor = color;
     }
 
-    public DesiredSampleColor getDesiredSampleColor(){
-        return desiredSampleColor;
-    }
+//    public void updateIntakedSampleColor(IntakedSampleColor color){
+//        intakedSampleColor = color;
+//    }
 
-    public IntakedSampleColor getIntakedSampleColor(){
+//    public void updateIsRightSampleColorBlue(){
+//
+//    }
+
+    public void updateIntakedSampleColor(){
         int red = colorSensor0.red();
         int blue = colorSensor0.blue();
         //int green = colorSensor0.green();
 
         if(blue > 400)
-            return IntakedSampleColor.BLUE;
+            intakedSampleColor = IntakedSampleColor.BLUE;
         else if(red > 400 && red < 600)
-                return  IntakedSampleColor.RED;
+            intakedSampleColor = IntakedSampleColor.RED;
         else if(red > 600)
-                return IntakedSampleColor.YELLOW;
-        return IntakedSampleColor.NOTHING;
+            intakedSampleColor = IntakedSampleColor.YELLOW;
+        else intakedSampleColor = IntakedSampleColor.NOTHING;
     }
 
 
-    public SampleState getSampleState(){
+
+
+    public void updateSampleState(){
         double distance = colorSensor0.getDistance(DistanceUnit.CM);
         if(distance < 3){
-            return SampleState.IS;
+            sampleState = SampleState.IS;
         }
-        return SampleState.ISNOT;
+        else sampleState = SampleState.ISNOT;
     }
 
-    public boolean isRightSampleColorBlue(DesiredSampleColor desiredSampleColor, IntakedSampleColor intakedSampleColor){
-        if(desiredSampleColor == DesiredSampleColor.BOTH)
-            if(intakedSampleColor != IntakedSampleColor.RED)
-                return true;
-        else if(desiredSampleColor == DesiredSampleColor.BLUE && intakedSampleColor == IntakedSampleColor.BLUE)
-            return true;
-        else if(desiredSampleColor == DesiredSampleColor.YELLOW && intakedSampleColor == IntakedSampleColor.YELLOW)
-            return true;
-        return false;
 
+    public boolean isRightSampleColorBlue() {
+        switch (desiredSampleColor) {
+            case BOTH:
+                return intakedSampleColor == IntakedSampleColor.BLUE || intakedSampleColor == IntakedSampleColor.YELLOW;
+            case BLUE:
+                return intakedSampleColor == IntakedSampleColor.BLUE;
+            case YELLOW:
+                return intakedSampleColor == IntakedSampleColor.YELLOW;
+            default:
+                return false;
+        }
     }
+
 
 
 }

@@ -1,6 +1,5 @@
-package org.firstinspires.ftc.teamcode.programs;
-import static org.firstinspires.ftc.robotcore.external.BlocksOpModeCompanion.hardwareMap;
-import org.firstinspires.ftc.teamcode.subsystems.Intake;
+package org.firstinspires.ftc.teamcode.programs.util;
+import org.firstinspires.ftc.teamcode.programs.subsystems.Intake;
 
 
 

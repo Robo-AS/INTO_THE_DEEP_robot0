@@ -1,11 +1,11 @@
-package org.firstinspires.ftc.teamcode.commandbase.BrushCommands;
+package org.firstinspires.ftc.teamcode.programs.commandbase.BrushCommands;
 
 import com.arcrobotics.ftclib.command.InstantCommand;
-import com.arcrobotics.ftclib.command.SequentialCommandGroup;
+import com.arcrobotics.ftclib.command.ParallelCommandGroup;
 
-import org.firstinspires.ftc.teamcode.subsystems.Brush;
+import org.firstinspires.ftc.teamcode.programs.subsystems.Brush;
 
-public class BrushCommand extends SequentialCommandGroup {
+public class BrushCommand extends ParallelCommandGroup {
     public BrushCommand(double motorPower, double servoPower){
         super(
                 new InstantCommand(() -> Brush.getInstance().brushMotor.setPower(motorPower)),

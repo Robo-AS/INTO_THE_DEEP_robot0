@@ -1,4 +1,4 @@
-package org.firstinspires.ftc.teamcode.programs;
+package org.firstinspires.ftc.teamcode.programs.util;
 
 public class Globals {
     public static double BRUSH_MOTOR_SPEED = 0.8;
