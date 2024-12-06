@@ -17,19 +17,21 @@ import org.firstinspires.ftc.teamcode.programs.subsystems.Brush;
 
 @com.qualcomm.robotcore.eventloop.opmode.TeleOp(name = "TeleOpBlue")
 public class TeleOpBlue extends CommandOpMode {
-    private final Robot robot = new Robot();
+    private Robot robot;
     private GamepadEx gamepadEx;
 
     @Override
     public void initialize(){
         CommandScheduler.getInstance().reset();
         gamepadEx = new GamepadEx(gamepad1);
+        robot = new Robot();
 
-        robot.initializeRobotHadrware();
+        robot.initializeHardware();
 
         //Choosing sample color button logic
         gamepadEx.getGamepadButton(GamepadKeys.Button.DPAD_DOWN)
                 .whenPressed(new SetDesiredColorCommand(Brush.DesiredSampleColor.YELLOW));
+
 
         gamepadEx.getGamepadButton(GamepadKeys.Button.DPAD_RIGHT)
                 .whenPressed(new SetDesiredColorCommand(Brush.DesiredSampleColor.BLUE));
@@ -49,13 +51,12 @@ public class TeleOpBlue extends CommandOpMode {
                         )
                 );
 
+
     }
 
     @Override
     public void run(){
         CommandScheduler.getInstance().run();
-
-
 
 
         if(robot.intake.brush.brushState == Brush.BrushState.INTAKING && robot.intake.brush.sampleState == Brush.SampleState.ISNOT){
@@ -79,7 +80,12 @@ public class TeleOpBlue extends CommandOpMode {
             CommandScheduler.getInstance().schedule(new SetBrushStateCommand(Brush.BrushState.INTAKING));
         }
 
-
-
+        telemetry.addData("BrushState:", robot.intake.brush.brushState);
+        telemetry.addData("DesiredColor", robot.intake.brush.desiredSampleColor);
+        telemetry.addData("IntakedColor:", robot.intake.brush.intakedSampleColor);
+        telemetry.addData("SampleState:", robot.intake.brush.sampleState);
+//        telemetry.addData("DPAD_DOWN", gamepad1.dpad_down);
+//        telemetry.addData("LEFT_BUMPER", gamepad1.left_bumper);
+        telemetry.update();
     }
 }

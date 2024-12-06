@@ -14,11 +14,12 @@ import dev.frozenmilk.dairy.cachinghardware.CachingDcMotorEx;
 import dev.frozenmilk.dairy.cachinghardware.CachingServo;
 
 public class Brush extends SubsystemBase{
-    private static Brush instance;
+    private static Brush instance = null;
+    private boolean enabled;
     private HardwareMap hardwareMap;
 
     public CachingDcMotorEx brushMotor;
-    public CachingServo brushUpDownServo;
+    //public CachingServo brushUpDownServo;
     public CachingServo brushSampleServo;
     public RevColorSensorV3 colorSensor0;
 
@@ -62,15 +63,15 @@ public class Brush extends SubsystemBase{
     public IntakedSampleColor intakedSampleColor = IntakedSampleColor.NOTHING;
 
 
-    public void initializeHardware(final HardwareMap hardwareMap){
+    public void initializeHardware(HardwareMap hardwareMap){
         this.hardwareMap = hardwareMap;
 
         brushMotor = new CachingDcMotorEx(hardwareMap.get(DcMotorEx.class, "brushMotor"));
         brushMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
-        brushMotor.setDirection(DcMotorSimple.Direction.FORWARD);
+        brushMotor.setDirection(DcMotorSimple.Direction.REVERSE);
 
-        brushUpDownServo = new CachingServo(hardwareMap.get(Servo.class, "brushAngleServo"));
-        brushUpDownServo.setDirection(Servo.Direction.FORWARD);
+//        brushUpDownServo = new CachingServo(hardwareMap.get(Servo.class, "brushAngleServo"));
+//        brushUpDownServo.setDirection(Servo.Direction.FORWARD);
 
         brushSampleServo = new CachingServo(hardwareMap.get(Servo.class, "brushSampleServo"));
         brushSampleServo.setDirection(Servo.Direction.FORWARD);
@@ -83,6 +84,7 @@ public class Brush extends SubsystemBase{
         if (instance == null) {
             instance = new Brush();
         }
+        instance.enabled = true;
         return instance;
     }
 

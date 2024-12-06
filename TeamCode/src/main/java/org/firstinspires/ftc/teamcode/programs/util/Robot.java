@@ -8,12 +8,12 @@ public class Robot {
     public Intake intake = new Intake();
 
 
-    public void initializeRobotHadrware(){
+    public void initializeHardware(){
         intake.initializeHardware();
     }
 
     public void initializeRobot(){
-        intake.initialize();
+
     }
 
 }

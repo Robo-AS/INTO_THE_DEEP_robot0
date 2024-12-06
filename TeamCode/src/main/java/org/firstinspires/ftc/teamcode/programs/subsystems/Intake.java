@@ -5,7 +5,7 @@ import com.qualcomm.robotcore.hardware.HardwareMap;
 
 public class Intake extends SubsystemBase {
     private HardwareMap hardwareMap;
-    public Extendo extendo = new Extendo();
+    //public Extendo extendo = new Extendo();
     public Brush brush = new Brush();
 
 
@@ -14,7 +14,7 @@ public class Intake extends SubsystemBase {
 
 
     public void initializeHardware(){
-        extendo.initializeHarware(hardwareMap);
+        //extendo.initializeHarware(hardwareMap);
         brush.initializeHardware(hardwareMap);
     }
 
