@@ -82,9 +82,9 @@ public class SensorGoBildaPinpointExample extends LinearOpMode {
         the tracking point the Y (strafe) odometry pod is. forward of center is a positive number,
         backwards is a negative number.
          */
-        odo.setOffsets(-84.0, -168.0); //these are tuned for 3110-0002-0001 Product Insight #1
+        odo.setOffsets(77, 148); //these are tuned for 3110-0002-0001 Product Insight #1
 
-        /*
+        /*DONE
         Set the kind of pods used by your robot. If you're using goBILDA odometry pods, select either
         the goBILDA_SWINGARM_POD, or the goBILDA_4_BAR_POD.
         If you're using another kind of odometry pod, uncomment setEncoderResolution and input the
@@ -99,7 +99,7 @@ public class SensorGoBildaPinpointExample extends LinearOpMode {
         increase when you move the robot forward. And the Y (strafe) pod should increase when
         you move the robot to the left.
          */
-        odo.setEncoderDirections(GoBildaPinpointDriver.EncoderDirection.FORWARD, GoBildaPinpointDriver.EncoderDirection.FORWARD);
+        odo.setEncoderDirections(GoBildaPinpointDriver.EncoderDirection.FORWARD, GoBildaPinpointDriver.EncoderDirection.REVERSED);
 
 
         /*
@@ -186,6 +186,7 @@ public class SensorGoBildaPinpointExample extends LinearOpMode {
             telemetry.addData("Status", odo.getDeviceStatus());
 
             telemetry.addData("REV Hub Frequency: ", frequency); //prints the control system refresh rate
+            telemetry.addData("HEADING", odo.getHeading());
             telemetry.update();
         }
     }}

@@ -8,16 +8,17 @@ import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
 
 @TeleOp(name = "ColorSensorTest")
 public class ColorSensorTest extends LinearOpMode {
-    public RevColorSensorV3 colorSensor0;
+    public RevColorSensorV3 colorSensor0; //declare
 
     @Override
     public void runOpMode(){
-        colorSensor0 = hardwareMap.get(RevColorSensorV3.class, "colorSensor0");
+        colorSensor0 = hardwareMap.get(RevColorSensorV3.class, "colorSensor0"); //mapping
 
         waitForStart();
 
 
         while(opModeIsActive()){
+            //Some funtion example(you can find all looking int the RecColorSensorV3 class)
             int red = colorSensor0.red();
             int green = colorSensor0.green();
             int blue = colorSensor0.blue();
