@@ -8,7 +8,7 @@ import org.firstinspires.ftc.teamcode.programs.subsystems.Brush;
 public class BrushIntakeCommand extends SequentialCommandGroup {
     public BrushIntakeCommand(){
         super(
-                new BrushCommand(Globals.BRUSH_MOTOR_SPEED, Globals.BRUSH_SAMPLE_SERVO_SPEED),
+                new BrushCommand(Globals.BRUSH_MOTOR_SPEED, Globals.BRUSH_SAMPLE_SERVO_SPEED_INTAKING),
                 new SetBrushStateCommand(Brush.BrushState.INTAKING)
         );
     }

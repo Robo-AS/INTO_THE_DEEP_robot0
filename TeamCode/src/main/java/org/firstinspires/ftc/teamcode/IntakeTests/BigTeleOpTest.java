@@ -64,7 +64,10 @@ public class BigTeleOpTest extends CommandOpMode {
 
         else if(brush.brushState == Brush.BrushState.INTAKING && brush.sampleState == Brush.SampleState.IS){
             CommandScheduler.getInstance().schedule(new BrushIdleCommandTEST(brush));
-            brush.updateIntakedSampleColor();
+            while(brush.intakedSampleColor == Brush.IntakedSampleColor.NOTHING){
+                brush.updateIntakedSampleColor();
+            }
+
             if(brush.isRightSampleColorBlue()){
                 CommandScheduler.getInstance().schedule(new BrushIdleCommandTEST(brush));
             }
@@ -74,14 +77,14 @@ public class BigTeleOpTest extends CommandOpMode {
         }
 
 
-//        if(brush.brushState == Brush.BrushState.THROWING && brush.sampleState == Brush.SampleState.IS){
-//            brush.updateSampleState();
-//        }
-//
-//
-//        if(brush.brushState == Brush.BrushState.THROWING && brush.sampleState == Brush.SampleState.ISNOT){
-//            CommandScheduler.getInstance().schedule(new SetBrushStateCommandTEST(Brush.BrushState.INTAKING, brush));
-//        }
+        if(brush.brushState == Brush.BrushState.THROWING && brush.sampleState == Brush.SampleState.IS){
+            brush.updateSampleState();
+        }
+
+
+        if(brush.brushState == Brush.BrushState.THROWING && brush.sampleState == Brush.SampleState.ISNOT){
+            CommandScheduler.getInstance().schedule(new SetBrushStateCommandTEST(Brush.BrushState.INTAKING, brush));
+        }
 
         telemetry.addData("BrushState:", brush.brushState);
         telemetry.addData("DesiredColor", brush.desiredSampleColor);

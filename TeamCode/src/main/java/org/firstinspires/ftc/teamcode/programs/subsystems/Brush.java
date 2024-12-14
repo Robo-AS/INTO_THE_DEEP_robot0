@@ -142,7 +142,7 @@ public class Brush extends SubsystemBase{
     public boolean isRightSampleColorBlue() {
         switch (desiredSampleColor) {
             case BOTH:
-                return intakedSampleColor == IntakedSampleColor.BLUE || intakedSampleColor == IntakedSampleColor.YELLOW;
+                return ((intakedSampleColor == IntakedSampleColor.BLUE) || (intakedSampleColor == IntakedSampleColor.YELLOW));
             case BLUE:
                 return intakedSampleColor == IntakedSampleColor.BLUE;
             case YELLOW:
