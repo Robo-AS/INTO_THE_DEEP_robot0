@@ -6,6 +6,7 @@ import com.arcrobotics.ftclib.command.ConditionalCommand;
 import com.arcrobotics.ftclib.gamepad.GamepadEx;
 import com.arcrobotics.ftclib.gamepad.GamepadKeys;
 
+
 import org.firstinspires.ftc.teamcode.programs.commandbase.BrushCommands.BrushIdleCommand;
 import org.firstinspires.ftc.teamcode.programs.commandbase.BrushCommands.BrushIntakeCommand;
 import org.firstinspires.ftc.teamcode.programs.commandbase.BrushCommands.BrushThrowingCommand;
@@ -15,18 +16,19 @@ import org.firstinspires.ftc.teamcode.programs.util.Robot;
 import org.firstinspires.ftc.teamcode.programs.subsystems.Brush;
 
 
-@com.qualcomm.robotcore.eventloop.opmode.TeleOp(name = "TeleOpBlue")
+@com.qualcomm.robotcore.eventloop.opmode.TeleOp(name = "ATeleOpBlue")
 public class TeleOpBlue extends CommandOpMode {
-    private Robot robot;
+    private final Robot robot = Robot.getInstance();
     private GamepadEx gamepadEx;
+
 
     @Override
     public void initialize(){
         CommandScheduler.getInstance().reset();
-        gamepadEx = new GamepadEx(gamepad1);
-        robot = new Robot();
 
-        robot.initializeHardware();
+        gamepadEx = new GamepadEx(gamepad1);
+        robot.initializeHardware(hardwareMap);
+        robot.initializeRobot();
 
         //Choosing sample color button logic
         gamepadEx.getGamepadButton(GamepadKeys.Button.DPAD_DOWN)
@@ -46,11 +48,10 @@ public class TeleOpBlue extends CommandOpMode {
                                 new ConditionalCommand(
                                         new SetBrushStateCommand(Brush.BrushState.INTAKING),
                                         new SetBrushStateCommand(Brush.BrushState.IDLE),
-                                        () -> robot.intake.brush.brushState == Brush.BrushState.IDLE
+                                        () -> robot.brush.brushState == Brush.BrushState.IDLE
                                 )
                         )
                 );
-
 
     }
 
@@ -58,34 +59,46 @@ public class TeleOpBlue extends CommandOpMode {
     public void run(){
         CommandScheduler.getInstance().run();
 
+        robot.brush.updateIntakedSampleColor();
+        if(robot.brush.brushState == Brush.BrushState.IDLE){
+            CommandScheduler.getInstance().schedule(new BrushIdleCommand());
+        }
 
-        if(robot.intake.brush.brushState == Brush.BrushState.INTAKING && robot.intake.brush.sampleState == Brush.SampleState.ISNOT){
-            robot.intake.brush.updateSampleState();
+        if(robot.brush.brushState == Brush.BrushState.INTAKING && robot.brush.sampleState == Brush.SampleState.ISNOT){
+            robot.brush.updateSampleState();
             CommandScheduler.getInstance().schedule(new BrushIntakeCommand());
         }
 
-        else if(robot.intake.brush.brushState == Brush.BrushState.INTAKING && robot.intake.brush.sampleState == Brush.SampleState.IS){
-            robot.intake.brush.updateIntakedSampleColor();
+        else if(robot.brush.brushState == Brush.BrushState.INTAKING && robot.brush.sampleState == Brush.SampleState.IS){
             CommandScheduler.getInstance().schedule(new BrushIdleCommand());
-            if(robot.intake.brush.isRightSampleColorBlue()){
+            while(robot.brush.intakedSampleColor == Brush.IntakedSampleColor.NOTHING){
+                robot.brush.updateIntakedSampleColor();
+            }
+
+            if(robot.brush.isRightSampleColorTeleOpBlue()){
                 CommandScheduler.getInstance().schedule(new BrushIdleCommand());
             }
-            else CommandScheduler.getInstance().schedule(new BrushThrowingCommand());
+            else{
+                CommandScheduler.getInstance().schedule(new BrushThrowingCommand());
+            }
         }
 
-        if(robot.intake.brush.brushState == Brush.BrushState.THROWING)
-            robot.intake.brush.updateSampleState();
 
-        if(robot.intake.brush.brushState == Brush.BrushState.THROWING && robot.intake.brush.sampleState == Brush.SampleState.ISNOT){
+        if(robot.brush.brushState == Brush.BrushState.THROWING && robot.brush.sampleState == Brush.SampleState.IS){
+            robot.brush.updateSampleState();
+        }
+
+
+        if(robot.brush.brushState == Brush.BrushState.THROWING && robot.brush.sampleState == Brush.SampleState.ISNOT){
             CommandScheduler.getInstance().schedule(new SetBrushStateCommand(Brush.BrushState.INTAKING));
         }
 
-        telemetry.addData("BrushState:", robot.intake.brush.brushState);
-        telemetry.addData("DesiredColor", robot.intake.brush.desiredSampleColor);
-        telemetry.addData("IntakedColor:", robot.intake.brush.intakedSampleColor);
-        telemetry.addData("SampleState:", robot.intake.brush.sampleState);
-//        telemetry.addData("DPAD_DOWN", gamepad1.dpad_down);
-//        telemetry.addData("LEFT_BUMPER", gamepad1.left_bumper);
+        telemetry.addData("BrushState:", robot.brush.brushState);
+        telemetry.addData("DesiredColor", robot.brush.desiredSampleColor);
+        telemetry.addData("IntakedColor:", robot.brush.intakedSampleColor);
+        telemetry.addData("SampleState:", robot.brush.sampleState);
+
         telemetry.update();
+
     }
 }

@@ -15,7 +15,6 @@ import dev.frozenmilk.dairy.cachinghardware.CachingServo;
 
 public class Brush extends SubsystemBase{
     private static Brush instance = null;
-    private boolean enabled;
     private HardwareMap hardwareMap;
 
     public CachingDcMotorEx brushMotor;
@@ -63,12 +62,25 @@ public class Brush extends SubsystemBase{
     public IntakedSampleColor intakedSampleColor = IntakedSampleColor.NOTHING;
 
 
-    public void initializeHardware(HardwareMap hardwareMap){
+    public static Brush getInstance() {
+        if (instance == null) {
+            instance = new Brush();
+        }
+        return instance;
+    }
+
+
+
+
+
+
+    public void initializeHardware(final HardwareMap hardwareMap){
         this.hardwareMap = hardwareMap;
 
         brushMotor = new CachingDcMotorEx(hardwareMap.get(DcMotorEx.class, "brushMotor"));
         brushMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         brushMotor.setDirection(DcMotorSimple.Direction.REVERSE);
+        brushMotor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
 
 //        brushUpDownServo = new CachingServo(hardwareMap.get(Servo.class, "brushAngleServo"));
 //        brushUpDownServo.setDirection(Servo.Direction.FORWARD);
@@ -80,16 +92,13 @@ public class Brush extends SubsystemBase{
 
     }
 
-    public static Brush getInstance() {
-        if (instance == null) {
-            instance = new Brush();
-        }
-        instance.enabled = true;
-        return instance;
-    }
 
     public void initialize() {
-
+        brushAngle = BrushAngle.UP;
+        brushState = BrushState.IDLE;
+        desiredSampleColor = DesiredSampleColor.BOTH;
+        sampleState = SampleState.ISNOT;
+        intakedSampleColor = IntakedSampleColor.NOTHING;
     }
 
     public void loop(){
@@ -139,7 +148,7 @@ public class Brush extends SubsystemBase{
     }
 
 
-    public boolean isRightSampleColorBlue() {
+    public boolean isRightSampleColorTeleOpBlue() {
         switch (desiredSampleColor) {
             case BOTH:
                 return ((intakedSampleColor == IntakedSampleColor.BLUE) || (intakedSampleColor == IntakedSampleColor.YELLOW));
