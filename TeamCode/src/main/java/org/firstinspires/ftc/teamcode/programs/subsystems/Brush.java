@@ -75,8 +75,6 @@ public class Brush extends SubsystemBase{
 
 
     public void initializeHardware(final HardwareMap hardwareMap){
-        this.hardwareMap = hardwareMap;
-
         brushMotor = new CachingDcMotorEx(hardwareMap.get(DcMotorEx.class, "brushMotor"));
         brushMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         brushMotor.setDirection(DcMotorSimple.Direction.REVERSE);

@@ -1,4 +1,4 @@
-package org.firstinspires.ftc.teamcode.IntakeTests;
+package org.firstinspires.ftc.teamcode.tests.IntakeTests;
 
 import com.arcrobotics.ftclib.command.InstantCommand;
 import org.firstinspires.ftc.robotcore.external.Telemetry;

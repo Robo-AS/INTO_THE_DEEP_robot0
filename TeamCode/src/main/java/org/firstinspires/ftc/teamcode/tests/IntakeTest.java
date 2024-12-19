@@ -9,7 +9,7 @@ import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
 
 import dev.frozenmilk.dairy.cachinghardware.CachingServo;
 
-@TeleOp(name = "IntakeTest")
+//@TeleOp(name = "IntakeTest")
 public class IntakeTest extends LinearOpMode {
     public RevColorSensorV3 colorSensor0;
 

@@ -59,13 +59,14 @@ public class TeleOpBlue extends CommandOpMode {
     public void run(){
         CommandScheduler.getInstance().run();
 
-        robot.brush.updateIntakedSampleColor();
+
         if(robot.brush.brushState == Brush.BrushState.IDLE){
             CommandScheduler.getInstance().schedule(new BrushIdleCommand());
         }
 
         if(robot.brush.brushState == Brush.BrushState.INTAKING && robot.brush.sampleState == Brush.SampleState.ISNOT){
             robot.brush.updateSampleState();
+            robot.brush.updateIntakedSampleColor();
             CommandScheduler.getInstance().schedule(new BrushIntakeCommand());
         }
 

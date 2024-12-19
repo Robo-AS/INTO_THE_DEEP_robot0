@@ -6,7 +6,7 @@ import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
 import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
 
-@TeleOp(name = "ColorSensorTest")
+//@TeleOp(name = "ColorSensorTest")
 public class ColorSensorTest extends LinearOpMode {
     public RevColorSensorV3 colorSensor0; //declare
 
