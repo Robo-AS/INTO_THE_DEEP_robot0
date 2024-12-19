@@ -11,6 +11,7 @@ import com.qualcomm.robotcore.hardware.Servo;
 
 import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
 import org.firstinspires.ftc.teamcode.programs.commandbase.BrushCommands.BrushIdleCommand;
+import org.firstinspires.ftc.teamcode.programs.commandbase.BrushCommands.BrushIntakeCommand;
 import org.firstinspires.ftc.teamcode.programs.commandbase.BrushCommands.BrushThrowingCommand;
 import org.firstinspires.ftc.teamcode.programs.commandbase.BrushCommands.SetBrushStateCommand;
 import org.firstinspires.ftc.teamcode.tests.OptimizedCommandsTEST.BrushIntakeCommandOPTIMIZED;
@@ -125,12 +126,17 @@ public class Brush extends SubsystemBase{
 
         if(brushState == BrushState.THROWING && sampleState == SampleState.IS){
             updateSampleState();
+            updateIntakedSampleColor();
+
+            if(isRightSampleColorTeleOpBlue())
+                CommandScheduler.getInstance().schedule(new BrushIdleCommand());
         }
 
 
         if(brushState == BrushState.THROWING && sampleState == SampleState.ISNOT){
             CommandScheduler.getInstance().schedule(new SetBrushStateCommand(BrushState.INTAKING));
         }
+
     }
 
 
