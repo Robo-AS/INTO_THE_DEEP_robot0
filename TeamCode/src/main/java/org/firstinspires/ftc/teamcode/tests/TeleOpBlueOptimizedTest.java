@@ -1,4 +1,4 @@
-package org.firstinspires.ftc.teamcode.programs.opmodes;
+package org.firstinspires.ftc.teamcode.tests;
 
 import com.arcrobotics.ftclib.command.CommandOpMode;
 import com.arcrobotics.ftclib.command.CommandScheduler;
@@ -14,10 +14,11 @@ import org.firstinspires.ftc.teamcode.programs.commandbase.BrushCommands.SetBrus
 import org.firstinspires.ftc.teamcode.programs.commandbase.SetDesiredColorCommand;
 import org.firstinspires.ftc.teamcode.programs.util.Robot;
 import org.firstinspires.ftc.teamcode.programs.subsystems.Brush;
+import org.firstinspires.ftc.teamcode.tests.OptimizedCommandsTEST.BrushIntakeCommandOPTIMIZED;
 
 
-@com.qualcomm.robotcore.eventloop.opmode.TeleOp(name = "ATeleOpBlue")
-public class TeleOpBlue extends CommandOpMode {
+@com.qualcomm.robotcore.eventloop.opmode.TeleOp(name = "ATeleOpBlueOPTIMIZED")
+public class TeleOpBlueOptimizedTest extends CommandOpMode {
     private final Robot robot = Robot.getInstance();
     private GamepadEx gamepadEx;
 

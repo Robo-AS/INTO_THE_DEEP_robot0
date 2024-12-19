@@ -1,5 +1,6 @@
 package org.firstinspires.ftc.teamcode.programs.subsystems;
 
+import com.arcrobotics.ftclib.command.CommandScheduler;
 import com.arcrobotics.ftclib.command.SubsystemBase;
 import com.qualcomm.hardware.rev.RevColorSensorV3;
 import com.qualcomm.robotcore.hardware.DcMotor;
@@ -9,13 +10,16 @@ import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.Servo;
 
 import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
+import org.firstinspires.ftc.teamcode.programs.commandbase.BrushCommands.BrushIdleCommand;
+import org.firstinspires.ftc.teamcode.programs.commandbase.BrushCommands.BrushThrowingCommand;
+import org.firstinspires.ftc.teamcode.programs.commandbase.BrushCommands.SetBrushStateCommand;
+import org.firstinspires.ftc.teamcode.tests.OptimizedCommandsTEST.BrushIntakeCommandOPTIMIZED;
 
 import dev.frozenmilk.dairy.cachinghardware.CachingDcMotorEx;
 import dev.frozenmilk.dairy.cachinghardware.CachingServo;
 
 public class Brush extends SubsystemBase{
     private static Brush instance = null;
-    private HardwareMap hardwareMap;
 
     public CachingDcMotorEx brushMotor;
     //public CachingServo brushUpDownServo;
@@ -54,7 +58,6 @@ public class Brush extends SubsystemBase{
     }
 
 
-
     public BrushAngle brushAngle = BrushAngle.UP;
     public BrushState brushState = BrushState.IDLE;
     public DesiredSampleColor desiredSampleColor = DesiredSampleColor.BOTH;
@@ -71,9 +74,6 @@ public class Brush extends SubsystemBase{
 
 
 
-
-
-
     public void initializeHardware(final HardwareMap hardwareMap){
         brushMotor = new CachingDcMotorEx(hardwareMap.get(DcMotorEx.class, "brushMotor"));
         brushMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
@@ -87,7 +87,6 @@ public class Brush extends SubsystemBase{
         brushSampleServo.setDirection(Servo.Direction.FORWARD);
 
         colorSensor0 = hardwareMap.get(RevColorSensorV3.class, "colorSensor0");
-
     }
 
 
@@ -99,9 +98,42 @@ public class Brush extends SubsystemBase{
         intakedSampleColor = IntakedSampleColor.NOTHING;
     }
 
-    public void loop(){
 
+
+    public void loop(){
+        if(brushState == BrushState.IDLE){
+            CommandScheduler.getInstance().schedule(new BrushIdleCommand());
+        }
+
+        if(brushState == BrushState.INTAKING && sampleState == SampleState.ISNOT){
+            CommandScheduler.getInstance().schedule(new BrushIntakeCommandOPTIMIZED());
+        }
+
+        else if(brushState == BrushState.INTAKING && sampleState == SampleState.IS){
+            CommandScheduler.getInstance().schedule(new BrushIdleCommand());
+            while(intakedSampleColor == IntakedSampleColor.NOTHING){
+                updateIntakedSampleColor();
+            }
+
+            if(isRightSampleColorTeleOpBlue()){
+                CommandScheduler.getInstance().schedule(new BrushIdleCommand());
+            }
+            else{
+                CommandScheduler.getInstance().schedule(new BrushThrowingCommand());
+            }
+        }
+
+        if(brushState == BrushState.THROWING && sampleState == SampleState.IS){
+            updateSampleState();
+        }
+
+
+        if(brushState == BrushState.THROWING && sampleState == SampleState.ISNOT){
+            CommandScheduler.getInstance().schedule(new SetBrushStateCommand(BrushState.INTAKING));
+        }
     }
+
+
 
 
     public void updateBrushState(BrushState state){
@@ -112,18 +144,11 @@ public class Brush extends SubsystemBase{
         desiredSampleColor = color;
     }
 
-//    public void updateIntakedSampleColor(IntakedSampleColor color){
-//        intakedSampleColor = color;
-//    }
 
-//    public void updateIsRightSampleColorBlue(){
-//
-//    }
 
     public void updateIntakedSampleColor(){
         int red = colorSensor0.red();
         int blue = colorSensor0.blue();
-        //int green = colorSensor0.green();
 
         if(blue > 400)
             intakedSampleColor = IntakedSampleColor.BLUE;

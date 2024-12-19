@@ -1,14 +1,13 @@
-package org.firstinspires.ftc.teamcode.programs.commandbase.BrushCommands;
+package org.firstinspires.ftc.teamcode.tests.OptimizedCommandsTEST;
 
 import com.arcrobotics.ftclib.command.InstantCommand;
 import com.arcrobotics.ftclib.command.ParallelCommandGroup;
-import com.arcrobotics.ftclib.command.SequentialCommandGroup;
 
-import org.firstinspires.ftc.teamcode.programs.util.Globals;
 import org.firstinspires.ftc.teamcode.programs.subsystems.Brush;
+import org.firstinspires.ftc.teamcode.programs.util.Globals;
 
-public class BrushIntakeCommand extends ParallelCommandGroup {
-    public BrushIntakeCommand(){
+public class BrushIntakeCommandOPTIMIZED extends ParallelCommandGroup {
+    public BrushIntakeCommandOPTIMIZED(){
         super(
                 new InstantCommand(()-> Brush.getInstance().updateSampleState()),
                 new InstantCommand(()-> Brush.getInstance().updateIntakedSampleColor()),
