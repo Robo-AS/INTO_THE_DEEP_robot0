@@ -126,8 +126,9 @@ public class Brush extends SubsystemBase{
 
         if(brushState == BrushState.THROWING && sampleState == SampleState.IS){
             updateSampleState();
-            updateIntakedSampleColor();
 
+            //In case it intakes consecutive sample (one bad and then one right)
+            updateIntakedSampleColor();
             if(isRightSampleColorTeleOpBlue())
                 CommandScheduler.getInstance().schedule(new BrushIdleCommand());
         }

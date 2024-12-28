@@ -9,7 +9,7 @@ import com.arcrobotics.ftclib.gamepad.GamepadKeys;
 import org.firstinspires.ftc.teamcode.programs.subsystems.Brush;
 
 
-@com.qualcomm.robotcore.eventloop.opmode.TeleOp(name = "BigTeleOpTest")
+//@com.qualcomm.robotcore.eventloop.opmode.TeleOp(name = "BigTeleOpTest")
 public class BigTeleOpTest extends CommandOpMode {
     private Brush brush;
     private GamepadEx gamepadEx;

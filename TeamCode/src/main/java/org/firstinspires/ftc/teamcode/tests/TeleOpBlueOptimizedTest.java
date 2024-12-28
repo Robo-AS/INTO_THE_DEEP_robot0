@@ -17,7 +17,7 @@ import org.firstinspires.ftc.teamcode.programs.subsystems.Brush;
 import org.firstinspires.ftc.teamcode.tests.OptimizedCommandsTEST.BrushIntakeCommandOPTIMIZED;
 
 
-@com.qualcomm.robotcore.eventloop.opmode.TeleOp(name = "ATeleOpBlueOPTIMIZED")
+//@com.qualcomm.robotcore.eventloop.opmode.TeleOp(name = "ATeleOpBlueOPTIMIZED")
 public class TeleOpBlueOptimizedTest extends CommandOpMode {
     private final Robot robot = Robot.getInstance();
     private GamepadEx gamepadEx;

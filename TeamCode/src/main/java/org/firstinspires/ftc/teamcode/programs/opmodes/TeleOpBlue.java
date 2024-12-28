@@ -16,7 +16,7 @@ import org.firstinspires.ftc.teamcode.programs.util.Robot;
 import org.firstinspires.ftc.teamcode.programs.subsystems.Brush;
 
 
-@com.qualcomm.robotcore.eventloop.opmode.TeleOp(name = "ATeleOpBlue")
+@com.qualcomm.robotcore.eventloop.opmode.TeleOp(name = "TeleOpBlue", group = "OpModes")
 public class TeleOpBlue extends CommandOpMode {
     private final Robot robot = Robot.getInstance();
     private GamepadEx gamepadEx;
