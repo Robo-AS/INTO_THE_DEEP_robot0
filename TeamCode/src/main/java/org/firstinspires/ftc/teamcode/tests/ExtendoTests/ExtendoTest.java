@@ -17,11 +17,13 @@ import org.firstinspires.ftc.teamcode.programs.commandbase.SetDesiredColorComman
 import org.firstinspires.ftc.teamcode.programs.subsystems.Brush;
 import org.firstinspires.ftc.teamcode.programs.subsystems.Extendo;
 import org.firstinspires.ftc.teamcode.programs.subsystems.Lift;
+import org.firstinspires.ftc.teamcode.programs.util.Globals;
 import org.firstinspires.ftc.teamcode.programs.util.Robot;
 
 @TeleOp(name = "ExtendoTest", group = "Tests")
 public class ExtendoTest extends CommandOpMode {
     private final Extendo extendo = Extendo.getInstance();
+    private final Brush brush = Brush.getInstance();
     private GamepadEx gamepadEx;
 
 
@@ -34,7 +36,6 @@ public class ExtendoTest extends CommandOpMode {
         extendo.initializeHardware(hardwareMap);
         extendo.initialize();
 
-
     }
 
     @Override
@@ -42,7 +43,7 @@ public class ExtendoTest extends CommandOpMode {
         CommandScheduler.getInstance().run();
 
 
-        extendo.loop(gamepadEx.gamepad.left_stick_y);
+        //extendo.loop(gamepadEx.gamepad.left_stick_y);
 
 
 

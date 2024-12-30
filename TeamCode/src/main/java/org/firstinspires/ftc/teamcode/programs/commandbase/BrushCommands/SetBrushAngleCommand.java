@@ -8,9 +8,9 @@ import org.firstinspires.ftc.teamcode.programs.subsystems.Brush;
 import org.firstinspires.ftc.teamcode.programs.util.Globals;
 
 public class SetBrushAngleCommand extends InstantCommand {
-    public SetBrushAngleCommand(double position){
+    public SetBrushAngleCommand(Brush.BrushAngle angle){
         super(
-                () -> Brush.getInstance().brushAngleServo.setPosition(position)
+                () -> Brush.getInstance().updateAngle(angle)
         );
     }
 }

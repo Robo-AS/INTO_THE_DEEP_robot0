@@ -11,7 +11,7 @@ import org.firstinspires.ftc.teamcode.programs.util.Globals;
 public class IntakeIdleCommand extends ParallelCommandGroup {
     public IntakeIdleCommand(){
         super(
-                new SetBrushAngleCommand(Globals.BRUSH_POSITION_UP),
+                new SetBrushAngleCommand(Brush.BrushAngle.UP),
                 new SetBrushStateCommand(Brush.BrushState.IDLE)
         );
 

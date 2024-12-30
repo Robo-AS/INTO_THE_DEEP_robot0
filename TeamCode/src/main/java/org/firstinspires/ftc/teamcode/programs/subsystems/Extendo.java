@@ -7,7 +7,6 @@ import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.HardwareMap;
-
 import dev.frozenmilk.dairy.cachinghardware.CachingDcMotorEx;
 
 
@@ -26,14 +25,14 @@ public class Extendo extends SubsystemBase {
     public int RETRACTING = 0;
 
 
-    private PIDController extendo_pid;
-    public static double p_extendo = 0.089, i_extendo = 0, d_extendo = 0;
+    private final PIDController extendo_pid;
+    public static double p_extendo = 0.0331, i_extendo = 0.22, d_extendo = 0.0006;
 
-    public static double targetPosition;
-    public static double currentPosition;
+    public static int targetPosition;
+    public static int currentPosition;
 
-    public static double joystickConstant = 1.0;
-    public static double minPosition = 350, maxPosition = 1300;
+    public static double joystickConstant = 20;
+    public static int minPosition = 350, maxPosition = 1300;
 
 
 
@@ -60,6 +59,8 @@ public class Extendo extends SubsystemBase {
     public void initialize() {
         extendoState = ExtendoState.RETRACTING;
         extendo_pid.reset();
+        targetPosition = 0;
+
     }
 
 
@@ -89,11 +90,15 @@ public class Extendo extends SubsystemBase {
     }
 
     public void updateTargetPosition(double joystickYCoord){
-        targetPosition += joystickYCoord * joystickConstant;
+        targetPosition += (int)(joystickYCoord * joystickConstant);
         targetPosition = Math.max(minPosition, Math.min(maxPosition, targetPosition)); //limita de prosti
     }
 
-    public double getTargetPosition(){
+    public int getTargetPosition(){
         return targetPosition;
+    }
+
+    public static boolean canOuttakeSample(){
+        return currentPosition <= 30;
     }
 }

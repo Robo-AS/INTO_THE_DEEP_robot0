@@ -10,14 +10,14 @@ import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.Servo;
 
 import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
+import org.firstinspires.ftc.teamcode.programs.commandbase.BrushCommands.BrushCommand;
 import org.firstinspires.ftc.teamcode.programs.commandbase.BrushCommands.BrushIdleCommand;
 import org.firstinspires.ftc.teamcode.programs.commandbase.BrushCommands.BrushIntakeCommand;
-import org.firstinspires.ftc.teamcode.programs.commandbase.BrushCommands.BrushSpitCommand;
 import org.firstinspires.ftc.teamcode.programs.commandbase.BrushCommands.BrushThrowingCommand;
 import org.firstinspires.ftc.teamcode.programs.commandbase.BrushCommands.SetBrushStateCommand;
 import org.firstinspires.ftc.teamcode.programs.commandbase.TeleOpCommands.IntakeRetractCommand;
+import org.firstinspires.ftc.teamcode.programs.commandbase.TeleOpCommands.IntakeRetractWithSampleCommand;
 import org.firstinspires.ftc.teamcode.programs.util.Globals;
-import org.firstinspires.ftc.teamcode.tests.OptimizedCommandsTEST.BrushIntakeCommandOPTIMIZED;
 
 import dev.frozenmilk.dairy.cachinghardware.CachingDcMotorEx;
 import dev.frozenmilk.dairy.cachinghardware.CachingServo;
@@ -34,6 +34,7 @@ public class Brush extends SubsystemBase{
         INTAKING,
         THROWING,
         SPITTING,
+        OUTTAKING,
         IDLE;
     }
 
@@ -65,7 +66,7 @@ public class Brush extends SubsystemBase{
 
     public BrushAngle brushAngle = BrushAngle.UP;
     public BrushState brushState = BrushState.IDLE;
-    public BrushState previousBrushState;
+    public BrushState previousBrushState = BrushState.IDLE;;
     public DesiredSampleColor desiredSampleColor = DesiredSampleColor.BOTH;
     public SampleState sampleState = SampleState.ISNOT;
     public IntakedSampleColor intakedSampleColor = IntakedSampleColor.NOTHING;
@@ -108,10 +109,16 @@ public class Brush extends SubsystemBase{
 
 
     public void loop(){
+        updateSampleState();
+        updateIntakedSampleColor();
 
-//        if(brushState == BrushState.SPITTING){
-//            CommandScheduler.getInstance().schedule(new BrushSpitCommand());
-//        }
+        if(brushState == BrushState.SPITTING){
+            CommandScheduler.getInstance().schedule(new BrushCommand(-1, 0.5));
+        }
+
+        if(brushState == BrushState.OUTTAKING){
+            CommandScheduler.getInstance().schedule(new BrushCommand(0, 1));
+        }
 
 
         if(brushState == BrushState.IDLE){
@@ -129,8 +136,8 @@ public class Brush extends SubsystemBase{
             }
 
             if(isRightSampleColorTeleOpBlue()){
-//                CommandScheduler.getInstance().schedule(new BrushIdleCommand());//here put retract command
-                CommandScheduler.getInstance().schedule(new IntakeRetractCommand());
+                CommandScheduler.getInstance().schedule(new IntakeRetractWithSampleCommand());
+
             }
             else{
                 CommandScheduler.getInstance().schedule(new BrushThrowingCommand());
@@ -138,17 +145,17 @@ public class Brush extends SubsystemBase{
         }
 
         if(brushState == BrushState.THROWING && sampleState == SampleState.IS){
-            updateSampleState();
+            //updateSampleState();
 
             //In case it intakes consecutive sample (one bad and then one right)
             updateIntakedSampleColor();
             if(isRightSampleColorTeleOpBlue())
-                CommandScheduler.getInstance().schedule(new BrushIdleCommand());
+                CommandScheduler.getInstance().schedule(new BrushIdleCommand());//here put retract command
         }
 
 
         if(brushState == BrushState.THROWING && sampleState == SampleState.ISNOT){
-            CommandScheduler.getInstance().schedule(new SetBrushStateCommand(BrushState.INTAKING));//here put retract command
+            CommandScheduler.getInstance().schedule(new SetBrushStateCommand(BrushState.INTAKING));
         }
 
     }
@@ -209,8 +216,10 @@ public class Brush extends SubsystemBase{
         switch (brushAngle){
             case UP:
                 brushAngleServo.setPosition(Globals.BRUSH_POSITION_UP);
+                break;
             case DOWN:
                 brushAngleServo.setPosition(Globals.BRUSH_POSITION_DOWN);
+                break;
 
         }
     }
