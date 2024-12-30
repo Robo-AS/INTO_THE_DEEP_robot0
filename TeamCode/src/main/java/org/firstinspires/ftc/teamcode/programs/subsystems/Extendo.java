@@ -21,7 +21,7 @@ public class Extendo extends SubsystemBase {
         RETRACTING
     }
 
-    public ExtendoState extendoState = ExtendoState.IDLE;
+    public ExtendoState extendoState = ExtendoState.RETRACTING;
     public int EXTENDING_MINIMUM = 350;
     public int RETRACTING = 0;
 
