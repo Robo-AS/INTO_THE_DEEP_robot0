@@ -1,5 +1,9 @@
 package org.firstinspires.ftc.teamcode.programs.subsystems;
 
+import static org.firstinspires.ftc.robotcore.external.BlocksOpModeCompanion.telemetry;
+
+import android.sax.StartElementListener;
+
 import com.acmerobotics.dashboard.config.Config;
 import com.arcrobotics.ftclib.command.SubsystemBase;
 import com.arcrobotics.ftclib.controller.PIDController;
@@ -31,8 +35,10 @@ public class Extendo extends SubsystemBase {
     public static int targetPosition;
     public static int currentPosition;
 
-    public static double joystickConstant = 20;
+    public static double joystickConstant = 30;
+    public static double exponentialJoystickCoef;
     public static int minPosition = 350, maxPosition = 1300;
+    public static double contantTerm = 0.6, liniarCoefTerm = 0.7;
 
 
 
@@ -90,13 +96,15 @@ public class Extendo extends SubsystemBase {
     }
 
     public void updateTargetPosition(double joystickYCoord){
-        targetPosition += (int)(joystickYCoord * joystickConstant);
+        exponentialJoystickCoef = (Math.pow(joystickYCoord, 3) + liniarCoefTerm * joystickYCoord) * contantTerm;
+        targetPosition += (int)(exponentialJoystickCoef * joystickConstant);
         targetPosition = Math.max(minPosition, Math.min(maxPosition, targetPosition)); //limita de prosti
     }
 
     public int getTargetPosition(){
         return targetPosition;
     }
+    public double getExponentialJoystickCoef() {return exponentialJoystickCoef; }
 
     public static boolean canOuttakeSample(){
         return currentPosition <= 30;

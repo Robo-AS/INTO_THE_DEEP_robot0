@@ -5,6 +5,7 @@ import static org.firstinspires.ftc.robotcore.external.BlocksOpModeCompanion.tel
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import org.firstinspires.ftc.teamcode.programs.subsystems.Brush;
 import org.firstinspires.ftc.teamcode.programs.subsystems.Extendo;
+import org.firstinspires.ftc.teamcode.programs.subsystems.MecanumDriveTrain;
 
 public class Robot {
     private static Robot instance = null;
@@ -12,10 +13,13 @@ public class Robot {
 
     public Brush brush;
     public Extendo extendo;
+    public MecanumDriveTrain mecanumDriveTrain;
+//    public double sensor;
 
     private Robot(){
         brush = Brush.getInstance();
         extendo = Extendo.getInstance();
+        mecanumDriveTrain = MecanumDriveTrain.getInstance();
     }
 
     public static Robot getInstance() {
@@ -30,6 +34,9 @@ public class Robot {
         this.hardwareMap = hardwareMap;
         brush.initializeHardware(hardwareMap);
         extendo.initializeHardware(hardwareMap);
+        mecanumDriveTrain.initializeHardware(hardwareMap);
+//        sensor = hardwareMap.voltageSensor.iterator().next().getVoltage();
+
 
     }
 
@@ -38,6 +45,10 @@ public class Robot {
         extendo.initialize();
     }
 
+
+//    public double getVoltage(){
+//        return sensor;
+//    }
 
 
 

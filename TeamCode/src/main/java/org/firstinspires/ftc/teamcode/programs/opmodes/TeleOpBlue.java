@@ -6,7 +6,6 @@ import com.arcrobotics.ftclib.command.CommandOpMode;
 import com.arcrobotics.ftclib.command.CommandScheduler;
 import com.arcrobotics.ftclib.command.ConditionalCommand;
 import com.arcrobotics.ftclib.command.InstantCommand;
-import com.arcrobotics.ftclib.command.ParallelCommandGroup;
 import com.arcrobotics.ftclib.command.SequentialCommandGroup;
 import com.arcrobotics.ftclib.command.button.Trigger;
 import com.arcrobotics.ftclib.gamepad.GamepadEx;
@@ -22,7 +21,8 @@ import org.firstinspires.ftc.teamcode.programs.commandbase.TeleOpCommands.Intake
 import org.firstinspires.ftc.teamcode.programs.subsystems.Extendo;
 import org.firstinspires.ftc.teamcode.programs.util.Robot;
 import org.firstinspires.ftc.teamcode.programs.subsystems.Brush;
-import org.firstinspires.ftc.teamcode.tests.ExtendoTests.SetExtendoStateCommandTEST;
+import org.firstinspires.ftc.teamcode.programs.commandbase.ExtendoCommands.SetExtendoStateCommand;
+import org.firstinspires.ftc.teamcode.wrappers.geometry.Pose;
 
 
 @com.qualcomm.robotcore.eventloop.opmode.TeleOp(name = "TeleOpBlue", group = "OpModes")
@@ -93,9 +93,9 @@ public class TeleOpBlue extends CommandOpMode {
                 .whenActive(
                         () -> CommandScheduler.getInstance().schedule(
                                 new ConditionalCommand(
-                                        new SetExtendoStateCommandTEST(Extendo.ExtendoState.EXTENDING_MINIMUM),
+                                        new SetExtendoStateCommand(Extendo.ExtendoState.EXTENDING_MINIMUM),
                                         new ConditionalCommand(
-                                                new SetExtendoStateCommandTEST(Extendo.ExtendoState.RETRACTING),
+                                                new SetExtendoStateCommand(Extendo.ExtendoState.RETRACTING),
                                                 new IntakeRetractCommand(),
                                                 () -> robot.brush.brushAngle == Brush.BrushAngle.UP
                                         ),
@@ -116,18 +116,24 @@ public class TeleOpBlue extends CommandOpMode {
         robot.extendo.loop(gamepadEx.getLeftY());
 
 
+        double turnSpeed = gamepad1.left_stick_x;
+        Pose drive = new Pose(gamepad1.right_stick_x, -gamepad1.right_stick_y, turnSpeed);
+        robot.mecanumDriveTrain.set(drive, 0);
+
         telemetry.addData("BrushState:", robot.brush.brushState);
         telemetry.addData("PreviousBrushState:", robot.brush.previousBrushState);
-//        telemetry.addData("DesiredColor", robot.brush.desiredSampleColor);
-//        telemetry.addData("IntakedColor:", robot.brush.intakedSampleColor);
-//        telemetry.addData("SampleState:", robot.brush.sampleState);
-//        telemetry.addData("AngleServoPosition", robot.brush.brushAngleServo.getPosition());
+        telemetry.addData("DesiredColor", robot.brush.desiredSampleColor);
+        telemetry.addData("IntakedColor:", robot.brush.intakedSampleColor);
+        telemetry.addData("SampleState:", robot.brush.sampleState);
+        telemetry.addData("AngleServoPosition", robot.brush.brushAngleServo.getPosition());
 
         telemetry.addData("Current Position", robot.extendo.extendoMotor.getCurrentPosition());
         telemetry.addData("Target Position", robot.extendo.getTargetPosition());
         telemetry.addData("Extendo State", robot.extendo.extendoState);
         telemetry.addData("Brush Angle", robot.brush.brushAngle);
         telemetry.addData("Joystick Y", gamepadEx.gamepad.left_stick_y);
+        telemetry.addData("Joystick Y MODIFIED", robot.extendo.getExponentialJoystickCoef());
+
         telemetry.update();
 
     }

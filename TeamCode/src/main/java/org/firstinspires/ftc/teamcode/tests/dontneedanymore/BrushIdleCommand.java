@@ -1,8 +1,9 @@
-package org.firstinspires.ftc.teamcode.programs.commandbase.BrushCommands;
+package org.firstinspires.ftc.teamcode.tests.dontneedanymore;
 
 import com.arcrobotics.ftclib.command.ParallelCommandGroup;
-import com.arcrobotics.ftclib.command.SequentialCommandGroup;
 
+import org.firstinspires.ftc.teamcode.programs.commandbase.BrushCommands.BrushCommand;
+import org.firstinspires.ftc.teamcode.programs.commandbase.BrushCommands.SetBrushStateCommand;
 import org.firstinspires.ftc.teamcode.programs.subsystems.Brush;
 
 public class BrushIdleCommand extends ParallelCommandGroup {
