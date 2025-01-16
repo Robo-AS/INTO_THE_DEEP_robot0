@@ -22,6 +22,9 @@ public class MecanumDriveTrain extends WSubsystem implements Drivetrain {
     public double sensor;
 
     double[] ws = new double[4];
+    private int frontLeft = 3, frontRight = 1, backLeft = 2, backRight = 0;
+
+
     public double ks = 0;
 
 
@@ -39,11 +42,11 @@ public class MecanumDriveTrain extends WSubsystem implements Drivetrain {
 
         dtFrontLeftMotor = new CachingDcMotorEx(hardwareMap.get(DcMotorEx.class, "frontLeftMotor"));
         dtFrontLeftMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
-        dtFrontLeftMotor.setDirection(DcMotorSimple.Direction.REVERSE);
+        //dtFrontLeftMotor.setDirection(DcMotorSimple.Direction.REVERSE);
 
         dtBackRightMotor = new CachingDcMotorEx(hardwareMap.get(DcMotorEx.class, "backRightMotor"));
         dtBackRightMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
-        //dtBackRightMotor.setDirection(DcMotorSimple.Direction.REVERSE);
+        dtBackRightMotor.setDirection(DcMotorSimple.Direction.REVERSE);
 
         dtFrontRightMotor = new CachingDcMotorEx(hardwareMap.get(DcMotorEx.class, "frontRightMotor"));
         dtFrontRightMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
@@ -70,31 +73,31 @@ public class MecanumDriveTrain extends WSubsystem implements Drivetrain {
 
         double[] wheelSpeeds = new double[4];
 
-        wheelSpeeds[RobotDrive.MotorType.kFrontLeft.value] = (forwardSpeed - strafeSpeed - turnSpeed)*(1-actualks) + actualks*Math.signum(forwardSpeed - strafeSpeed - turnSpeed);
-        wheelSpeeds[RobotDrive.MotorType.kFrontRight.value] = (forwardSpeed + strafeSpeed + turnSpeed)*(1-actualks) + actualks*Math.signum(forwardSpeed + strafeSpeed + turnSpeed);
-        wheelSpeeds[RobotDrive.MotorType.kBackLeft.value] = (forwardSpeed + strafeSpeed - turnSpeed)*(1-actualks) + actualks*Math.signum(forwardSpeed + strafeSpeed - turnSpeed);
-        wheelSpeeds[RobotDrive.MotorType.kBackRight.value] = (forwardSpeed - strafeSpeed + turnSpeed)*(1-actualks) + actualks*Math.signum((forwardSpeed - strafeSpeed + turnSpeed));
+        wheelSpeeds[frontLeft] = (forwardSpeed - strafeSpeed + turnSpeed)*(1-actualks) + actualks*Math.signum((forwardSpeed - strafeSpeed + turnSpeed));
+        wheelSpeeds[frontRight] = (forwardSpeed + strafeSpeed + turnSpeed)*(1-actualks) + actualks*Math.signum(forwardSpeed + strafeSpeed + turnSpeed);
+        wheelSpeeds[backLeft] = (forwardSpeed + strafeSpeed - turnSpeed)*(1-actualks) + actualks*Math.signum(forwardSpeed + strafeSpeed - turnSpeed);
+        wheelSpeeds[backRight] = (forwardSpeed - strafeSpeed - turnSpeed)*(1-actualks) + actualks*Math.signum(forwardSpeed - strafeSpeed - turnSpeed);  //(forwardSpeed - strafeSpeed + turnSpeed)*(1-actualks) + actualks*Math.signum((forwardSpeed - strafeSpeed + turnSpeed));
 
         double max = 1;
         for (double wheelSpeed : wheelSpeeds) max = Math.max(max, Math.abs(wheelSpeed));
 
 
         if (max > 1) {
-            wheelSpeeds[RobotDrive.MotorType.kFrontLeft.value] /= max;
-            wheelSpeeds[RobotDrive.MotorType.kFrontRight.value] /= max;
-            wheelSpeeds[RobotDrive.MotorType.kBackLeft.value] /= max;
-            wheelSpeeds[RobotDrive.MotorType.kBackRight.value] /= max;
+            wheelSpeeds[frontLeft] /= max;
+            wheelSpeeds[frontRight] /= max;
+            wheelSpeeds[backLeft] /= max;
+            wheelSpeeds[backRight] /= max;
         }
 
-        ws[0] = wheelSpeeds[0];
-        ws[1] = wheelSpeeds[1];
-        ws[2] = wheelSpeeds[2];
-        ws[3] = wheelSpeeds[3];
+        ws[frontLeft] = wheelSpeeds[frontLeft];
+        ws[frontRight] = wheelSpeeds[frontRight];
+        ws[backLeft] = wheelSpeeds[backLeft];
+        ws[backRight] = wheelSpeeds[backRight];
 
-        dtFrontLeftMotor.setPower(ws[0]);
-        dtFrontRightMotor.setPower(ws[1]);
-        dtBackLeftMotor.setPower(ws[2]);
-        dtBackRightMotor.setPower(ws[3]);
+        dtFrontLeftMotor.setPower(ws[frontLeft]);
+        dtFrontRightMotor.setPower(ws[frontRight]);
+        dtBackLeftMotor.setPower(ws[backLeft]);
+        dtBackRightMotor.setPower(ws[backRight]);
     }
 
 

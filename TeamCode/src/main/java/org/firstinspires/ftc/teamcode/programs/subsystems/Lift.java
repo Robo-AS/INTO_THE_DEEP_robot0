@@ -8,6 +8,9 @@ import com.acmerobotics.dashboard.config.Config;
 import com.acmerobotics.dashboard.telemetry.MultipleTelemetry;
 import com.arcrobotics.ftclib.command.SubsystemBase;
 import com.arcrobotics.ftclib.controller.PIDController;
+import com.arcrobotics.ftclib.controller.wpilibcontroller.ElevatorFeedforward;
+import com.arcrobotics.ftclib.controller.wpilibcontroller.ProfiledPIDController;
+import com.arcrobotics.ftclib.trajectory.TrapezoidProfile;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
@@ -41,11 +44,13 @@ public class Lift extends SubsystemBase{
 
 
     private PIDController lift_pid;
-    public static double p_lift = 0.0056, d_lift = 0.0006, i_lift = 0.0001; //the d is too bog as last tested
-    public static double f_lift = 0.04; //basically a constant you tune until the lift holds itself in place(doesn't fall due to gravity)
+//    public static double p_lift = 0.0056, d_lift = 0.0006, i_lift = 0.0001; //the d is too bog as last tested
+//    public static double f_lift = 0.04; //basically a constant you tune until the lift holds itself in place(doesn't fall due to gravity)
 
     public static int targetPosition;
     public static int currentPosition;
+
+    public static double p_lift = 0.02, d_lift = 0.0005, i_lift = 0.15;
 
 
 
@@ -89,7 +94,7 @@ public class Lift extends SubsystemBase{
 
         lift_pid.setPID(p_lift, i_lift, d_lift);
         double pid = lift_pid.calculate(currentPosition, targetPosition);
-        double power = (pid + f_lift);
+        double power = pid;
         liftMotor.setPower(power);
         followerMotor.setPower(power);
 

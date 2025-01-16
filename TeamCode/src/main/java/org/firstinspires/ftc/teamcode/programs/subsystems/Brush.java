@@ -90,7 +90,7 @@ public class Brush extends SubsystemBase{
         brushSampleServo = new CachingServo(hardwareMap.get(Servo.class, "brushSampleServo"));
         brushSampleServo.setDirection(Servo.Direction.FORWARD);
 
-        colorSensor0 = hardwareMap.get(RevColorSensorV3.class, "colorSensor0");
+        colorSensor0 = hardwareMap.get(RevColorSensorV3.class, "colorSensor");
     }
 
 

@@ -116,23 +116,24 @@ public class TeleOpBlue extends CommandOpMode {
         robot.extendo.loop(gamepadEx.getLeftY());
 
 
-        double turnSpeed = gamepad1.left_stick_x;
-        Pose drive = new Pose(gamepad1.right_stick_x, -gamepad1.right_stick_y, turnSpeed);
+        double turnSpeed = -gamepad1.left_stick_x;
+        Pose drive = new Pose(-gamepad1.right_stick_x, -gamepad1.right_stick_y, turnSpeed);
         robot.mecanumDriveTrain.set(drive, 0);
 
-        telemetry.addData("BrushState:", robot.brush.brushState);
-        telemetry.addData("PreviousBrushState:", robot.brush.previousBrushState);
-        telemetry.addData("DesiredColor", robot.brush.desiredSampleColor);
-        telemetry.addData("IntakedColor:", robot.brush.intakedSampleColor);
-        telemetry.addData("SampleState:", robot.brush.sampleState);
-        telemetry.addData("AngleServoPosition", robot.brush.brushAngleServo.getPosition());
+//        telemetry.addData("BrushState:", robot.brush.brushState);
+//        telemetry.addData("PreviousBrushState:", robot.brush.previousBrushState);
+//        telemetry.addData("DesiredColor", robot.brush.desiredSampleColor);
+//        telemetry.addData("IntakedColor:", robot.brush.intakedSampleColor);
+//        telemetry.addData("SampleState:", robot.brush.sampleState);
+//        telemetry.addData("AngleServoPosition", robot.brush.brushAngleServo.getPosition());
+//        telemetry.addData("Brush Angle", robot.brush.brushAngle);
 
         telemetry.addData("Current Position", robot.extendo.extendoMotor.getCurrentPosition());
         telemetry.addData("Target Position", robot.extendo.getTargetPosition());
         telemetry.addData("Extendo State", robot.extendo.extendoState);
-        telemetry.addData("Brush Angle", robot.brush.brushAngle);
-        telemetry.addData("Joystick Y", gamepadEx.gamepad.left_stick_y);
-        telemetry.addData("Joystick Y MODIFIED", robot.extendo.getExponentialJoystickCoef());
+
+//        telemetry.addData("Joystick Y", gamepadEx.gamepad.left_stick_y);
+//        telemetry.addData("Joystick Y MODIFIED", robot.extendo.getExponentialJoystickCoef());
 
         telemetry.update();
 

@@ -11,6 +11,8 @@ import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.HardwareMap;
+import com.qualcomm.robotcore.util.ElapsedTime;
+
 import dev.frozenmilk.dairy.cachinghardware.CachingDcMotorEx;
 
 
@@ -18,6 +20,7 @@ import dev.frozenmilk.dairy.cachinghardware.CachingDcMotorEx;
 public class Extendo extends SubsystemBase {
     private static Extendo instance = null;
     public CachingDcMotorEx extendoMotor;
+    private ElapsedTime time = new ElapsedTime();
 
     public enum ExtendoState{
         EXTENDING_MINIMUM,
@@ -30,14 +33,17 @@ public class Extendo extends SubsystemBase {
 
 
     private final PIDController extendo_pid;
-    public static double p_extendo = 0.0331, i_extendo = 0.22, d_extendo = 0.0006;
+//    public static double p_extendo = 0.0331, i_extendo = 0.22, d_extendo = 0.0006;
+//    public static double p_extendo = 0.005, i_extendo = 0, d_extendo = 0.0001;
+
+    public static double p_extendo = 0.0331, i_extendo = 0.171475, d_extendo = 0.0007;
 
     public static int targetPosition;
     public static int currentPosition;
 
     public static double joystickConstant = 30;
     public static double exponentialJoystickCoef;
-    public static int minPosition = 350, maxPosition = 1300;
+    public static int minPosition = 550, maxPosition = 1700;
     public static double contantTerm = 0.6, liniarCoefTerm = 0.7;
 
 
