@@ -1,12 +1,11 @@
 package org.firstinspires.ftc.teamcode.tests;
 
 import com.arcrobotics.ftclib.command.CommandOpMode;
-import com.arcrobotics.ftclib.command.CommandScheduler;
 import com.arcrobotics.ftclib.gamepad.GamepadEx;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
 import org.firstinspires.ftc.teamcode.programs.subsystems.MecanumDriveTrain;
-import org.firstinspires.ftc.teamcode.wrappers.geometry.Pose;
+import org.firstinspires.ftc.teamcode.utils.geometry.Pose;
 
 
 @TeleOp(name = "MECANUM_TEST", group = "Tests")

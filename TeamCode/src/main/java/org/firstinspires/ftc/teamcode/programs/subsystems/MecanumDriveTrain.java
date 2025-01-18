@@ -1,17 +1,15 @@
 package org.firstinspires.ftc.teamcode.programs.subsystems;
 
-import com.arcrobotics.ftclib.drivebase.RobotDrive;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.util.Range;
 
-import org.firstinspires.ftc.teamcode.programs.util.Robot;
-import org.firstinspires.ftc.teamcode.wrappers.Drivetrain;
-import org.firstinspires.ftc.teamcode.wrappers.WSubsystem;
-import org.firstinspires.ftc.teamcode.wrappers.geometry.Pose;
-import org.firstinspires.ftc.teamcode.wrappers.geometry.Vector2D;
+import org.firstinspires.ftc.teamcode.utils.Drivetrain;
+import org.firstinspires.ftc.teamcode.utils.WSubsystem;
+import org.firstinspires.ftc.teamcode.utils.geometry.Pose;
+import org.firstinspires.ftc.teamcode.utils.geometry.Vector2D;
 
 import dev.frozenmilk.dairy.cachinghardware.CachingDcMotorEx;
 

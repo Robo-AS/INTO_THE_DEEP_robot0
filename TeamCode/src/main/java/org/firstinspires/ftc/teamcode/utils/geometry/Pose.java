@@ -1,4 +1,4 @@
-package org.firstinspires.ftc.teamcode.wrappers.geometry;
+package org.firstinspires.ftc.teamcode.utils.geometry;
 
 import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
 import org.firstinspires.ftc.vision.apriltag.AprilTagPoseFtc;

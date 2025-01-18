@@ -1,4 +1,4 @@
-package org.firstinspires.ftc.teamcode.wrappers.geometry;
+package org.firstinspires.ftc.teamcode.utils.geometry;
 
 public class Point {
     public double x, y;

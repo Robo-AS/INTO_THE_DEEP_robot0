@@ -1,4 +1,4 @@
-package org.firstinspires.ftc.teamcode.wrappers;
+package org.firstinspires.ftc.teamcode.utils;
 
 public abstract class WSubsystem {
 

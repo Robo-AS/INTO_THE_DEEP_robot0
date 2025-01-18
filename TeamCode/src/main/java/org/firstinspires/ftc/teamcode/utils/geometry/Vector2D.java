@@ -1,4 +1,4 @@
-package org.firstinspires.ftc.teamcode.wrappers.geometry;
+package org.firstinspires.ftc.teamcode.utils.geometry;
 
 public class Vector2D {
     public double x,y;
