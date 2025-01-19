@@ -49,7 +49,6 @@ public class Extendo extends SubsystemBase {
 
     MotionProfile profile;
     public static int previousTarget = 0;
-    public static int targetMotionProfile = 0;
     public static double maxVelocity = 1000000, maxAcceleration = 10000;
 
     public Extendo(){
@@ -84,25 +83,34 @@ public class Extendo extends SubsystemBase {
 
     public void loop(double joystickYCoord){
         currentPosition = extendoMotor.getCurrentPosition();
-        targetMotionProfile = targetPosition;
-        if(targetMotionProfile != previousTarget){
-            profile = MotionProfileGenerator.generateSimpleMotionProfile(
-                    new MotionState(previousTarget, 0),
-                    new MotionState(targetMotionProfile, 0),
-                    maxVelocity,
-                    maxAcceleration
-            );
+        if(targetPosition != previousTarget){
+            if(targetPosition == EXTENDING_MINIMUM || targetPosition == RETRACTING) {
+                profile = MotionProfileGenerator.generateSimpleMotionProfile(
+                        new MotionState(previousTarget, 0),
+                        new MotionState(targetPosition, 0),
+                        maxVelocity,
+                        maxAcceleration
+                );
 
-            time.reset();
-            previousTarget = targetMotionProfile;
+                time.reset();
+                previousTarget = targetPosition;
+            }
+            else{
+                extendo_pid.setPID(p_extendo, i_extendo, d_extendo);
+                double power = extendo_pid.calculate(currentPosition, targetPosition);
+                extendoMotor.setPower(power);
+            }
+
         }
 
+
+
         MotionState targetState = profile == null ? new MotionState(0, 0) : profile.get(time.seconds());
-        double finalTarget = targetState.getX();
+        double targetMotionProfile = targetState.getX();
 
 
         extendo_pid.setPID(p_extendo, i_extendo, d_extendo);
-        double power = extendo_pid.calculate(currentPosition, finalTarget);
+        double power = extendo_pid.calculate(currentPosition, targetMotionProfile);
         extendoMotor.setPower(power);
 
         if(extendoState == ExtendoState.EXTENDING_MINIMUM)

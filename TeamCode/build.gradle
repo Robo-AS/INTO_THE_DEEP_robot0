@@ -16,6 +16,8 @@ apply from: '../build.common.gradle'
 apply from: '../build.dependencies.gradle'
 apply plugin: 'kotlin-android'
 
+
+//chestia asta e sketchy rau(but for some fucking reason it works)
 kotlin {
     jvmToolchain(8)
 }

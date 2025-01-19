@@ -114,6 +114,7 @@ public class TeleOpBlue extends CommandOpMode {
 
         robot.brush.loop();
         robot.extendo.loop(gamepadEx.getLeftY());
+        robot.lift.loop();
 
 
         double turnSpeed = -gamepad1.left_stick_x;
@@ -135,6 +136,8 @@ public class TeleOpBlue extends CommandOpMode {
 //        telemetry.addData("Joystick Y", gamepadEx.gamepad.left_stick_y);
 //        telemetry.addData("Joystick Y MODIFIED", robot.extendo.getExponentialJoystickCoef());
 
+//        telemetry.addData("Current Position", robot.lift.liftMotor.getCurrentPosition());
+//        telemetry.addData("Target Position", robot.lift.getTargetPosition());
         telemetry.update();
 
     }
