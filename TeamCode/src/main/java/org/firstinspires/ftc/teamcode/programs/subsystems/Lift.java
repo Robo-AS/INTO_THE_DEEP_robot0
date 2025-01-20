@@ -40,10 +40,11 @@ public class Lift extends SubsystemBase{
 
     public LiftState liftState = LiftState.IDLE;
     public int LOW_BASKET = 0;
-    public int HIGH_BASKET = 0;
+    public int HIGH_BASKET = 1200;
     public int LOW_RUNG= 0;
-    public int HIGH_RUNG = 0;
+    public int HIGH_RUNG = 600;
     public int ARM_MOVEMENT = 0;
+    public int IDLE = 0;
 
 
 
@@ -58,8 +59,8 @@ public class Lift extends SubsystemBase{
 
     MotionProfile profile;
     public static int previousTarget = 0;
-    public static double maxVelocityUP = 1000000, maxAccelerationUP = 20000;
-    public static double maxVelocityDOWN = 1000000, maxAccelerationDOWN = 2000;
+    public static double maxVelocityUP = 10000000, maxAccelerationUP = 200000;
+    public static double maxVelocityDOWN = 1000000, maxAccelerationDOWN = 4000;
 
 
     public Lift(){
@@ -99,6 +100,7 @@ public class Lift extends SubsystemBase{
 
     public void loop(){
         currentPosition = liftMotor.getCurrentPosition();
+
         if(targetPosition != previousTarget) {
             if(targetPosition > previousTarget) { //profile pentru extindere
                 profile = MotionProfileGenerator.generateSimpleMotionProfile(
@@ -160,6 +162,7 @@ public class Lift extends SubsystemBase{
                 break;
 
             case IDLE:
+                targetPosition = IDLE;
                 break;
         }
 

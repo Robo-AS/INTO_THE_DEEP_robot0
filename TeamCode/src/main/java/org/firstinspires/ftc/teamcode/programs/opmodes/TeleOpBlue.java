@@ -19,9 +19,11 @@ import org.firstinspires.ftc.teamcode.programs.commandbase.TeleOpCommands.Intake
 import org.firstinspires.ftc.teamcode.programs.commandbase.TeleOpCommands.IntakeIntakingCommand;
 import org.firstinspires.ftc.teamcode.programs.commandbase.TeleOpCommands.IntakeRetractCommand;
 import org.firstinspires.ftc.teamcode.programs.subsystems.Extendo;
+import org.firstinspires.ftc.teamcode.programs.subsystems.Lift;
 import org.firstinspires.ftc.teamcode.programs.util.Robot;
 import org.firstinspires.ftc.teamcode.programs.subsystems.Brush;
 import org.firstinspires.ftc.teamcode.programs.commandbase.ExtendoCommands.SetExtendoStateCommand;
+import org.firstinspires.ftc.teamcode.tests.LiftTests.SetLiftStateCommandTEST;
 import org.firstinspires.ftc.teamcode.utils.geometry.Pose;
 
 
@@ -104,6 +106,31 @@ public class TeleOpBlue extends CommandOpMode {
                         )
                 );
 
+
+        //Lift commands
+        gamepadEx.getGamepadButton(GamepadKeys.Button.RIGHT_BUMPER)
+                .whenPressed(
+                        () -> CommandScheduler.getInstance().schedule(
+                                new ConditionalCommand(
+                                        new SetLiftStateCommandTEST(Lift.LiftState.HIGH_RUNG),
+                                        new SetLiftStateCommandTEST(Lift.LiftState.IDLE),
+                                        () -> robot.lift.liftState == Lift.LiftState.IDLE
+                                )
+                        )
+
+                );
+
+        Trigger liftTrigger = new Trigger(() -> gamepadEx.getTrigger(GamepadKeys.Trigger.RIGHT_TRIGGER) > 0.5);
+        liftTrigger
+                .whenActive(
+                        () -> CommandScheduler.getInstance().schedule(
+                                new ConditionalCommand(
+                                        new SetLiftStateCommandTEST(Lift.LiftState.HIGH_BASKET),
+                                        new SetLiftStateCommandTEST(Lift.LiftState.IDLE),
+                                        () -> robot.lift.liftState == Lift.LiftState.IDLE
+                                )
+                        )
+                );
 
     }
 

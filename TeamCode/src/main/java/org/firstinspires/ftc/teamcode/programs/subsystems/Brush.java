@@ -13,7 +13,7 @@ import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
 import org.firstinspires.ftc.teamcode.programs.commandbase.BrushCommands.BrushCommand;
 import org.firstinspires.ftc.teamcode.programs.commandbase.BrushCommands.BrushThrowingCommand;
 import org.firstinspires.ftc.teamcode.programs.commandbase.BrushCommands.SetBrushStateCommand;
-import org.firstinspires.ftc.teamcode.programs.commandbase.TeleOpCommands.IntakeRetractWithSampleCommand;
+import org.firstinspires.ftc.teamcode.programs.commandbase.TeleOpCommands.IntakeRetractYELLOWSampleCommand;
 import org.firstinspires.ftc.teamcode.programs.util.Globals;
 
 import dev.frozenmilk.dairy.cachinghardware.CachingDcMotorEx;
@@ -136,7 +136,7 @@ public class Brush extends SubsystemBase{
             }
 
             if(isRightSampleColorTeleOpBlue()){
-                CommandScheduler.getInstance().schedule(new IntakeRetractWithSampleCommand());
+                CommandScheduler.getInstance().schedule(new IntakeRetractYELLOWSampleCommand());
 
             }
             else{

@@ -11,8 +11,8 @@ import org.firstinspires.ftc.teamcode.programs.subsystems.Extendo;
 
 import org.firstinspires.ftc.teamcode.programs.commandbase.ExtendoCommands.SetExtendoStateCommand;
 
-public class IntakeRetractWithSampleCommand extends SequentialCommandGroup {
-    public IntakeRetractWithSampleCommand(){
+public class IntakeRetractYELLOWSampleCommand extends SequentialCommandGroup {
+    public IntakeRetractYELLOWSampleCommand(){
         super(
                 new SetBrushStateCommand(Brush.BrushState.IDLE),
                 new SetBrushAngleCommand(Brush.BrushAngle.UP),
