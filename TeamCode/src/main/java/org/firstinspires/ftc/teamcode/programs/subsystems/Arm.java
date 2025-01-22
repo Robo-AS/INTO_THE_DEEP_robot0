@@ -27,10 +27,15 @@ public class Arm extends SubsystemBase {
         ARM_ANGLE_TEST
     }
 
+    public ArmState armState = ArmState.INIT;
+    public static double rightServoPos = 0.09, leftServoPos = 0.11, clawServoPos = 0, sampleServoPos = 0;
+    public static double INIT_rightServo = 0.1, INIT_leftServo = 0.12;
+    public static int RANGE_ANGLE = 200;
 
-    public static double rightServoPos = 0.5, leftServoPos = 0.5, clawServoPos = 0, sampleServoPos = 0;
+// pentru servoSample ai la HIGH_BASKET 0.24 pos
 
-
+    public static double HIGH_BASKET = 220;
+    double positionRIGHT, positionLEFT;
 
     public static Arm getInstance(){
         if (instance == null) {
@@ -56,8 +61,8 @@ public class Arm extends SubsystemBase {
 
 
     public void initialize() {
-        rightServo.setPosition(0.5);
-        leftServo.setPosition(0.5);
+        rightServo.setPosition(INIT_rightServo);
+        leftServo.setPosition(INIT_leftServo);
         clawServo.setPosition(0);
         sampleServo.setPosition(0);
 
@@ -65,11 +70,51 @@ public class Arm extends SubsystemBase {
 
 
     public void loop(){
-        rightServo.setPosition(rightServoPos);
-        leftServo.setPosition(leftServoPos);
-        clawServo.setPosition(clawServoPos);
+        positionRIGHT = (HIGH_BASKET/2)/RANGE_ANGLE + INIT_rightServo;
+        positionLEFT = (HIGH_BASKET/2)/RANGE_ANGLE + INIT_leftServo;
+
+        rightServo.setPosition(positionRIGHT);
+        leftServo.setPosition(positionLEFT);
         sampleServo.setPosition(sampleServoPos);
+        clawServo.setPosition(clawServoPos);
+
+
     }
+
+//    public void udpdate(ArmState state){
+//        armState = state;
+//        switch (state){
+//            case INIT:
+//                rightServo.setPosition(INIT_rightServo);
+//                leftServo.setPosition(INIT_leftServo);
+//                break;
+//
+//            case HIGH_BASKET:
+//                rightServo.setPosition(degreesToPositonRight(HIGH_BASKET_rightServo));
+//                leftServo.setPosition(degreesToPositonLeft(HIGH_BASKET_leftServo));
+//                break;
+//
+//            case HIGH_RUNG:
+//                rightServo.setPosition(HIGH_RUNG_rightServo);
+//                leftServo.setPosition(HIGH_RUNG_leftServo);
+//                break;
+//
+//            case PUT_SPECIMEN:
+//                rightServo.setPosition(PUT_SPECIMEN_rightServo);
+//                leftServo.setPosition(PUT_SPECIMEN_leftServo);
+//                break;
+//
+//            case ARM_ANGLE_TEST:
+//                rightServo.setPosition(ARM_ANGLE_TEST_rightServo);
+//                leftServo.setPosition(ARM_ANGLE_TEST_leftServo);
+//                break;
+//        }
+//
+//    }
+
+
+
+
 
 
 }

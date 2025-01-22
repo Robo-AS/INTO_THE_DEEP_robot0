@@ -6,13 +6,13 @@ import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
 import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
 
-//@TeleOp(name = "ColorSensorTest")
+@TeleOp(name = "ColorSensorTest", group = "Tests")
 public class ColorSensorTest extends LinearOpMode {
     public RevColorSensorV3 colorSensor0; //declare
 
     @Override
     public void runOpMode(){
-        colorSensor0 = hardwareMap.get(RevColorSensorV3.class, "colorSensor0"); //mapping
+        colorSensor0 = hardwareMap.get(RevColorSensorV3.class, "colorSensor"); //mapping
 
         waitForStart();
 
@@ -29,11 +29,12 @@ public class ColorSensorTest extends LinearOpMode {
 //            if(distance < 3)
 //                telemetry.addData("There is piece", true);
 //            else telemetry.addData("There is piece", false);
-//            telemetry.addData("Red", red);
-//            telemetry.addData("Green", green);
-//            telemetry.addData("Blue", blue);
-//            telemetry.addData("Alpha", alpha);
-//            telemetry.addData("ARGB", argb);
+
+            telemetry.addData("Red", red);
+            telemetry.addData("Green", green);
+            telemetry.addData("Blue", blue);
+            telemetry.addData("Alpha", alpha);
+            telemetry.addData("ARGB", argb);
 
 
             if(blue > 400)

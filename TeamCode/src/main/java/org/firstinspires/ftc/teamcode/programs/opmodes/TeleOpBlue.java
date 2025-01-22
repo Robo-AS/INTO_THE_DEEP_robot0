@@ -18,6 +18,7 @@ import org.firstinspires.ftc.teamcode.programs.commandbase.SetDesiredColorComman
 import org.firstinspires.ftc.teamcode.programs.commandbase.TeleOpCommands.IntakeIdleCommand;
 import org.firstinspires.ftc.teamcode.programs.commandbase.TeleOpCommands.IntakeIntakingCommand;
 import org.firstinspires.ftc.teamcode.programs.commandbase.TeleOpCommands.IntakeRetractCommand;
+import org.firstinspires.ftc.teamcode.programs.commandbase.TeleOpCommands.OuttakeCommand;
 import org.firstinspires.ftc.teamcode.programs.subsystems.Extendo;
 import org.firstinspires.ftc.teamcode.programs.subsystems.Lift;
 import org.firstinspires.ftc.teamcode.programs.util.Robot;
@@ -44,22 +45,6 @@ public class TeleOpBlue extends CommandOpMode {
         robot.initializeHardware(hardwareMap);
         robot.initializeRobot();
 
-        gamepadEx.getGamepadButton(GamepadKeys.Button.DPAD_UP)
-                        .whenPressed(
-                                () -> CommandScheduler.getInstance().schedule(
-                                        new SequentialCommandGroup(
-                                                new ConditionalCommand(
-                                                        new InstantCommand(()-> robot.brush.updatePreviousBrushState(robot.brush.brushState)),
-                                                        new DoesNothingCommand(),
-                                                        () -> robot.brush.brushState != Brush.BrushState.SPITTING
-                                                ),
-                                                new SetBrushStateCommand(Brush.BrushState.SPITTING)
-                                        )
-                                )
-                        );
-        gamepadEx.getGamepadButton(GamepadKeys.Button.DPAD_UP)
-                .whenReleased(new SetBrushStateCommand(robot.brush.previousBrushState));
-
 
         //Choosing sample color button logic
         gamepadEx.getGamepadButton(GamepadKeys.Button.DPAD_DOWN)
@@ -71,6 +56,28 @@ public class TeleOpBlue extends CommandOpMode {
 
         gamepadEx.getGamepadButton(GamepadKeys.Button.DPAD_LEFT)
                 .whenPressed(new SetDesiredColorCommand(Brush.DesiredSampleColor.BOTH));
+
+
+
+        //spitting button logic
+        gamepadEx.getGamepadButton(GamepadKeys.Button.DPAD_UP)
+                        .whenPressed(
+                                () -> CommandScheduler.getInstance().schedule(
+                                        new SequentialCommandGroup(
+                                                new ConditionalCommand(
+                                                        new InstantCommand(()-> robot.brush.updatePreviousBrushState(robot.brush.brushState)),
+                                                        new DoesNothingCommand(),
+                                                        () -> robot.brush.brushState != Brush.BrushState.SPITTING_HUMAN_PLAYER
+                                                ),
+                                                new SetBrushStateCommand(Brush.BrushState.SPITTING_HUMAN_PLAYER)
+                                        )
+                                )
+                        );
+        gamepadEx.getGamepadButton(GamepadKeys.Button.DPAD_UP)
+                .whenReleased(new SetBrushStateCommand(robot.brush.previousBrushState));
+
+
+
 
         //Controling the brush button logic
         gamepadEx.getGamepadButton(GamepadKeys.Button.LEFT_BUMPER)
@@ -128,6 +135,23 @@ public class TeleOpBlue extends CommandOpMode {
                                         new SetLiftStateCommandTEST(Lift.LiftState.HIGH_BASKET),
                                         new SetLiftStateCommandTEST(Lift.LiftState.IDLE),
                                         () -> robot.lift.liftState == Lift.LiftState.IDLE
+                                )
+                        )
+                );
+
+
+        //balaceala de button logic
+        gamepadEx.getGamepadButton(GamepadKeys.Button.LEFT_STICK_BUTTON)
+                .whenPressed(
+                        () -> CommandScheduler.getInstance().schedule(
+                                new ConditionalCommand(
+                                        new ConditionalCommand(
+                                                new OuttakeCommand(),
+                                                new DoesNothingCommand(),
+                                                () -> robot.brush.sampleState == Brush.SampleState.IS && robot.brush.intakedSampleColor == Brush.IntakedSampleColor.BLUE
+                                        ),
+                                        new DoesNothingCommand(),
+                                        () -> robot.extendo.extendoState == Extendo.ExtendoState.RETRACTING
                                 )
                         )
                 );

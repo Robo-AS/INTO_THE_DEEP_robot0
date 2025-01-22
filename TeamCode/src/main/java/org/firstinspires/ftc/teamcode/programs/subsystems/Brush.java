@@ -13,6 +13,7 @@ import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
 import org.firstinspires.ftc.teamcode.programs.commandbase.BrushCommands.BrushCommand;
 import org.firstinspires.ftc.teamcode.programs.commandbase.BrushCommands.BrushThrowingCommand;
 import org.firstinspires.ftc.teamcode.programs.commandbase.BrushCommands.SetBrushStateCommand;
+import org.firstinspires.ftc.teamcode.programs.commandbase.TeleOpCommands.IntakeRetractSPECIFICSampleCommand;
 import org.firstinspires.ftc.teamcode.programs.commandbase.TeleOpCommands.IntakeRetractYELLOWSampleCommand;
 import org.firstinspires.ftc.teamcode.programs.util.Globals;
 
@@ -31,39 +32,40 @@ public class Brush extends SubsystemBase{
         INTAKING,
         THROWING,
         SPITTING,
+        SPITTING_HUMAN_PLAYER,
         OUTTAKING,
-        IDLE;
+        IDLE
     }
 
     public enum BrushAngle{
         UP,
-        DOWN;
+        DOWN
     }
 
     public enum IntakedSampleColor {
         RED,
         BLUE,
         YELLOW,
-        NOTHING;
+        NOTHING
     }
 
     public enum SampleState{
         IS,
-        ISNOT;
+        ISNOT
     }
 
     public enum DesiredSampleColor {
         YELLOW,
         BLUE,
         RED,
-        BOTH;
+        BOTH
 
     }
 
 
     public BrushAngle brushAngle = BrushAngle.UP;
     public BrushState brushState = BrushState.IDLE;
-    public BrushState previousBrushState = BrushState.IDLE;;
+    public BrushState previousBrushState = BrushState.IDLE;
     public DesiredSampleColor desiredSampleColor = DesiredSampleColor.BOTH;
     public SampleState sampleState = SampleState.ISNOT;
     public IntakedSampleColor intakedSampleColor = IntakedSampleColor.NOTHING;
@@ -109,6 +111,10 @@ public class Brush extends SubsystemBase{
         updateSampleState();
         updateIntakedSampleColor();
 
+        if(brushState == BrushState.SPITTING_HUMAN_PLAYER){
+            CommandScheduler.getInstance().schedule(new BrushCommand(-1, 0));
+        }
+
         if(brushState == BrushState.SPITTING){
             CommandScheduler.getInstance().schedule(new BrushCommand(-1, 0.5));
         }
@@ -124,19 +130,21 @@ public class Brush extends SubsystemBase{
         }
 
         if(brushState == BrushState.INTAKING && sampleState == SampleState.ISNOT){
-            CommandScheduler.getInstance().schedule(new BrushCommand(Globals.BRUSH_MOTOR_SPEED, Globals.BRUSH_SAMPLE_SERVO_SPEED_INTAKING),new BrushCommand(Globals.BRUSH_MOTOR_SPEED, Globals.BRUSH_SAMPLE_SERVO_SPEED_INTAKING));
+            CommandScheduler.getInstance().schedule(new BrushCommand(Globals.BRUSH_MOTOR_SPEED, Globals.BRUSH_SAMPLE_SERVO_SPEED_INTAKING));
             //CommandScheduler.getInstance().schedule(new BrushIntakeCommand());
         }
 
         else if(brushState == BrushState.INTAKING && sampleState == SampleState.IS){
             CommandScheduler.getInstance().schedule(new BrushCommand(0, 0.5));
-//            CommandScheduler.getInstance().schedule(new BrushIdleCommand());
+            //CommandScheduler.getInstance().schedule(new BrushIdleCommand());
             while(intakedSampleColor == IntakedSampleColor.NOTHING){
                 updateIntakedSampleColor();
             }
 
             if(isRightSampleColorTeleOpBlue()){
-                CommandScheduler.getInstance().schedule(new IntakeRetractYELLOWSampleCommand());
+                if(intakedSampleColor == IntakedSampleColor.YELLOW)
+                    CommandScheduler.getInstance().schedule(new IntakeRetractYELLOWSampleCommand());
+                else CommandScheduler.getInstance().schedule(new IntakeRetractSPECIFICSampleCommand());
 
             }
             else{
