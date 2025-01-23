@@ -1,4 +1,4 @@
-package org.firstinspires.ftc.teamcode.programs.commandbase.TeleOpCommands;
+package org.firstinspires.ftc.teamcode.programs.commandbase.TeleOpCommands.IntakeCommands;
 
 import com.arcrobotics.ftclib.command.ConditionalCommand;
 import com.arcrobotics.ftclib.command.ParallelCommandGroup;

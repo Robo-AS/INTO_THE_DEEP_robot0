@@ -26,7 +26,7 @@ import dev.frozenmilk.dairy.cachinghardware.CachingDcMotorEx;
 public class Lift extends SubsystemBase{
     private static Lift instance = null;
     public CachingDcMotorEx liftMotor, followerMotor;
-    private ElapsedTime time = new ElapsedTime();
+    private final ElapsedTime time = new ElapsedTime();
 
 
     public enum LiftState{
@@ -49,9 +49,6 @@ public class Lift extends SubsystemBase{
 
 
     private PIDController lift_pid;
-//    public static double p_lift = 0.0056, d_lift = 0.0056, i_lift = 0.0001; //the d is too bog as last tested
-//    public static double f_lift = 0.04; //basically a constant you tune until the lift holds itself in place(doesn't fall due to gravity)
-
     public static int targetPosition;
     public static int currentPosition;
 
@@ -95,6 +92,9 @@ public class Lift extends SubsystemBase{
     public void initialize(){
         liftState = LiftState.IDLE;
         lift_pid.reset();
+        targetPosition = 0;
+        previousTarget = 0;
+
     }
 
 
@@ -174,5 +174,9 @@ public class Lift extends SubsystemBase{
 
     public int getTargetPosition(){
         return targetPosition;
+    }
+
+    public static boolean canRotateWrist(){
+        return currentPosition > 350;
     }
 }
