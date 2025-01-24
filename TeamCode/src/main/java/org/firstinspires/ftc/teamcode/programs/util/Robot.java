@@ -2,6 +2,7 @@ package org.firstinspires.ftc.teamcode.programs.util;
 import static org.firstinspires.ftc.robotcore.external.BlocksOpModeCompanion.hardwareMap;
 import static org.firstinspires.ftc.robotcore.external.BlocksOpModeCompanion.telemetry;
 
+import com.qualcomm.hardware.lynx.LynxModule;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 
 import org.firstinspires.ftc.teamcode.programs.subsystems.Arm;
@@ -19,7 +20,10 @@ public class Robot {
     public Lift lift;
     public MecanumDriveTrain mecanumDriveTrain;
     public Arm arm;
+
+
 //    public double sensor;
+    public LynxModule chub;
 
     private Robot(){
         brush = Brush.getInstance();
@@ -46,6 +50,9 @@ public class Robot {
         arm.initializeHardware(hardwareMap);
 //        sensor = hardwareMap.voltageSensor.iterator().next().getVoltage();
 
+        chub = hardwareMap.get(LynxModule.class, "Control Hub");
+        chub.setBulkCachingMode(LynxModule.BulkCachingMode.MANUAL);
+
     }
 
     public void initializeRobot() {
@@ -60,6 +67,10 @@ public class Robot {
 //        return sensor;
 //    }
 
+
+    public void loop(){
+        chub.clearBulkCache();
+    }
 
 
 

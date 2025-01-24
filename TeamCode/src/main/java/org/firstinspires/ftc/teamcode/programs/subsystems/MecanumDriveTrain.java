@@ -63,7 +63,7 @@ public class MecanumDriveTrain extends WSubsystem implements Drivetrain {
     public void set(double forwardSpeed, double strafeSpeed, double turnSpeed, double gyroAngle) {
         Vector2D input = new Vector2D(forwardSpeed, strafeSpeed).rotate(-gyroAngle);
 
-        double actualks = ks *12/getVoltage();
+        double actualks = ks; // *12/getVoltage();
 
         forwardSpeed = Range.clip(input.x, -1, 1);
         strafeSpeed = Range.clip(input.y, -1, 1);

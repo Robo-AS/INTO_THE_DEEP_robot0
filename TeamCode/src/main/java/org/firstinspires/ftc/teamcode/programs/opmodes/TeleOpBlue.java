@@ -10,10 +10,9 @@ import com.arcrobotics.ftclib.command.SequentialCommandGroup;
 import com.arcrobotics.ftclib.command.button.Trigger;
 import com.arcrobotics.ftclib.gamepad.GamepadEx;
 import com.arcrobotics.ftclib.gamepad.GamepadKeys;
+import com.qualcomm.robotcore.util.ElapsedTime;
 
 
-import org.firstinspires.ftc.teamcode.programs.commandbase.ArmCommands.SetArmStateCommand;
-import org.firstinspires.ftc.teamcode.programs.commandbase.ArmCommands.SetClawStateCommand;
 import org.firstinspires.ftc.teamcode.programs.commandbase.BrushCommands.SetBrushStateCommand;
 import org.firstinspires.ftc.teamcode.programs.commandbase.DoesNothingCommand;
 import org.firstinspires.ftc.teamcode.programs.commandbase.SetDesiredColorCommand;
@@ -25,13 +24,13 @@ import org.firstinspires.ftc.teamcode.programs.commandbase.TeleOpCommands.Outtak
 import org.firstinspires.ftc.teamcode.programs.commandbase.TeleOpCommands.OuttakeCommands.OuttakeGoHighBascketCommand;
 import org.firstinspires.ftc.teamcode.programs.commandbase.TeleOpCommands.OuttakeCommands.OuttakeGoHighRungCommand;
 import org.firstinspires.ftc.teamcode.programs.commandbase.TeleOpCommands.OuttakeCommands.OutttakePutSampleGoBackToIdle;
+import org.firstinspires.ftc.teamcode.programs.commandbase.TeleOpCommands.OuttakeCommands.PutSpecimenCommand;
 import org.firstinspires.ftc.teamcode.programs.subsystems.Arm;
 import org.firstinspires.ftc.teamcode.programs.subsystems.Extendo;
 import org.firstinspires.ftc.teamcode.programs.subsystems.Lift;
 import org.firstinspires.ftc.teamcode.programs.util.Robot;
 import org.firstinspires.ftc.teamcode.programs.subsystems.Brush;
 import org.firstinspires.ftc.teamcode.programs.commandbase.ExtendoCommands.SetExtendoStateCommand;
-import org.firstinspires.ftc.teamcode.tests.LiftTests.SetLiftStateCommandTEST;
 import org.firstinspires.ftc.teamcode.utils.geometry.Pose;
 
 
@@ -40,9 +39,14 @@ public class TeleOpBlue extends CommandOpMode {
     private final Robot robot = Robot.getInstance();
     public GamepadEx gamepadEx;
 
+    private ElapsedTime elapsedtime;
+    double exponentialJoystickCoord_X_TURN, exponentialJoystickCoord_X_FORWARD, exponentialJoystickCoord_Y;
+    public static double contantTerm = 0.6, liniarCoefTerm = 0.7;
 
     @Override
     public void initialize(){
+        elapsedtime = new ElapsedTime();
+        elapsedtime.reset();
         telemetry = new MultipleTelemetry(telemetry, FtcDashboard.getInstance().getTelemetry());
         CommandScheduler.getInstance().reset();
 
@@ -130,8 +134,12 @@ public class TeleOpBlue extends CommandOpMode {
                                 new ConditionalCommand(
                                         new OuttakeGoHighRungCommand(),
                                         new ConditionalCommand(
-                                                new SetArmStateCommand(Arm.ArmState.PUT_SPECIMEN),
-                                                new OuttakeGoBackToIdleCommand()                                                                                                                                                                                                                                           ,
+                                                new PutSpecimenCommand(),
+                                                new ConditionalCommand(
+                                                        new OuttakeGoBackToIdleCommand(),
+                                                        new DoesNothingCommand(),
+                                                        () -> robot.arm.clawState == Arm.ClawState.OPEN
+                                                )                                                                                                                                                                                                              ,
                                                 () -> robot.arm.clawState == Arm.ClawState.CLOSED
                                         ),
                                         () -> robot.lift.liftState == Lift.LiftState.IDLE
@@ -183,16 +191,19 @@ public class TeleOpBlue extends CommandOpMode {
     public void run(){
         CommandScheduler.getInstance().run();
 
-
+        robot.loop();
         robot.brush.loop();
         robot.extendo.loop(gamepadEx.getLeftY());
         robot.lift.loop();
         robot.arm.loop();
 
+        //applying expo funtion for mecanum
+        exponentialJoystickCoord_X_TURN = (Math.pow(gamepad1.left_stick_x, 3) + liniarCoefTerm * gamepad1.left_stick_x) * contantTerm;
+        exponentialJoystickCoord_X_FORWARD = (Math.pow(gamepad1.right_stick_x, 3) + liniarCoefTerm * gamepad1.right_stick_x) * contantTerm;
+        exponentialJoystickCoord_Y = (Math.pow(gamepad1.right_stick_y, 3) + liniarCoefTerm * gamepad1.right_stick_y) * contantTerm;
 
-
-        double turnSpeed = -gamepad1.left_stick_x;
-        Pose drive = new Pose(-gamepad1.right_stick_x, -gamepad1.right_stick_y, turnSpeed);
+        double turnSpeed = -exponentialJoystickCoord_X_TURN;
+        Pose drive = new Pose(-exponentialJoystickCoord_X_FORWARD, -exponentialJoystickCoord_Y, turnSpeed);
         robot.mecanumDriveTrain.set(drive, 0);
 
 //        telemetry.addData("BrushState:", robot.brush.brushState);
@@ -212,6 +223,10 @@ public class TeleOpBlue extends CommandOpMode {
 
 //        telemetry.addData("Current Position", robot.lift.liftMotor.getCurrentPosition());
 //        telemetry.addData("Target Position", robot.lift.getTargetPosition());
+
+
+        telemetry.addData("Loop Times", elapsedtime.milliseconds());
+        elapsedtime.reset();
         telemetry.update();
 
     }

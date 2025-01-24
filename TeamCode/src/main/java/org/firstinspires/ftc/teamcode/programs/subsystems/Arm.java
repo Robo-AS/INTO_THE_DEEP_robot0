@@ -43,7 +43,7 @@ public class Arm extends SubsystemBase {
     public WristState wristState = WristState.INIT;
 
     public static double OPEN_clawServo = 0, CLOSED_clawServo = 1;
-    public static double INIT_wristServo = 0, HIGH_BASKET_wristServo = 0.3, HIGH_RUNG_wristServo = 0.6; //open & horizontal
+    public static double INIT_wristServo = 0, HIGH_BASKET_wristServo = 0.3, HIGH_RUNG_wristServo = 0.6;
     public static double INIT_rightServo = 0.12, INIT_leftServo = 0.12;
     public static int RANGE_ANGLE = 200;
 
@@ -95,26 +95,28 @@ public class Arm extends SubsystemBase {
 
 
     public void loop(){
-        if(targetPosition != previousTarget){
-            profile = MotionProfileGenerator.generateSimpleMotionProfile(
-                    new MotionState(previousTarget, 0),
-                    new MotionState(targetPosition, 0),
-                    maxVelocity,
-                    maxAcceleration
-            );
+//        if(targetPosition != previousTarget){
+//            profile = MotionProfileGenerator.generateSimpleMotionProfile(
+//                    new MotionState(previousTarget, 0),
+//                    new MotionState(targetPosition, 0),
+//                    maxVelocity,
+//                    maxAcceleration
+//            );
+//
+//            time.reset();
+//            previousTarget = targetPosition;
+//        }
+//
+//        MotionState targetState = profile == null ? new MotionState(0, 0) : profile.get(time.seconds());
+//        double targetMotionProfile = targetState.getX();
 
-            time.reset();
-            previousTarget = targetPosition;
-        }
-
-        MotionState targetState = profile == null ? new MotionState(0, 0) : profile.get(time.seconds());
-        double targetMotionProfile = targetState.getX();
 
 
+//        rightServo.setPosition(positionToAngleRight(targetMotionProfile));
+//        leftServo.setPosition(positionToAngleLeft(targetMotionProfile));
 
-        rightServo.setPosition(positionToAngleRight(targetMotionProfile));
-        leftServo.setPosition(positionToAngleLeft(targetMotionProfile));
-
+        rightServo.setPosition(positionToAngleRight(targetPosition));
+        leftServo.setPosition(positionToAngleLeft(targetPosition));
 //        rightServo.setPosition(INIT_rightServo);
 //        leftServo.setPosition(INIT_leftServo);
 //        clawServo.setPosition(INIT_clawServoPos);

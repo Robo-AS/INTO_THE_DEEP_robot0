@@ -39,16 +39,17 @@ public class Lift extends SubsystemBase{
     }
 
     public LiftState liftState = LiftState.IDLE;
+
+    public static int HIGH_BASKET = 1200;
+    public static int HIGH_RUNG = 600;
     public int LOW_BASKET = 0;
-    public int HIGH_BASKET = 1200;
     public int LOW_RUNG= 0;
-    public int HIGH_RUNG = 600;
     public int ARM_MOVEMENT = 0;
     public int IDLE = 0;
 
 
 
-    private PIDController lift_pid;
+    private final PIDController lift_pid;
     public static int targetPosition;
     public static int currentPosition;
 
@@ -94,7 +95,6 @@ public class Lift extends SubsystemBase{
         lift_pid.reset();
         targetPosition = 0;
         previousTarget = 0;
-
     }
 
 
