@@ -108,8 +108,11 @@ public class Brush extends SubsystemBase{
 
 
     public void loop(){
-        updateSampleState();
-        updateIntakedSampleColor();
+        if(brushAngle == BrushAngle.DOWN){
+            updateSampleState();
+            updateIntakedSampleColor();
+        }
+
 
         if(brushState == BrushState.SPITTING_HUMAN_PLAYER){
             CommandScheduler.getInstance().schedule(new BrushCommand(-1, 0));
