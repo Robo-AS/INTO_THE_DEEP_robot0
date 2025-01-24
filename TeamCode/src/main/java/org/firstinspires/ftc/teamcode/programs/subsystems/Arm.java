@@ -95,28 +95,32 @@ public class Arm extends SubsystemBase {
 
 
     public void loop(){
-//        if(targetPosition != previousTarget){
-//            profile = MotionProfileGenerator.generateSimpleMotionProfile(
-//                    new MotionState(previousTarget, 0),
-//                    new MotionState(targetPosition, 0),
-//                    maxVelocity,
-//                    maxAcceleration
-//            );
-//
-//            time.reset();
-//            previousTarget = targetPosition;
-//        }
-//
-//        MotionState targetState = profile == null ? new MotionState(0, 0) : profile.get(time.seconds());
+        if(targetPosition != previousTarget){
+            profile = MotionProfileGenerator.generateSimpleMotionProfile(
+                    new MotionState(previousTarget, 0),
+                    new MotionState(targetPosition, 0),
+                    maxVelocity,
+                    maxAcceleration
+            );
+
+            time.reset();
+            previousTarget = targetPosition;
+        }
+
+        //MotionState targetState = profile == null ? new MotionState(0, 0) : profile.get(time.seconds());
 //        double targetMotionProfile = targetState.getX();
 
+        if(profile != null){
+            MotionState targetState = profile.get(time.seconds());
+            double targetMotionProfile = targetState.getX();
+            rightServo.setPosition(positionToAngleRight(targetMotionProfile));
+            leftServo.setPosition(positionToAngleLeft(targetMotionProfile));
+        }
 
 
-//        rightServo.setPosition(positionToAngleRight(targetMotionProfile));
-//        leftServo.setPosition(positionToAngleLeft(targetMotionProfile));
 
-        rightServo.setPosition(positionToAngleRight(targetPosition));
-        leftServo.setPosition(positionToAngleLeft(targetPosition));
+//        rightServo.setPosition(positionToAngleRight(targetPosition));
+//        leftServo.setPosition(positionToAngleLeft(targetPosition));
 //        rightServo.setPosition(INIT_rightServo);
 //        leftServo.setPosition(INIT_leftServo);
 //        clawServo.setPosition(INIT_clawServoPos);
@@ -141,7 +145,11 @@ public class Arm extends SubsystemBase {
                 break;
 
             case PUT_SPECIMEN:
+                rightServo.setPosition(positionToAngleRight(PUT_SPECIMEN));
+                leftServo.setPosition(positionToAngleLeft(PUT_SPECIMEN));
+                previousTarget = PUT_SPECIMEN;
                 targetPosition = PUT_SPECIMEN;
+                profile = null;
                 break;
 
         }

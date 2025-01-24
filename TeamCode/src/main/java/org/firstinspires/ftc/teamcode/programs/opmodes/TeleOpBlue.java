@@ -42,6 +42,7 @@ public class TeleOpBlue extends CommandOpMode {
     private ElapsedTime elapsedtime;
     double exponentialJoystickCoord_X_TURN, exponentialJoystickCoord_X_FORWARD, exponentialJoystickCoord_Y;
     public static double contantTerm = 0.6, liniarCoefTerm = 0.7;
+    private double loopTime = 0;
 
     @Override
     public void initialize(){
@@ -164,7 +165,6 @@ public class TeleOpBlue extends CommandOpMode {
                                         () -> robot.lift.liftState == Lift.LiftState.IDLE
                                 )
                         )
-
                 );
 
 
@@ -202,9 +202,20 @@ public class TeleOpBlue extends CommandOpMode {
         exponentialJoystickCoord_X_FORWARD = (Math.pow(gamepad1.right_stick_x, 3) + liniarCoefTerm * gamepad1.right_stick_x) * contantTerm;
         exponentialJoystickCoord_Y = (Math.pow(gamepad1.right_stick_y, 3) + liniarCoefTerm * gamepad1.right_stick_y) * contantTerm;
 
-        double turnSpeed = -exponentialJoystickCoord_X_TURN;
+        double turnSpeed;
+        if(robot.extendo.extendoState == Extendo.ExtendoState.EXTENDING_MINIMUM){
+            turnSpeed = -exponentialJoystickCoord_X_TURN/2;
+        }
+        else turnSpeed = -exponentialJoystickCoord_X_TURN;
+
+
         Pose drive = new Pose(-exponentialJoystickCoord_X_FORWARD, -exponentialJoystickCoord_Y, turnSpeed);
         robot.mecanumDriveTrain.set(drive, 0);
+
+
+
+
+
 
 //        telemetry.addData("BrushState:", robot.brush.brushState);
 //        telemetry.addData("PreviousBrushState:", robot.brush.previousBrushState);
@@ -225,8 +236,12 @@ public class TeleOpBlue extends CommandOpMode {
 //        telemetry.addData("Target Position", robot.lift.getTargetPosition());
 
 
-        telemetry.addData("Loop Times", elapsedtime.milliseconds());
-        elapsedtime.reset();
+//        telemetry.addData("Loop Times", elapsedtime.milliseconds());
+//        elapsedtime.reset();
+
+        double loop = System.nanoTime();
+        telemetry.addData("Hz", 1000000000 / (loop - loopTime));
+        loopTime = loop;
         telemetry.update();
 
     }

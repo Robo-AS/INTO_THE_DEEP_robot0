@@ -11,9 +11,12 @@ import org.firstinspires.ftc.teamcode.programs.subsystems.Extendo;
 import org.firstinspires.ftc.teamcode.programs.subsystems.Lift;
 import org.firstinspires.ftc.teamcode.programs.subsystems.MecanumDriveTrain;
 
+import java.util.List;
+
 public class Robot {
     private static Robot instance = null;
     private HardwareMap hardwareMap;
+    private List<LynxModule> allHubs;
 
     public Brush brush;
     public Extendo extendo;
@@ -23,7 +26,7 @@ public class Robot {
 
 
 //    public double sensor;
-    public LynxModule chub;
+
 
     private Robot(){
         brush = Brush.getInstance();
@@ -50,8 +53,11 @@ public class Robot {
         arm.initializeHardware(hardwareMap);
 //        sensor = hardwareMap.voltageSensor.iterator().next().getVoltage();
 
-        chub = hardwareMap.get(LynxModule.class, "Control Hub");
-        chub.setBulkCachingMode(LynxModule.BulkCachingMode.MANUAL);
+
+        allHubs = hardwareMap.getAll(LynxModule.class);
+        for (LynxModule hub : allHubs) {
+            hub.setBulkCachingMode(LynxModule.BulkCachingMode.MANUAL);
+        }
 
     }
 
@@ -69,7 +75,9 @@ public class Robot {
 
 
     public void loop(){
-        chub.clearBulkCache();
+        for (LynxModule hub : allHubs) {
+            hub.clearBulkCache();
+        }
     }
 
 

@@ -38,7 +38,7 @@ public class Lift extends SubsystemBase{
         IDLE
     }
 
-    public LiftState liftState = LiftState.IDLE;
+    public LiftState liftState = LiftState.IDLE;;
 
     public static int HIGH_BASKET = 1200;
     public static int HIGH_RUNG = 600;
@@ -91,8 +91,8 @@ public class Lift extends SubsystemBase{
     }
 
     public void initialize(){
-        liftState = LiftState.IDLE;
         lift_pid.reset();
+        liftState = LiftState.IDLE;
         targetPosition = 0;
         previousTarget = 0;
     }

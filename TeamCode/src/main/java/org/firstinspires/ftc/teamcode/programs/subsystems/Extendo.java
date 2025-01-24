@@ -1,16 +1,11 @@
 package org.firstinspires.ftc.teamcode.programs.subsystems;
 
-import static org.firstinspires.ftc.robotcore.external.BlocksOpModeCompanion.telemetry;
-
-import android.sax.StartElementListener;
-
 import com.acmerobotics.dashboard.config.Config;
 import com.acmerobotics.roadrunner.profile.MotionProfile;
 import com.acmerobotics.roadrunner.profile.MotionProfileGenerator;
 import com.acmerobotics.roadrunner.profile.MotionState;
 import com.arcrobotics.ftclib.command.SubsystemBase;
 import com.arcrobotics.ftclib.controller.PIDController;
-import com.arcrobotics.ftclib.trajectory.TrapezoidProfile;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
@@ -24,14 +19,14 @@ import dev.frozenmilk.dairy.cachinghardware.CachingDcMotorEx;
 public class Extendo extends SubsystemBase {
     private static Extendo instance = null;
     public CachingDcMotorEx extendoMotor;
-    private ElapsedTime time = new ElapsedTime();
+    private final ElapsedTime time = new ElapsedTime();
 
     public enum ExtendoState{
         EXTENDING_MINIMUM,
         RETRACTING
     }
 
-    public ExtendoState extendoState = ExtendoState.RETRACTING;
+    public ExtendoState extendoState = ExtendoState.RETRACTING;;
     public int EXTENDING_MINIMUM = 550;
     public int RETRACTING = 0;
 
@@ -40,7 +35,7 @@ public class Extendo extends SubsystemBase {
     public static double p_extendo = 0.007, i_extendo = 0.11, d_extendo = 0.00006;
 
     public static int targetPosition = 0;
-    public static int currentPosition = 0;
+    public static int currentPosition;
 
     public static double joystickConstant = 50;
     public static double exponentialJoystickCoef;
@@ -72,11 +67,9 @@ public class Extendo extends SubsystemBase {
     }
 
     public void initialize() {
-        extendoState = ExtendoState.RETRACTING;
         extendo_pid.reset();
-        time.reset();
+        extendoState = ExtendoState.RETRACTING;
         targetPosition = 0;
-        currentPosition = 0;
         previousTarget = 0;
     }
 
@@ -95,7 +88,6 @@ public class Extendo extends SubsystemBase {
 
             time.reset();
             previousTarget = targetPosition;
-
         }
 
 
