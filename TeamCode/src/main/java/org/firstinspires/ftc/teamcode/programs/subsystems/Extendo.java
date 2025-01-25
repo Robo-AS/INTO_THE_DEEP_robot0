@@ -76,6 +76,7 @@ public class Extendo extends SubsystemBase {
         extendoState = ExtendoState.RETRACTING;
         targetPosition = 0;
         previousTarget = 0;
+        joystickConstant = Globals.EXTENDO_JOYSTICK_CONSTANT_UP;
     }
 
 
@@ -132,6 +133,8 @@ public class Extendo extends SubsystemBase {
     public int getTargetPosition(){
         return targetPosition;
     }
+
+    public double getJoystickConstant(){return joystickConstant;}
 
 
     public static boolean canOuttakeSample(){

@@ -25,7 +25,7 @@ public class Brush extends SubsystemBase{
     public CachingDcMotorEx brushMotor;
     public CachingServo brushAngleServo;
     public CachingServo brushSampleServo;
-    public RevColorSensorV3 colorSensor0;
+    public RevColorSensorV3 colorSensor;
 
     public enum BrushState {
         INTAKING,
@@ -90,7 +90,7 @@ public class Brush extends SubsystemBase{
         brushSampleServo = new CachingServo(hardwareMap.get(Servo.class, "brushSampleServo"));
         brushSampleServo.setDirection(Servo.Direction.FORWARD);
 
-        colorSensor0 = hardwareMap.get(RevColorSensorV3.class, "colorSensor");
+        colorSensor = hardwareMap.get(RevColorSensorV3.class, "colorSensor");
     }
 
 
@@ -103,71 +103,6 @@ public class Brush extends SubsystemBase{
         brushAngleServo.setPosition(Globals.BRUSH_POSITION_UP);
     }
 
-
-
-//    public void loop(){
-//        if(brushAngle == BrushAngle.DOWN){
-//            updateSampleState();
-//            updateIntakedSampleColor();
-//        }
-//
-//
-//        if(brushState == BrushState.SPITTING_HUMAN_PLAYER){
-//            CommandScheduler.getInstance().schedule(new BrushCommand(-1, 0));
-//        }
-//
-//        if(brushState == BrushState.SPITTING){
-//            CommandScheduler.getInstance().schedule(new BrushCommand(-1, 0.5));
-//        }
-//
-//        if(brushState == BrushState.OUTTAKING){
-//            CommandScheduler.getInstance().schedule(new BrushCommand(0, 1));
-//        }
-//
-//
-//        if(brushState == BrushState.IDLE){
-//            CommandScheduler.getInstance().schedule(new BrushCommand(0, 0.5));
-//        }
-//
-//        if(brushState == BrushState.INTAKING && sampleState == SampleState.ISNOT){
-//            CommandScheduler.getInstance().schedule(new BrushCommand(Globals.BRUSH_MOTOR_SPEED, Globals.BRUSH_SAMPLE_SERVO_SPEED_INTAKING));
-//        }
-//
-//        if(brushState == BrushState.INTAKING && sampleState == SampleState.IS){
-//            CommandScheduler.getInstance().schedule(new BrushCommand(0, 0.5)); //idle
-//            while(intakedSampleColor == IntakedSampleColor.NOTHING){
-//                updateIntakedSampleColor();
-//            }
-//
-//            if(isRightSampleColorTeleOpBlue()){
-//                if(intakedSampleColor == IntakedSampleColor.YELLOW)
-//                    CommandScheduler.getInstance().schedule(new IntakeRetractYELLOWSampleCommand());
-//                else CommandScheduler.getInstance().schedule(new IntakeRetractSPECIFICSampleCommand());
-//
-//            }
-//            else{
-//                CommandScheduler.getInstance().schedule(new SetBrushStateCommand(BrushState.THROWING));
-//            }
-//        }
-//
-////        if(brushState == BrushState.THROWING && sampleState == SampleState.IS){
-////            //updateSampleState();
-////
-////            //In case it intakes consecutive sample (one bad and then one right)
-////            updateIntakedSampleColor();
-////            if(isRightSampleColorTeleOpBlue())
-////                CommandScheduler.getInstance().schedule(new BrushIdleCommand());//here put retract command
-////        }
-//
-//
-//        if(brushState == BrushState.THROWING && sampleState == SampleState.ISNOT){
-//            CommandScheduler.getInstance().schedule(new SetBrushStateCommand(BrushState.INTAKING));
-//        }
-//        if(brushState == BrushState.THROWING && sampleState == SampleState.IS){
-//            CommandScheduler.getInstance().schedule(new BrushCommand(Globals.BRUSH_MOTOR_SPEED, 1));
-//        }
-//
-//    }
 
 
     public void loop(){
@@ -239,8 +174,8 @@ public class Brush extends SubsystemBase{
 
 
     public void updateIntakedSampleColor(){
-        int red = colorSensor0.red();
-        int blue = colorSensor0.blue();
+        int red = colorSensor.red();
+        int blue = colorSensor.blue();
 
         if(blue > 400)
             intakedSampleColor = IntakedSampleColor.BLUE;
@@ -255,7 +190,7 @@ public class Brush extends SubsystemBase{
 
 
     public void updateSampleState(){
-        double distance = colorSensor0.getDistance(DistanceUnit.CM);
+        double distance = colorSensor.getDistance(DistanceUnit.CM);
         if(distance < 3){
             sampleState = SampleState.IS;
         }
@@ -294,6 +229,9 @@ public class Brush extends SubsystemBase{
         previousBrushState = state;
     }
 
+    public void updateShouldVibrate(){
+        Globals.shouldVibrate = true;
+    }
 
 
 }

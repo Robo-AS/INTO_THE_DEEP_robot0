@@ -10,7 +10,7 @@ import com.arcrobotics.ftclib.command.SequentialCommandGroup;
 import com.arcrobotics.ftclib.command.button.Trigger;
 import com.arcrobotics.ftclib.gamepad.GamepadEx;
 import com.arcrobotics.ftclib.gamepad.GamepadKeys;
-
+import com.qualcomm.robotcore.hardware.Gamepad;
 
 
 import org.firstinspires.ftc.teamcode.programs.commandbase.BrushCommands.SetBrushStateCommand;
@@ -205,7 +205,22 @@ public class TeleOpBlue extends CommandOpMode {
         robot.mecanumDriveTrain.set(drive, 0);
 
 
+//        gamepad1.rumble(Globals.rumble1, Globals.rumble2, Globals.durationMs);
 
+        if(robot.brush.desiredSampleColor == Brush.DesiredSampleColor.BLUE){
+            gamepad1.setLedColor(0, 0, 255, Gamepad.LED_DURATION_CONTINUOUS);
+        }
+        else if(robot.brush.desiredSampleColor == Brush.DesiredSampleColor.YELLOW){
+            gamepad1.setLedColor(255, 200, 0, Gamepad.LED_DURATION_CONTINUOUS);
+        }
+        else if(robot.brush.desiredSampleColor == Brush.DesiredSampleColor.BOTH){
+            gamepad1.setLedColor(0, 0, 0, Gamepad.LED_DURATION_CONTINUOUS);
+        }
+
+        if(Globals.shouldVibrate){
+            gamepad1.rumble(Globals.rumble1, Globals.rumble2, Globals.durationMs);
+            Globals.shouldVibrate = false;
+        }
 
 
 
@@ -222,6 +237,8 @@ public class TeleOpBlue extends CommandOpMode {
 //        telemetry.addData("Extendo State", robot.extendo.extendoState);
 //        telemetry.addData("Joystick Y", gamepadEx.gamepad.left_stick_y);
 //        telemetry.addData("Joystick Y MODIFIED", robot.extendo.getExponentialJoystickCoef());
+        telemetry.addData("JoystickConstant", robot.extendo.getJoystickConstant());
+        telemetry.addData("SHOULD VIBRATE", Globals.shouldVibrate);
 
 //        telemetry.addData("Current Position", robot.lift.liftMotor.getCurrentPosition());
 //        telemetry.addData("Target Position", robot.lift.getTargetPosition());

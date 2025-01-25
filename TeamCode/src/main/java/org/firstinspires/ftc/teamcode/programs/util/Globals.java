@@ -15,8 +15,14 @@ public class Globals {
     public static double DECREASE_TURN_SPEED_CONSTANT = 2;
 
     //Extendo
-    public static double EXTENDO_JOYSTICK_CONSTANT;
-    public static double EXTENDO_JOYSTICK_CONSTANT_UP = 15;
+    public static double EXTENDO_JOYSTICK_CONSTANT_UP = 20;
     public static double EXTENDO_JOYSTICK_CONSTANT_DOWN = 50;
+
+
+    //Gamepad
+    public static double rumble1 = 1, rumble2 = 1;
+    public static int durationMs = 200;
+    public static boolean shouldVibrate = false;
+
 
 }
