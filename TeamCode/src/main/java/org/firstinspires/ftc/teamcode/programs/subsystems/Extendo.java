@@ -1,5 +1,7 @@
 package org.firstinspires.ftc.teamcode.programs.subsystems;
 
+import android.provider.Settings;
+
 import com.acmerobotics.dashboard.config.Config;
 import com.acmerobotics.roadrunner.profile.MotionProfile;
 import com.acmerobotics.roadrunner.profile.MotionProfileGenerator;
@@ -11,6 +13,8 @@ import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.util.ElapsedTime;
+
+import org.firstinspires.ftc.teamcode.programs.util.Globals;
 
 import dev.frozenmilk.dairy.cachinghardware.CachingDcMotorEx;
 
@@ -26,7 +30,7 @@ public class Extendo extends SubsystemBase {
         RETRACTING
     }
 
-    public ExtendoState extendoState = ExtendoState.RETRACTING;;
+    public ExtendoState extendoState = ExtendoState.RETRACTING;
     public int EXTENDING_MINIMUM = 550;
     public int RETRACTING = 0;
 
@@ -36,11 +40,12 @@ public class Extendo extends SubsystemBase {
 
     public static int targetPosition = 0;
     public static int currentPosition;
-
-    public static double joystickConstant = 50;
-    public static double exponentialJoystickCoef;
     public static int minPosition = 550, maxPosition = 1700;
+
+//    public static double joystickConstant = 30; //15, 50
+    public static double exponentialJoystickCoef;
     public static double contantTerm = 0.6, liniarCoefTerm = 0.7;
+    private double joystickConstant;
 
     MotionProfile profile;
     public static int previousTarget = 0;
@@ -113,19 +118,21 @@ public class Extendo extends SubsystemBase {
                 targetPosition = RETRACTING;
                 break;
         }
-
     }
 
     public void updateTargetPosition(double joystickYCoord){
         exponentialJoystickCoef = (Math.pow(joystickYCoord, 3) + liniarCoefTerm * joystickYCoord) * contantTerm;
+
         targetPosition += (int)(exponentialJoystickCoef * joystickConstant);
         targetPosition = Math.max(minPosition, Math.min(maxPosition, targetPosition)); //limita de prosti
     }
 
+    public void updateJoystickConstant(double constant){ joystickConstant = constant; }
+
     public int getTargetPosition(){
         return targetPosition;
     }
-    public double getExponentialJoystickCoef() {return exponentialJoystickCoef; }
+
 
     public static boolean canOuttakeSample(){
         return currentPosition <= 30;

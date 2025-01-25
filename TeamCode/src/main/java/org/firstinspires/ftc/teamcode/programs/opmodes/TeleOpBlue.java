@@ -28,6 +28,7 @@ import org.firstinspires.ftc.teamcode.programs.commandbase.TeleOpCommands.Outtak
 import org.firstinspires.ftc.teamcode.programs.subsystems.Arm;
 import org.firstinspires.ftc.teamcode.programs.subsystems.Extendo;
 import org.firstinspires.ftc.teamcode.programs.subsystems.Lift;
+import org.firstinspires.ftc.teamcode.programs.util.Globals;
 import org.firstinspires.ftc.teamcode.programs.util.Robot;
 import org.firstinspires.ftc.teamcode.programs.subsystems.Brush;
 import org.firstinspires.ftc.teamcode.programs.commandbase.ExtendoCommands.SetExtendoStateCommand;
@@ -199,7 +200,7 @@ public class TeleOpBlue extends CommandOpMode {
         exponentialJoystickCoord_X_FORWARD = (Math.pow(gamepad1.right_stick_x, 3) + liniarCoefTerm * gamepad1.right_stick_x) * contantTerm;
         exponentialJoystickCoord_Y = (Math.pow(gamepad1.right_stick_y, 3) + liniarCoefTerm * gamepad1.right_stick_y) * contantTerm;
 
-        double turnSpeed = robot.extendo.extendoState == Extendo.ExtendoState.EXTENDING_MINIMUM ? -exponentialJoystickCoord_X_TURN/2 :-exponentialJoystickCoord_X_TURN;
+        double turnSpeed = robot.extendo.extendoState == Extendo.ExtendoState.EXTENDING_MINIMUM ? -exponentialJoystickCoord_X_TURN/Globals.DECREASE_TURN_SPEED_CONSTANT :-exponentialJoystickCoord_X_TURN;
         Pose drive = new Pose(-exponentialJoystickCoord_X_FORWARD, -exponentialJoystickCoord_Y, turnSpeed);
         robot.mecanumDriveTrain.set(drive, 0);
 

@@ -11,7 +11,6 @@ import com.qualcomm.robotcore.hardware.Servo;
 
 import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
 import org.firstinspires.ftc.teamcode.programs.commandbase.BrushCommands.BrushCommand;
-import org.firstinspires.ftc.teamcode.programs.commandbase.BrushCommands.BrushThrowingCommand;
 import org.firstinspires.ftc.teamcode.programs.commandbase.BrushCommands.SetBrushStateCommand;
 import org.firstinspires.ftc.teamcode.programs.commandbase.TeleOpCommands.IntakeCommands.IntakeRetractSPECIFICSampleCommand;
 import org.firstinspires.ftc.teamcode.programs.commandbase.TeleOpCommands.IntakeCommands.IntakeRetractYELLOWSampleCommand;
@@ -59,7 +58,6 @@ public class Brush extends SubsystemBase{
         BLUE,
         RED,
         BOTH
-
     }
 
 
@@ -107,6 +105,71 @@ public class Brush extends SubsystemBase{
 
 
 
+//    public void loop(){
+//        if(brushAngle == BrushAngle.DOWN){
+//            updateSampleState();
+//            updateIntakedSampleColor();
+//        }
+//
+//
+//        if(brushState == BrushState.SPITTING_HUMAN_PLAYER){
+//            CommandScheduler.getInstance().schedule(new BrushCommand(-1, 0));
+//        }
+//
+//        if(brushState == BrushState.SPITTING){
+//            CommandScheduler.getInstance().schedule(new BrushCommand(-1, 0.5));
+//        }
+//
+//        if(brushState == BrushState.OUTTAKING){
+//            CommandScheduler.getInstance().schedule(new BrushCommand(0, 1));
+//        }
+//
+//
+//        if(brushState == BrushState.IDLE){
+//            CommandScheduler.getInstance().schedule(new BrushCommand(0, 0.5));
+//        }
+//
+//        if(brushState == BrushState.INTAKING && sampleState == SampleState.ISNOT){
+//            CommandScheduler.getInstance().schedule(new BrushCommand(Globals.BRUSH_MOTOR_SPEED, Globals.BRUSH_SAMPLE_SERVO_SPEED_INTAKING));
+//        }
+//
+//        if(brushState == BrushState.INTAKING && sampleState == SampleState.IS){
+//            CommandScheduler.getInstance().schedule(new BrushCommand(0, 0.5)); //idle
+//            while(intakedSampleColor == IntakedSampleColor.NOTHING){
+//                updateIntakedSampleColor();
+//            }
+//
+//            if(isRightSampleColorTeleOpBlue()){
+//                if(intakedSampleColor == IntakedSampleColor.YELLOW)
+//                    CommandScheduler.getInstance().schedule(new IntakeRetractYELLOWSampleCommand());
+//                else CommandScheduler.getInstance().schedule(new IntakeRetractSPECIFICSampleCommand());
+//
+//            }
+//            else{
+//                CommandScheduler.getInstance().schedule(new SetBrushStateCommand(BrushState.THROWING));
+//            }
+//        }
+//
+////        if(brushState == BrushState.THROWING && sampleState == SampleState.IS){
+////            //updateSampleState();
+////
+////            //In case it intakes consecutive sample (one bad and then one right)
+////            updateIntakedSampleColor();
+////            if(isRightSampleColorTeleOpBlue())
+////                CommandScheduler.getInstance().schedule(new BrushIdleCommand());//here put retract command
+////        }
+//
+//
+//        if(brushState == BrushState.THROWING && sampleState == SampleState.ISNOT){
+//            CommandScheduler.getInstance().schedule(new SetBrushStateCommand(BrushState.INTAKING));
+//        }
+//        if(brushState == BrushState.THROWING && sampleState == SampleState.IS){
+//            CommandScheduler.getInstance().schedule(new BrushCommand(Globals.BRUSH_MOTOR_SPEED, 1));
+//        }
+//
+//    }
+
+
     public void loop(){
         if(brushAngle == BrushAngle.DOWN){
             updateSampleState();
@@ -114,65 +177,56 @@ public class Brush extends SubsystemBase{
         }
 
 
-        if(brushState == BrushState.SPITTING_HUMAN_PLAYER){
-            CommandScheduler.getInstance().schedule(new BrushCommand(-1, 0));
+        switch (brushState) {
+            case SPITTING_HUMAN_PLAYER:
+                CommandScheduler.getInstance().schedule(new BrushCommand(-1, 0));
+                break;
+
+            case SPITTING:
+                CommandScheduler.getInstance().schedule(new BrushCommand(-1, 0.5));
+                break;
+
+            case OUTTAKING:
+                CommandScheduler.getInstance().schedule(new BrushCommand(0, 1));
+                break;
+
+            case IDLE:
+                CommandScheduler.getInstance().schedule(new BrushCommand(0, 0.5));
+                break;
+
+            case INTAKING:
+                if (sampleState == SampleState.ISNOT) {
+                    CommandScheduler.getInstance().schedule(
+                            new BrushCommand(Globals.BRUSH_MOTOR_SPEED, Globals.BRUSH_SAMPLE_SERVO_SPEED_INTAKING)
+                    );
+                } else if (sampleState == SampleState.IS) {
+                    CommandScheduler.getInstance().schedule(new BrushCommand(0, 0.5)); // Idle
+
+                    while (intakedSampleColor == IntakedSampleColor.NOTHING) {
+                        updateIntakedSampleColor();
+                    }
+
+                    if (isRightSampleColorTeleOpBlue()) {
+                        if (intakedSampleColor == IntakedSampleColor.YELLOW) {
+                            CommandScheduler.getInstance().schedule(new IntakeRetractYELLOWSampleCommand());
+                        } else {
+                            CommandScheduler.getInstance().schedule(new IntakeRetractSPECIFICSampleCommand());
+                        }
+                    } else {
+                        CommandScheduler.getInstance().schedule(new SetBrushStateCommand(BrushState.THROWING));
+                    }
+                }
+                break;
+
+            case THROWING:
+                if (sampleState == SampleState.ISNOT) {
+                    CommandScheduler.getInstance().schedule(new SetBrushStateCommand(BrushState.INTAKING));
+                } else if (sampleState == SampleState.IS) {
+                    CommandScheduler.getInstance().schedule(new BrushCommand(Globals.BRUSH_MOTOR_SPEED, 1));
+                }
+                break;
         }
-
-        if(brushState == BrushState.SPITTING){
-            CommandScheduler.getInstance().schedule(new BrushCommand(-1, 0.5));
-        }
-
-        if(brushState == BrushState.OUTTAKING){
-            CommandScheduler.getInstance().schedule(new BrushCommand(0, 1));
-        }
-
-
-        if(brushState == BrushState.IDLE){
-            CommandScheduler.getInstance().schedule(new BrushCommand(0, 0.5));
-//            CommandScheduler.getInstance().schedule(new BrushIdleCommand());
-        }
-
-        if(brushState == BrushState.INTAKING && sampleState == SampleState.ISNOT){
-            CommandScheduler.getInstance().schedule(new BrushCommand(Globals.BRUSH_MOTOR_SPEED, Globals.BRUSH_SAMPLE_SERVO_SPEED_INTAKING));
-            //CommandScheduler.getInstance().schedule(new BrushIntakeCommand());
-        }
-
-        else if(brushState == BrushState.INTAKING && sampleState == SampleState.IS){
-            CommandScheduler.getInstance().schedule(new BrushCommand(0, 0.5));
-            //CommandScheduler.getInstance().schedule(new BrushIdleCommand());
-            while(intakedSampleColor == IntakedSampleColor.NOTHING){
-                updateIntakedSampleColor();
-            }
-
-            if(isRightSampleColorTeleOpBlue()){
-                if(intakedSampleColor == IntakedSampleColor.YELLOW)
-                    CommandScheduler.getInstance().schedule(new IntakeRetractYELLOWSampleCommand());
-                else CommandScheduler.getInstance().schedule(new IntakeRetractSPECIFICSampleCommand());
-
-            }
-            else{
-                CommandScheduler.getInstance().schedule(new BrushThrowingCommand());
-            }
-        }
-
-//        if(brushState == BrushState.THROWING && sampleState == SampleState.IS){
-//            //updateSampleState();
-//
-//            //In case it intakes consecutive sample (one bad and then one right)
-//            updateIntakedSampleColor();
-//            if(isRightSampleColorTeleOpBlue())
-//                CommandScheduler.getInstance().schedule(new BrushIdleCommand());//here put retract command
-//        }
-
-
-        if(brushState == BrushState.THROWING && sampleState == SampleState.ISNOT){
-            CommandScheduler.getInstance().schedule(new SetBrushStateCommand(BrushState.INTAKING));
-        }
-
     }
-
-
-
 
     public void updateState(BrushState state){
         brushState = state;
