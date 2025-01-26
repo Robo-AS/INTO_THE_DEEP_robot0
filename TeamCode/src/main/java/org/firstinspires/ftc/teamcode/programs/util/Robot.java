@@ -2,6 +2,7 @@ package org.firstinspires.ftc.teamcode.programs.util;
 import static org.firstinspires.ftc.robotcore.external.BlocksOpModeCompanion.hardwareMap;
 import static org.firstinspires.ftc.robotcore.external.BlocksOpModeCompanion.telemetry;
 
+import com.acmerobotics.roadrunner.ftc.GoBildaPinpointDriver;
 import com.qualcomm.hardware.lynx.LynxModule;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 
@@ -51,13 +52,14 @@ public class Robot {
         lift.initializeHardware(hardwareMap);
         mecanumDriveTrain.initializeHardware(hardwareMap);
         arm.initializeHardware(hardwareMap);
-//        sensor = hardwareMap.voltageSensor.iterator().next().getVoltage();
 
 
         allHubs = hardwareMap.getAll(LynxModule.class);
         for (LynxModule hub : allHubs) {
             hub.setBulkCachingMode(LynxModule.BulkCachingMode.MANUAL);
         }
+
+//        sensor = hardwareMap.voltageSensor.iterator().next().getVoltage();
 
     }
 
@@ -66,6 +68,9 @@ public class Robot {
         extendo.initialize();
         lift.initialize();
         arm.initialize();
+
+
+
     }
 
 
@@ -79,6 +84,8 @@ public class Robot {
             hub.clearBulkCache();
         }
     }
+
+
 
 
 

@@ -205,8 +205,6 @@ public class TeleOpBlue extends CommandOpMode {
         robot.mecanumDriveTrain.set(drive, 0);
 
 
-//        gamepad1.rumble(Globals.rumble1, Globals.rumble2, Globals.durationMs);
-
         if(robot.brush.desiredSampleColor == Brush.DesiredSampleColor.BLUE){
             gamepad1.setLedColor(0, 0, 255, Gamepad.LED_DURATION_CONTINUOUS);
         }
@@ -237,12 +235,19 @@ public class TeleOpBlue extends CommandOpMode {
 //        telemetry.addData("Extendo State", robot.extendo.extendoState);
 //        telemetry.addData("Joystick Y", gamepadEx.gamepad.left_stick_y);
 //        telemetry.addData("Joystick Y MODIFIED", robot.extendo.getExponentialJoystickCoef());
-        telemetry.addData("JoystickConstant", robot.extendo.getJoystickConstant());
-        telemetry.addData("SHOULD VIBRATE", Globals.shouldVibrate);
+//        telemetry.addData("JoystickConstant", robot.extendo.getJoystickConstant());
+//        telemetry.addData("SHOULD VIBRATE", Globals.shouldVibrate);
 
 //        telemetry.addData("Current Position", robot.lift.liftMotor.getCurrentPosition());
 //        telemetry.addData("Target Position", robot.lift.getTargetPosition());
 
+
+//        telemetry.addData("PINPOINT HEAD", robot.arm.getPinpointHeading());
+
+
+
+//        if(gamepad1.cross)
+//            robot.arm.updatePINPOINT();
 
         double loop = System.nanoTime();
         telemetry.addData("Hz", 1000000000 / (loop - loopTime));
