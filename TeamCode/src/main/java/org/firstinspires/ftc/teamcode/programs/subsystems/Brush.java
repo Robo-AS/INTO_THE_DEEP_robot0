@@ -63,7 +63,7 @@ public class Brush extends SubsystemBase{
 
     public BrushAngle brushAngle = BrushAngle.UP;
     public BrushState brushState = BrushState.IDLE;
-    public BrushState previousBrushState = BrushState.IDLE;
+    public BrushState previousBrushState;
     public DesiredSampleColor desiredSampleColor = DesiredSampleColor.BOTH;
     public SampleState sampleState = SampleState.ISNOT;
     public IntakedSampleColor intakedSampleColor = IntakedSampleColor.NOTHING;
@@ -223,6 +223,7 @@ public class Brush extends SubsystemBase{
     }
 
     public void updateState(BrushState state){
+        previousBrushState = brushState;
         brushState = state;
     }
 
@@ -298,9 +299,9 @@ public class Brush extends SubsystemBase{
     }
 
 
-    public void updatePreviousBrushState(BrushState state){
-        previousBrushState = state;
-    }
+//    public void updatePreviousBrushState(BrushState state){
+//        previousBrushState = state;
+//    }
 
     public void updateShouldVibrate(){
         Globals.shouldVibrate = true;

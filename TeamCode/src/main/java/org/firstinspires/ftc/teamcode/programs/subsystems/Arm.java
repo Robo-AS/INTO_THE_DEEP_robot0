@@ -216,5 +216,9 @@ public class Arm extends SubsystemBase {
         return pinpoint.getHeading() * (180/Math.PI);
     }
 
+    public MotionProfile getProfile(){
+        return profile;
+    }
+
 
 }

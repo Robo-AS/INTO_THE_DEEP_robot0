@@ -6,6 +6,7 @@ import com.arcrobotics.ftclib.command.CommandOpMode;
 import com.arcrobotics.ftclib.command.CommandScheduler;
 import com.arcrobotics.ftclib.command.ConditionalCommand;
 import com.arcrobotics.ftclib.command.InstantCommand;
+import com.arcrobotics.ftclib.command.ParallelCommandGroup;
 import com.arcrobotics.ftclib.command.SequentialCommandGroup;
 import com.arcrobotics.ftclib.command.button.Trigger;
 import com.arcrobotics.ftclib.gamepad.GamepadEx;
@@ -71,23 +72,22 @@ public class TeleOpBlue extends CommandOpMode {
 
         //spitting button logic
         gamepadEx.getGamepadButton(GamepadKeys.Button.DPAD_UP)
-                        .whenPressed(
-                                () -> CommandScheduler.getInstance().schedule(
-                                        new SequentialCommandGroup(
-                                                new ConditionalCommand(
-                                                        new InstantCommand(()-> robot.brush.updatePreviousBrushState(robot.brush.brushState)),
-                                                        new DoesNothingCommand(),
-                                                        () -> robot.brush.brushState != Brush.BrushState.SPITTING_HUMAN_PLAYER
-                                                ),
-                                                new SetBrushStateCommand(Brush.BrushState.SPITTING_HUMAN_PLAYER)
-                                        )
+                .whenPressed(
+                        () -> CommandScheduler.getInstance().schedule(
+                                new ConditionalCommand(
+                                        new SetBrushStateCommand(Brush.BrushState.SPITTING_HUMAN_PLAYER),
+                                        new DoesNothingCommand(),
+                                        () -> robot.brush.brushState != Brush.BrushState.SPITTING_HUMAN_PLAYER
                                 )
-                        );
+                        )
+                );
+
         gamepadEx.getGamepadButton(GamepadKeys.Button.DPAD_UP)
-                .whenReleased(new SetBrushStateCommand(robot.brush.previousBrushState));
-
-
-
+                .whenReleased(
+                        () -> CommandScheduler.getInstance().schedule(
+                                new SetBrushStateCommand(robot.brush.previousBrushState)
+                        )
+                );
 
         //Controling the brush button logic
         gamepadEx.getGamepadButton(GamepadKeys.Button.LEFT_BUMPER)
@@ -248,6 +248,7 @@ public class TeleOpBlue extends CommandOpMode {
 
 //        if(gamepad1.cross)
 //            robot.arm.updatePINPOINT();
+        telemetry.addData("PROFILE", robot.arm.getProfile());
 
         double loop = System.nanoTime();
         telemetry.addData("Hz", 1000000000 / (loop - loopTime));
