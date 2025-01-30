@@ -105,7 +105,7 @@ public class Brush extends SubsystemBase{
 
 
 
-    public void loop(){
+    public void loopBlue(){
         if(brushAngle == BrushAngle.DOWN){
             updateSampleState();
             updateIntakedSampleColor();
@@ -142,6 +142,65 @@ public class Brush extends SubsystemBase{
                     }
 
                     if (isRightSampleColorTeleOpBlue()) {
+                        if (intakedSampleColor == IntakedSampleColor.YELLOW) {
+                            CommandScheduler.getInstance().schedule(new IntakeRetractYELLOWSampleCommand());
+                        } else {
+                            CommandScheduler.getInstance().schedule(new IntakeRetractSPECIFICSampleCommand());
+                        }
+                    } else {
+                        CommandScheduler.getInstance().schedule(new SetBrushStateCommand(BrushState.THROWING));
+                    }
+                }
+                break;
+
+            case THROWING:
+                if (sampleState == SampleState.ISNOT) {
+                    CommandScheduler.getInstance().schedule(new SetBrushStateCommand(BrushState.INTAKING));
+                } else if (sampleState == SampleState.IS) {
+                    CommandScheduler.getInstance().schedule(new BrushCommand(Globals.BRUSH_MOTOR_SPEED, 1));
+                }
+                break;
+        }
+    }
+
+
+    public void loopRed(){
+        if(brushAngle == BrushAngle.DOWN){
+            updateSampleState();
+            updateIntakedSampleColor();
+        }
+
+
+        switch (brushState) {
+            case SPITTING_HUMAN_PLAYER:
+                CommandScheduler.getInstance().schedule(new BrushCommand(-1, 0));
+                break;
+
+            case SPITTING:
+                CommandScheduler.getInstance().schedule(new BrushCommand(-1, 0.5));
+                break;
+
+            case OUTTAKING:
+                CommandScheduler.getInstance().schedule(new BrushCommand(0, 1));
+                break;
+
+            case IDLE:
+                CommandScheduler.getInstance().schedule(new BrushCommand(0, 0.5));
+                break;
+
+            case INTAKING:
+                if (sampleState == SampleState.ISNOT) {
+                    CommandScheduler.getInstance().schedule(
+                            new BrushCommand(Globals.BRUSH_MOTOR_SPEED, Globals.BRUSH_SAMPLE_SERVO_SPEED_INTAKING)
+                    );
+                } else if (sampleState == SampleState.IS) {
+                    CommandScheduler.getInstance().schedule(new BrushCommand(0, 0.5)); // Idle
+
+                    while (intakedSampleColor == IntakedSampleColor.NOTHING) {
+                        updateIntakedSampleColor();
+                    }
+
+                    if (isRightSampleColorTeleOpRed()) {
                         if (intakedSampleColor == IntakedSampleColor.YELLOW) {
                             CommandScheduler.getInstance().schedule(new IntakeRetractYELLOWSampleCommand());
                         } else {
@@ -210,6 +269,20 @@ public class Brush extends SubsystemBase{
                 return false;
         }
     }
+
+    public boolean isRightSampleColorTeleOpRed() {
+        switch (desiredSampleColor) {
+            case BOTH:
+                return ((intakedSampleColor == IntakedSampleColor.RED) || (intakedSampleColor == IntakedSampleColor.YELLOW));
+            case RED:
+                return intakedSampleColor == IntakedSampleColor.RED;
+            case YELLOW:
+                return intakedSampleColor == IntakedSampleColor.YELLOW;
+            default:
+                return false;
+        }
+    }
+
 
     public void updateAngle(BrushAngle angle){
         brushAngle = angle;

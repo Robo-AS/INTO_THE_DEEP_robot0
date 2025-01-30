@@ -40,8 +40,8 @@ public class Lift extends SubsystemBase{
 
     public LiftState liftState = LiftState.IDLE;;
 
-    public static int HIGH_BASKET = 1200;
-    public static int HIGH_RUNG = 600;
+    public static int HIGH_BASKET = 900;
+    public static int HIGH_RUNG = 450;
     public int LOW_BASKET = 0;
     public int LOW_RUNG= 0;
     public int ARM_MOVEMENT = 0;
@@ -136,6 +136,14 @@ public class Lift extends SubsystemBase{
 
     }
 
+    public void testLoop(){
+        currentPosition = liftMotor.getCurrentPosition();
+
+        lift_pid.setPID(p_lift, i_lift, d_lift);
+        double power = lift_pid.calculate(currentPosition, targetPosition);
+        liftMotor.setPower(power);
+        followerMotor.setPower(power);
+    }
 
 
     public void update(LiftState state){

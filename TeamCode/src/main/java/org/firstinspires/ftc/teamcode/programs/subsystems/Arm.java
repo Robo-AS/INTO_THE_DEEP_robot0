@@ -44,9 +44,9 @@ public class Arm extends SubsystemBase {
     public ClawState clawState = ClawState.OPEN;
     public WristState wristState = WristState.INIT;
 
-    public static double OPEN_clawServo = 0, CLOSED_clawServo = 1;
+    public static double OPEN_clawServo = 0, CLOSED_clawServo = 0.5;
     public static double INIT_wristServo = 0, HIGH_BASKET_wristServo = 0.3, HIGH_RUNG_wristServo = 0.6;
-    public static double INIT_rightServo = 0.12, INIT_leftServo = 0.12;
+    public static double INIT_rightServo = 0.1, INIT_leftServo = 0.18;
     public static int RANGE_ANGLE = 200;
 
     public static double INIT = 0;
@@ -83,7 +83,7 @@ public class Arm extends SubsystemBase {
         clawServo = new CachingServo(hardwareMap.get(Servo.class, "clawServo"));
         clawServo.setDirection(Servo.Direction.FORWARD);
 
-        wristServo = new CachingServo(hardwareMap.get(Servo.class, "sampleServo"));
+        wristServo = new CachingServo(hardwareMap.get(Servo.class, "wristServo"));
         wristServo.setDirection(Servo.Direction.FORWARD);
 
         pinpoint = hardwareMap.get(GoBildaPinpointDriver.class,"pinpoint");
@@ -132,6 +132,14 @@ public class Arm extends SubsystemBase {
 
 
     }
+
+    public void testLOOP(){
+        rightServo.setPosition(INIT_rightServo);
+        leftServo.setPosition(INIT_leftServo);
+        clawServo.setPosition(OPEN_clawServo);
+        wristServo.setPosition(INIT_wristServo);
+    }
+
 
 
     public void update(ArmState state){

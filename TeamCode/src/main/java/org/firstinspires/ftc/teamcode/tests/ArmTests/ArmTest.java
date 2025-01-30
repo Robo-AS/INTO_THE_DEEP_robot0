@@ -28,7 +28,7 @@ public class ArmTest extends CommandOpMode {
 
         gamepadEx = new GamepadEx(gamepad1);
         arm.initializeHardware(hardwareMap);
-        arm.initialize();
+        //arm.initialize();
 
     }
 
@@ -37,7 +37,7 @@ public class ArmTest extends CommandOpMode {
         CommandScheduler.getInstance().run();
 
 
-        arm.loop();
+        arm.testLOOP();
 
         double loop = System.nanoTime();
         telemetry.addData("Hz", 1000000000 / (loop - loopTime));

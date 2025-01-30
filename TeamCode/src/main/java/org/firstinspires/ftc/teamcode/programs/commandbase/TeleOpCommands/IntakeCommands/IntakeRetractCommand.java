@@ -18,7 +18,7 @@ public class IntakeRetractCommand extends SequentialCommandGroup {
             new SetBrushAngleCommand(Brush.BrushAngle.UP),
             new SetJoystickConstantCommand(Globals.EXTENDO_JOYSTICK_CONSTANT_UP),
             new SetBrushStateCommand(Brush.BrushState.SPITTING),
-            new WaitCommand(300),
+            new WaitCommand(150),//300
             new SetBrushStateCommand(Brush.BrushState.IDLE),
             new SetExtendoStateCommand(Extendo.ExtendoState.RETRACTING)
 

@@ -55,15 +55,16 @@ public class LiftTest extends CommandOpMode {
 
 
 //        lift.loop();
+        lift.testLoop();
 
         // Create a telemetry packet for FTCDashboard
-        TelemetryPacket packet = new TelemetryPacket();
-        packet.put("Current Position", lift.liftMotor.getCurrentPosition());
-        packet.put("Target Position", lift.getTargetPosition());
+//        TelemetryPacket packet = new TelemetryPacket();
+//        packet.put("Current Position", lift.liftMotor.getCurrentPosition());
+//        packet.put("Target Position", lift.getTargetPosition());
 
         // Send the packet to the dashboard
-        dashboard.sendTelemetryPacket(packet);
-        telemetry.update();
+//        dashboard.sendTelemetryPacket(packet);
+//        telemetry.update();
 
 
         // Add to on-screen telemetry (optional)
