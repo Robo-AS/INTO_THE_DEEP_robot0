@@ -18,7 +18,8 @@ import org.firstinspires.ftc.teamcode.programs.commandbase.TeleOpCommands.Intake
 import org.firstinspires.ftc.teamcode.programs.commandbase.TeleOpCommands.IntakeCommands.IntakeIntakingCommand;
 import org.firstinspires.ftc.teamcode.programs.commandbase.TeleOpCommands.IntakeCommands.IntakeRetractCommand;
 import org.firstinspires.ftc.teamcode.programs.commandbase.TeleOpCommands.IntakeCommands.OuttakeCommand;
-import org.firstinspires.ftc.teamcode.programs.commandbase.TeleOpCommands.OuttakeCommands.OuttakeGoBackToIdleCommand;
+import org.firstinspires.ftc.teamcode.programs.commandbase.TeleOpCommands.OuttakeCommands.OuttakeGoBackToIdleFromHighBasketCommand;
+import org.firstinspires.ftc.teamcode.programs.commandbase.TeleOpCommands.OuttakeCommands.OuttakeGoBackToIdleFromHighRungCommand;
 import org.firstinspires.ftc.teamcode.programs.commandbase.TeleOpCommands.OuttakeCommands.OuttakeGoHighBascketCommand;
 import org.firstinspires.ftc.teamcode.programs.commandbase.TeleOpCommands.OuttakeCommands.OuttakeGoHighRungCommand;
 import org.firstinspires.ftc.teamcode.programs.commandbase.TeleOpCommands.OuttakeCommands.OutttakePutSampleGoBackToIdle;
@@ -106,7 +107,7 @@ public class TeleOpRed extends CommandOpMode {
                 );
 
 
-        Trigger extendoTrigger = new Trigger(() -> gamepadEx.getTrigger(GamepadKeys.Trigger.LEFT_TRIGGER) > 0.5);
+        Trigger extendoTrigger = new Trigger(() -> gamepadEx.getTrigger(GamepadKeys.Trigger.LEFT_TRIGGER) > 0.8);
         extendoTrigger
                 .whenActive(
                         () -> CommandScheduler.getInstance().schedule(
@@ -134,7 +135,7 @@ public class TeleOpRed extends CommandOpMode {
                                         new ConditionalCommand(
                                                 new PutSpecimenCommand(),
                                                 new ConditionalCommand(
-                                                        new OuttakeGoBackToIdleCommand(),
+                                                        new OuttakeGoBackToIdleFromHighRungCommand(),
                                                         new DoesNothingCommand(),
                                                         () -> robot.arm.clawState == Arm.ClawState.OPEN
                                                 )                                                                                                                                                                                                              ,
@@ -148,7 +149,7 @@ public class TeleOpRed extends CommandOpMode {
 
 
 
-        Trigger liftTrigger = new Trigger(() -> gamepadEx.getTrigger(GamepadKeys.Trigger.RIGHT_TRIGGER) > 0.5);
+        Trigger liftTrigger = new Trigger(() -> gamepadEx.getTrigger(GamepadKeys.Trigger.RIGHT_TRIGGER) > 0.8);
         liftTrigger
                 .whenActive(
                         () -> CommandScheduler.getInstance().schedule(
@@ -156,7 +157,7 @@ public class TeleOpRed extends CommandOpMode {
                                         new OuttakeGoHighBascketCommand(),
                                         new ConditionalCommand(
                                                 new OutttakePutSampleGoBackToIdle(),
-                                                new OuttakeGoBackToIdleCommand(),
+                                                new OuttakeGoBackToIdleFromHighBasketCommand(),
                                                 () -> robot.arm.clawState == Arm.ClawState.CLOSED
                                         ),
                                         () -> robot.lift.liftState == Lift.LiftState.IDLE
@@ -221,8 +222,8 @@ public class TeleOpRed extends CommandOpMode {
 
 
 
-        telemetry.addData("BrushState:", robot.brush.brushState);
-        telemetry.addData("PreviousBrushState:", robot.brush.previousBrushState);
+//        telemetry.addData("BrushState:", robot.brush.brushState);
+//        telemetry.addData("PreviousBrushState:", robot.brush.previousBrushState);
 //        telemetry.addData("DesiredColor", robot.brush.desiredSampleColor);
 //        telemetry.addData("IntakedColor:", robot.brush.intakedSampleColor);
 //        telemetry.addData("SampleState:", robot.brush.sampleState);
@@ -237,8 +238,8 @@ public class TeleOpRed extends CommandOpMode {
 //        telemetry.addData("JoystickConstant", robot.extendo.getJoystickConstant());
 //        telemetry.addData("SHOULD VIBRATE", Globals.shouldVibrate);
 
-//        telemetry.addData("Current Position", robot.lift.liftMotor.getCurrentPosition());
-//        telemetry.addData("Target Position", robot.lift.getTargetPosition());
+        telemetry.addData("Current Position", robot.lift.liftMotor.getCurrentPosition());
+        telemetry.addData("Target Position", robot.lift.getTargetPosition());
 
 
 //        telemetry.addData("PINPOINT HEAD", robot.arm.getPinpointHeading());

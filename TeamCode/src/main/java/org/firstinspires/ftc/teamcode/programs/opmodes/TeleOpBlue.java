@@ -5,9 +5,6 @@ import com.acmerobotics.dashboard.telemetry.MultipleTelemetry;
 import com.arcrobotics.ftclib.command.CommandOpMode;
 import com.arcrobotics.ftclib.command.CommandScheduler;
 import com.arcrobotics.ftclib.command.ConditionalCommand;
-import com.arcrobotics.ftclib.command.InstantCommand;
-import com.arcrobotics.ftclib.command.ParallelCommandGroup;
-import com.arcrobotics.ftclib.command.SequentialCommandGroup;
 import com.arcrobotics.ftclib.command.button.Trigger;
 import com.arcrobotics.ftclib.gamepad.GamepadEx;
 import com.arcrobotics.ftclib.gamepad.GamepadKeys;
@@ -21,7 +18,8 @@ import org.firstinspires.ftc.teamcode.programs.commandbase.TeleOpCommands.Intake
 import org.firstinspires.ftc.teamcode.programs.commandbase.TeleOpCommands.IntakeCommands.IntakeIntakingCommand;
 import org.firstinspires.ftc.teamcode.programs.commandbase.TeleOpCommands.IntakeCommands.IntakeRetractCommand;
 import org.firstinspires.ftc.teamcode.programs.commandbase.TeleOpCommands.IntakeCommands.OuttakeCommand;
-import org.firstinspires.ftc.teamcode.programs.commandbase.TeleOpCommands.OuttakeCommands.OuttakeGoBackToIdleCommand;
+import org.firstinspires.ftc.teamcode.programs.commandbase.TeleOpCommands.OuttakeCommands.OuttakeGoBackToIdleFromHighBasketCommand;
+import org.firstinspires.ftc.teamcode.programs.commandbase.TeleOpCommands.OuttakeCommands.OuttakeGoBackToIdleFromHighRungCommand;
 import org.firstinspires.ftc.teamcode.programs.commandbase.TeleOpCommands.OuttakeCommands.OuttakeGoHighBascketCommand;
 import org.firstinspires.ftc.teamcode.programs.commandbase.TeleOpCommands.OuttakeCommands.OuttakeGoHighRungCommand;
 import org.firstinspires.ftc.teamcode.programs.commandbase.TeleOpCommands.OuttakeCommands.OutttakePutSampleGoBackToIdle;
@@ -89,6 +87,8 @@ public class TeleOpBlue extends CommandOpMode {
                         )
                 );
 
+
+
         //Controling the brush button logic
         gamepadEx.getGamepadButton(GamepadKeys.Button.LEFT_BUMPER)
                 .whenPressed(
@@ -107,7 +107,7 @@ public class TeleOpBlue extends CommandOpMode {
                 );
 
 
-        Trigger extendoTrigger = new Trigger(() -> gamepadEx.getTrigger(GamepadKeys.Trigger.LEFT_TRIGGER) > 0.5);
+        Trigger extendoTrigger = new Trigger(() -> gamepadEx.getTrigger(GamepadKeys.Trigger.LEFT_TRIGGER) > 0.8);
         extendoTrigger
                 .whenActive(
                         () -> CommandScheduler.getInstance().schedule(
@@ -135,7 +135,7 @@ public class TeleOpBlue extends CommandOpMode {
                                         new ConditionalCommand(
                                                 new PutSpecimenCommand(),
                                                 new ConditionalCommand(
-                                                        new OuttakeGoBackToIdleCommand(),
+                                                        new OuttakeGoBackToIdleFromHighRungCommand(),
                                                         new DoesNothingCommand(),
                                                         () -> robot.arm.clawState == Arm.ClawState.OPEN
                                                 )                                                                                                                                                                                                              ,
@@ -149,7 +149,7 @@ public class TeleOpBlue extends CommandOpMode {
 
 
 
-        Trigger liftTrigger = new Trigger(() -> gamepadEx.getTrigger(GamepadKeys.Trigger.RIGHT_TRIGGER) > 0.5);
+        Trigger liftTrigger = new Trigger(() -> gamepadEx.getTrigger(GamepadKeys.Trigger.RIGHT_TRIGGER) > 0.8);
         liftTrigger
                 .whenActive(
                         () -> CommandScheduler.getInstance().schedule(
@@ -157,7 +157,7 @@ public class TeleOpBlue extends CommandOpMode {
                                         new OuttakeGoHighBascketCommand(),
                                         new ConditionalCommand(
                                                 new OutttakePutSampleGoBackToIdle(),
-                                                new OuttakeGoBackToIdleCommand(),
+                                                new OuttakeGoBackToIdleFromHighBasketCommand(),
                                                 () -> robot.arm.clawState == Arm.ClawState.CLOSED
                                         ),
                                         () -> robot.lift.liftState == Lift.LiftState.IDLE
@@ -230,7 +230,7 @@ public class TeleOpBlue extends CommandOpMode {
 //        telemetry.addData("AngleServoPosition", robot.brush.brushAngleServo.getPosition());
 //        telemetry.addData("Brush Angle", robot.brush.brushAngle);
 
-//        telemetry.addData("Current Position", robot.extendo.extendoMotor.getCurrentPosition());
+        telemetry.addData("Current Position EXTENDO", robot.extendo.extendoMotor.getCurrentPosition());
 //        telemetry.addData("Target Position", robot.extendo.getTargetPosition());
 //        telemetry.addData("Extendo State", robot.extendo.extendoState);
 //        telemetry.addData("Joystick Y", gamepadEx.gamepad.left_stick_y);

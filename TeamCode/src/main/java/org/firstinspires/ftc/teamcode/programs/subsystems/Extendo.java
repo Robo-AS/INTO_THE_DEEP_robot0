@@ -40,7 +40,7 @@ public class Extendo extends SubsystemBase {
 
     public static int targetPosition = 0;
     public static int currentPosition;
-    public static int minPosition = 550, maxPosition = 1700;
+    public static int minPosition = 550, maxPosition = 1600;//1700
 
 //    public static double joystickConstant = 30; //15, 50
     public static double exponentialJoystickCoef;

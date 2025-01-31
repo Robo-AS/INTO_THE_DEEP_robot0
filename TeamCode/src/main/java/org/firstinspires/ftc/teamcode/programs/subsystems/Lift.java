@@ -34,17 +34,19 @@ public class Lift extends SubsystemBase{
         HIGH_BASKET,
         LOW_RUNG,
         HIGH_RUNG,
-        ARM_MOVEMENT,
+        PUT_SPECIMEN,
+        UP_FOR_IDLE,
         IDLE
     }
 
     public LiftState liftState = LiftState.IDLE;;
 
     public static int HIGH_BASKET = 900;
-    public static int HIGH_RUNG = 450;
+    public static int HIGH_RUNG = 520;
     public int LOW_BASKET = 0;
     public int LOW_RUNG= 0;
-    public int ARM_MOVEMENT = 0;
+    public static int PUT_SPECIMEN = 150;//100
+    public static int UP_FOR_IDLE = 400;
     public int IDLE = 0;
 
 
@@ -53,12 +55,13 @@ public class Lift extends SubsystemBase{
     public static int targetPosition;
     public static int currentPosition;
 
-    public static double p_lift = 0.0056, d_lift = 0.00009, i_lift = 0.1;
+    public static double p_lift = 0.0056, d_lift = 0.00009, i_lift = 0.15;
 
     MotionProfile profile;
     public static int previousTarget = 0;
     public static double maxVelocityUP = 10000000, maxAccelerationUP = 200000;
     public static double maxVelocityDOWN = 1000000, maxAccelerationDOWN = 4000;
+    public static double maxVelocityPUT_SPECIMEN = 10000000, maxAccelerationPUT_SPECIMEN = 200000;
 
 
     public Lift(){
@@ -111,13 +114,26 @@ public class Lift extends SubsystemBase{
                 );
             }
 
-            if(targetPosition < previousTarget){ //profile pentru retragere
-                profile = MotionProfileGenerator.generateSimpleMotionProfile(
-                        new MotionState(previousTarget, 0),
-                        new MotionState(targetPosition, 0),
-                        maxVelocityDOWN,
-                        maxAccelerationDOWN
-                );
+            if(targetPosition < previousTarget){//profile pentru retragere
+
+                if(liftState == LiftState.PUT_SPECIMEN){
+                    profile = MotionProfileGenerator.generateSimpleMotionProfile(
+                            new MotionState(previousTarget, 0),
+                            new MotionState(targetPosition, 0),
+                            maxVelocityPUT_SPECIMEN,
+                            maxAccelerationPUT_SPECIMEN
+                    );
+                }
+
+                else{
+                    profile = MotionProfileGenerator.generateSimpleMotionProfile(
+                            new MotionState(previousTarget, 0),
+                            new MotionState(targetPosition, 0),
+                            maxVelocityDOWN,
+                            maxAccelerationDOWN
+                    );
+                }
+
             }
 
             time.reset();
@@ -140,7 +156,8 @@ public class Lift extends SubsystemBase{
         currentPosition = liftMotor.getCurrentPosition();
 
         lift_pid.setPID(p_lift, i_lift, d_lift);
-        double power = lift_pid.calculate(currentPosition, targetPosition);
+        double pid = lift_pid.calculate(currentPosition, targetPosition);
+        double power = pid;
         liftMotor.setPower(power);
         followerMotor.setPower(power);
     }
@@ -165,8 +182,11 @@ public class Lift extends SubsystemBase{
                 targetPosition = HIGH_RUNG;
                 break;
 
-            case ARM_MOVEMENT:
-                targetPosition = ARM_MOVEMENT;
+            case PUT_SPECIMEN:
+                targetPosition = PUT_SPECIMEN;
+                break;
+            case UP_FOR_IDLE:
+                targetPosition = UP_FOR_IDLE;
                 break;
 
             case IDLE:
@@ -185,6 +205,6 @@ public class Lift extends SubsystemBase{
     }
 
     public static boolean canRotateWrist(){
-        return currentPosition > 350;
+        return currentPosition >= 250;
     }
 }

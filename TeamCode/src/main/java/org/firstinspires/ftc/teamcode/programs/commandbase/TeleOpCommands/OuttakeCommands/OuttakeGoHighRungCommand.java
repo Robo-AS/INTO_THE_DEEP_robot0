@@ -1,6 +1,7 @@
 package org.firstinspires.ftc.teamcode.programs.commandbase.TeleOpCommands.OuttakeCommands;
 
 import com.arcrobotics.ftclib.command.SequentialCommandGroup;
+import com.arcrobotics.ftclib.command.WaitCommand;
 import com.arcrobotics.ftclib.command.WaitUntilCommand;
 
 import org.firstinspires.ftc.teamcode.programs.commandbase.ArmCommands.SetArmStateCommand;
@@ -13,9 +14,11 @@ public class OuttakeGoHighRungCommand extends SequentialCommandGroup {
     public OuttakeGoHighRungCommand(){
         super(
                 new SetLiftStateCommand(Lift.LiftState.HIGH_RUNG),
-                new WaitUntilCommand(Lift::canRotateWrist),
-                new SetWristStateCommand(Arm.WristState.HIGH_RUNG),
-                new SetArmStateCommand(Arm.ArmState.HIGH_RUNG)
+                new WaitCommand(100),
+                //new WaitUntilCommand(Lift::canRotateWrist),
+                new SetWristStateCommand(Arm.WristState.TRANSITION),
+                new SetArmStateCommand(Arm.ArmState.HIGH_RUNG),
+                new SetWristStateCommand(Arm.WristState.HIGH_RUNG)
         );
     }
 }

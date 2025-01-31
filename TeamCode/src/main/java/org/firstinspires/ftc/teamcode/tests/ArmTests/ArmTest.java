@@ -28,7 +28,7 @@ public class ArmTest extends CommandOpMode {
 
         gamepadEx = new GamepadEx(gamepad1);
         arm.initializeHardware(hardwareMap);
-        //arm.initialize();
+        arm.testInit();
 
     }
 
@@ -38,6 +38,10 @@ public class ArmTest extends CommandOpMode {
 
 
         arm.testLOOP();
+
+
+        telemetry.addData("PROFILE", arm.getProfile());
+        telemetry.addData("Heading", arm.getPinpointHeading());
 
         double loop = System.nanoTime();
         telemetry.addData("Hz", 1000000000 / (loop - loopTime));

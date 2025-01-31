@@ -10,8 +10,8 @@ import org.firstinspires.ftc.teamcode.programs.commandbase.LiftCommands.SetLiftS
 import org.firstinspires.ftc.teamcode.programs.subsystems.Arm;
 import org.firstinspires.ftc.teamcode.programs.subsystems.Lift;
 
-public class OuttakeGoBackToIdleCommand extends SequentialCommandGroup {
-    public OuttakeGoBackToIdleCommand(){
+public class OuttakeGoBackToIdleFromHighBasketCommand extends SequentialCommandGroup {
+    public OuttakeGoBackToIdleFromHighBasketCommand(){
         super(
 
                 new SetArmStateCommand(Arm.ArmState.INIT),
