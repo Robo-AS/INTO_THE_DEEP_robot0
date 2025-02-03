@@ -1,19 +1,13 @@
 package org.firstinspires.ftc.teamcode.programs.subsystems;
 
 
-import static org.firstinspires.ftc.robotcore.external.BlocksOpModeCompanion.telemetry;
-
-import com.acmerobotics.dashboard.FtcDashboard;
 import com.acmerobotics.dashboard.config.Config;
-import com.acmerobotics.dashboard.telemetry.MultipleTelemetry;
 import com.acmerobotics.roadrunner.profile.MotionProfile;
 import com.acmerobotics.roadrunner.profile.MotionProfileGenerator;
 import com.acmerobotics.roadrunner.profile.MotionState;
 import com.arcrobotics.ftclib.command.SubsystemBase;
 import com.arcrobotics.ftclib.controller.PIDController;
-import com.arcrobotics.ftclib.controller.wpilibcontroller.ElevatorFeedforward;
-import com.arcrobotics.ftclib.controller.wpilibcontroller.ProfiledPIDController;
-import com.arcrobotics.ftclib.trajectory.TrapezoidProfile;
+
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
@@ -43,7 +37,7 @@ public class Lift extends SubsystemBase{
 
     public static int HIGH_BASKET = 900;
     public static int HIGH_RUNG = 520;
-    public int LOW_BASKET = 0;
+    public static int LOW_BASKET = 400;
     public int LOW_RUNG= 0;
     public static int PUT_SPECIMEN = 150;//100
     public static int UP_FOR_IDLE = 400;

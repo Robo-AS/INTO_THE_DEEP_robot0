@@ -10,9 +10,11 @@ import com.arcrobotics.ftclib.gamepad.GamepadEx;
 import com.arcrobotics.ftclib.gamepad.GamepadKeys;
 import com.qualcomm.robotcore.hardware.Gamepad;
 
+import org.firstinspires.ftc.teamcode.programs.commandbase.ArmCommands.SetClawStateCommand;
 import org.firstinspires.ftc.teamcode.programs.commandbase.BrushCommands.SetBrushStateCommand;
 import org.firstinspires.ftc.teamcode.programs.commandbase.DoesNothingCommand;
 import org.firstinspires.ftc.teamcode.programs.commandbase.ExtendoCommands.SetExtendoStateCommand;
+import org.firstinspires.ftc.teamcode.programs.commandbase.LiftCommands.SetLiftStateCommand;
 import org.firstinspires.ftc.teamcode.programs.commandbase.SetDesiredColorCommand;
 import org.firstinspires.ftc.teamcode.programs.commandbase.TeleOpCommands.IntakeCommands.IntakeIdleCommand;
 import org.firstinspires.ftc.teamcode.programs.commandbase.TeleOpCommands.IntakeCommands.IntakeIntakingCommand;
@@ -22,7 +24,10 @@ import org.firstinspires.ftc.teamcode.programs.commandbase.TeleOpCommands.Outtak
 import org.firstinspires.ftc.teamcode.programs.commandbase.TeleOpCommands.OuttakeCommands.OuttakeGoBackToIdleFromHighRungCommand;
 import org.firstinspires.ftc.teamcode.programs.commandbase.TeleOpCommands.OuttakeCommands.OuttakeGoHighBascketCommand;
 import org.firstinspires.ftc.teamcode.programs.commandbase.TeleOpCommands.OuttakeCommands.OuttakeGoHighRungCommand;
+import org.firstinspires.ftc.teamcode.programs.commandbase.TeleOpCommands.OuttakeCommands.OuttakeGoLowBasketCommand;
+import org.firstinspires.ftc.teamcode.programs.commandbase.TeleOpCommands.OuttakeCommands.OutttakeGoBackToIdleFromLowBasketCommand;
 import org.firstinspires.ftc.teamcode.programs.commandbase.TeleOpCommands.OuttakeCommands.OutttakePutSampleGoBackToIdle;
+import org.firstinspires.ftc.teamcode.programs.commandbase.TeleOpCommands.OuttakeCommands.OutttakePutSampleLowBasketGoBackToIdle;
 import org.firstinspires.ftc.teamcode.programs.commandbase.TeleOpCommands.OuttakeCommands.PutSpecimenCommand;
 import org.firstinspires.ftc.teamcode.programs.subsystems.Arm;
 import org.firstinspires.ftc.teamcode.programs.subsystems.Brush;
@@ -183,6 +188,46 @@ public class TeleOpRed extends CommandOpMode {
                 );
 
 
+        //NEAUTOMATIVAT
+        gamepadEx.getGamepadButton(GamepadKeys.Button.X)
+                .whenPressed(
+                        () -> CommandScheduler.getInstance().schedule(
+                                new ConditionalCommand(
+                                        new SetLiftStateCommand(Lift.LiftState.LOW_BASKET),
+                                        new SetLiftStateCommand(Lift.LiftState.IDLE),
+                                        () -> robot.lift.liftState == Lift.LiftState.IDLE
+                                )
+                        )
+                );
+
+        gamepadEx.getGamepadButton(GamepadKeys.Button.A)
+                .whenPressed(
+                        () -> CommandScheduler.getInstance().schedule(
+                                new ConditionalCommand(
+                                        new OuttakeGoLowBasketCommand(),
+                                        new ConditionalCommand(
+                                                new OutttakePutSampleLowBasketGoBackToIdle(),
+                                                new OutttakeGoBackToIdleFromLowBasketCommand(),
+                                                () -> robot.arm.clawState == Arm.ClawState.CLOSED
+                                        ),
+                                        () -> robot.lift.liftState == Lift.LiftState.IDLE
+                                )
+                        )
+                );
+
+
+        gamepadEx.getGamepadButton(GamepadKeys.Button.B)
+                .whenPressed(
+                        () -> CommandScheduler.getInstance().schedule(
+                                new ConditionalCommand(
+                                        new SetClawStateCommand(Arm.ClawState.OPEN),
+                                        new SetClawStateCommand(Arm.ClawState.CLOSED),
+                                        () -> robot.arm.clawState == Arm.ClawState.CLOSED
+                                )
+                        )
+                );
+
+
     }
 
     @Override
@@ -224,8 +269,8 @@ public class TeleOpRed extends CommandOpMode {
 
 //        telemetry.addData("BrushState:", robot.brush.brushState);
 //        telemetry.addData("PreviousBrushState:", robot.brush.previousBrushState);
-//        telemetry.addData("DesiredColor", robot.brush.desiredSampleColor);
-//        telemetry.addData("IntakedColor:", robot.brush.intakedSampleColor);
+        telemetry.addData("DesiredColor", robot.brush.desiredSampleColor);
+        telemetry.addData("IntakedColor:", robot.brush.intakedSampleColor);
 //        telemetry.addData("SampleState:", robot.brush.sampleState);
 //        telemetry.addData("AngleServoPosition", robot.brush.brushAngleServo.getPosition());
 //        telemetry.addData("Brush Angle", robot.brush.brushAngle);
@@ -238,8 +283,8 @@ public class TeleOpRed extends CommandOpMode {
 //        telemetry.addData("JoystickConstant", robot.extendo.getJoystickConstant());
 //        telemetry.addData("SHOULD VIBRATE", Globals.shouldVibrate);
 
-        telemetry.addData("Current Position", robot.lift.liftMotor.getCurrentPosition());
-        telemetry.addData("Target Position", robot.lift.getTargetPosition());
+//        telemetry.addData("Current Position", robot.lift.liftMotor.getCurrentPosition());
+//        telemetry.addData("Target Position", robot.lift.getTargetPosition());
 
 
 //        telemetry.addData("PINPOINT HEAD", robot.arm.getPinpointHeading());
@@ -248,6 +293,7 @@ public class TeleOpRed extends CommandOpMode {
 
 //        if(gamepad1.cross)
 //            robot.arm.updatePINPOINT();
+//        telemetry.addData("PROFILE", robot.arm.getProfile());
 
         double loop = System.nanoTime();
         telemetry.addData("Hz", 1000000000 / (loop - loopTime));

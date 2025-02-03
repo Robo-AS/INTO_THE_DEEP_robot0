@@ -11,8 +11,10 @@ import com.arcrobotics.ftclib.gamepad.GamepadKeys;
 import com.qualcomm.robotcore.hardware.Gamepad;
 
 
+import org.firstinspires.ftc.teamcode.programs.commandbase.ArmCommands.SetClawStateCommand;
 import org.firstinspires.ftc.teamcode.programs.commandbase.BrushCommands.SetBrushStateCommand;
 import org.firstinspires.ftc.teamcode.programs.commandbase.DoesNothingCommand;
+import org.firstinspires.ftc.teamcode.programs.commandbase.LiftCommands.SetLiftStateCommand;
 import org.firstinspires.ftc.teamcode.programs.commandbase.SetDesiredColorCommand;
 import org.firstinspires.ftc.teamcode.programs.commandbase.TeleOpCommands.IntakeCommands.IntakeIdleCommand;
 import org.firstinspires.ftc.teamcode.programs.commandbase.TeleOpCommands.IntakeCommands.IntakeIntakingCommand;
@@ -22,7 +24,10 @@ import org.firstinspires.ftc.teamcode.programs.commandbase.TeleOpCommands.Outtak
 import org.firstinspires.ftc.teamcode.programs.commandbase.TeleOpCommands.OuttakeCommands.OuttakeGoBackToIdleFromHighRungCommand;
 import org.firstinspires.ftc.teamcode.programs.commandbase.TeleOpCommands.OuttakeCommands.OuttakeGoHighBascketCommand;
 import org.firstinspires.ftc.teamcode.programs.commandbase.TeleOpCommands.OuttakeCommands.OuttakeGoHighRungCommand;
+import org.firstinspires.ftc.teamcode.programs.commandbase.TeleOpCommands.OuttakeCommands.OuttakeGoLowBasketCommand;
+import org.firstinspires.ftc.teamcode.programs.commandbase.TeleOpCommands.OuttakeCommands.OutttakeGoBackToIdleFromLowBasketCommand;
 import org.firstinspires.ftc.teamcode.programs.commandbase.TeleOpCommands.OuttakeCommands.OutttakePutSampleGoBackToIdle;
+import org.firstinspires.ftc.teamcode.programs.commandbase.TeleOpCommands.OuttakeCommands.OutttakePutSampleLowBasketGoBackToIdle;
 import org.firstinspires.ftc.teamcode.programs.commandbase.TeleOpCommands.OuttakeCommands.PutSpecimenCommand;
 import org.firstinspires.ftc.teamcode.programs.subsystems.Arm;
 import org.firstinspires.ftc.teamcode.programs.subsystems.Extendo;
@@ -183,6 +188,59 @@ public class TeleOpBlue extends CommandOpMode {
                 );
 
 
+
+        //NEAUTOMATIVAT
+        gamepadEx.getGamepadButton(GamepadKeys.Button.X)
+                .whenPressed(
+                        () -> CommandScheduler.getInstance().schedule(
+                                new ConditionalCommand(
+                                        new SetLiftStateCommand(Lift.LiftState.LOW_BASKET),
+                                        new SetLiftStateCommand(Lift.LiftState.IDLE),
+                                        () -> robot.lift.liftState == Lift.LiftState.IDLE
+                                )
+                        )
+                );
+
+//        gamepadEx.getGamepadButton(GamepadKeys.Button.A)
+//                .whenPressed(
+//                        () -> CommandScheduler.getInstance().schedule(
+//                                new ConditionalCommand(
+//                                        new OuttakeGoLowBasketCommand(),
+//                                        new OutttakeGoBackToIdleFromLowBasketCommand(),
+//                                        () -> robot.lift.liftState == Lift.LiftState.IDLE
+//                                )
+//                        )
+//                );
+
+
+        gamepadEx.getGamepadButton(GamepadKeys.Button.A)
+                        .whenPressed(
+                                () -> CommandScheduler.getInstance().schedule(
+                                        new ConditionalCommand(
+                                                new OuttakeGoLowBasketCommand(),
+                                                new ConditionalCommand(
+                                                        new OutttakePutSampleLowBasketGoBackToIdle(),
+                                                        new OutttakeGoBackToIdleFromLowBasketCommand(),
+                                                        () -> robot.arm.clawState == Arm.ClawState.CLOSED
+                                                ),
+                                                () -> robot.lift.liftState == Lift.LiftState.IDLE
+                                        )
+                                )
+                        );
+
+
+        gamepadEx.getGamepadButton(GamepadKeys.Button.B)
+                .whenPressed(
+                        () -> CommandScheduler.getInstance().schedule(
+                                new ConditionalCommand(
+                                        new SetClawStateCommand(Arm.ClawState.OPEN),
+                                        new SetClawStateCommand(Arm.ClawState.CLOSED),
+                                        () -> robot.arm.clawState == Arm.ClawState.CLOSED
+                                )
+                        )
+                );
+
+
     }
 
     @Override
@@ -222,15 +280,16 @@ public class TeleOpBlue extends CommandOpMode {
 
 
 
-        telemetry.addData("BrushState:", robot.brush.brushState);
-        telemetry.addData("PreviousBrushState:", robot.brush.previousBrushState);
-//        telemetry.addData("DesiredColor", robot.brush.desiredSampleColor);
-//        telemetry.addData("IntakedColor:", robot.brush.intakedSampleColor);
+
+//        telemetry.addData("BrushState:", robot.brush.brushState);
+//        telemetry.addData("PreviousBrushState:", robot.brush.previousBrushState);
+        telemetry.addData("DesiredColor", robot.brush.desiredSampleColor);
+        telemetry.addData("IntakedColor:", robot.brush.intakedSampleColor);
 //        telemetry.addData("SampleState:", robot.brush.sampleState);
 //        telemetry.addData("AngleServoPosition", robot.brush.brushAngleServo.getPosition());
 //        telemetry.addData("Brush Angle", robot.brush.brushAngle);
 
-        telemetry.addData("Current Position EXTENDO", robot.extendo.extendoMotor.getCurrentPosition());
+//        telemetry.addData("Current Position EXTENDO", robot.extendo.extendoMotor.getCurrentPosition());
 //        telemetry.addData("Target Position", robot.extendo.getTargetPosition());
 //        telemetry.addData("Extendo State", robot.extendo.extendoState);
 //        telemetry.addData("Joystick Y", gamepadEx.gamepad.left_stick_y);
@@ -248,7 +307,7 @@ public class TeleOpBlue extends CommandOpMode {
 
 //        if(gamepad1.cross)
 //            robot.arm.updatePINPOINT();
-        telemetry.addData("PROFILE", robot.arm.getProfile());
+//        telemetry.addData("PROFILE", robot.arm.getProfile());
 
         double loop = System.nanoTime();
         telemetry.addData("Hz", 1000000000 / (loop - loopTime));

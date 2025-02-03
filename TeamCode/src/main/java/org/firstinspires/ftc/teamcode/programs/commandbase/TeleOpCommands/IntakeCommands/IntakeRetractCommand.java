@@ -21,7 +21,6 @@ public class IntakeRetractCommand extends SequentialCommandGroup {
             new WaitCommand(150),//300
             new SetBrushStateCommand(Brush.BrushState.IDLE),
             new SetExtendoStateCommand(Extendo.ExtendoState.RETRACTING)
-
         );
     }
 }

@@ -45,9 +45,9 @@ public class Arm extends SubsystemBase {
     public ClawState clawState = ClawState.OPEN;
     public WristState wristState = WristState.INIT;
 
-    public static double OPEN_clawServo = 0, CLOSED_clawServo = 0.5;
+    public static double OPEN_clawServo = 0, CLOSED_clawServo = 0.75;
     public static double INIT_wristServo = 0, HIGH_BASKET_wristServo = 0.3, HIGH_RUNG_wristServo = 1, TRANSITION_wristServo = 0.15;
-    public static double INIT_rightServo = 0.11, INIT_leftServo = 0.19;
+    public static double INIT_rightServo = 0.14, INIT_leftServo = 0.17;
     public static int RANGE_ANGLE = 200;
 
 
@@ -144,8 +144,8 @@ public class Arm extends SubsystemBase {
     }
 
     public void testLOOP(){
-        rightServo.setPosition(positionToAngleRight(TEST));
-        leftServo.setPosition(positionToAngleLeft(TEST));
+        rightServo.setPosition(positionToAngleRight(INIT_rightServo));
+        leftServo.setPosition(positionToAngleLeft(INIT_leftServo));
         clawServo.setPosition(OPEN_clawServo);
         wristServo.setPosition(INIT_wristServo);
 

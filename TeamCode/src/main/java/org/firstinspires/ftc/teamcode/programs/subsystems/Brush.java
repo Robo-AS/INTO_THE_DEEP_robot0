@@ -1,5 +1,6 @@
 package org.firstinspires.ftc.teamcode.programs.subsystems;
 
+import com.acmerobotics.dashboard.config.Config;
 import com.arcrobotics.ftclib.command.CommandScheduler;
 import com.arcrobotics.ftclib.command.SubsystemBase;
 import com.qualcomm.hardware.rev.RevColorSensorV3;
@@ -19,6 +20,7 @@ import org.firstinspires.ftc.teamcode.programs.util.Globals;
 import dev.frozenmilk.dairy.cachinghardware.CachingDcMotorEx;
 import dev.frozenmilk.dairy.cachinghardware.CachingServo;
 
+@Config
 public class Brush extends SubsystemBase{
     private static Brush instance = null;
 
@@ -241,11 +243,24 @@ public class Brush extends SubsystemBase{
             intakedSampleColor = IntakedSampleColor.BLUE;
         else if(red > 400 && red < 600)
             intakedSampleColor = IntakedSampleColor.RED;
-        else if(red > 600)
+        else if(red > 650)
             intakedSampleColor = IntakedSampleColor.YELLOW;
         else intakedSampleColor = IntakedSampleColor.NOTHING;
     }
 
+//    public void updateIntakedSampleColor(){
+//        int green = colorSensor.green();
+//        int red = colorSensor.red();
+//
+//        if(red < 80 && green < 80)
+//            intakedSampleColor = IntakedSampleColor.NOTHING;
+//        else if(green > 800 && red > 600)
+//            intakedSampleColor = IntakedSampleColor.YELLOW;
+//        else if(red > 300 && green < 400)
+//            intakedSampleColor = IntakedSampleColor.RED;
+//        else if (red < 150 && green < 300)
+//            intakedSampleColor = IntakedSampleColor.BLUE;
+//    }
 
 
 
