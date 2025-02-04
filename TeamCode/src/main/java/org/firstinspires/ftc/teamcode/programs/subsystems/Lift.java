@@ -40,7 +40,7 @@ public class Lift extends SubsystemBase{
     public static int LOW_BASKET = 400;
     public int LOW_RUNG= 0;
     public static int PUT_SPECIMEN = 150;//100
-    public static int UP_FOR_IDLE = 400;
+    public static int UP_FOR_IDLE = 300;
     public int IDLE = 0;
 
 
@@ -200,5 +200,9 @@ public class Lift extends SubsystemBase{
 
     public static boolean canRotateWrist(){
         return currentPosition >= 250;
+    }
+
+    public static boolean canRotateArmHighBasket(){
+        return currentPosition >= 150;
     }
 }

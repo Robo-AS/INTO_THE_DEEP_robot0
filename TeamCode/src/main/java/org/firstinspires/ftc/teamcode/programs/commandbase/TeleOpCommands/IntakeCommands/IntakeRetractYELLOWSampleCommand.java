@@ -23,15 +23,16 @@ public class IntakeRetractYELLOWSampleCommand extends SequentialCommandGroup {
                 new SetBrushAngleCommand(Brush.BrushAngle.UP),
                 new SetJoystickConstantCommand(Globals.EXTENDO_JOYSTICK_CONSTANT_UP),
                 new SetBrushStateCommand(Brush.BrushState.SPITTING),
-                new WaitCommand(150),
                 new SetBrushStateCommand(Brush.BrushState.IDLE),
                 new SetExtendoStateCommand(Extendo.ExtendoState.RETRACTING),
                 new WaitUntilCommand(Extendo::canOuttakeSample),
                 new SetBrushStateCommand(Brush.BrushState.OUTTAKING),
-                new WaitCommand(500),
+                new WaitCommand(100),
+                new ShouldVibrateCommand(),
+                new WaitCommand(100),
                 new SetBrushStateCommand(Brush.BrushState.IDLE),
-                new SetClawStateCommand(Arm.ClawState.CLOSED),
-                new ShouldVibrateCommand()
+                new SetClawStateCommand(Arm.ClawState.CLOSED)
+
         );
     }
 }

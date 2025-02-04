@@ -10,6 +10,7 @@ import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.Servo;
 
+import org.firstinspires.ftc.robotcore.external.navigation.CurrentUnit;
 import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
 import org.firstinspires.ftc.teamcode.programs.commandbase.BrushCommands.BrushCommand;
 import org.firstinspires.ftc.teamcode.programs.commandbase.BrushCommands.SetBrushStateCommand;
@@ -108,6 +109,7 @@ public class Brush extends SubsystemBase{
 
 
     public void loopBlue(){
+
         if(brushAngle == BrushAngle.DOWN){
             updateSampleState();
             updateIntakedSampleColor();
@@ -136,11 +138,13 @@ public class Brush extends SubsystemBase{
                     CommandScheduler.getInstance().schedule(
                             new BrushCommand(Globals.BRUSH_MOTOR_SPEED, Globals.BRUSH_SAMPLE_SERVO_SPEED_INTAKING)
                     );
-                } else if (sampleState == SampleState.IS) {
+                }
+                else if (sampleState == SampleState.IS) {
                     CommandScheduler.getInstance().schedule(new BrushCommand(0, 0.5)); // Idle
 
-                    while (intakedSampleColor == IntakedSampleColor.NOTHING) {
+                    if (intakedSampleColor == IntakedSampleColor.NOTHING) {
                         updateIntakedSampleColor();
+                        return;
                     }
 
                     if (isRightSampleColorTeleOpBlue()) {
@@ -198,9 +202,11 @@ public class Brush extends SubsystemBase{
                 } else if (sampleState == SampleState.IS) {
                     CommandScheduler.getInstance().schedule(new BrushCommand(0, 0.5)); // Idle
 
-                    while (intakedSampleColor == IntakedSampleColor.NOTHING) {
+                    if (intakedSampleColor == IntakedSampleColor.NOTHING) {
                         updateIntakedSampleColor();
+                        return;
                     }
+
 
                     if (isRightSampleColorTeleOpRed()) {
                         if (intakedSampleColor == IntakedSampleColor.YELLOW) {
@@ -235,33 +241,47 @@ public class Brush extends SubsystemBase{
 
 
 
+//    public void updateIntakedSampleColor(){
+//        int red = colorSensor.red();
+//        int blue = colorSensor.blue();
+////        int green = colorSensor.green();
+//
+//        if(blue > 400)
+//            intakedSampleColor = IntakedSampleColor.BLUE;
+//        else if(red > 400 && red < 600)
+//            intakedSampleColor = IntakedSampleColor.RED;
+//        else if(red > 650)
+//            intakedSampleColor = IntakedSampleColor.YELLOW;
+//        else intakedSampleColor = IntakedSampleColor.NOTHING;
+//    }
+
+
+
+
     public void updateIntakedSampleColor(){
         int red = colorSensor.red();
         int blue = colorSensor.blue();
+        int green = colorSensor.green();
 
-        if(blue > 400)
-            intakedSampleColor = IntakedSampleColor.BLUE;
-        else if(red > 400 && red < 600)
-            intakedSampleColor = IntakedSampleColor.RED;
-        else if(red > 650)
-            intakedSampleColor = IntakedSampleColor.YELLOW;
-        else intakedSampleColor = IntakedSampleColor.NOTHING;
-    }
-
-//    public void updateIntakedSampleColor(){
-//        int green = colorSensor.green();
-//        int red = colorSensor.red();
-//
-//        if(red < 80 && green < 80)
+//        if(red < 100 && green < 150 && blue <100)
 //            intakedSampleColor = IntakedSampleColor.NOTHING;
-//        else if(green > 800 && red > 600)
-//            intakedSampleColor = IntakedSampleColor.YELLOW;
-//        else if(red > 300 && green < 400)
-//            intakedSampleColor = IntakedSampleColor.RED;
-//        else if (red < 150 && green < 300)
+//        if(blue > 400)
 //            intakedSampleColor = IntakedSampleColor.BLUE;
-//    }
+//        if(red > 700 && green > 900 && blue < 250)
+//            intakedSampleColor = IntakedSampleColor.YELLOW;
+//        if(red > 450 && green < 300 && blue < 150)
+//            intakedSampleColor = IntakedSampleColor.RED;
 
+
+        if(green > 700)
+            intakedSampleColor = IntakedSampleColor.YELLOW;
+        else if(blue > 300 && green < 700)
+            intakedSampleColor = IntakedSampleColor.BLUE;
+        else if(red > 300 && green < 700)
+            intakedSampleColor = IntakedSampleColor.RED;
+        else intakedSampleColor = IntakedSampleColor.NOTHING;
+
+    }
 
 
     public void updateSampleState(){
@@ -322,5 +342,10 @@ public class Brush extends SubsystemBase{
         Globals.shouldVibrate = true;
     }
 
+
+    public double getCurrent(){
+        CurrentUnit unit = CurrentUnit.AMPS;
+        return brushMotor.getCurrent(unit);
+    }
 
 }

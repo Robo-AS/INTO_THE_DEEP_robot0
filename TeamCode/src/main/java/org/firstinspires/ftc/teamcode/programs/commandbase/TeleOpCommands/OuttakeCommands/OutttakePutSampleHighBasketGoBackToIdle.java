@@ -10,8 +10,8 @@ import org.firstinspires.ftc.teamcode.programs.commandbase.LiftCommands.SetLiftS
 import org.firstinspires.ftc.teamcode.programs.subsystems.Arm;
 import org.firstinspires.ftc.teamcode.programs.subsystems.Lift;
 
-public class OutttakePutSampleGoBackToIdle extends SequentialCommandGroup {
-    public OutttakePutSampleGoBackToIdle(){
+public class OutttakePutSampleHighBasketGoBackToIdle extends SequentialCommandGroup {
+    public OutttakePutSampleHighBasketGoBackToIdle(){
         super(
                 new SetClawStateCommand(Arm.ClawState.OPEN),
                 new WaitCommand(200),

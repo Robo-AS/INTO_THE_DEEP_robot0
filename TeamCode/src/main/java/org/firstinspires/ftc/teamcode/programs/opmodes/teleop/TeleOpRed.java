@@ -26,7 +26,7 @@ import org.firstinspires.ftc.teamcode.programs.commandbase.TeleOpCommands.Outtak
 import org.firstinspires.ftc.teamcode.programs.commandbase.TeleOpCommands.OuttakeCommands.OuttakeGoHighRungCommand;
 import org.firstinspires.ftc.teamcode.programs.commandbase.TeleOpCommands.OuttakeCommands.OuttakeGoLowBasketCommand;
 import org.firstinspires.ftc.teamcode.programs.commandbase.TeleOpCommands.OuttakeCommands.OutttakeGoBackToIdleFromLowBasketCommand;
-import org.firstinspires.ftc.teamcode.programs.commandbase.TeleOpCommands.OuttakeCommands.OutttakePutSampleGoBackToIdle;
+import org.firstinspires.ftc.teamcode.programs.commandbase.TeleOpCommands.OuttakeCommands.OutttakePutSampleHighBasketGoBackToIdle;
 import org.firstinspires.ftc.teamcode.programs.commandbase.TeleOpCommands.OuttakeCommands.OutttakePutSampleLowBasketGoBackToIdle;
 import org.firstinspires.ftc.teamcode.programs.commandbase.TeleOpCommands.OuttakeCommands.PutSpecimenCommand;
 import org.firstinspires.ftc.teamcode.programs.subsystems.Arm;
@@ -161,7 +161,7 @@ public class TeleOpRed extends CommandOpMode {
                                 new ConditionalCommand(
                                         new OuttakeGoHighBascketCommand(),
                                         new ConditionalCommand(
-                                                new OutttakePutSampleGoBackToIdle(),
+                                                new OutttakePutSampleHighBasketGoBackToIdle(),
                                                 new OuttakeGoBackToIdleFromHighBasketCommand(),
                                                 () -> robot.arm.clawState == Arm.ClawState.CLOSED
                                         ),

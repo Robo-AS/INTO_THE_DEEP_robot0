@@ -14,7 +14,7 @@ public class PutSpecimenCommand extends SequentialCommandGroup {
         super(
                 //new SetArmStateCommand(Arm.ArmState.PUT_SPECIMEN),
                 new SetLiftStateCommand(Lift.LiftState.PUT_SPECIMEN),
-                new WaitCommand(250),
+                new WaitCommand(150),//250
                 new SetClawStateCommand(Arm.ClawState.OPEN)
         );
     }

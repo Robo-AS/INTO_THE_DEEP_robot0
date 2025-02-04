@@ -16,10 +16,12 @@ public class OuttakeCommand extends SequentialCommandGroup {
         super(
                 new WaitUntilCommand(Extendo::canOuttakeSample),
                 new SetBrushStateCommand(Brush.BrushState.OUTTAKING),
-                new WaitCommand(300),
+                new WaitCommand(250),
+                new ShouldVibrateCommand(),
+                new WaitCommand(100),
                 new SetBrushStateCommand(Brush.BrushState.IDLE),
-                new SetClawStateCommand(Arm.ClawState.CLOSED),
-                new ShouldVibrateCommand()
+                new SetClawStateCommand(Arm.ClawState.CLOSED)
+
         );
     }
 }
