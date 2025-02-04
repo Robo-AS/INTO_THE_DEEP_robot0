@@ -1,6 +1,5 @@
 package org.firstinspires.ftc.teamcode.programs.commandbase.TeleOpCommands.IntakeCommands;
 
-import com.arcrobotics.ftclib.command.InstantCommand;
 import com.arcrobotics.ftclib.command.SequentialCommandGroup;
 import com.arcrobotics.ftclib.command.WaitCommand;
 import com.arcrobotics.ftclib.command.WaitUntilCommand;
@@ -10,7 +9,6 @@ import org.firstinspires.ftc.teamcode.programs.commandbase.BrushCommands.SetBrus
 import org.firstinspires.ftc.teamcode.programs.commandbase.BrushCommands.SetBrushStateCommand;
 import org.firstinspires.ftc.teamcode.programs.commandbase.ExtendoCommands.SetJoystickConstantCommand;
 import org.firstinspires.ftc.teamcode.programs.commandbase.ShouldVibrateCommand;
-import org.firstinspires.ftc.teamcode.programs.opmodes.TeleOpBlue;
 import org.firstinspires.ftc.teamcode.programs.subsystems.Arm;
 import org.firstinspires.ftc.teamcode.programs.subsystems.Brush;
 import org.firstinspires.ftc.teamcode.programs.subsystems.Extendo;
