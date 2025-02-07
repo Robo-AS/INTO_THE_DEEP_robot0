@@ -1,10 +1,17 @@
 package org.firstinspires.ftc.teamcode.programs.util;
+import com.pedropathing.follower.Follower;
+import com.pedropathing.localization.Pose;
+import com.pedropathing.localization.PoseUpdater;
+import com.pedropathing.util.Constants;
 import com.qualcomm.hardware.lynx.LynxModule;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 
+import org.firstinspires.ftc.teamcode.pedroPathing.constants.FConstants;
+import org.firstinspires.ftc.teamcode.pedroPathing.constants.LConstants;
 import org.firstinspires.ftc.teamcode.programs.subsystems.Arm;
 import org.firstinspires.ftc.teamcode.programs.subsystems.Brush;
 import org.firstinspires.ftc.teamcode.programs.subsystems.Extendo;
+import org.firstinspires.ftc.teamcode.programs.subsystems.Hang;
 import org.firstinspires.ftc.teamcode.programs.subsystems.Lift;
 import org.firstinspires.ftc.teamcode.programs.subsystems.MecanumDriveTrain;
 
@@ -20,9 +27,12 @@ public class Robot {
     public Lift lift;
     public MecanumDriveTrain mecanumDriveTrain;
     public Arm arm;
-
-
+    public Hang hang;
 //    public double sensor;
+
+
+    //chestii pentru auto
+//    public Follower follower;
 
 
     private Robot(){
@@ -57,6 +67,8 @@ public class Robot {
 
 //        sensor = hardwareMap.voltageSensor.iterator().next().getVoltage();
 
+
+
     }
 
     public void initializeRobot() {
@@ -65,7 +77,10 @@ public class Robot {
         lift.initialize();
         arm.initialize();
 
-
+//        //auto things
+//        Constants.setConstants(FConstants.class, LConstants.class);
+//        follower = new Follower(hardwareMap);
+//        follower.setStartingPose(new Pose(0, 0, 0));
 
     }
 
@@ -80,8 +95,6 @@ public class Robot {
             hub.clearBulkCache();
         }
     }
-
-
 
 
 

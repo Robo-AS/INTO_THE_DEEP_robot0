@@ -14,6 +14,8 @@ import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
+import org.firstinspires.ftc.robotcore.external.navigation.CurrentUnit;
+
 import dev.frozenmilk.dairy.cachinghardware.CachingDcMotorEx;
 
 @Config
@@ -146,15 +148,7 @@ public class Lift extends SubsystemBase{
 
     }
 
-    public void testLoop(){
-        currentPosition = liftMotor.getCurrentPosition();
 
-        lift_pid.setPID(p_lift, i_lift, d_lift);
-        double pid = lift_pid.calculate(currentPosition, targetPosition);
-        double power = pid;
-        liftMotor.setPower(power);
-        followerMotor.setPower(power);
-    }
 
 
     public void update(LiftState state){
@@ -204,5 +198,33 @@ public class Lift extends SubsystemBase{
 
     public static boolean canRotateArmHighBasket(){
         return currentPosition >= 150;
+    }
+
+
+    //    public void testLoop(){
+//        currentPosition = liftMotor.getCurrentPosition();
+//
+//        lift_pid.setPID(p_lift, i_lift, d_lift);
+//        double pid = lift_pid.calculate(currentPosition, targetPosition);
+//        double power = pid;
+//        liftMotor.setPower(power);
+//        followerMotor.setPower(power);
+//    }
+
+
+    public void hangTestLoop(double gamepadY){
+        liftMotor.setPower(gamepadY);
+        followerMotor.setPower(gamepadY);
+    }
+
+    public double getCurrentLiftMotor(){
+        CurrentUnit currentUnit = CurrentUnit.AMPS;
+        return liftMotor.getCurrent(currentUnit);
+    }
+
+
+    public double getCurrentFollowerMotor(){
+        CurrentUnit currentUnit = CurrentUnit.AMPS;
+        return followerMotor.getCurrent(currentUnit);
     }
 }

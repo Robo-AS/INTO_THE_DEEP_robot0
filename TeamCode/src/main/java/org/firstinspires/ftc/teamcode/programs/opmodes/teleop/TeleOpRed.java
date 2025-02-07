@@ -146,7 +146,7 @@ public class TeleOpRed extends CommandOpMode {
                                                 )                                                                                                                                                                                                              ,
                                                 () -> robot.arm.clawState == Arm.ClawState.CLOSED
                                         ),
-                                        () -> robot.lift.liftState == Lift.LiftState.IDLE
+                                        () -> robot.lift.liftState == Lift.LiftState.IDLE || robot.lift.liftState == Lift.LiftState.HIGH_BASKET
                                 )
                         )
 
@@ -165,7 +165,7 @@ public class TeleOpRed extends CommandOpMode {
                                                 new OuttakeGoBackToIdleFromHighBasketCommand(),
                                                 () -> robot.arm.clawState == Arm.ClawState.CLOSED
                                         ),
-                                        () -> robot.lift.liftState == Lift.LiftState.IDLE
+                                        () -> robot.lift.liftState == Lift.LiftState.IDLE || robot.lift.liftState == Lift.LiftState.HIGH_RUNG
                                 )
                         )
                 );

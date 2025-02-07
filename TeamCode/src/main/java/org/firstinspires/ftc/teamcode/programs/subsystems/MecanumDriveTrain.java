@@ -40,7 +40,7 @@ public class MecanumDriveTrain extends WSubsystem implements Drivetrain {
 
         dtFrontLeftMotor = new CachingDcMotorEx(hardwareMap.get(DcMotorEx.class, "frontLeftMotor"));
         dtFrontLeftMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
-        //dtFrontLeftMotor.setDirection(DcMotorSimple.Direction.REVERSE);
+//        dtFrontLeftMotor.setDirection(DcMotorSimple.Direction.REVERSE);
 
         dtBackRightMotor = new CachingDcMotorEx(hardwareMap.get(DcMotorEx.class, "backRightMotor"));
         dtBackRightMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
@@ -50,7 +50,7 @@ public class MecanumDriveTrain extends WSubsystem implements Drivetrain {
         dtFrontRightMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         //dtFrontRightMotor.setDirection(DcMotorSimple.Direction.REVERSE);
 
-        sensor = hardwareMap.voltageSensor.iterator().next().getVoltage();
+//        sensor = hardwareMap.voltageSensor.iterator().next().getVoltage();
 
     }
 

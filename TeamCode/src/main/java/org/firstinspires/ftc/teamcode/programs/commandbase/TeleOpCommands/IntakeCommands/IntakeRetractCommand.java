@@ -2,6 +2,7 @@ package org.firstinspires.ftc.teamcode.programs.commandbase.TeleOpCommands.Intak
 
 import com.arcrobotics.ftclib.command.SequentialCommandGroup;
 import com.arcrobotics.ftclib.command.WaitCommand;
+import com.arcrobotics.ftclib.command.WaitUntilCommand;
 
 import org.firstinspires.ftc.teamcode.programs.commandbase.BrushCommands.SetBrushAngleCommand;
 import org.firstinspires.ftc.teamcode.programs.commandbase.BrushCommands.SetBrushStateCommand;
@@ -18,9 +19,10 @@ public class IntakeRetractCommand extends SequentialCommandGroup {
             new SetBrushAngleCommand(Brush.BrushAngle.UP),
             new SetJoystickConstantCommand(Globals.EXTENDO_JOYSTICK_CONSTANT_UP),
             new SetBrushStateCommand(Brush.BrushState.SPITTING),
-//            new WaitCommand(150),//300
-            new SetBrushStateCommand(Brush.BrushState.IDLE),
-            new SetExtendoStateCommand(Extendo.ExtendoState.RETRACTING)
+            new SetExtendoStateCommand(Extendo.ExtendoState.RETRACTING),
+            new WaitCommand(500),
+            new SetBrushStateCommand(Brush.BrushState.IDLE)
+
         );
     }
 }
