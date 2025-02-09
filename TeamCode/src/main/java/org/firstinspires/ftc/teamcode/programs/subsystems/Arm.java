@@ -17,7 +17,6 @@ public class Arm extends SubsystemBase {
     private static Arm instance = null;
     public CachingServo rightServo, leftServo;
     public CachingServo clawServo, wristServo;
-    GoBildaPinpointDriver pinpoint;
 
 
     public enum ArmState{
@@ -88,7 +87,6 @@ public class Arm extends SubsystemBase {
         wristServo = new CachingServo(hardwareMap.get(Servo.class, "wristServo"));
         wristServo.setDirection(Servo.Direction.FORWARD);
 
-        pinpoint = hardwareMap.get(GoBildaPinpointDriver.class,"pinpoint");
 
     }
 
@@ -98,7 +96,6 @@ public class Arm extends SubsystemBase {
         leftServo.setPosition(INIT_leftServo);
         clawServo.setPosition(OPEN_clawServo);
         wristServo.setPosition(INIT_wristServo);
-        pinpoint.resetPosAndIMU();
         sideAngle = 0;
     }
 
@@ -241,11 +238,6 @@ public class Arm extends SubsystemBase {
     }
 
 
-
-    public double getPinpointHeading(){
-        pinpoint.update();
-        return pinpoint.getHeading() * (180/Math.PI);
-    }
 
     public MotionProfile getProfile(){
         return profile;

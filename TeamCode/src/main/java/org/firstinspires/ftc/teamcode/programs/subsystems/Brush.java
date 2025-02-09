@@ -240,38 +240,10 @@ public class Brush extends SubsystemBase{
     }
 
 
-
-//    public void updateIntakedSampleColor(){
-//        int red = colorSensor.red();
-//        int blue = colorSensor.blue();
-////        int green = colorSensor.green();
-//
-//        if(blue > 400)
-//            intakedSampleColor = IntakedSampleColor.BLUE;
-//        else if(red > 400 && red < 600)
-//            intakedSampleColor = IntakedSampleColor.RED;
-//        else if(red > 650)
-//            intakedSampleColor = IntakedSampleColor.YELLOW;
-//        else intakedSampleColor = IntakedSampleColor.NOTHING;
-//    }
-
-
-
-
     public void updateIntakedSampleColor(){
         int red = colorSensor.red();
         int blue = colorSensor.blue();
         int green = colorSensor.green();
-
-//        if(red < 100 && green < 150 && blue <100)
-//            intakedSampleColor = IntakedSampleColor.NOTHING;
-//        if(blue > 400)
-//            intakedSampleColor = IntakedSampleColor.BLUE;
-//        if(red > 700 && green > 900 && blue < 250)
-//            intakedSampleColor = IntakedSampleColor.YELLOW;
-//        if(red > 450 && green < 300 && blue < 150)
-//            intakedSampleColor = IntakedSampleColor.RED;
-
 
         if(green > 700)
             intakedSampleColor = IntakedSampleColor.YELLOW;
@@ -346,6 +318,34 @@ public class Brush extends SubsystemBase{
     public double getCurrent(){
         CurrentUnit unit = CurrentUnit.AMPS;
         return brushMotor.getCurrent(unit);
+    }
+
+
+
+    public void loopAuto(){
+        switch (brushState) {
+            case SPITTING_HUMAN_PLAYER:
+                CommandScheduler.getInstance().schedule(new BrushCommand(-1, 0));
+                break;
+
+            case SPITTING:
+                CommandScheduler.getInstance().schedule(new BrushCommand(-1, 0.5));
+                break;
+
+            case OUTTAKING:
+                CommandScheduler.getInstance().schedule(new BrushCommand(0, 1));
+                break;
+
+            case IDLE:
+                CommandScheduler.getInstance().schedule(new BrushCommand(0, 0.5));
+                break;
+
+            case INTAKING:
+                CommandScheduler.getInstance().schedule(new BrushCommand(Globals.BRUSH_MOTOR_SPEED, Globals.BRUSH_SAMPLE_SERVO_SPEED_INTAKING));
+                break;
+
+
+        }
     }
 
 }

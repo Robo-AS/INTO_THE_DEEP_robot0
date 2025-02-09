@@ -13,6 +13,7 @@ import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
 import org.firstinspires.ftc.robotcontroller.external.samples.RobotHardware;
 import org.firstinspires.ftc.teamcode.programs.commandbase.BrushCommands.SetBrushStateCommand;
+import org.firstinspires.ftc.teamcode.programs.commandbase.LiftCommands.SetLiftStateCommand;
 import org.firstinspires.ftc.teamcode.programs.commandbase.SetDesiredColorCommand;
 import org.firstinspires.ftc.teamcode.programs.subsystems.Brush;
 import org.firstinspires.ftc.teamcode.programs.subsystems.Lift;
@@ -37,8 +38,8 @@ public class LiftTest extends CommandOpMode {
                 .whenPressed(
                         () -> CommandScheduler.getInstance().schedule(
                                 new ConditionalCommand(
-                                        new SetLiftStateCommandTEST(Lift.LiftState.HIGH_RUNG),
-                                        new SetLiftStateCommandTEST(Lift.LiftState.IDLE),
+                                        new SetLiftStateCommand(Lift.LiftState.HIGH_RUNG),
+                                        new SetLiftStateCommand(Lift.LiftState.IDLE),
                                         () -> lift.liftState == Lift.LiftState.IDLE
                                 )
                         )

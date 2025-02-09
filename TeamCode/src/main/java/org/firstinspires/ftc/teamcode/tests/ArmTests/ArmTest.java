@@ -41,7 +41,7 @@ public class ArmTest extends CommandOpMode {
 
 
         telemetry.addData("PROFILE", arm.getProfile());
-        telemetry.addData("Heading", arm.getPinpointHeading());
+
 
         double loop = System.nanoTime();
         telemetry.addData("Hz", 1000000000 / (loop - loopTime));

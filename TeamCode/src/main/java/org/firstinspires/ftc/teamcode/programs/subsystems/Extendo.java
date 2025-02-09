@@ -1,7 +1,5 @@
 package org.firstinspires.ftc.teamcode.programs.subsystems;
 
-import android.provider.Settings;
-
 import com.acmerobotics.dashboard.config.Config;
 import com.acmerobotics.roadrunner.profile.MotionProfile;
 import com.acmerobotics.roadrunner.profile.MotionProfileGenerator;
@@ -27,12 +25,16 @@ public class Extendo extends SubsystemBase {
 
     public enum ExtendoState{
         EXTENDING_MINIMUM,
-        RETRACTING
+        RETRACTING,
+        EXTENDING_MINIMUM_AUTO,
+        TAKE_SAMPLE_AUTO
     }
 
     public ExtendoState extendoState = ExtendoState.RETRACTING;
     public int EXTENDING_MINIMUM = 550;
     public int RETRACTING = 0;
+    public int EXTENDING_AUTO = 450;
+    public int TAKE_SAMPLE_AUTO = 1200;
 
 
     private final PIDController extendo_pid;
@@ -106,7 +108,6 @@ public class Extendo extends SubsystemBase {
 
         if(extendoState == ExtendoState.EXTENDING_MINIMUM)
             updateTargetPosition(joystickYCoord);
-
     }
 
     public void update(ExtendoState state){
@@ -117,6 +118,12 @@ public class Extendo extends SubsystemBase {
                 break;
             case RETRACTING:
                 targetPosition = RETRACTING;
+                break;
+            case EXTENDING_MINIMUM_AUTO:
+                targetPosition = EXTENDING_AUTO;
+                break;
+            case TAKE_SAMPLE_AUTO:
+                targetPosition = TAKE_SAMPLE_AUTO;
                 break;
         }
     }
@@ -141,6 +148,31 @@ public class Extendo extends SubsystemBase {
         return currentPosition <= 300;
     }
 
+
+    public void loopAuto(){
+        currentPosition = extendoMotor.getCurrentPosition();
+
+
+        if(targetPosition != previousTarget){
+            profile = MotionProfileGenerator.generateSimpleMotionProfile(
+                    new MotionState(previousTarget, 0),
+                    new MotionState(targetPosition, 0),
+                    maxVelocity,
+                    maxAcceleration
+            );
+
+            time.reset();
+            previousTarget = targetPosition;
+        }
+
+
+        MotionState targetState = profile == null ? new MotionState(0, 0) : profile.get(time.seconds());
+        double targetMotionProfile = targetState.getX();
+
+        double power = extendo_pid.calculate(currentPosition, targetMotionProfile);
+        extendo_pid.setPID(p_extendo, i_extendo, d_extendo);
+        extendoMotor.setPower(power);
+    }
 
 
 }

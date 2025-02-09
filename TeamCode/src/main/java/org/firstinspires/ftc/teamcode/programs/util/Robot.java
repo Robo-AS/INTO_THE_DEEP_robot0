@@ -31,8 +31,7 @@ public class Robot {
 //    public double sensor;
 
 
-    //chestii pentru auto
-//    public Follower follower;
+
 
 
     private Robot(){
@@ -76,12 +75,6 @@ public class Robot {
         extendo.initialize();
         lift.initialize();
         arm.initialize();
-
-//        //auto things
-//        Constants.setConstants(FConstants.class, LConstants.class);
-//        follower = new Follower(hardwareMap);
-//        follower.setStartingPose(new Pose(0, 0, 0));
-
     }
 
 
