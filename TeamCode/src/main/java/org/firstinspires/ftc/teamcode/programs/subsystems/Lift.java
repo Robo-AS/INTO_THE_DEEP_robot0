@@ -227,4 +227,9 @@ public class Lift extends SubsystemBase{
         CurrentUnit currentUnit = CurrentUnit.AMPS;
         return followerMotor.getCurrent(currentUnit);
     }
+
+
+    public static boolean canOpenClaw(){
+        return currentPosition > 850;
+    }
 }

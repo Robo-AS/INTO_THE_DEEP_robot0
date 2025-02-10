@@ -32,8 +32,8 @@ import org.firstinspires.ftc.teamcode.programs.subsystems.Extendo;
 import org.firstinspires.ftc.teamcode.programs.util.Robot;
 
 @Config
-@Autonomous(name = "BasketAuto")
-public class BasketAuto extends CommandOpMode {
+@Autonomous(name = "BasketAutoTest")
+public class BasketAutoTest extends CommandOpMode {
     private final Robot robot = Robot.getInstance();
 
     private Follower follower;
@@ -96,7 +96,6 @@ public class BasketAuto extends CommandOpMode {
                 .setLinearHeadingInterpolation(grab2Pose.getHeading(), score2Pose.getHeading())
                 .build();
 
-
         PathChain grab3 = follower.pathBuilder()
                 .addPath(new BezierLine(new Point(score2Pose), new Point(grab3Pose)))
                 .setLinearHeadingInterpolation(score2Pose.getHeading(), grab3Pose.getHeading())
@@ -111,83 +110,24 @@ public class BasketAuto extends CommandOpMode {
 
         CommandScheduler.getInstance().schedule(
                 new SequentialCommandGroup(
-                        new FollowPath(follower, scorePreload, true, 1)
-                                .alongWith(
-                                        new SetClawStateCommand(Arm.ClawState.CLOSED),
-                                        new WaitCommand(100),
-                                        new OuttakeGoHighBasketAutoCommand()
-                                )
-                                .andThen(new ScorePreloadAutoCommand()),
-
-
-                        new FollowPath(follower, grab1, true, 1)
-                                .alongWith(
-                                        new SequentialCommandGroup(
-                                                new SetExtendoStateCommand(Extendo.ExtendoState.EXTENDING_MINIMUM_AUTO),
-                                                new WaitCommand(500),
-                                                new SetBrushAngleCommand(Brush.BrushAngle.DOWN),
-                                                new SetBrushStateCommand(Brush.BrushState.INTAKING)
-                                        )
-
-                                ),
-
-                        new SetExtendoStateCommand(Extendo.ExtendoState.TAKE_SAMPLE_AUTO),
-                        new WaitUntilCommand(robot.brush::isSample),
-                        new SetBrushStateCommand(Brush.BrushState.IDLE),
-
-
-                        new FollowPath(follower, score1, true, 1)
-                                .alongWith(new IntakeRetractAutoCommand()),
-                        new OuttakeGoHighBasketAutoCommand(),
-                        new ScorePreloadAutoCommand(),
-
-
-
-                        new FollowPath(follower, grab2, true, 1)
-                                .alongWith(
-                                        new SequentialCommandGroup(
-                                                new SetExtendoStateCommand(Extendo.ExtendoState.EXTENDING_MINIMUM_AUTO),
-                                                new WaitCommand(500),
-                                                new SetBrushAngleCommand(Brush.BrushAngle.DOWN),
-                                                new SetBrushStateCommand(Brush.BrushState.INTAKING)
-                                        )
-
-                                ),
-                        new SetExtendoStateCommand(Extendo.ExtendoState.TAKE_SAMPLE_AUTO),
-                        new WaitUntilCommand(robot.brush::isSample),
-                        new SetBrushStateCommand(Brush.BrushState.IDLE),
-
-
-
-                        new FollowPath(follower, score2, true, 1)
-                                .alongWith(new IntakeRetractAutoCommand()),
-                        new OuttakeGoHighBasketAutoCommand(),
-                        new ScorePreloadAutoCommand(),
-
-
-
-
-
-                        new FollowPath(follower, grab3, true, 1)
-                                .alongWith(
-                                        new SequentialCommandGroup(
-                                                new SetExtendoStateCommand(Extendo.ExtendoState.EXTENDING_MINIMUM_AUTO),
-                                                new WaitCommand(500),
-                                                new SetBrushAngleCommand(Brush.BrushAngle.DOWN),
-                                                new SetBrushStateCommand(Brush.BrushState.INTAKING)
-                                        )
-
-                                ),
-                        new SetExtendoStateCommand(Extendo.ExtendoState.TAKE_SAMPLE_AUTO_NEAR_WALL),
-                        new WaitUntilCommand(robot.brush::isSample),
-                        new SetBrushStateCommand(Brush.BrushState.IDLE),
-
-
-
+                        new FollowPath(follower, scorePreload, true, 1),
+                        new WaitCommand(500),
+                        new FollowPath(follower, grab1, true, 1),
+                        new WaitCommand(500),
+                        new FollowPath(follower, score1, true, 1),
+                        new WaitCommand(500),
+                        new FollowPath(follower, grab2, true, 1),
+                        new WaitCommand(500),
+                        new FollowPath(follower, score2, true, 1),
+                        new WaitCommand(500),
+                        new FollowPath(follower, grab3, true, 1),
+                        new WaitCommand(500),
                         new FollowPath(follower, score3, true, 1)
-                                .alongWith(new IntakeRetractAutoCommand()),
-                        new OuttakeGoHighBasketAutoCommand(),
-                        new ScorePreloadAutoCommand()
+
+
+
+
+
 
 
                 )

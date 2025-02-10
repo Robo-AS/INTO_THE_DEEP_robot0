@@ -348,4 +348,10 @@ public class Brush extends SubsystemBase{
         }
     }
 
+
+    public boolean isSample(){
+        double distance = colorSensor.getDistance(DistanceUnit.CM);
+        return distance < 3;
+    }
+
 }

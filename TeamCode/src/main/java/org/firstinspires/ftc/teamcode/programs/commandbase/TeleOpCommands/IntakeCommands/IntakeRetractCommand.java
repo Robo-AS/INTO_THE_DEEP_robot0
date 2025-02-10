@@ -15,13 +15,13 @@ import org.firstinspires.ftc.teamcode.programs.util.Globals;
 public class IntakeRetractCommand extends SequentialCommandGroup {
     public IntakeRetractCommand(){
         super(
-            new SetBrushStateCommand(Brush.BrushState.IDLE),
-            new SetBrushAngleCommand(Brush.BrushAngle.UP),
-            new SetJoystickConstantCommand(Globals.EXTENDO_JOYSTICK_CONSTANT_UP),
-            new SetBrushStateCommand(Brush.BrushState.SPITTING),
-            new SetExtendoStateCommand(Extendo.ExtendoState.RETRACTING),
-            new WaitCommand(500),
-            new SetBrushStateCommand(Brush.BrushState.IDLE)
+                new SetBrushStateCommand(Brush.BrushState.IDLE),
+                new SetBrushAngleCommand(Brush.BrushAngle.UP),
+                new SetJoystickConstantCommand(Globals.EXTENDO_JOYSTICK_CONSTANT_UP),
+                new SetBrushStateCommand(Brush.BrushState.SPITTING),
+                new SetExtendoStateCommand(Extendo.ExtendoState.RETRACTING),
+                new WaitCommand(500),
+                new SetBrushStateCommand(Brush.BrushState.IDLE)
 
         );
     }
