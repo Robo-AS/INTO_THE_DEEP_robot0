@@ -1,11 +1,14 @@
 package org.firstinspires.ftc.teamcode.programs.subsystems;
 
+import com.acmerobotics.dashboard.config.Config;
+import com.arcrobotics.ftclib.controller.PIDController;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.util.Range;
 
+import org.firstinspires.ftc.teamcode.programs.util.Globals;
 import org.firstinspires.ftc.teamcode.utils.Drivetrain;
 import org.firstinspires.ftc.teamcode.utils.WSubsystem;
 import org.firstinspires.ftc.teamcode.utils.geometry.Pose;
@@ -13,17 +16,29 @@ import org.firstinspires.ftc.teamcode.utils.geometry.Vector2D;
 
 import dev.frozenmilk.dairy.cachinghardware.CachingDcMotorEx;
 
+@Config
 public class MecanumDriveTrain extends WSubsystem implements Drivetrain {
-    //private final Robot robot = Robot.getInstance();
     private static MecanumDriveTrain instance = null;
-    public CachingDcMotorEx dtFrontLeftMotor, dtFrontRightMotor, dtBackLeftMotor, dtBackRightMotor;
+    public static CachingDcMotorEx dtFrontLeftMotor, dtFrontRightMotor, dtBackLeftMotor, dtBackRightMotor;
     public double sensor;
 
     double[] ws = new double[4];
-    private int frontLeft = 3, frontRight = 1, backLeft = 2, backRight = 0;
+    private final int frontLeft = 3, frontRight = 1, backLeft = 2, backRight = 0;
 
 
     public double ks = 0;
+
+
+    //PIDs for Hang:
+    private final PIDController left_pid, right_pid;
+    public static double p = 0.01, i = 0, d = 0, f = 0;
+    public static double targetPosition = 0;
+    public static double currentPositionLeft = 0, currentPositionRight = 0;
+
+    public MecanumDriveTrain(){
+        left_pid = new PIDController(p, i, d);
+        right_pid = new PIDController(p, i, d);
+    }
 
 
     public static MecanumDriveTrain getInstance(){
@@ -54,6 +69,14 @@ public class MecanumDriveTrain extends WSubsystem implements Drivetrain {
 
     }
 
+    public void initialize(){
+        left_pid.reset();
+        right_pid.reset();
+        targetPosition = 0;
+        currentPositionLeft = 0;
+        currentPositionRight = 0;
+    }
+
 
     @Override
     public void set(Pose pose) {
@@ -65,37 +88,57 @@ public class MecanumDriveTrain extends WSubsystem implements Drivetrain {
 
         double actualks = ks; // *12/getVoltage();
 
-        forwardSpeed = Range.clip(input.x, -1, 1);
-        strafeSpeed = Range.clip(input.y, -1, 1);
-        turnSpeed = Range.clip(turnSpeed, -1, 1);
+        if(!Globals.HANGING){
+            forwardSpeed = Range.clip(input.x, -1, 1);
+            strafeSpeed = Range.clip(input.y, -1, 1);
+            turnSpeed = Range.clip(turnSpeed, -1, 1);
 
-        double[] wheelSpeeds = new double[4];
+            double[] wheelSpeeds = new double[4];
 
-        wheelSpeeds[frontLeft] = (forwardSpeed - strafeSpeed + turnSpeed)*(1-actualks) + actualks*Math.signum((forwardSpeed - strafeSpeed + turnSpeed));
-        wheelSpeeds[frontRight] = (forwardSpeed + strafeSpeed + turnSpeed)*(1-actualks) + actualks*Math.signum(forwardSpeed + strafeSpeed + turnSpeed);
-        wheelSpeeds[backLeft] = (forwardSpeed + strafeSpeed - turnSpeed)*(1-actualks) + actualks*Math.signum(forwardSpeed + strafeSpeed - turnSpeed);
-        wheelSpeeds[backRight] = (forwardSpeed - strafeSpeed - turnSpeed)*(1-actualks) + actualks*Math.signum(forwardSpeed - strafeSpeed - turnSpeed);  //(forwardSpeed - strafeSpeed + turnSpeed)*(1-actualks) + actualks*Math.signum((forwardSpeed - strafeSpeed + turnSpeed));
+            wheelSpeeds[frontLeft] = (forwardSpeed - strafeSpeed + turnSpeed)*(1-actualks) + actualks*Math.signum((forwardSpeed - strafeSpeed + turnSpeed));
+            wheelSpeeds[frontRight] = (forwardSpeed + strafeSpeed + turnSpeed)*(1-actualks) + actualks*Math.signum(forwardSpeed + strafeSpeed + turnSpeed);
+            wheelSpeeds[backLeft] = (forwardSpeed + strafeSpeed - turnSpeed)*(1-actualks) + actualks*Math.signum(forwardSpeed + strafeSpeed - turnSpeed);
+            wheelSpeeds[backRight] = (forwardSpeed - strafeSpeed - turnSpeed)*(1-actualks) + actualks*Math.signum(forwardSpeed - strafeSpeed - turnSpeed);  //(forwardSpeed - strafeSpeed + turnSpeed)*(1-actualks) + actualks*Math.signum((forwardSpeed - strafeSpeed + turnSpeed));
 
-        double max = 1;
-        for (double wheelSpeed : wheelSpeeds) max = Math.max(max, Math.abs(wheelSpeed));
+            double max = 1;
+            for (double wheelSpeed : wheelSpeeds) max = Math.max(max, Math.abs(wheelSpeed));
 
 
-        if (max > 1) {
-            wheelSpeeds[frontLeft] /= max;
-            wheelSpeeds[frontRight] /= max;
-            wheelSpeeds[backLeft] /= max;
-            wheelSpeeds[backRight] /= max;
+            if (max > 1) {
+                wheelSpeeds[frontLeft] /= max;
+                wheelSpeeds[frontRight] /= max;
+                wheelSpeeds[backLeft] /= max;
+                wheelSpeeds[backRight] /= max;
+            }
+
+            ws[frontLeft] = wheelSpeeds[frontLeft];
+            ws[frontRight] = wheelSpeeds[frontRight];
+            ws[backLeft] = wheelSpeeds[backLeft];
+            ws[backRight] = wheelSpeeds[backRight];
+
+            dtFrontLeftMotor.setPower(ws[frontLeft]);
+            dtFrontRightMotor.setPower(ws[frontRight]);
+            dtBackLeftMotor.setPower(ws[backLeft]);
+            dtBackRightMotor.setPower(ws[backRight]);
         }
 
-        ws[frontLeft] = wheelSpeeds[frontLeft];
-        ws[frontRight] = wheelSpeeds[frontRight];
-        ws[backLeft] = wheelSpeeds[backLeft];
-        ws[backRight] = wheelSpeeds[backRight];
+        else{
+            currentPositionLeft = dtFrontLeftMotor.getCurrentPosition();
+            currentPositionRight = dtFrontRightMotor.getCurrentPosition();
 
-        dtFrontLeftMotor.setPower(ws[frontLeft]);
-        dtFrontRightMotor.setPower(ws[frontRight]);
-        dtBackLeftMotor.setPower(ws[backLeft]);
-        dtBackRightMotor.setPower(ws[backRight]);
+            left_pid.setPID(p, i, d);
+            right_pid.setPID(p, i, d);
+            double powerLeft = left_pid.calculate(currentPositionLeft, targetPosition);
+            double powerRight = right_pid.calculate(currentPositionRight, -targetPosition);
+
+            dtFrontLeftMotor.setPower(powerLeft);
+            dtFrontRightMotor.setPower(powerRight);
+
+            dtBackLeftMotor.setPower(-(double) 80 /100*powerLeft);
+            dtBackRightMotor.setPower(-(double) 80/100*powerRight);
+        }
+
+
     }
 
 
@@ -128,6 +171,37 @@ public class MecanumDriveTrain extends WSubsystem implements Drivetrain {
     public double getVoltage(){
         return sensor;
     }
+
+
+    public static void resetEncoders(){
+        dtBackLeftMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        dtBackLeftMotor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+
+        dtFrontLeftMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        dtFrontLeftMotor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+
+        dtBackRightMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        dtBackRightMotor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+
+        dtFrontRightMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        dtFrontRightMotor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+    }
+    
+
+    public double getCurrentPotionLeft(){
+        return currentPositionLeft;
+    }
+
+    public double getCurrentPositionRight(){
+        return currentPositionRight;
+    }
+
+
+    public double getTargetPosition(){
+        return targetPosition;
+    }
+
+
 
 
 }

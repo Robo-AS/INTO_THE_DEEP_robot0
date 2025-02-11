@@ -21,11 +21,10 @@ import org.firstinspires.ftc.teamcode.pedroPathing.constants.LConstants;
 import org.firstinspires.ftc.teamcode.programs.commandbase.ArmCommands.SetClawStateCommand;
 import org.firstinspires.ftc.teamcode.programs.commandbase.AutoCommands.IntakeRetractAutoCommand;
 import org.firstinspires.ftc.teamcode.programs.commandbase.AutoCommands.OuttakeGoHighBasketAutoCommand;
-import org.firstinspires.ftc.teamcode.programs.commandbase.AutoCommands.ScorePreloadAutoCommand;
+import org.firstinspires.ftc.teamcode.programs.commandbase.AutoCommands.ScoreSampleAutoCommand;
 import org.firstinspires.ftc.teamcode.programs.commandbase.BrushCommands.SetBrushAngleCommand;
 import org.firstinspires.ftc.teamcode.programs.commandbase.BrushCommands.SetBrushStateCommand;
 import org.firstinspires.ftc.teamcode.programs.commandbase.ExtendoCommands.SetExtendoStateCommand;
-import org.firstinspires.ftc.teamcode.programs.commandbase.TeleOpCommands.IntakeCommands.IntakeRetractCommand;
 import org.firstinspires.ftc.teamcode.programs.subsystems.Arm;
 import org.firstinspires.ftc.teamcode.programs.subsystems.Brush;
 import org.firstinspires.ftc.teamcode.programs.subsystems.Extendo;
@@ -35,10 +34,8 @@ import org.firstinspires.ftc.teamcode.programs.util.Robot;
 @Autonomous(name = "BasketAuto")
 public class BasketAuto extends CommandOpMode {
     private final Robot robot = Robot.getInstance();
-
     private Follower follower;
-
-    public static double grab1Pose_X = 28, grab1Pose_Y = 121.5, grab1Pose_HEADING = 0;
+    private double loopTime = 0;
 
     public static Pose startPose = new Pose(7, 112, Math.toRadians(-90));
     public static Pose preloadPose = new Pose(14, 127, Math.toRadians(-45));
@@ -117,7 +114,7 @@ public class BasketAuto extends CommandOpMode {
                                         new WaitCommand(100),
                                         new OuttakeGoHighBasketAutoCommand()
                                 )
-                                .andThen(new ScorePreloadAutoCommand()),
+                                .andThen(new ScoreSampleAutoCommand()),
 
 
                         new FollowPath(follower, grab1, true, 1)
@@ -139,7 +136,7 @@ public class BasketAuto extends CommandOpMode {
                         new FollowPath(follower, score1, true, 1)
                                 .alongWith(new IntakeRetractAutoCommand()),
                         new OuttakeGoHighBasketAutoCommand(),
-                        new ScorePreloadAutoCommand(),
+                        new ScoreSampleAutoCommand(),
 
 
 
@@ -162,7 +159,7 @@ public class BasketAuto extends CommandOpMode {
                         new FollowPath(follower, score2, true, 1)
                                 .alongWith(new IntakeRetractAutoCommand()),
                         new OuttakeGoHighBasketAutoCommand(),
-                        new ScorePreloadAutoCommand(),
+                        new ScoreSampleAutoCommand(),
 
 
 
@@ -187,7 +184,7 @@ public class BasketAuto extends CommandOpMode {
                         new FollowPath(follower, score3, true, 1)
                                 .alongWith(new IntakeRetractAutoCommand()),
                         new OuttakeGoHighBasketAutoCommand(),
-                        new ScorePreloadAutoCommand()
+                        new ScoreSampleAutoCommand()
 
 
                 )
@@ -207,6 +204,12 @@ public class BasketAuto extends CommandOpMode {
         robot.arm.loop();
         robot.extendo.loopAuto();
         robot.brush.loopAuto();
+
+
+        double loop = System.nanoTime();
+        telemetry.addData("Hz", 1000000000 / (loop - loopTime));
+        loopTime = loop;
+        telemetry.update();
 
 
     }

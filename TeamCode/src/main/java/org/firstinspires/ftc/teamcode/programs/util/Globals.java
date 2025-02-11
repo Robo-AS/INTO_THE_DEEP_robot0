@@ -25,4 +25,17 @@ public class Globals {
     public static boolean shouldVibrate = false;
 
 
+    //Hang
+    public static boolean HANGING = false;
+    public static void isHanging(){
+        HANGING = true;
+
+    }
+
+    public static void isNotHanging(){
+        HANGING = false;
+
+    }
+
+
 }

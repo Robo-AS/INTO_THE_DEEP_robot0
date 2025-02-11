@@ -16,6 +16,7 @@ import org.firstinspires.ftc.teamcode.programs.commandbase.DoesNothingCommand;
 import org.firstinspires.ftc.teamcode.programs.commandbase.ExtendoCommands.SetExtendoStateCommand;
 import org.firstinspires.ftc.teamcode.programs.commandbase.LiftCommands.SetLiftStateCommand;
 import org.firstinspires.ftc.teamcode.programs.commandbase.SetDesiredColorCommand;
+import org.firstinspires.ftc.teamcode.programs.commandbase.TeleOpCommands.HangCommands.GoHangLevel2Position;
 import org.firstinspires.ftc.teamcode.programs.commandbase.TeleOpCommands.IntakeCommands.IntakeIdleCommand;
 import org.firstinspires.ftc.teamcode.programs.commandbase.TeleOpCommands.IntakeCommands.IntakeIntakingCommand;
 import org.firstinspires.ftc.teamcode.programs.commandbase.TeleOpCommands.IntakeCommands.IntakeRetractCommand;
@@ -193,9 +194,17 @@ public class TeleOpRed extends CommandOpMode {
                 .whenPressed(
                         () -> CommandScheduler.getInstance().schedule(
                                 new ConditionalCommand(
-                                        new SetLiftStateCommand(Lift.LiftState.LOW_BASKET),
-                                        new SetLiftStateCommand(Lift.LiftState.IDLE),
-                                        () -> robot.lift.liftState == Lift.LiftState.IDLE
+                                        new GoHangLevel2Position(),
+                                        new ConditionalCommand(
+                                                new SetLiftStateCommand(Lift.LiftState.IDLE),
+                                                new ConditionalCommand(
+                                                        new SetExtendoStateCommand(Extendo.ExtendoState.RETRACTING),
+                                                        new DoesNothingCommand(),
+                                                        () -> robot.lift.liftState == Lift.LiftState.IDLE && robot.extendo.extendoState == Extendo.ExtendoState.HANG
+                                                ),
+                                                () -> robot.lift.liftState == Lift.LiftState.HIGH_BASKET && robot.extendo.extendoState == Extendo.ExtendoState.HANG
+                                        ),
+                                        () -> robot.lift.liftState != Lift.LiftState.HIGH_BASKET && robot.extendo.extendoState != Extendo.ExtendoState.HANG
                                 )
                         )
                 );

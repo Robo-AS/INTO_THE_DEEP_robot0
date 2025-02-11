@@ -11,13 +11,13 @@ import org.firstinspires.ftc.teamcode.programs.commandbase.LiftCommands.SetLiftS
 import org.firstinspires.ftc.teamcode.programs.subsystems.Arm;
 import org.firstinspires.ftc.teamcode.programs.subsystems.Lift;
 
-public class ScorePreloadAutoCommand extends SequentialCommandGroup {
-    public ScorePreloadAutoCommand(){
+public class ScoreSampleAutoCommand extends SequentialCommandGroup {
+    public ScoreSampleAutoCommand(){
         super(
                 new WaitUntilCommand(Lift::canOpenClaw),
                 new WaitCommand(200),
                 new SetClawStateCommand(Arm.ClawState.OPEN),
-                new WaitCommand(500),
+                new WaitCommand(300),
                 new SetArmStateCommand(Arm.ArmState.INIT),
                 new SetClawStateCommand(Arm.ClawState.OPEN),
                 new SetWristStateCommand(Arm.WristState.INIT),

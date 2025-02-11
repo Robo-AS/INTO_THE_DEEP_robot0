@@ -28,15 +28,19 @@ public class Extendo extends SubsystemBase {
         RETRACTING,
         EXTENDING_MINIMUM_AUTO,
         TAKE_SAMPLE_AUTO,
-        TAKE_SAMPLE_AUTO_NEAR_WALL
+        TAKE_SAMPLE_AUTO_NEAR_WALL,
+        TAKE_SAMPLE_SPECIMEN,
+        HANG
     }
 
     public ExtendoState extendoState = ExtendoState.RETRACTING;
     public int EXTENDING_MINIMUM = 550;
     public int RETRACTING = 0;
     public int EXTENDING_AUTO = 450;
-    public int TAKE_SAMPLE_AUTO = 1200;
+    public int TAKE_SAMPLE_AUTO = 1000;//1200
     public int TAKE_SAMPLE_AUTO_NEAR_WALL = 1000;
+    public int TAKE_SAMPLE_SPECIMEN = 1300;
+    public int HANG = 1000;
 
 
     private final PIDController extendo_pid;
@@ -129,6 +133,12 @@ public class Extendo extends SubsystemBase {
                 break;
             case TAKE_SAMPLE_AUTO_NEAR_WALL:
                 targetPosition = TAKE_SAMPLE_AUTO_NEAR_WALL;
+                break;
+            case TAKE_SAMPLE_SPECIMEN:
+                targetPosition = TAKE_SAMPLE_SPECIMEN;
+                break;
+            case HANG:
+                targetPosition = HANG;
                 break;
         }
     }

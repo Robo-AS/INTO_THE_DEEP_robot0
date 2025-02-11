@@ -1,5 +1,6 @@
 package org.firstinspires.ftc.teamcode.tests;
 
+import com.qualcomm.hardware.adafruit.AdafruitI2cColorSensor;
 import com.qualcomm.hardware.rev.RevColorSensorV3;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
@@ -8,8 +9,8 @@ import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
 
 @TeleOp(name = "ColorSensorTest", group = "Tests")
 public class ColorSensorTest extends LinearOpMode {
-    public RevColorSensorV3 colorSensor0; //declare
-
+    public RevColorSensorV3 colorSensor0;//declare
+    public AdafruitI2cColorSensor ada;
     @Override
     public void runOpMode(){
         colorSensor0 = hardwareMap.get(RevColorSensorV3.class, "colorSensor"); //mapping

@@ -1,4 +1,4 @@
-package org.firstinspires.ftc.teamcode.tests;
+package org.firstinspires.ftc.teamcode.tests.HangTests;
 
 import com.arcrobotics.ftclib.command.CommandOpMode;
 import com.arcrobotics.ftclib.gamepad.GamepadEx;
@@ -7,7 +7,7 @@ import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import org.firstinspires.ftc.teamcode.programs.subsystems.Lift;
 
 @TeleOp(name = "HangTest", group = "Tests")
-public class HangTest extends CommandOpMode {
+public class HangLiftTest extends CommandOpMode {
     private final Lift lift = Lift.getInstance();
     private GamepadEx gamepadEx;
 

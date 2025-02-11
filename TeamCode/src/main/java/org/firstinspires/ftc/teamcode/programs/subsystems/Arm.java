@@ -56,7 +56,6 @@ public class Arm extends SubsystemBase {
     public static double PUT_SPECIMEN = 280;
 
 
-    public static double TEST = HIGH_RUNG;
     //MOTION PROFILING STUFF
     private final ElapsedTime time = new ElapsedTime();
     MotionProfile profile;
@@ -86,7 +85,6 @@ public class Arm extends SubsystemBase {
 
         wristServo = new CachingServo(hardwareMap.get(Servo.class, "wristServo"));
         wristServo.setDirection(Servo.Direction.FORWARD);
-
 
     }
 

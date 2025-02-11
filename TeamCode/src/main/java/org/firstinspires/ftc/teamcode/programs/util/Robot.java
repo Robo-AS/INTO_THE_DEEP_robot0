@@ -40,6 +40,7 @@ public class Robot {
         lift = Lift.getInstance();
         mecanumDriveTrain = MecanumDriveTrain.getInstance();
         arm = Arm.getInstance();
+        hang = Hang.getInstance();
     }
 
     public static Robot getInstance() {
@@ -57,6 +58,7 @@ public class Robot {
         lift.initializeHardware(hardwareMap);
         mecanumDriveTrain.initializeHardware(hardwareMap);
         arm.initializeHardware(hardwareMap);
+        hang.initializeHardware(hardwareMap);
 
 
         allHubs = hardwareMap.getAll(LynxModule.class);
@@ -75,6 +77,7 @@ public class Robot {
         extendo.initialize();
         lift.initialize();
         arm.initialize();
+        hang.initialize();
     }
 
 
