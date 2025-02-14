@@ -40,6 +40,18 @@ public class SpecimenAuto extends CommandOpMode {
     public static Pose preloadPose = new Pose(37, 72, Math.toRadians(180));
 
     public static Pose grab1Pose = new Pose(30, 40, Math.toRadians(-45));
+    public static Pose spit1Pose = new Pose(0, 0, Math.toRadians(0));
+
+    public static Pose grab2Pose = new Pose(0, 0, Math.toRadians(0));
+    public static Pose spit2Pose = new Pose(0, 0, Math.toRadians(0));
+
+    public static Pose grab3Pose = new Pose(0, 0, Math.toRadians(0));
+    public static Pose spit3Pose = new Pose(0, 0, Math.toRadians(0));
+
+    public static Pose pick1Pose = new Pose(0, 0, Math.toRadians(0));
+    public static Pose score1Pose = new Pose(0, 0, Math.toRadians(0));
+
+
 
 
     @Override
@@ -72,6 +84,11 @@ public class SpecimenAuto extends CommandOpMode {
                 .addPath(new BezierLine(new Point(preloadPose), new Point(grab1Pose)))
                 .setTangentHeadingInterpolation()
                 .build();
+
+        PathChain spit1 = follower.pathBuilder()
+                        .addPath(new BezierLine(new Point(grab1Pose), new Point(spit1Pose)))
+                        .setLinearHeadingInterpolation(grab1Pose.getHeading(), spit1Pose.getHeading(), 0.8)
+                        .build();
 
 
 

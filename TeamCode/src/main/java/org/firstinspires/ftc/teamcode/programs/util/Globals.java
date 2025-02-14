@@ -26,14 +26,20 @@ public class Globals {
 
 
     //Hang
-    public static boolean HANGING = false;
-    public static void isHanging(){
-        HANGING = true;
+    public static boolean HANGING_LEVEL_2 = false;
+    public static boolean HANGING_LEVEL_3 = false;
+
+
+    public static void isHangingLevel2(){
+        HANGING_LEVEL_2 = true;
+    }
+    public static void isHangingLevel3(){
+        HANGING_LEVEL_3 = true;
 
     }
 
     public static void isNotHanging(){
-        HANGING = false;
+        HANGING_LEVEL_3 = false;
 
     }
 

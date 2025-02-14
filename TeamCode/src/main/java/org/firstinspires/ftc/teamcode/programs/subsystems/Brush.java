@@ -348,9 +348,16 @@ public class Brush extends SubsystemBase{
         }
     }
 
+    public void updateSampleStateAuto(double distance){
+        if(distance < 3){
+            sampleState = SampleState.IS;
+        }
+        else sampleState = SampleState.ISNOT;
+    }
 
     public boolean isSample(){
         double distance = colorSensor.getDistance(DistanceUnit.CM);
+        updateSampleStateAuto(distance);
         return distance < 3;
     }
 

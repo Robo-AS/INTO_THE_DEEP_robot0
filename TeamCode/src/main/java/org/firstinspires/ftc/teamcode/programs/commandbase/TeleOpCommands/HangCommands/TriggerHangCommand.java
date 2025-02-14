@@ -10,9 +10,9 @@ import org.firstinspires.ftc.teamcode.programs.util.Globals;
 public class TriggerHangCommand extends SequentialCommandGroup {
     public TriggerHangCommand(){
         super(
-                new SetHangStateCommand(Hang.HangState.TRIGGERED)
-                //new InstantCommand(Globals::isHanging),
-                //new InstantCommand(MecanumDriveTrain::resetEncoders)
+                new SetHangStateCommand(Hang.HangState.TRIGGERED),
+                new InstantCommand(Globals::isHangingLevel3),
+                new InstantCommand(MecanumDriveTrain::resetEncoders)
         );
 
     }

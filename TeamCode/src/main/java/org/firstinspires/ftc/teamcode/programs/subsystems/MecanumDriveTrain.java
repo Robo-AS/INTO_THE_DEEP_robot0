@@ -32,8 +32,11 @@ public class MecanumDriveTrain extends WSubsystem implements Drivetrain {
     //PIDs for Hang:
     private final PIDController left_pid, right_pid;
     public static double p = 0.01, i = 0, d = 0, f = 0;
-    public static double targetPosition = 0;
+    public static double targetPositionLeft = 0, targetPositionRight = 0;
     public static double currentPositionLeft = 0, currentPositionRight = 0;
+    public static double joystickConstantLeft = 5, joystickConstantRight = 5.1382;
+    public static double minPositionLeft = 0, maxPositionLeft = 2170;
+    public static double minPositionRight = 0, maxPositionRight = 2230;
 
     public MecanumDriveTrain(){
         left_pid = new PIDController(p, i, d);
@@ -72,7 +75,8 @@ public class MecanumDriveTrain extends WSubsystem implements Drivetrain {
     public void initialize(){
         left_pid.reset();
         right_pid.reset();
-        targetPosition = 0;
+        targetPositionLeft = 0;
+        targetPositionRight = 0;
         currentPositionLeft = 0;
         currentPositionRight = 0;
     }
@@ -84,11 +88,11 @@ public class MecanumDriveTrain extends WSubsystem implements Drivetrain {
     }
 
     public void set(double forwardSpeed, double strafeSpeed, double turnSpeed, double gyroAngle) {
-        Vector2D input = new Vector2D(forwardSpeed, strafeSpeed).rotate(-gyroAngle);
 
+        Vector2D input = new Vector2D(forwardSpeed, strafeSpeed).rotate(-gyroAngle);
         double actualks = ks; // *12/getVoltage();
 
-        if(!Globals.HANGING){
+        if(!Globals.HANGING_LEVEL_3){
             forwardSpeed = Range.clip(input.x, -1, 1);
             strafeSpeed = Range.clip(input.y, -1, 1);
             turnSpeed = Range.clip(turnSpeed, -1, 1);
@@ -128,13 +132,13 @@ public class MecanumDriveTrain extends WSubsystem implements Drivetrain {
 
             left_pid.setPID(p, i, d);
             right_pid.setPID(p, i, d);
-            double powerLeft = left_pid.calculate(currentPositionLeft, targetPosition);
-            double powerRight = right_pid.calculate(currentPositionRight, -targetPosition);
+            double powerLeft = left_pid.calculate(currentPositionLeft, targetPositionLeft);
+            double powerRight = right_pid.calculate(currentPositionRight, -targetPositionRight);
 
             dtFrontLeftMotor.setPower(powerLeft);
             dtFrontRightMotor.setPower(powerRight);
 
-            dtBackLeftMotor.setPower(-(double) 80 /100*powerLeft);
+            dtBackLeftMotor.setPower(-(double) 80/100*powerLeft);
             dtBackRightMotor.setPower(-(double) 80/100*powerRight);
         }
 
@@ -197,10 +201,23 @@ public class MecanumDriveTrain extends WSubsystem implements Drivetrain {
     }
 
 
-    public double getTargetPosition(){
-        return targetPosition;
+    public double getTargetPositionLeft(){
+        return targetPositionLeft;
     }
 
+    public void updateTargetPositionHang(double joystickYCoord){
+        targetPositionLeft += (joystickYCoord * joystickConstantLeft);
+        targetPositionLeft = Math.max(minPositionLeft, Math.min(maxPositionLeft, targetPositionLeft)); //limita de prosti
+
+        targetPositionRight += (joystickYCoord *joystickConstantRight);
+        targetPositionRight = Math.max(minPositionRight, Math.min(maxPositionRight, targetPositionRight)); //limita de prosti
+
+    }
+
+    public void resetTargetPositions(){
+        targetPositionRight = 0;
+        targetPositionLeft = 0;
+    }
 
 
 

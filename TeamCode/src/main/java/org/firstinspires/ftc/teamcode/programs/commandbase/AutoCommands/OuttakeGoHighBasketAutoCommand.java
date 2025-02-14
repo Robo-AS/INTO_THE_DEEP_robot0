@@ -12,7 +12,7 @@ import org.firstinspires.ftc.teamcode.programs.subsystems.Lift;
 public class OuttakeGoHighBasketAutoCommand extends SequentialCommandGroup {
     public OuttakeGoHighBasketAutoCommand(){
         super(
-                new SetLiftStateCommand(Lift.LiftState.HIGH_BASKET),
+                new SetLiftStateCommand(Lift.LiftState.HIGH_BASKET_AUTO),
                 new WaitUntilCommand(Lift::canRotateArmHighBasket),
                 new SetWristStateCommand(Arm.WristState.HIGH_BASKET),
                 new SetArmStateCommand(Arm.ArmState.HIGH_BASKET)

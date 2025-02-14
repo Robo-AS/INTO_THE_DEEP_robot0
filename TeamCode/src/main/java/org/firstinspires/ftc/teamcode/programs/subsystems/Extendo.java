@@ -40,7 +40,7 @@ public class Extendo extends SubsystemBase {
     public int TAKE_SAMPLE_AUTO = 1000;//1200
     public int TAKE_SAMPLE_AUTO_NEAR_WALL = 1000;
     public int TAKE_SAMPLE_SPECIMEN = 1300;
-    public int HANG = 1000;
+    public int HANG = 1300;//1000
 
 
     private final PIDController extendo_pid;

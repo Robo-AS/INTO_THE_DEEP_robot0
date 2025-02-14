@@ -1,5 +1,7 @@
 package org.firstinspires.ftc.teamcode.programs.opmodes.teleop;
 
+import android.provider.Settings;
+
 import com.acmerobotics.dashboard.FtcDashboard;
 import com.acmerobotics.dashboard.telemetry.MultipleTelemetry;
 import com.arcrobotics.ftclib.command.CommandOpMode;
@@ -43,7 +45,7 @@ import org.firstinspires.ftc.teamcode.programs.commandbase.ExtendoCommands.SetEx
 import org.firstinspires.ftc.teamcode.utils.geometry.Pose;
 
 
-@com.qualcomm.robotcore.eventloop.opmode.TeleOp(name = "TeleOpBlue", group = "OpModes")
+@com.qualcomm.robotcore.eventloop.opmode.TeleOp(name = "🟦TeleOpBlue🟦", group = "OpModes")
 public class TeleOpBlue extends CommandOpMode {
     private final Robot robot = Robot.getInstance();
     public GamepadEx gamepadEx;
@@ -59,9 +61,12 @@ public class TeleOpBlue extends CommandOpMode {
 
         gamepadEx = new GamepadEx(gamepad1);
 
+        Globals.HANGING_LEVEL_2 = false;
+        Globals.HANGING_LEVEL_3 = false;
 
         robot.initializeHardware(hardwareMap);
         robot.initializeRobot();
+        //robot.mecanumDriveTrain.resetTargetPositions();
 
 
         //Choosing sample color button logic
@@ -271,6 +276,11 @@ public class TeleOpBlue extends CommandOpMode {
         robot.lift.loop();
         robot.arm.loop();
 
+        //PENTRU LEVEL 3 HANG
+        if(Globals.HANGING_LEVEL_3) {
+            robot.mecanumDriveTrain.updateTargetPositionHang(-gamepadEx.getRightY());
+        }
+
         //applying expo function for mecanum
         exponentialJoystickCoord_X_TURN = (Math.pow(gamepad1.left_stick_x, 3) + liniarCoefTerm * gamepad1.left_stick_x) * contantTerm;
         exponentialJoystickCoord_X_FORWARD = (Math.pow(gamepad1.right_stick_x, 3) + liniarCoefTerm * gamepad1.right_stick_x) * contantTerm;
@@ -315,23 +325,23 @@ public class TeleOpBlue extends CommandOpMode {
 //        telemetry.addData("JoystickConstant", robot.extendo.getJoystickConstant());
 //        telemetry.addData("SHOULD VIBRATE", Globals.shouldVibrate);
 
-//        telemetry.addData("Current Position", robot.lift.liftMotor.getCurrentPosition());
-//        telemetry.addData("Target Position", robot.lift.getTargetPosition());
+        telemetry.addData("Current Position LIFT", robot.lift.liftMotor.getCurrentPosition());
+        telemetry.addData("Target Position LIFT", robot.lift.getTargetPosition());
 
 
 //        telemetry.addData("PINPOINT HEAD", robot.arm.getPinpointHeading());
-
-
-
 //        if(gamepad1.cross)
 //            robot.arm.updatePINPOINT();
 //        telemetry.addData("PROFILE", robot.arm.getProfile());
 
-
-        telemetry.addData("HANG", Globals.HANGING);
+        telemetry.addData("HANG_2", Globals.HANGING_LEVEL_2);
+        telemetry.addData("HANG_3", Globals.HANGING_LEVEL_3);
         telemetry.addData("Current Position Left", robot.mecanumDriveTrain.getCurrentPotionLeft());
         telemetry.addData("Current Position Right", robot.mecanumDriveTrain.getCurrentPositionRight());
-        telemetry.addData("Target Positon", robot.mecanumDriveTrain.getTargetPosition());
+        telemetry.addData("Target Positon", robot.mecanumDriveTrain.getTargetPositionLeft());
+
+
+
         double loop = System.nanoTime();
         telemetry.addData("Hz", 1000000000 / (loop - loopTime));
         loopTime = loop;

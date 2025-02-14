@@ -9,18 +9,30 @@ import com.pedropathing.pathgen.Point;
 
 @Config
 public class BasketPaths {
+    public static boolean GRAB_1_COMPLETED = false;
+    public static boolean GRAB_2_COMPLETED = false;
+    public static boolean GRAB_3_COMPLETED = false;
 
-    public static double preloadPose_X = 14, preloadPose_Y = 127, preloadPose_HEADING = -45;
+    public static boolean SCORE_1_COMPLETED = false;
+    public static boolean SCORE_2_COMPLETED = false;
+    public static boolean SCORE_3_COMPLETED = false;
 
-    public static Pose startPose = new Pose(7, 112, Math.toRadians(-90));
-    public static Pose preloadPose = new Pose(preloadPose_X, preloadPose_Y, Math.toRadians(preloadPose_HEADING));
-
-
-
-    public static PathChain preload(){
-        return new PathBuilder()
-                .addPath(new BezierLine(new Point(startPose), new Point(preloadPose)))
-                .setLinearHeadingInterpolation(startPose.getHeading(), preloadPose.getHeading())
-                .build();
+    public void resetTrajectoryes(){
+        GRAB_1_COMPLETED = false;
+        GRAB_2_COMPLETED = false;
+        GRAB_3_COMPLETED = false;
     }
+
+    public void setGrab2Completed(){ GRAB_2_COMPLETED = true; }
+    public void setGrab3Completed(){ GRAB_3_COMPLETED = true; }
+    public void setScore1Completed(){ SCORE_1_COMPLETED = true; }
+    public void setScore2Completed(){ SCORE_2_COMPLETED = true; }
+    public void setScore3Completed(){ SCORE_3_COMPLETED = true; }
+
+
+    public boolean getscore1(){ return SCORE_1_COMPLETED; }
+    public boolean getscore2(){ return SCORE_2_COMPLETED; }
+    public boolean getscore3(){ return SCORE_3_COMPLETED; }
+
+
 }

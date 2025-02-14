@@ -15,6 +15,7 @@ import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.robotcore.external.navigation.CurrentUnit;
+import org.firstinspires.ftc.teamcode.programs.util.Globals;
 
 import dev.frozenmilk.dairy.cachinghardware.CachingDcMotorEx;
 
@@ -32,17 +33,19 @@ public class Lift extends SubsystemBase{
         HIGH_RUNG,
         PUT_SPECIMEN,
         UP_FOR_IDLE,
+        HIGH_BASKET_AUTO,
         IDLE
     }
 
     public LiftState liftState = LiftState.IDLE;;
 
     public static int HIGH_BASKET = 900;
-    public static int HIGH_RUNG = 520;
+    public static int HIGH_RUNG = 540;
     public static int LOW_BASKET = 400;
-    public int LOW_RUNG= 0;
-    public static int PUT_SPECIMEN = 150;//100
+    public int LOW_RUNG = 0;
+    public static int PUT_SPECIMEN = 200;//150
     public static int UP_FOR_IDLE = 300;
+    public static int HIGH_BASKET_AUTO = 870;
     public int IDLE = 0;
 
 
@@ -52,12 +55,14 @@ public class Lift extends SubsystemBase{
     public static int currentPosition;
 
     public static double p_lift = 0.0056, d_lift = 0.00009, i_lift = 0.15;
+    public static double p_hang = 0.04, d_hang = 0, i_hang = 0;
 
     MotionProfile profile;
     public static int previousTarget = 0;
     public static double maxVelocityUP = 10000000, maxAccelerationUP = 200000;
     public static double maxVelocityDOWN = 1000000, maxAccelerationDOWN = 4000;
-    public static double maxVelocityPUT_SPECIMEN = 10000000, maxAccelerationPUT_SPECIMEN = 200000;
+    public static double maxVelocityPUT_SPECIMEN = 10000000, maxAccelerationPUT_SPECIMEN = 30000;
+    public static double maxVelocityHANG = 500, maxAccelerationHANG = 3000000;
 
 
     public Lift(){
@@ -100,6 +105,17 @@ public class Lift extends SubsystemBase{
     public void loop(){
         currentPosition = liftMotor.getCurrentPosition();
 
+        if(Globals.HANGING_LEVEL_2){
+            p_lift = p_hang;
+            d_lift = d_hang;
+            i_lift = i_hang;
+        }
+        else{
+            p_lift = 0.0056;
+            d_lift = 0.00009;
+            i_lift = 0.15;
+        }
+
         if(targetPosition != previousTarget) {
             if(targetPosition > previousTarget) { //profile pentru extindere
                 profile = MotionProfileGenerator.generateSimpleMotionProfile(
@@ -118,6 +134,14 @@ public class Lift extends SubsystemBase{
                             new MotionState(targetPosition, 0),
                             maxVelocityPUT_SPECIMEN,
                             maxAccelerationPUT_SPECIMEN
+                    );
+                }
+                else if (Globals.HANGING_LEVEL_2){
+                    profile = MotionProfileGenerator.generateSimpleMotionProfile(
+                            new MotionState(previousTarget, 0),
+                            new MotionState(targetPosition, 0),
+                            maxVelocityHANG,
+                            maxAccelerationHANG
                     );
                 }
 
@@ -177,6 +201,9 @@ public class Lift extends SubsystemBase{
                 targetPosition = UP_FOR_IDLE;
                 break;
 
+            case HIGH_BASKET_AUTO:
+                targetPosition = HIGH_BASKET_AUTO;
+                break;
             case IDLE:
                 targetPosition = IDLE;
                 break;
