@@ -41,7 +41,7 @@ public class Extendo extends SubsystemBase {
     public int TAKE_SAMPLE_AUTO = 1000;
     public int TAKE_SAMPLE_AUTO_NEAR_WALL = 1600;
     public int TAKE_SAMPLE_SPECIMEN = 1600;
-    public int TAKE_SPECIMEN_AUTO = 500;//600
+    public int TAKE_SPECIMEN_AUTO = 1000;//600
     public int HANG = 1300;//1000
 
 
@@ -141,6 +141,7 @@ public class Extendo extends SubsystemBase {
                 break;
             case TAKE_SPECIMEN_AUTO:
                 targetPosition = TAKE_SPECIMEN_AUTO;
+                break;
             case HANG:
                 targetPosition = HANG;
                 break;

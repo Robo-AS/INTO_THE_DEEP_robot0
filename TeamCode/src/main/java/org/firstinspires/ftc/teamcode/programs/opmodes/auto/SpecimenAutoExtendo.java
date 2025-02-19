@@ -53,7 +53,7 @@ public class SpecimenAutoExtendo extends CommandOpMode {
     public static Pose bring1PoseControlPoint = new Pose(39.74025974025975, 25.01298701298701, Math.toRadians(180));
 
 
-    public static Pose grab2Pose = new Pose(64, 13, Math.toRadians(180));
+    public static Pose grab2Pose = new Pose(64, 12, Math.toRadians(180));
     public static Pose grab2ControlPoint = new Pose(68, 24, Math.toRadians(180));
 
     public static Pose bring2Pose = new Pose(41.37662337662338, 11.45454545454546, Math.toRadians(180));
@@ -183,11 +183,6 @@ public class SpecimenAutoExtendo extends CommandOpMode {
 
 
 
-//        PathChain score1 = follower.pathBuilder()
-//                .addPath(new BezierCurve(new Point(takeSpecimen1Pose), new Point(score1PoseControlPoint), new Point(score1Pose)))
-//                .setLinearHeadingInterpolation(takeSpecimen1Pose.getHeading(), score1Pose.getHeading())
-//                .build();
-
 
         PathChain score1 = follower.pathBuilder()
                 .addPath(new BezierCurve(new Point(takeSpecimen1Pose), new Point(score1PoseControlPoint), new Point(score1Pose)))
@@ -288,8 +283,14 @@ public class SpecimenAutoExtendo extends CommandOpMode {
 
                         new FollowPath(follower, grab2, true, 1)
                                 .alongWith(
-                                        new SetBrushAngleCommand(Brush.BrushAngle.UP),
-                                        new SetExtendoStateCommand(Extendo.ExtendoState.EXTENDING_MINIMUM_AUTO)
+                                        new SequentialCommandGroup(
+                                                new SetExtendoStateCommand(Extendo.ExtendoState.EXTENDING_MINIMUM_AUTO),
+                                                new WaitCommand(300),
+                                                new SetBrushAngleCommand(Brush.BrushAngle.UP)
+
+                                        )
+
+
                                 )
                                 .andThen(new SetBrushAngleCommand(Brush.BrushAngle.DOWN_AUTO)),
 
@@ -301,8 +302,12 @@ public class SpecimenAutoExtendo extends CommandOpMode {
 
                         new FollowPath(follower, grab3, true, 1)
                                 .alongWith(
-                                        new SetBrushAngleCommand(Brush.BrushAngle.UP),
-                                        new SetExtendoStateCommand(Extendo.ExtendoState.RETRACTING)
+                                        new SequentialCommandGroup(
+                                                new SetExtendoStateCommand(Extendo.ExtendoState.RETRACTING),
+                                                new WaitCommand(300),
+                                                new SetBrushAngleCommand(Brush.BrushAngle.UP)
+
+                                        )
                                 ),
 
 
@@ -310,7 +315,7 @@ public class SpecimenAutoExtendo extends CommandOpMode {
                         new FollowPath(follower, bring3, true, 1)
                                 .alongWith(
                                         new SequentialCommandGroup(
-                                                new WaitCommand(2000),
+                                                new WaitCommand(1200),//2000
                                                 new SetExtendoStateCommand(Extendo.ExtendoState.EXTENDING_MINIMUM_AUTO),
                                                 new WaitCommand(500),
                                                 new SetBrushAngleCommand(Brush.BrushAngle.DOWN_AUTO),
@@ -336,18 +341,23 @@ public class SpecimenAutoExtendo extends CommandOpMode {
                                 ),
                         new WaitCommand(250),
                         new FollowPath(follower, score1SMALL, true, 1),
-                        new WaitCommand(200),
-                        new PutSpecimenCommand(),
+//                        new WaitCommand(200),
+
 
 
 
 
                         new FollowPath(follower, take2, true, 1)
                                 .alongWith(
-                                        new OuttakeGoBackToIdleFromHighRungCommand(),
-                                        new SetExtendoStateCommand(Extendo.ExtendoState.EXTENDING_MINIMUM_AUTO),
-                                        new WaitCommand(500),
-                                        new SetBrushAngleCommand(Brush.BrushAngle.DOWN_AUTO)
+                                        new SequentialCommandGroup(
+
+                                                new PutSpecimenCommand(),
+                                                new OuttakeGoBackToIdleFromHighRungCommand(),
+                                                new SetExtendoStateCommand(Extendo.ExtendoState.EXTENDING_MINIMUM_AUTO),
+                                                new WaitCommand(500),
+                                                new SetBrushAngleCommand(Brush.BrushAngle.DOWN_AUTO)
+                                        )
+
 
 
                                 ),
@@ -367,17 +377,20 @@ public class SpecimenAutoExtendo extends CommandOpMode {
                                 ),
                         new WaitCommand(250),
                         new FollowPath(follower, score2SMALL, true, 1),
-                        new WaitCommand(200),
-                        new PutSpecimenCommand(),
+//                        new WaitCommand(200),
 
 
 
                         new FollowPath(follower, take3, true, 1)
                                 .alongWith(
-                                        new OuttakeGoBackToIdleFromHighRungCommand(),
-                                        new SetExtendoStateCommand(Extendo.ExtendoState.EXTENDING_MINIMUM_AUTO),
-                                        new WaitCommand(500),
-                                        new SetBrushAngleCommand(Brush.BrushAngle.DOWN_AUTO)
+                                        new SequentialCommandGroup(
+
+                                                new PutSpecimenCommand(),
+                                                new OuttakeGoBackToIdleFromHighRungCommand(),
+                                                new SetExtendoStateCommand(Extendo.ExtendoState.EXTENDING_MINIMUM_AUTO),
+                                                new WaitCommand(500),
+                                                new SetBrushAngleCommand(Brush.BrushAngle.DOWN_AUTO)
+                                        )
 
 
                                 ),
@@ -397,16 +410,20 @@ public class SpecimenAutoExtendo extends CommandOpMode {
                                 ),
                         new WaitCommand(250),
                         new FollowPath(follower, score3SMALL, true, 1),
-                        new WaitCommand(200),
-                        new PutSpecimenCommand(),
+//                        new WaitCommand(200),
+
 
 
                         new FollowPath(follower, take4, true, 1)
                                 .alongWith(
-                                        new OuttakeGoBackToIdleFromHighRungCommand(),
-                                        new SetExtendoStateCommand(Extendo.ExtendoState.EXTENDING_MINIMUM_AUTO),
-                                        new WaitCommand(500),
-                                        new SetBrushAngleCommand(Brush.BrushAngle.DOWN_AUTO)
+                                        new SequentialCommandGroup(
+
+                                                new PutSpecimenCommand(),
+                                                new OuttakeGoBackToIdleFromHighRungCommand(),
+                                                new SetExtendoStateCommand(Extendo.ExtendoState.EXTENDING_MINIMUM_AUTO),
+                                                new WaitCommand(500),
+                                                new SetBrushAngleCommand(Brush.BrushAngle.DOWN_AUTO)
+                                        )
 
 
                                 ),
@@ -427,9 +444,9 @@ public class SpecimenAutoExtendo extends CommandOpMode {
                                 ),
                         new WaitCommand(250),
                         new FollowPath(follower, score4SMALL, true, 1),
-                        new WaitCommand(200),
+//                        new WaitCommand(200),
                         new PutSpecimenCommand(),
-                        new WaitCommand(300),
+                        new WaitCommand(200),
                         new OuttakeGoBackToIdleFromHighRungCommand()
 
 
