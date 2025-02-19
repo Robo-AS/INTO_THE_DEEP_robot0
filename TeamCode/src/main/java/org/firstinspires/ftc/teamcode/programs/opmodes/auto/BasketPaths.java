@@ -1,11 +1,7 @@
 package org.firstinspires.ftc.teamcode.programs.opmodes.auto;
 
 import com.acmerobotics.dashboard.config.Config;
-import com.pedropathing.localization.Pose;
-import com.pedropathing.pathgen.BezierLine;
-import com.pedropathing.pathgen.PathBuilder;
-import com.pedropathing.pathgen.PathChain;
-import com.pedropathing.pathgen.Point;
+
 
 @Config
 public class BasketPaths {
