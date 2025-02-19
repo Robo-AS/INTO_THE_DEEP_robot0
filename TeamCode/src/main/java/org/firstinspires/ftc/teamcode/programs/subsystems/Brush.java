@@ -41,7 +41,8 @@ public class Brush extends SubsystemBase{
 
     public enum BrushAngle{
         UP,
-        DOWN
+        DOWN,
+        DOWN_AUTO
     }
 
     public enum IntakedSampleColor {
@@ -252,7 +253,6 @@ public class Brush extends SubsystemBase{
         else if(red > 300 && green < 700)
             intakedSampleColor = IntakedSampleColor.RED;
         else intakedSampleColor = IntakedSampleColor.NOTHING;
-
     }
 
 
@@ -301,6 +301,10 @@ public class Brush extends SubsystemBase{
             case DOWN:
                 brushAngleServo.setPosition(Globals.BRUSH_POSITION_DOWN);
                 break;
+            case DOWN_AUTO:
+                brushAngleServo.setPosition(Globals.BRUSH_POSITION_DOWN_AUTO);
+                break;
+
 
         }
     }

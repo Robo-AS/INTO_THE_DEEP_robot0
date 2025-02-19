@@ -9,6 +9,7 @@ public class Globals {
     public static double BRUSH_SAMPLE_SERVO_SPEED_THROWING = 1;
     public static double BRUSH_POSITION_UP = 0.72;
     public static double BRUSH_POSITION_DOWN = 0.05;
+    public static double BRUSH_POSITION_DOWN_AUTO = 0.2;
 
 
     // Mecanum

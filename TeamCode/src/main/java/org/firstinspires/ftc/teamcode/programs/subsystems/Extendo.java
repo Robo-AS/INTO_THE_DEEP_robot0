@@ -30,20 +30,22 @@ public class Extendo extends SubsystemBase {
         TAKE_SAMPLE_AUTO,
         TAKE_SAMPLE_AUTO_NEAR_WALL,
         TAKE_SAMPLE_SPECIMEN,
+        TAKE_SPECIMEN_AUTO,
         HANG
     }
 
     public ExtendoState extendoState = ExtendoState.RETRACTING;
     public int EXTENDING_MINIMUM = 550;
     public int RETRACTING = 0;
-    public int EXTENDING_AUTO = 450;
-    public int TAKE_SAMPLE_AUTO = 1000;//1200
-    public int TAKE_SAMPLE_AUTO_NEAR_WALL = 1000;
-    public int TAKE_SAMPLE_SPECIMEN = 1300;
+    public int EXTENDING_MINIMUM_AUTO = 450;
+    public int TAKE_SAMPLE_AUTO = 1000;
+    public int TAKE_SAMPLE_AUTO_NEAR_WALL = 1600;
+    public int TAKE_SAMPLE_SPECIMEN = 1600;
+    public int TAKE_SPECIMEN_AUTO = 500;//600
     public int HANG = 1300;//1000
 
 
-    private final PIDController extendo_pid;
+    private PIDController extendo_pid;
     public static double p_extendo = 0.007, i_extendo = 0.11, d_extendo = 0.00006;
 
     public static int targetPosition = 0;
@@ -126,7 +128,7 @@ public class Extendo extends SubsystemBase {
                 targetPosition = RETRACTING;
                 break;
             case EXTENDING_MINIMUM_AUTO:
-                targetPosition = EXTENDING_AUTO;
+                targetPosition = EXTENDING_MINIMUM_AUTO;
                 break;
             case TAKE_SAMPLE_AUTO:
                 targetPosition = TAKE_SAMPLE_AUTO;
@@ -137,6 +139,8 @@ public class Extendo extends SubsystemBase {
             case TAKE_SAMPLE_SPECIMEN:
                 targetPosition = TAKE_SAMPLE_SPECIMEN;
                 break;
+            case TAKE_SPECIMEN_AUTO:
+                targetPosition = TAKE_SPECIMEN_AUTO;
             case HANG:
                 targetPosition = HANG;
                 break;

@@ -18,9 +18,9 @@ public class EMERGENCY extends CommandOpMode {
     public void initialize() {
         robot.initializeHardware(hardwareMap);
         robot.initializeRobot();
-
-
     }
+
+
 
     @Override
     public void run(){

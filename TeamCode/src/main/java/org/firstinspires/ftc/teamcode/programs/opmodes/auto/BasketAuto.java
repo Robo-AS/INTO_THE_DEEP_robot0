@@ -43,19 +43,19 @@ public class BasketAuto extends CommandOpMode {
     private double loopTime = 0;
 
     private final ElapsedTime time = new ElapsedTime();
-    private final ElapsedTime grabTime = new ElapsedTime();
+
 
     public static Pose startPose = new Pose(7, 112, Math.toRadians(-90));
-    public static Pose preloadPose = new Pose(14, 127, Math.toRadians(-45));
+    public static Pose preloadPose = new Pose(13, 127, Math.toRadians(-45));
 
     public static Pose grab1Pose = new Pose(28, 120.8, Math.toRadians(0));
-    public static Pose score1Pose = new Pose(16, 128, Math.toRadians(-45));
+    public static Pose score1Pose = new Pose(16.5, 129.5, Math.toRadians(-45));
 
     public static Pose grab2Pose = new Pose(28, 130, Math.toRadians(0));
-    public static Pose score2Pose = new Pose(16, 128, Math.toRadians(-45));
+    public static Pose score2Pose = new Pose(16.5, 129.5, Math.toRadians(-45));
 
-    public static Pose grab3Pose = new Pose(28, 134, Math.toRadians(17));
-    public static Pose score3Pose = new Pose(16, 128, Math.toRadians(-45));
+    public static Pose grab3Pose = new Pose(28, 134, Math.toRadians(14));
+    public static Pose score3Pose = new Pose(16.5, 129.5, Math.toRadians(-45));
 
     @Override
     public void initialize() {
@@ -78,7 +78,6 @@ public class BasketAuto extends CommandOpMode {
         robot.hang.initialize();
 
         basketPaths.resetTrajectoryes();
-
 
 
 
@@ -126,19 +125,20 @@ public class BasketAuto extends CommandOpMode {
                                 .alongWith(
                                         new SequentialCommandGroup(
                                                 new SetClawStateCommand(Arm.ClawState.CLOSED),
-                                                new WaitCommand(100),
-                                                new OuttakeGoHighBasketAutoCommand()
+                                                new WaitCommand(300),
+                                                new OuttakeGoHighBasketAutoCommand(),
+                                                new ScoreSampleAutoCommand()
                                         )
 
-                                )
-                                .andThen(new ScoreSampleAutoCommand()),
+                                ),
+                                //.andThen(new ScoreSampleAutoCommand()),
 
 
                         new FollowPath(follower, grab1, true, 1)
                                 .alongWith(
                                         new SequentialCommandGroup(
                                                 new SetExtendoStateCommand(Extendo.ExtendoState.EXTENDING_MINIMUM_AUTO),
-                                                new WaitCommand(500),
+                                                new WaitCommand(500),//500
                                                 new SetBrushAngleCommand(Brush.BrushAngle.DOWN),
                                                 new SetBrushStateCommand(Brush.BrushState.INTAKING)
                                         )
@@ -228,7 +228,7 @@ public class BasketAuto extends CommandOpMode {
 
                                 ),
                         new SetExtendoStateCommand(Extendo.ExtendoState.TAKE_SAMPLE_AUTO_NEAR_WALL),
-                        new WaitUntilCommand(robot.brush::isSample).withTimeout(1000),
+                        new WaitUntilCommand(robot.brush::isSample).withTimeout(2000),
                         new SetBrushStateCommand(Brush.BrushState.IDLE),
 
                         new ConditionalCommand(
@@ -287,14 +287,6 @@ public class BasketAuto extends CommandOpMode {
 
     }
 
-
-    public void resetGrabTime(){
-        grabTime.reset();
-    }
-
-    public boolean timePassed(){
-        return grabTime.seconds() > 5;
-    }
 
 
 }

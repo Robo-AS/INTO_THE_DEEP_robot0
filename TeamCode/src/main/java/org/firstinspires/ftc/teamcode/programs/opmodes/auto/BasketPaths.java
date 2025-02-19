@@ -9,13 +9,13 @@ import com.pedropathing.pathgen.Point;
 
 @Config
 public class BasketPaths {
-    public static boolean GRAB_1_COMPLETED = false;
-    public static boolean GRAB_2_COMPLETED = false;
-    public static boolean GRAB_3_COMPLETED = false;
+    public boolean GRAB_1_COMPLETED = false;
+    public boolean GRAB_2_COMPLETED = false;
+    public boolean GRAB_3_COMPLETED = false;
 
-    public static boolean SCORE_1_COMPLETED = false;
-    public static boolean SCORE_2_COMPLETED = false;
-    public static boolean SCORE_3_COMPLETED = false;
+    public boolean SCORE_1_COMPLETED = false;
+    public boolean SCORE_2_COMPLETED = false;
+    public boolean SCORE_3_COMPLETED = false;
 
     public void resetTrajectoryes(){
         GRAB_1_COMPLETED = false;

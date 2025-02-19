@@ -37,20 +37,20 @@ public class Lift extends SubsystemBase{
         IDLE
     }
 
-    public LiftState liftState = LiftState.IDLE;;
+    public LiftState liftState = LiftState.IDLE;
 
     public static int HIGH_BASKET = 900;
-    public static int HIGH_RUNG = 540;
+    public static int HIGH_RUNG = 520;
     public static int LOW_BASKET = 400;
     public int LOW_RUNG = 0;
-    public static int PUT_SPECIMEN = 200;//150
+    public static int PUT_SPECIMEN = 160;//150
     public static int UP_FOR_IDLE = 300;
-    public static int HIGH_BASKET_AUTO = 870;
+    public static int HIGH_BASKET_AUTO = 840 ;//870//am schimbat aici gen ca dadusem joc mecanism de hang si fara ala se plia mai bine lift-ul (aparent)
     public int IDLE = 0;
 
 
 
-    private final PIDController lift_pid;
+    private PIDController lift_pid;
     public static int targetPosition;
     public static int currentPosition;
 
@@ -61,7 +61,7 @@ public class Lift extends SubsystemBase{
     public static int previousTarget = 0;
     public static double maxVelocityUP = 10000000, maxAccelerationUP = 200000;
     public static double maxVelocityDOWN = 1000000, maxAccelerationDOWN = 4000;
-    public static double maxVelocityPUT_SPECIMEN = 10000000, maxAccelerationPUT_SPECIMEN = 30000;
+    public static double maxVelocityPUT_SPECIMEN = 10000000, maxAccelerationPUT_SPECIMEN = 60000;
     public static double maxVelocityHANG = 500, maxAccelerationHANG = 3000000;
 
 
@@ -257,6 +257,6 @@ public class Lift extends SubsystemBase{
 
 
     public static boolean canOpenClaw(){
-        return currentPosition > 850;
+        return currentPosition > 800;
     }
 }

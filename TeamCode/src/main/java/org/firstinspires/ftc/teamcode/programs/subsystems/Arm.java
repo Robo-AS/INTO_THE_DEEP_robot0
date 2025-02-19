@@ -45,7 +45,7 @@ public class Arm extends SubsystemBase {
     public WristState wristState = WristState.INIT;
 
     public static double OPEN_clawServo = 0, CLOSED_clawServo = 0.75;
-    public static double INIT_wristServo = 0, HIGH_BASKET_wristServo = 0.3, HIGH_RUNG_wristServo = 1, TRANSITION_wristServo = 0.15;
+    public static double INIT_wristServo = 0, HIGH_BASKET_wristServo = 0.3, HIGH_RUNG_wristServo = 0.9, TRANSITION_wristServo = 0.15;
     public static double INIT_rightServo = 0.175, INIT_leftServo = 0.2;
     public static int RANGE_ANGLE = 200;
 

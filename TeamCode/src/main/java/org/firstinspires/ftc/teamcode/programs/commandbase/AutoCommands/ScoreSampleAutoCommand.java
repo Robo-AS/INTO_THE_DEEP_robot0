@@ -15,7 +15,7 @@ public class ScoreSampleAutoCommand extends SequentialCommandGroup {
     public ScoreSampleAutoCommand(){
         super(
                 new WaitUntilCommand(Lift::canOpenClaw),
-                new WaitCommand(100),
+                new WaitCommand(50),
                 new SetClawStateCommand(Arm.ClawState.OPEN),
                 new WaitCommand(300),
                 new SetArmStateCommand(Arm.ArmState.INIT),
