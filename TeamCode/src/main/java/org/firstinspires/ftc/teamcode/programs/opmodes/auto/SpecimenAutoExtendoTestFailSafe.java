@@ -3,6 +3,7 @@ package org.firstinspires.ftc.teamcode.programs.opmodes.auto;
 import com.acmerobotics.dashboard.config.Config;
 import com.arcrobotics.ftclib.command.CommandOpMode;
 import com.arcrobotics.ftclib.command.CommandScheduler;
+import com.arcrobotics.ftclib.command.InstantCommand;
 import com.arcrobotics.ftclib.command.SequentialCommandGroup;
 import com.arcrobotics.ftclib.command.WaitCommand;
 import com.arcrobotics.ftclib.command.WaitUntilCommand;
@@ -15,6 +16,7 @@ import com.pedropathing.pathgen.PathChain;
 import com.pedropathing.pathgen.Point;
 import com.pedropathing.util.Constants;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
+import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.teamcode.pedroPathing.constants.FConstants;
 import org.firstinspires.ftc.teamcode.pedroPathing.constants.LConstants;
@@ -33,17 +35,19 @@ import org.firstinspires.ftc.teamcode.programs.util.Robot;
 
 
 @Config
-@Autonomous(name = "SpecimenAutoExtendo")
-public class SpecimenAutoExtendo extends CommandOpMode {
+@Autonomous(name = "SpecimenAutoExtendoTestFailSafe")
+public class SpecimenAutoExtendoTestFailSafe extends CommandOpMode {
     private final Robot robot = Robot.getInstance();
+    private final SpecimenPaths specimenPaths = new SpecimenPaths();
     private Follower follower;
     private double loopTime = 0;
+    private final ElapsedTime time = new ElapsedTime();
 
 
 
     public static Pose startPose = new Pose(7, 64, Math.toRadians(180));
     public static Pose preloadPose = new Pose(34.5, 68, Math.toRadians(180));
-    public static Pose preloadSMALLPose = new Pose(38.5, 68, Math.toRadians(180));
+
 
 
     public static Pose grab1Pose = new Pose(63, 22, Math.toRadians(180));
@@ -79,6 +83,7 @@ public class SpecimenAutoExtendo extends CommandOpMode {
     public static Pose score1SMALLPose = new Pose(38.63766233766234, 59.61038961038961, Math.toRadians(180));
 
 
+
     public static Pose take2Pose = new Pose(25.246753246753247, 39.740259740259745, Math.toRadians(230));//line 10
     public static Pose take2PoseControlPoint = new Pose(28.28571428571428, 50.02597402597402, Math.toRadians(230));
 
@@ -109,7 +114,6 @@ public class SpecimenAutoExtendo extends CommandOpMode {
 
 
 
-
     @Override
     public void initialize() {
         CommandScheduler.getInstance().reset();
@@ -136,10 +140,6 @@ public class SpecimenAutoExtendo extends CommandOpMode {
                 .setConstantHeadingInterpolation(preloadPose.getHeading())
                 .build();
 
-        PathChain scorePreloadSMALL = follower.pathBuilder()
-                .addPath(new BezierLine(new Point(preloadPose), new Point(preloadSMALLPose)))
-                .setConstantHeadingInterpolation(preloadSMALLPose.getHeading())
-                .build();
 
 
 
@@ -179,6 +179,8 @@ public class SpecimenAutoExtendo extends CommandOpMode {
                 .addPath(new BezierCurve(new Point(bring3Pose), new Point(takeSpecimen1PoseControlPoint), new Point(takeSpecimen1Pose)))
                 .setLinearHeadingInterpolation(bring3Pose.getHeading(), takeSpecimen1Pose.getHeading())
                 .build();
+
+
 
         PathChain score1 = follower.pathBuilder()
                 .addPath(new BezierCurve(new Point(takeSpecimen1Pose), new Point(score1PoseControlPoint), new Point(score1Pose)))
@@ -245,6 +247,8 @@ public class SpecimenAutoExtendo extends CommandOpMode {
         CommandScheduler.getInstance().schedule(
                 new SequentialCommandGroup(
                         new SetClawStateCommand(Arm.ClawState.OPEN),//don't ask
+//                        new InstantCommand(follower::update),
+//                        new InstantCommand(time::reset), //I think I need to do this?
                         new FollowPath(follower, scorePreload, true, 1)
                                 .alongWith(
                                         new SequentialCommandGroup(
@@ -253,17 +257,16 @@ public class SpecimenAutoExtendo extends CommandOpMode {
                                                 new OuttakeGoHighRungCommand()
                                         )
                                 ),
-//                                .andThen(
-//                                        new SequentialCommandGroup(
-//                                                new WaitCommand(200),
-//                                                new PutSpecimenCommand()
-//                                        )
-//                                ),
+                        new FollowPath(follower, scorePreload, true, 1)
 
-                        //new WaitCommand(100),
-                        new FollowPath(follower, scorePreloadSMALL, true, 1),
-                        new WaitCommand(200),
-                        new PutSpecimenCommand(),
+
+                                .andThen(
+                                        new SequentialCommandGroup(
+                                                new WaitCommand(200),
+                                                new PutSpecimenCommand()
+                                        )
+                                ),
+
 
 
                         new FollowPath(follower, grab1, true, 1)
@@ -324,12 +327,11 @@ public class SpecimenAutoExtendo extends CommandOpMode {
 
 
                                         )
-                                )
-                                .andThen(
-                                        new SetExtendoStateCommand(Extendo.ExtendoState.TAKE_SPECIMEN_AUTO),
-                                        new WaitUntilCommand(robot.brush::isSample),
-                                        new SetBrushStateCommand(Brush.BrushState.IDLE)
                                 ),
+                        new InstantCommand(specimenPaths::setBring3Take1Completed),
+                        new SetExtendoStateCommand(Extendo.ExtendoState.TAKE_SPECIMEN_AUTO),
+                        new WaitUntilCommand(robot.brush::isSample),
+                        new SetBrushStateCommand(Brush.BrushState.IDLE),
 
 
                         new FollowPath(follower, score1, true, 1)
@@ -340,8 +342,10 @@ public class SpecimenAutoExtendo extends CommandOpMode {
                                         )
 
                                 ),
+                        new InstantCommand(specimenPaths::setScore1Completed),
                         new WaitCommand(250),
                         new FollowPath(follower, score1SMALL, true, 1),
+                        new InstantCommand(specimenPaths::setScore1SmallCompleted),
 //                        new WaitCommand(200),
 
 
@@ -352,22 +356,20 @@ public class SpecimenAutoExtendo extends CommandOpMode {
                                 .alongWith(
                                         new SequentialCommandGroup(
                                                 new PutSpecimenCommand(),
-                                                new OuttakeGoBackToIdleFromHighRungCommand()
-//                                                new SetExtendoStateCommand(Extendo.ExtendoState.EXTENDING_MINIMUM_AUTO),
-//                                                new WaitCommand(500),
-//                                                new SetBrushAngleCommand(Brush.BrushAngle.DOWN_AUTO)
-                                        ),
-                                        new SequentialCommandGroup(
+                                                new OuttakeGoBackToIdleFromHighRungCommand(),
                                                 new SetExtendoStateCommand(Extendo.ExtendoState.EXTENDING_MINIMUM_AUTO),
                                                 new WaitCommand(500),
-                                                new SetBrushAngleCommand(Brush.BrushAngle.DOWN_AUTO)
+                                                new SetBrushAngleCommand(Brush.BrushAngle.DOWN_AUTO),
+                                                new SetBrushStateCommand(Brush.BrushState.INTAKING),
+                                                new SetExtendoStateCommand(Extendo.ExtendoState.TAKE_SPECIMEN_AUTO)
                                         )
 
 
 
                                 ),
-                        new SetBrushStateCommand(Brush.BrushState.INTAKING),
-                        new SetExtendoStateCommand(Extendo.ExtendoState.TAKE_SPECIMEN_AUTO),
+                        new InstantCommand(specimenPaths::setTake2Completed),
+//                        new SetBrushStateCommand(Brush.BrushState.INTAKING),
+//                        new SetExtendoStateCommand(Extendo.ExtendoState.TAKE_SPECIMEN_AUTO),
                         new WaitUntilCommand(robot.brush::isSample),
                         new SetBrushStateCommand(Brush.BrushState.IDLE),
 
@@ -380,8 +382,10 @@ public class SpecimenAutoExtendo extends CommandOpMode {
                                         )
 
                                 ),
+                        new InstantCommand(specimenPaths::setScore2Completed),
                         new WaitCommand(250),
                         new FollowPath(follower, score2SMALL, true, 1),
+                        new InstantCommand(specimenPaths::setScore2SmallCompleted),
 //                        new WaitCommand(200),
 
 
@@ -389,21 +393,18 @@ public class SpecimenAutoExtendo extends CommandOpMode {
                         new FollowPath(follower, take3, true, 1)
                                 .alongWith(
                                         new SequentialCommandGroup(
+
                                                 new PutSpecimenCommand(),
-                                                new OuttakeGoBackToIdleFromHighRungCommand()
-//                                                new SetExtendoStateCommand(Extendo.ExtendoState.EXTENDING_MINIMUM_AUTO),
-//                                                new WaitCommand(500),
-//                                                new SetBrushAngleCommand(Brush.BrushAngle.DOWN_AUTO)
-                                        ),
-                                        new SequentialCommandGroup(
+                                                new OuttakeGoBackToIdleFromHighRungCommand(),
                                                 new SetExtendoStateCommand(Extendo.ExtendoState.EXTENDING_MINIMUM_AUTO),
                                                 new WaitCommand(500),
                                                 new SetBrushAngleCommand(Brush.BrushAngle.DOWN_AUTO)
                                         )
 
 
-
                                 ),
+
+                        new InstantCommand(specimenPaths::setTake3Completed),
                         new SetBrushStateCommand(Brush.BrushState.INTAKING),
                         new SetExtendoStateCommand(Extendo.ExtendoState.TAKE_SPECIMEN_AUTO),
                         new WaitUntilCommand(robot.brush::isSample),
@@ -418,8 +419,10 @@ public class SpecimenAutoExtendo extends CommandOpMode {
                                         )
 
                                 ),
+                        new InstantCommand(specimenPaths::setScore3Completed),
                         new WaitCommand(250),
                         new FollowPath(follower, score3SMALL, true, 1),
+                        new InstantCommand(specimenPaths::setScore3SmallCompleted),
 //                        new WaitCommand(200),
 
 
@@ -427,13 +430,9 @@ public class SpecimenAutoExtendo extends CommandOpMode {
                         new FollowPath(follower, take4, true, 1)
                                 .alongWith(
                                         new SequentialCommandGroup(
+
                                                 new PutSpecimenCommand(),
-                                                new OuttakeGoBackToIdleFromHighRungCommand()
-//                                                new SetExtendoStateCommand(Extendo.ExtendoState.EXTENDING_MINIMUM_AUTO),
-//                                                new WaitCommand(500),
-//                                                new SetBrushAngleCommand(Brush.BrushAngle.DOWN_AUTO)
-                                        ),
-                                        new SequentialCommandGroup(
+                                                new OuttakeGoBackToIdleFromHighRungCommand(),
                                                 new SetExtendoStateCommand(Extendo.ExtendoState.EXTENDING_MINIMUM_AUTO),
                                                 new WaitCommand(500),
                                                 new SetBrushAngleCommand(Brush.BrushAngle.DOWN_AUTO)
@@ -441,6 +440,7 @@ public class SpecimenAutoExtendo extends CommandOpMode {
 
 
                                 ),
+                        new InstantCommand(specimenPaths::setTake4Completed),
                         new SetBrushStateCommand(Brush.BrushState.INTAKING),
                         new SetExtendoStateCommand(Extendo.ExtendoState.TAKE_SPECIMEN_AUTO),
                         new WaitUntilCommand(robot.brush::isSample),
@@ -456,11 +456,13 @@ public class SpecimenAutoExtendo extends CommandOpMode {
                                         )
 
                                 ),
+                        new InstantCommand(specimenPaths::setScore4Completed),
                         new WaitCommand(250),
                         new FollowPath(follower, score4SMALL, true, 1),
+                        new InstantCommand(specimenPaths::setScore4SmallCompleted),
 //                        new WaitCommand(200),
                         new PutSpecimenCommand(),
-                        new WaitCommand(200),
+//                        new WaitCommand(200),
                         new OuttakeGoBackToIdleFromHighRungCommand()
 
 
@@ -490,10 +492,36 @@ public class SpecimenAutoExtendo extends CommandOpMode {
         robot.brush.loopAuto();
 
 
+        if(time.seconds() > 20 && !specimenPaths.allTrajectoriesCompleted()){
+            follower.breakFollowing();
+//            if(!specimenPaths.SCORE_1_COMPLETED || !specimenPaths.SCORE_2_COMPLETED || !specimenPaths.SCORE_3_COMPLETED || !specimenPaths.SCORE_4_COMPLETED)
+//                return;
+////            if(!specimenPaths.SCORE_1_SMALL_COMPLETED || !specimenPaths.SCORE_2_SMALL_COMPLETED || !specimenPaths.SCORE_3_SMALL_COMPLETED || !specimenPaths.SCORE_4_SMALL_COMPLETED)
+////                return;
+//            else{
+//                follower.breakFollowing();
+//
+//            }
 
-        telemetry.addData("X_OFFSET", follower.getXOffset());
-        telemetry.addData("Y_OFFSET", follower.getYOffset());
-        telemetry.addData("HEADING", follower.getHeadingOffset());
+
+        }
+
+        telemetry.addData("Time", time.seconds());
+
+        telemetry.addData("bring3_take1", specimenPaths.getBring3Take1Completed());
+        telemetry.addData("score_1", specimenPaths.getScore1Completed());
+        telemetry.addData("score_1_SMALL", specimenPaths.getScore1SmallCompleted());
+        telemetry.addData("take_2", specimenPaths.getTake2Completed());
+        telemetry.addData("score_2", specimenPaths.getScore2Completed());
+        telemetry.addData("score_2_SMALL", specimenPaths.getScore2SmallCompleted());
+        telemetry.addData("take_3", specimenPaths.getTake3Completed());
+        telemetry.addData("score_3", specimenPaths.getScore3Completed());
+        telemetry.addData("score_3_SMALL", specimenPaths.getScore3SmallCompleted());
+        telemetry.addData("take_4", specimenPaths.getTake4Completed());
+        telemetry.addData("score_4", specimenPaths.getScore4Completed());
+        telemetry.addData("score_4_SMALL", specimenPaths.getScore4SmallCompleted());
+
+
 
 
 

@@ -31,6 +31,10 @@ public class Globals {
     public static boolean HANGING_LEVEL_3 = false;
 
 
+    //Auto
+    public static int TIMEOUT_SPECIMEN_INTAKING = 1500;
+
+
     public static void isHangingLevel2(){
         HANGING_LEVEL_2 = true;
     }

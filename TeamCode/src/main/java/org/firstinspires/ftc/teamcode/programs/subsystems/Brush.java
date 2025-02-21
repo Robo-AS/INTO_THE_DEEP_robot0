@@ -64,6 +64,11 @@ public class Brush extends SubsystemBase{
         BOTH
     }
 
+    public enum SpecimenBlocked{
+        BLOCKED,
+        NOT_BLOCKED
+    }
+
 
     public BrushAngle brushAngle = BrushAngle.UP;
     public BrushState brushState = BrushState.IDLE;
@@ -71,6 +76,7 @@ public class Brush extends SubsystemBase{
     public DesiredSampleColor desiredSampleColor = DesiredSampleColor.BOTH;
     public SampleState sampleState = SampleState.ISNOT;
     public IntakedSampleColor intakedSampleColor = IntakedSampleColor.NOTHING;
+    public SpecimenBlocked specimenBlocked = SpecimenBlocked.NOT_BLOCKED;
 
 
     public static Brush getInstance() {
@@ -346,6 +352,7 @@ public class Brush extends SubsystemBase{
 
             case INTAKING:
                 CommandScheduler.getInstance().schedule(new BrushCommand(Globals.BRUSH_MOTOR_SPEED, Globals.BRUSH_SAMPLE_SERVO_SPEED_INTAKING));
+                isSpecimenBlocked();
                 break;
 
 
@@ -363,6 +370,13 @@ public class Brush extends SubsystemBase{
         double distance = colorSensor.getDistance(DistanceUnit.CM);
         updateSampleStateAuto(distance);
         return distance < 3;
+    }
+
+    public void isSpecimenBlocked(){
+        CurrentUnit currentUnit = CurrentUnit.AMPS;
+        if (brushMotor.getCurrent(currentUnit) > 5)
+            specimenBlocked = SpecimenBlocked.BLOCKED;
+        else specimenBlocked = SpecimenBlocked.NOT_BLOCKED;
     }
 
 }

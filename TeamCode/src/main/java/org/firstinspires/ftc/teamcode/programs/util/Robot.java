@@ -6,6 +6,7 @@ import com.pedropathing.util.Constants;
 import com.qualcomm.hardware.lynx.LynxModule;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 
+import org.firstinspires.ftc.robotcore.external.navigation.CurrentUnit;
 import org.firstinspires.ftc.teamcode.pedroPathing.constants.FConstants;
 import org.firstinspires.ftc.teamcode.pedroPathing.constants.LConstants;
 import org.firstinspires.ftc.teamcode.programs.subsystems.Arm;
@@ -90,6 +91,11 @@ public class Robot {
         for (LynxModule hub : allHubs) {
             hub.clearBulkCache();
         }
+    }
+
+    public boolean isSpecimenBlocked(){
+        CurrentUnit currentUnit = CurrentUnit.AMPS;
+        return brush.brushMotor.getCurrent(currentUnit) > 5;
     }
 
 

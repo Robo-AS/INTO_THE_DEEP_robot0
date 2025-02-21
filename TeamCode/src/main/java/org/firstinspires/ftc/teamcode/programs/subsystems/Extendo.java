@@ -31,18 +31,21 @@ public class Extendo extends SubsystemBase {
         TAKE_SAMPLE_AUTO_NEAR_WALL,
         TAKE_SAMPLE_SPECIMEN,
         TAKE_SPECIMEN_AUTO,
+        RETRACT_AUTO_FAIL_SAFE,
         HANG
     }
 
     public ExtendoState extendoState = ExtendoState.RETRACTING;
-    public int EXTENDING_MINIMUM = 550;
-    public int RETRACTING = 0;
-    public int EXTENDING_MINIMUM_AUTO = 450;
-    public int TAKE_SAMPLE_AUTO = 1000;
-    public int TAKE_SAMPLE_AUTO_NEAR_WALL = 1600;
-    public int TAKE_SAMPLE_SPECIMEN = 1600;
-    public int TAKE_SPECIMEN_AUTO = 1000;//600
-    public int HANG = 1300;//1000
+    public int EXTENDING_MINIMUM = 400;//550
+    public int RETRACTING = -5;
+    public int EXTENDING_MINIMUM_AUTO = 400;//550
+    public int TAKE_SAMPLE_AUTO = 730;//1000
+    public int TAKE_SAMPLE_AUTO_NEAR_WALL = 1160;//1600
+
+    public int TAKE_SAMPLE_SPECIMEN = 1160;//1600
+    public int TAKE_SPECIMEN_AUTO = 730;//1000
+    public int RETRACT_AUTO_FAIL_SAFE = 500;
+    public int HANG = 950;//1300
 
 
     private PIDController extendo_pid;
@@ -50,7 +53,7 @@ public class Extendo extends SubsystemBase {
 
     public static int targetPosition = 0;
     public static int currentPosition;
-    public static int minPosition = 550, maxPosition = 1600;//1700
+    public static int minPosition = 400, maxPosition = 1160;//550, 1600
 
 //    public static double joystickConstant = 30; //15, 50
     public static double exponentialJoystickCoef;
@@ -141,6 +144,9 @@ public class Extendo extends SubsystemBase {
                 break;
             case TAKE_SPECIMEN_AUTO:
                 targetPosition = TAKE_SPECIMEN_AUTO;
+                break;
+            case RETRACT_AUTO_FAIL_SAFE:
+                targetPosition = RETRACT_AUTO_FAIL_SAFE;
                 break;
             case HANG:
                 targetPosition = HANG;

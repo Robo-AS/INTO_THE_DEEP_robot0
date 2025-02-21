@@ -1,7 +1,5 @@
 package org.firstinspires.ftc.teamcode.programs.opmodes.auto;
 
-import com.acmerobotics.dashboard.config.Config;
-import com.arcrobotics.ftclib.command.CommandOpMode;
 import com.arcrobotics.ftclib.command.CommandScheduler;
 import com.arcrobotics.ftclib.command.SequentialCommandGroup;
 import com.arcrobotics.ftclib.command.WaitCommand;
@@ -15,6 +13,7 @@ import com.pedropathing.pathgen.PathChain;
 import com.pedropathing.pathgen.Point;
 import com.pedropathing.util.Constants;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
+import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 
 import org.firstinspires.ftc.teamcode.pedroPathing.constants.FConstants;
 import org.firstinspires.ftc.teamcode.pedroPathing.constants.LConstants;
@@ -31,15 +30,11 @@ import org.firstinspires.ftc.teamcode.programs.subsystems.Brush;
 import org.firstinspires.ftc.teamcode.programs.subsystems.Extendo;
 import org.firstinspires.ftc.teamcode.programs.util.Robot;
 
-
-@Config
-@Autonomous(name = "SpecimenAutoExtendo")
-public class SpecimenAutoExtendo extends CommandOpMode {
+@Autonomous(name = "SpecimenAutoFIXED")
+public class SpecimenAutoFIXED extends LinearOpMode {
     private final Robot robot = Robot.getInstance();
     private Follower follower;
     private double loopTime = 0;
-
-
 
     public static Pose startPose = new Pose(7, 64, Math.toRadians(180));
     public static Pose preloadPose = new Pose(34.5, 68, Math.toRadians(180));
@@ -110,14 +105,15 @@ public class SpecimenAutoExtendo extends CommandOpMode {
 
 
 
-    @Override
-    public void initialize() {
-        CommandScheduler.getInstance().reset();
 
+    @Override
+    public void runOpMode() throws InterruptedException {
+        CommandScheduler.getInstance().reset();
 
         Constants.setConstants(FConstants.class, LConstants.class);
         follower = new Follower(hardwareMap);
         follower.setStartingPose(startPose);
+
 
         robot.lift.initializeHardware(hardwareMap);
         robot.lift.initialize();
@@ -129,7 +125,6 @@ public class SpecimenAutoExtendo extends CommandOpMode {
         robot.brush.initialize();
         robot.hang.initializeHardware(hardwareMap);
         robot.hang.initialize();
-
 
         PathChain scorePreload = follower.pathBuilder()
                 .addPath(new BezierLine(new Point(startPose), new Point(preloadPose)))
@@ -240,6 +235,11 @@ public class SpecimenAutoExtendo extends CommandOpMode {
                 .addPath(new BezierLine(new Point(score4Pose), new Point(score4SMALLPose)))
                 .setConstantHeadingInterpolation(score4SMALLPose.getHeading())
                 .build();
+
+
+        while (opModeInInit()){
+            //here i should recalibrate the pinpoint
+        }
 
 
         CommandScheduler.getInstance().schedule(
@@ -464,43 +464,40 @@ public class SpecimenAutoExtendo extends CommandOpMode {
                         new OuttakeGoBackToIdleFromHighRungCommand()
 
 
-
-
-
-
-
                 )
         );
-    }
 
 
 
 
+        while(opModeIsActive()){
+            follower.update();
 
-    @Override
-    public void run(){
-        follower.update();
-        CommandScheduler.getInstance().run();
+            CommandScheduler.getInstance().run();
+
+            //robot.loop();
+            robot.lift.loop();
+            robot.arm.loop();
+            robot.extendo.loopAuto();
+            robot.brush.loopAuto();
+
+//            telemetry.addData("X_OFFSET", follower.getXOffset());
+//            telemetry.addData("Y_OFFSET", follower.getYOffset());
+//            telemetry.addData("HEADING", follower.getHeadingOffset());
+
+            Pose currentPose = follower.getPose();
+            telemetry.addData("X", currentPose.getX());
+            telemetry.addData("Y", currentPose.getY());
+            telemetry.addData("Heading", Math.toDegrees(currentPose.getHeading()));
 
 
-        //robot.loop();
-        robot.lift.loop();
-        robot.arm.loop();
-        robot.extendo.loopAuto();
-        robot.brush.loopAuto();
+            double loop = System.nanoTime();
+            telemetry.addData("Hz", 1000000000 / (loop - loopTime));
+            loopTime = loop;
+            telemetry.update();
+        }
 
 
-
-        telemetry.addData("X_OFFSET", follower.getXOffset());
-        telemetry.addData("Y_OFFSET", follower.getYOffset());
-        telemetry.addData("HEADING", follower.getHeadingOffset());
-
-
-
-        double loop = System.nanoTime();
-        telemetry.addData("Hz", 1000000000 / (loop - loopTime));
-        loopTime = loop;
-        telemetry.update();
 
 
     }
