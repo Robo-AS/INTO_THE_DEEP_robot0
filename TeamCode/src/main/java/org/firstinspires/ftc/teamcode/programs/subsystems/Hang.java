@@ -9,8 +9,8 @@ import dev.frozenmilk.dairy.cachinghardware.CachingServo;
 @Config
 public class Hang extends SubsystemBase {
     private static Hang instance = null;
-    public CachingServo hangServoLeft;
-    public CachingServo hangServoRight;
+    public CachingServo hangServoLeft, servoSafetyLeft;
+    public CachingServo hangServoRight, servoSafetyRight;
 
 
     public enum HangState{
@@ -18,11 +18,19 @@ public class Hang extends SubsystemBase {
         TRIGGERED
     }
 
+    public enum SafetyState{
+        IDLE,
+        TRIGGERED
+    }
+
 
     public HangState hangState = HangState.IDLE;
+    public SafetyState safetyState = SafetyState.IDLE;
 
     public static double IDLE = 0.55;
     public static double TRIGGERED = 0.4;
+    public static double IDLE_SAFETY = 0.54;
+    public static double TRIGGERED_SAFETY = 0.4;
 
 
     public static Hang getInstance(){
@@ -40,15 +48,25 @@ public class Hang extends SubsystemBase {
         hangServoRight = new CachingServo(hardwareMap.get(Servo.class, "hangServoRight"));
         hangServoRight.setDirection(Servo.Direction.REVERSE);
 
+        servoSafetyLeft = new CachingServo(hardwareMap.get(Servo.class, "servoSafetyLeft"));
+        servoSafetyLeft.setDirection(Servo.Direction.FORWARD);
+
+        servoSafetyRight = new CachingServo(hardwareMap.get(Servo.class, "servoSafetyRight"));
+        servoSafetyRight.setDirection(Servo.Direction.REVERSE);
+
     }
 
     public void initialize(){
         hangState = HangState.IDLE;
+        safetyState = SafetyState.IDLE;
         hangServoLeft.setPosition(IDLE);
         hangServoRight.setPosition(IDLE);
+
+        servoSafetyLeft.setPosition(IDLE_SAFETY);
+        servoSafetyRight.setPosition(IDLE_SAFETY);
     }
 
-    public void update(HangState state){
+    public void updateHang(HangState state){
         hangState = state;
         switch (state){
             case IDLE:
@@ -62,10 +80,29 @@ public class Hang extends SubsystemBase {
         }
     }
 
+    public void updateSafety(SafetyState state){
+        safetyState = state;
+        switch (state){
+            case IDLE:
+                servoSafetyRight.setPosition(IDLE_SAFETY);
+                servoSafetyLeft.setPosition(IDLE_SAFETY);
+                break;
+            case TRIGGERED:
+                servoSafetyRight.setPosition(TRIGGERED_SAFETY);
+                servoSafetyLeft.setPosition(TRIGGERED_SAFETY);
+                break;
+        }
+    }
+
 
 
     public void testServosLopp(){
         hangServoLeft.setPosition(TRIGGERED);
         hangServoRight.setPosition(TRIGGERED);
+    }
+
+    public void testSafetyLopp(){
+        servoSafetyLeft.setPosition(TRIGGERED_SAFETY);
+        servoSafetyRight.setPosition(TRIGGERED_SAFETY);
     }
 }

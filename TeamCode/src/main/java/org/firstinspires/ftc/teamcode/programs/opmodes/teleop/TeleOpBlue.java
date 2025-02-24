@@ -7,6 +7,8 @@ import com.acmerobotics.dashboard.telemetry.MultipleTelemetry;
 import com.arcrobotics.ftclib.command.CommandOpMode;
 import com.arcrobotics.ftclib.command.CommandScheduler;
 import com.arcrobotics.ftclib.command.ConditionalCommand;
+import com.arcrobotics.ftclib.command.SequentialCommandGroup;
+import com.arcrobotics.ftclib.command.WaitCommand;
 import com.arcrobotics.ftclib.command.button.Trigger;
 import com.arcrobotics.ftclib.gamepad.GamepadEx;
 import com.arcrobotics.ftclib.gamepad.GamepadKeys;
@@ -18,7 +20,9 @@ import org.firstinspires.ftc.teamcode.programs.commandbase.BrushCommands.SetBrus
 import org.firstinspires.ftc.teamcode.programs.commandbase.DoesNothingCommand;
 import org.firstinspires.ftc.teamcode.programs.commandbase.LiftCommands.SetLiftStateCommand;
 import org.firstinspires.ftc.teamcode.programs.commandbase.SetDesiredColorCommand;
+import org.firstinspires.ftc.teamcode.programs.commandbase.SetSweeperStateCommand;
 import org.firstinspires.ftc.teamcode.programs.commandbase.TeleOpCommands.HangCommands.GoHangLevel2Position;
+import org.firstinspires.ftc.teamcode.programs.commandbase.TeleOpCommands.HangCommands.SetSafetyStateCommand;
 import org.firstinspires.ftc.teamcode.programs.commandbase.TeleOpCommands.HangCommands.TriggerHangCommand;
 import org.firstinspires.ftc.teamcode.programs.commandbase.TeleOpCommands.HangCommands.UntriggerHangCommand;
 import org.firstinspires.ftc.teamcode.programs.commandbase.TeleOpCommands.IntakeCommands.IntakeIdleCommand;
@@ -38,6 +42,7 @@ import org.firstinspires.ftc.teamcode.programs.subsystems.Arm;
 import org.firstinspires.ftc.teamcode.programs.subsystems.Extendo;
 import org.firstinspires.ftc.teamcode.programs.subsystems.Hang;
 import org.firstinspires.ftc.teamcode.programs.subsystems.Lift;
+import org.firstinspires.ftc.teamcode.programs.subsystems.Sweeper;
 import org.firstinspires.ftc.teamcode.programs.util.Globals;
 import org.firstinspires.ftc.teamcode.programs.util.Robot;
 import org.firstinspires.ftc.teamcode.programs.subsystems.Brush;
@@ -199,6 +204,25 @@ public class TeleOpBlue extends CommandOpMode {
 
 
         //HANG
+//        gamepadEx.getGamepadButton(GamepadKeys.Button.Y)//triunghi
+//                .whenPressed(
+//                        () -> CommandScheduler.getInstance().schedule(
+//                                new ConditionalCommand(
+//                                        new GoHangLevel2Position(),
+//                                        new ConditionalCommand(
+//                                                new SetLiftStateCommand(Lift.LiftState.IDLE),
+//                                                new ConditionalCommand(
+//                                                        new SetExtendoStateCommand(Extendo.ExtendoState.RETRACTING),
+//                                                        new DoesNothingCommand(),
+//                                                        () -> robot.lift.liftState == Lift.LiftState.IDLE && robot.extendo.extendoState == Extendo.ExtendoState.HANG
+//                                                ),
+//                                                () -> robot.lift.liftState == Lift.LiftState.HIGH_BASKET && robot.extendo.extendoState == Extendo.ExtendoState.HANG
+//                                        ),
+//                                        () -> robot.lift.liftState != Lift.LiftState.HIGH_BASKET && robot.extendo.extendoState != Extendo.ExtendoState.HANG
+//                                )
+//                        )
+//                );
+
         gamepadEx.getGamepadButton(GamepadKeys.Button.Y)//triunghi
                 .whenPressed(
                         () -> CommandScheduler.getInstance().schedule(
@@ -206,11 +230,7 @@ public class TeleOpBlue extends CommandOpMode {
                                         new GoHangLevel2Position(),
                                         new ConditionalCommand(
                                                 new SetLiftStateCommand(Lift.LiftState.IDLE),
-                                                new ConditionalCommand(
-                                                        new SetExtendoStateCommand(Extendo.ExtendoState.RETRACTING),
-                                                        new DoesNothingCommand(),
-                                                        () -> robot.lift.liftState == Lift.LiftState.IDLE && robot.extendo.extendoState == Extendo.ExtendoState.HANG
-                                                ),
+                                                new DoesNothingCommand(),
                                                 () -> robot.lift.liftState == Lift.LiftState.HIGH_BASKET && robot.extendo.extendoState == Extendo.ExtendoState.HANG
                                         ),
                                         () -> robot.lift.liftState != Lift.LiftState.HIGH_BASKET && robot.extendo.extendoState != Extendo.ExtendoState.HANG
@@ -224,8 +244,13 @@ public class TeleOpBlue extends CommandOpMode {
                                 () -> CommandScheduler.getInstance().schedule(
                                         new ConditionalCommand(
                                                 new TriggerHangCommand(),
-                                                new UntriggerHangCommand(),
-                                                () -> robot.hang.hangState == Hang.HangState.IDLE
+                                                //new UntriggerHangCommand(),
+                                                new ConditionalCommand(
+                                                        new SetSafetyStateCommand(Hang.SafetyState.TRIGGERED),
+                                                        new DoesNothingCommand(),
+                                                        () -> robot.hang.safetyState == Hang.SafetyState.IDLE
+                                                ),
+                                                () -> robot.hang.hangState == Hang.HangState.IDLE && Globals.HANGING_LEVEL_2
                                         )
                                 )
                         );
@@ -262,6 +287,24 @@ public class TeleOpBlue extends CommandOpMode {
                                 )
                         )
                 );
+
+
+        gamepadEx.getGamepadButton(GamepadKeys.Button.RIGHT_STICK_BUTTON)
+                .whenPressed(
+                        () -> CommandScheduler.getInstance().schedule(
+                                new ConditionalCommand(
+                                        new SequentialCommandGroup(
+                                                new SetSweeperStateCommand(Sweeper.SweeperState.OPEN),
+                                                new WaitCommand(500),
+                                                new SetSweeperStateCommand(Sweeper.SweeperState.CLOSED)
+                                        ),
+
+                                        new DoesNothingCommand(),
+                                        () -> robot.sweeper.sweeperState == Sweeper.SweeperState.CLOSED
+                                )
+                        )
+                );
+
 
 
     }
@@ -340,6 +383,9 @@ public class TeleOpBlue extends CommandOpMode {
         telemetry.addData("Current Position Right", robot.mecanumDriveTrain.getCurrentPositionRight());
         telemetry.addData("Target Positon", robot.mecanumDriveTrain.getTargetPositionLeft());
 
+
+        telemetry.addData("Hang State", robot.hang.hangState);
+        telemetry.addData("Safety State", robot.hang.safetyState);
 
 
         double loop = System.nanoTime();

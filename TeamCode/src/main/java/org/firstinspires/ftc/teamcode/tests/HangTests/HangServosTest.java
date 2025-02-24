@@ -25,9 +25,7 @@ public class HangServosTest extends CommandOpMode {
     @Override
     public void run(){
 
-        hang.testServosLopp();
-
-
+        hang.testSafetyLopp();
         telemetry.update();
     }
 }

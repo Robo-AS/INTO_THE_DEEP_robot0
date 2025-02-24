@@ -5,7 +5,6 @@ import com.acmerobotics.roadrunner.profile.MotionProfile;
 import com.acmerobotics.roadrunner.profile.MotionProfileGenerator;
 import com.acmerobotics.roadrunner.profile.MotionState;
 import com.arcrobotics.ftclib.command.SubsystemBase;
-import com.pedropathing.localization.GoBildaPinpointDriver;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.util.ElapsedTime;
@@ -46,7 +45,7 @@ public class Arm extends SubsystemBase {
 
     public static double OPEN_clawServo = 0, CLOSED_clawServo = 0.75;
     public static double INIT_wristServo = 0, HIGH_BASKET_wristServo = 0.3, HIGH_RUNG_wristServo = 0.9, TRANSITION_wristServo = 0.15;
-    public static double INIT_rightServo = 0.175, INIT_leftServo = 0.2;
+    public static double INIT_rightServo = 0.12, INIT_leftServo = 0.16;
     public static int RANGE_ANGLE = 200;
 
 

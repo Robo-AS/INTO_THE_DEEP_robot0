@@ -62,7 +62,7 @@ public class Lift extends SubsystemBase{
     public static double maxVelocityUP = 10000000, maxAccelerationUP = 200000;
     public static double maxVelocityDOWN = 1000000, maxAccelerationDOWN = 4000;
     public static double maxVelocityPUT_SPECIMEN = 10000000, maxAccelerationPUT_SPECIMEN = 60000;
-    public static double maxVelocityHANG = 500, maxAccelerationHANG = 3000000;
+    public static double maxVelocityHANG = 800, maxAccelerationHANG = 3000000;
 
 
     public Lift(){

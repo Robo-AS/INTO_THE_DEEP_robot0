@@ -15,6 +15,7 @@ import org.firstinspires.ftc.teamcode.programs.subsystems.Extendo;
 import org.firstinspires.ftc.teamcode.programs.subsystems.Hang;
 import org.firstinspires.ftc.teamcode.programs.subsystems.Lift;
 import org.firstinspires.ftc.teamcode.programs.subsystems.MecanumDriveTrain;
+import org.firstinspires.ftc.teamcode.programs.subsystems.Sweeper;
 
 import java.util.List;
 
@@ -29,8 +30,7 @@ public class Robot {
     public MecanumDriveTrain mecanumDriveTrain;
     public Arm arm;
     public Hang hang;
-//    public double sensor;
-
+    public Sweeper sweeper;
 
 
 
@@ -42,6 +42,7 @@ public class Robot {
         mecanumDriveTrain = MecanumDriveTrain.getInstance();
         arm = Arm.getInstance();
         hang = Hang.getInstance();
+        sweeper = Sweeper.getInstance();
     }
 
     public static Robot getInstance() {
@@ -60,16 +61,13 @@ public class Robot {
         mecanumDriveTrain.initializeHardware(hardwareMap);
         arm.initializeHardware(hardwareMap);
         hang.initializeHardware(hardwareMap);
+        sweeper.initializeHardware(hardwareMap);
 
 
         allHubs = hardwareMap.getAll(LynxModule.class);
         for (LynxModule hub : allHubs) {
             hub.setBulkCachingMode(LynxModule.BulkCachingMode.MANUAL);
         }
-
-//        sensor = hardwareMap.voltageSensor.iterator().next().getVoltage();
-
-
 
     }
 
@@ -79,12 +77,10 @@ public class Robot {
         lift.initialize();
         arm.initialize();
         hang.initialize();
+        sweeper.initialize();
     }
 
 
-//    public double getVoltage(){
-//        return sensor;
-//    }
 
 
     public void loop(){

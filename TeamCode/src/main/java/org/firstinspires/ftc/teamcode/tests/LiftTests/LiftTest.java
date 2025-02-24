@@ -65,7 +65,7 @@ public class LiftTest extends CommandOpMode {
 
         // Send the packet to the dashboard
 //        dashboard.sendTelemetryPacket(packet);
-//        telemetry.update();
+//        telemetry.updateHang();
 
 
         // Add to on-screen telemetry (optional)

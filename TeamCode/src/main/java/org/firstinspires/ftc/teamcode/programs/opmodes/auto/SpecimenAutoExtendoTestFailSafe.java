@@ -247,7 +247,7 @@ public class SpecimenAutoExtendoTestFailSafe extends CommandOpMode {
         CommandScheduler.getInstance().schedule(
                 new SequentialCommandGroup(
                         new SetClawStateCommand(Arm.ClawState.OPEN),//don't ask
-//                        new InstantCommand(follower::update),
+//                        new InstantCommand(follower::updateHang),
 //                        new InstantCommand(time::reset), //I think I need to do this?
                         new FollowPath(follower, scorePreload, true, 1)
                                 .alongWith(

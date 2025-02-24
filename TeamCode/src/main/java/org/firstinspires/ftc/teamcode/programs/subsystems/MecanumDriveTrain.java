@@ -31,12 +31,12 @@ public class MecanumDriveTrain extends WSubsystem implements Drivetrain {
 
     //PIDs for Hang:
     private final PIDController left_pid, right_pid;
-    public static double p = 0.01, i = 0, d = 0, f = 0;
+    public static double p = 0.02, i = 0, d = 0;
     public static double targetPositionLeft = 0, targetPositionRight = 0;
     public static double currentPositionLeft = 0, currentPositionRight = 0;
-    public static double joystickConstantLeft = 5, joystickConstantRight = 5.1382;
-    public static double minPositionLeft = 0, maxPositionLeft = 2170;
-    public static double minPositionRight = 0, maxPositionRight = 2230;
+    public static double joystickConstantLeft = 5, joystickConstantRight = 5;
+    public static double minPositionLeft = 0, maxPositionLeft = 2200;
+    public static double minPositionRight = 0, maxPositionRight = 2200;
 
     public MecanumDriveTrain(){
         left_pid = new PIDController(p, i, d);

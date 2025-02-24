@@ -36,14 +36,14 @@ public class Extendo extends SubsystemBase {
     }
 
     public ExtendoState extendoState = ExtendoState.RETRACTING;
-    public int EXTENDING_MINIMUM = 400;//550
+    public int EXTENDING_MINIMUM = 400; //550
     public int RETRACTING = -5;
-    public int EXTENDING_MINIMUM_AUTO = 400;//550
+    public int EXTENDING_MINIMUM_AUTO = 400; //550
     public int TAKE_SAMPLE_AUTO = 730;//1000
     public int TAKE_SAMPLE_AUTO_NEAR_WALL = 1160;//1600
 
-    public int TAKE_SAMPLE_SPECIMEN = 1160;//1600
-    public int TAKE_SPECIMEN_AUTO = 730;//1000
+    public int TAKE_SAMPLE_SPECIMEN = 1160; //1600
+    public int TAKE_SPECIMEN_AUTO = 730; //1000
     public int RETRACT_AUTO_FAIL_SAFE = 500;
     public int HANG = 950;//1300
 
@@ -119,6 +119,10 @@ public class Extendo extends SubsystemBase {
 
         if(extendoState == ExtendoState.EXTENDING_MINIMUM)
             updateTargetPosition(joystickYCoord);
+
+        if(extendoState == ExtendoState.HANG)
+            updateTargetPositionHang(joystickYCoord);
+
     }
 
     public void update(ExtendoState state){
@@ -160,6 +164,15 @@ public class Extendo extends SubsystemBase {
         targetPosition += (int)(exponentialJoystickCoef * joystickConstant);
         targetPosition = Math.max(minPosition, Math.min(maxPosition, targetPosition)); //limita de prosti
     }
+
+    public void updateTargetPositionHang(double joystickYCoord){
+        exponentialJoystickCoef = (Math.pow(joystickYCoord, 3) + liniarCoefTerm * joystickYCoord) * contantTerm;
+
+        targetPosition += (int)(exponentialJoystickCoef * joystickConstant);
+        targetPosition = Math.max(RETRACTING, Math.min(HANG, targetPosition));
+    }
+
+
 
     public void updateJoystickConstant(double constant){ joystickConstant = constant; }
 

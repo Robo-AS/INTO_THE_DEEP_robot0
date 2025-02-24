@@ -47,7 +47,7 @@ public class SpecimenAutoFIXED_FailsSafes extends LinearOpMode {
     private double loopTime = 0;
     private final ElapsedTime time = new ElapsedTime();
     private final SpecimenPaths specimenPaths = new SpecimenPaths();
-    private final boolean timeIsUp = false;
+    private boolean timeIsUp = false;
 
     public static Pose startPose = new Pose(7, 64, Math.toRadians(180));
     public static Pose preloadPose = new Pose(34.5, 68, Math.toRadians(180));
@@ -341,32 +341,7 @@ public class SpecimenAutoFIXED_FailsSafes extends LinearOpMode {
                                         new SetBrushStateCommand(Brush.BrushState.IDLE)
                                 ),
 
-                        //FAIL SAFE FOR TAKE 1
-//                        new ConditionalCommand(
-//                                new DoesNothingCommand(),
-//                                new ConditionalCommand(
-//                                        new SequentialCommandGroup(
-//                                            new SetBrushStateCommand(Brush.BrushState.SPITTING_HUMAN_PLAYER),
-//                                            new WaitCommand(500),
-//                                            new IntakeRetractFailSafeCommand(),
-//                                            new WaitCommand(2000),
-//                                            new SetBrushStateCommand(Brush.BrushState.INTAKING),
-//                                            new SetExtendoStateCommand(Extendo.ExtendoState.TAKE_SPECIMEN_AUTO),
-//                                            new WaitUntilCommand(robot.brush::isSample).withTimeout(1500),
-//                                            new SetBrushStateCommand(Brush.BrushState.IDLE)
-//                                        ),
-//                                        new SequentialCommandGroup(
-//                                                new IntakeRetractFailSafeCommand(),
-//                                                new WaitCommand(2000),
-//                                                new SetBrushStateCommand(Brush.BrushState.INTAKING),
-//                                                new SetExtendoStateCommand(Extendo.ExtendoState.TAKE_SPECIMEN_AUTO),
-//                                                new WaitUntilCommand(robot.brush::isSample).withTimeout(1500),
-//                                                new SetBrushStateCommand(Brush.BrushState.IDLE)
-//                                        ),
-//                                        () -> robot.brush.specimenBlocked == Brush.SpecimenBlocked.BLOCKED
-//                                ),
-//                                () -> robot.brush.sampleState == Brush.SampleState.IS
-//                        ),
+
                         //FAIL SAFES FOR TAKE 1
                         new ConditionalCommand(
                                 new SequentialCommandGroup(
@@ -490,6 +465,7 @@ public class SpecimenAutoFIXED_FailsSafes extends LinearOpMode {
                                                 new PutSpecimenCommand(),
                                                 new OuttakeGoBackToIdleFromHighRungCommand()
                                         ),
+
                                         new SequentialCommandGroup(
                                                 new SetExtendoStateCommand(Extendo.ExtendoState.EXTENDING_MINIMUM_AUTO),
                                                 new WaitCommand(500),
@@ -580,8 +556,6 @@ public class SpecimenAutoFIXED_FailsSafes extends LinearOpMode {
 
 
         while(opModeIsActive()){
-
-
             follower.update();
             CommandScheduler.getInstance().run();
 
@@ -592,27 +566,11 @@ public class SpecimenAutoFIXED_FailsSafes extends LinearOpMode {
             robot.extendo.loopAuto();
             robot.brush.loopAuto();
 
-            if(time.seconds() > 28 && !specimenPaths.allTrajectoriesCompleted()){
-                follower.breakFollowing();
+            if(time.seconds() > 25 && !specimenPaths.allTrajectoriesCompleted()){
+                timeIsUp = true;
 
-                CommandScheduler.getInstance().schedule(
-                        new ConditionalCommand(
-                                new DoesNothingCommand(),
-                                new SequentialCommandGroup(
-                                        new SetBrushStateCommand(Brush.BrushState.IDLE),
-                                        new SetBrushAngleCommand(Brush.BrushAngle.UP),
-                                        new SetExtendoStateCommand(Extendo.ExtendoState.RETRACTING)
-                                ),
-                                () -> robot.extendo.extendoState == Extendo.ExtendoState.RETRACTING
-                        ),
-
-                        new ConditionalCommand(
-                                new OuttakeGoBackToIdleFromHighRungCommand(),
-                                new DoesNothingCommand(),
-                                () -> robot.lift.liftState == Lift.LiftState.HIGH_RUNG
-                        )
-                );
             }
+
 
 
 //            telemetry.addData("X_OFFSET", follower.getXOffset());
@@ -651,5 +609,28 @@ public class SpecimenAutoFIXED_FailsSafes extends LinearOpMode {
         }
 
 
+    }
+
+
+    public void cancelAuto(){
+        follower.breakFollowing();
+
+        CommandScheduler.getInstance().schedule(
+                new ConditionalCommand(
+                        new DoesNothingCommand(),
+                        new SequentialCommandGroup(
+                                new SetBrushStateCommand(Brush.BrushState.IDLE),
+                                new SetBrushAngleCommand(Brush.BrushAngle.UP),
+                                new SetExtendoStateCommand(Extendo.ExtendoState.RETRACTING)
+                        ),
+                        () -> robot.extendo.extendoState == Extendo.ExtendoState.RETRACTING
+                ),
+
+                new ConditionalCommand(
+                        new OuttakeGoBackToIdleFromHighRungCommand(),
+                        new DoesNothingCommand(),
+                        () -> robot.lift.liftState == Lift.LiftState.HIGH_RUNG
+                )
+        );
     }
 }
