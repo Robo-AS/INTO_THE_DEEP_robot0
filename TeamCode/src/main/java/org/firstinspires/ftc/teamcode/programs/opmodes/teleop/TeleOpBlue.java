@@ -248,7 +248,7 @@ public class TeleOpBlue extends CommandOpMode {
                                                 new ConditionalCommand(
                                                         new SetSafetyStateCommand(Hang.SafetyState.TRIGGERED),
                                                         new DoesNothingCommand(),
-                                                        () -> robot.hang.safetyState == Hang.SafetyState.IDLE
+                                                        () -> robot.hang.safetyState == Hang.SafetyState.IDLE && Globals.HANGING_LEVEL_2
                                                 ),
                                                 () -> robot.hang.hangState == Hang.HangState.IDLE && Globals.HANGING_LEVEL_2
                                         )
