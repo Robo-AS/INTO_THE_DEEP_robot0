@@ -354,8 +354,6 @@ public class Brush extends SubsystemBase{
                 CommandScheduler.getInstance().schedule(new BrushCommand(Globals.BRUSH_MOTOR_SPEED, Globals.BRUSH_SAMPLE_SERVO_SPEED_INTAKING));
                 isSpecimenBlocked();
                 break;
-
-
         }
     }
 

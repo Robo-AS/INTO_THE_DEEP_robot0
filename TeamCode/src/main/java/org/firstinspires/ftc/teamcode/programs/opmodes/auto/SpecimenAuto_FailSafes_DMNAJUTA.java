@@ -3,7 +3,6 @@ package org.firstinspires.ftc.teamcode.programs.opmodes.auto;
 import com.arcrobotics.ftclib.command.CommandScheduler;
 import com.arcrobotics.ftclib.command.ConditionalCommand;
 import com.arcrobotics.ftclib.command.InstantCommand;
-import com.arcrobotics.ftclib.command.RunCommand;
 import com.arcrobotics.ftclib.command.SequentialCommandGroup;
 import com.arcrobotics.ftclib.command.WaitCommand;
 import com.arcrobotics.ftclib.command.WaitUntilCommand;
@@ -29,8 +28,6 @@ import org.firstinspires.ftc.teamcode.programs.commandbase.BrushCommands.SetBrus
 import org.firstinspires.ftc.teamcode.programs.commandbase.BrushCommands.SetBrushStateCommand;
 import org.firstinspires.ftc.teamcode.programs.commandbase.DoesNothingCommand;
 import org.firstinspires.ftc.teamcode.programs.commandbase.ExtendoCommands.SetExtendoStateCommand;
-import org.firstinspires.ftc.teamcode.programs.commandbase.LiftCommands.SetLiftStateCommand;
-import org.firstinspires.ftc.teamcode.programs.commandbase.TeleOpCommands.IntakeCommands.IntakeRetractCommand;
 import org.firstinspires.ftc.teamcode.programs.commandbase.TeleOpCommands.OuttakeCommands.OuttakeGoBackToIdleFromHighRungCommand;
 import org.firstinspires.ftc.teamcode.programs.commandbase.TeleOpCommands.OuttakeCommands.OuttakeGoHighRungCommand;
 import org.firstinspires.ftc.teamcode.programs.commandbase.TeleOpCommands.OuttakeCommands.PutSpecimenCommand;
@@ -41,8 +38,8 @@ import org.firstinspires.ftc.teamcode.programs.subsystems.Lift;
 import org.firstinspires.ftc.teamcode.programs.util.Globals;
 import org.firstinspires.ftc.teamcode.programs.util.Robot;
 
-@Autonomous(name = "SpecimenAutoFIXED_FailsSafes")
-public class SpecimenAutoFIXED_FailsSafes extends LinearOpMode {
+@Autonomous(name = "SpecimenAuto_FailSafes_DMNAJUTA")
+public class SpecimenAuto_FailSafes_DMNAJUTA extends LinearOpMode {
     private final Robot robot = Robot.getInstance();
     private Follower follower;
     private double loopTime = 0;
@@ -116,6 +113,7 @@ public class SpecimenAutoFIXED_FailsSafes extends LinearOpMode {
 
     public static Pose score4SMALLPose = new Pose(38.63766233766234, 65.45454545454547, Math.toRadians(180));
 
+    public static Pose goBackPose = new Pose(34.33766233766234, 65.45454545454547, Math.toRadians(180));
 
 
 
@@ -248,6 +246,11 @@ public class SpecimenAutoFIXED_FailsSafes extends LinearOpMode {
         PathChain score4SMALL = follower.pathBuilder()
                 .addPath(new BezierLine(new Point(score4Pose), new Point(score4SMALLPose)))
                 .setConstantHeadingInterpolation(score4SMALLPose.getHeading())
+                .build();
+
+        PathChain goBack = follower.pathBuilder()
+                .addPath(new BezierLine(new Point(score4SMALLPose), new Point(goBackPose)))
+                .setConstantHeadingInterpolation(goBackPose.getHeading())
                 .build();
 
 
@@ -443,7 +446,32 @@ public class SpecimenAutoFIXED_FailsSafes extends LinearOpMode {
                                 ),
 
 
-
+                        //FAIL SAFES FOR TAKE 2
+                        new ConditionalCommand(
+                                new SequentialCommandGroup(
+                                        new IntakeRetractFailSafeCommand(),
+                                        new WaitCommand(2000),
+                                        new SetBrushStateCommand(Brush.BrushState.INTAKING),
+                                        new SetExtendoStateCommand(Extendo.ExtendoState.TAKE_SPECIMEN_AUTO),
+                                        new WaitUntilCommand(robot.brush::isSample).withTimeout(Globals.TIMEOUT_SPECIMEN_INTAKING),
+                                        new SetBrushStateCommand(Brush.BrushState.IDLE)
+                                ),
+                                new ConditionalCommand(
+                                        new SequentialCommandGroup(
+                                                new SetBrushStateCommand(Brush.BrushState.SPITTING_HUMAN_PLAYER),
+                                                new WaitCommand(500),
+                                                new IntakeRetractFailSafeCommand(),
+                                                new WaitCommand(2000),
+                                                new SetBrushStateCommand(Brush.BrushState.INTAKING),
+                                                new SetExtendoStateCommand(Extendo.ExtendoState.TAKE_SPECIMEN_AUTO),
+                                                new WaitUntilCommand(robot.brush::isSample).withTimeout(Globals.TIMEOUT_SPECIMEN_INTAKING),
+                                                new SetBrushStateCommand(Brush.BrushState.IDLE)
+                                        ),
+                                        new DoesNothingCommand(),
+                                        () -> robot.brush.specimenBlocked == Brush.SpecimenBlocked.BLOCKED
+                                ),
+                                () -> robot.brush.sampleState == Brush.SampleState.ISNOT
+                        ),
 
                         new FollowPath(follower, score2, true, 1)
                                 .alongWith(
@@ -470,14 +498,18 @@ public class SpecimenAutoFIXED_FailsSafes extends LinearOpMode {
                                                 new OuttakeGoBackToIdleFromHighRungCommand()
                                         ),
 
-                                        new SequentialCommandGroup(
-                                                new SetExtendoStateCommand(Extendo.ExtendoState.EXTENDING_MINIMUM_AUTO),
-                                                new WaitCommand(500),
-                                                new SetBrushAngleCommand(Brush.BrushAngle.DOWN_AUTO),
-                                                new SetBrushStateCommand(Brush.BrushState.INTAKING)
+                                        new ConditionalCommand(
+                                                new SequentialCommandGroup(
+                                                        new WaitCommand(5000)//gen astepti pana se opreste auto-ul by itself pentru ca creier
+                                                ),
+                                                new SequentialCommandGroup(
+                                                        new SetExtendoStateCommand(Extendo.ExtendoState.EXTENDING_MINIMUM_AUTO),
+                                                        new WaitCommand(500),
+                                                        new SetBrushAngleCommand(Brush.BrushAngle.DOWN_AUTO),
+                                                        new SetBrushStateCommand(Brush.BrushState.INTAKING)
+                                                ),
+                                                () -> timeIsUp
                                         )
-
-
 
                                 )
                                 .andThen(
@@ -488,7 +520,40 @@ public class SpecimenAutoFIXED_FailsSafes extends LinearOpMode {
                                         new SetBrushStateCommand(Brush.BrushState.IDLE)
                                 ),
 
-
+                        //FAIL SAFES FOR TAKE 3
+                        new ConditionalCommand(
+                                new ConditionalCommand(
+                                        new SequentialCommandGroup(
+                                                new SetBrushStateCommand(Brush.BrushState.IDLE),
+                                                new SetBrushAngleCommand(Brush.BrushAngle.UP),
+                                                new SetExtendoStateCommand(Extendo.ExtendoState.RETRACTING)
+                                        ),
+                                        new ConditionalCommand(
+                                                new SequentialCommandGroup(
+                                                    new SetBrushStateCommand(Brush.BrushState.SPITTING_HUMAN_PLAYER),
+                                                    new WaitCommand(500),
+                                                    new IntakeRetractFailSafeCommand(),
+                                                    new WaitCommand(2000),
+                                                    new SetBrushStateCommand(Brush.BrushState.INTAKING),
+                                                    new SetExtendoStateCommand(Extendo.ExtendoState.TAKE_SPECIMEN_AUTO),
+                                                    new WaitUntilCommand(robot.brush::isSample).withTimeout(Globals.TIMEOUT_SPECIMEN_INTAKING),
+                                                    new SetBrushStateCommand(Brush.BrushState.IDLE)
+                                                ),
+                                                new SequentialCommandGroup(
+                                                    new IntakeRetractFailSafeCommand(),
+                                                    new WaitCommand(2000),
+                                                    new SetBrushStateCommand(Brush.BrushState.INTAKING),
+                                                    new SetExtendoStateCommand(Extendo.ExtendoState.TAKE_SPECIMEN_AUTO),
+                                                    new WaitUntilCommand(robot.brush::isSample).withTimeout(Globals.TIMEOUT_SPECIMEN_INTAKING),
+                                                    new SetBrushStateCommand(Brush.BrushState.IDLE)
+                                                ),
+                                                () -> robot.brush.specimenBlocked == Brush.SpecimenBlocked.BLOCKED
+                                        ),
+                                        () -> timeIsUp
+                                ),
+                                new DoesNothingCommand(),
+                                () -> robot.brush.sampleState == Brush.SampleState.ISNOT
+                        ),
 
 
                         new FollowPath(follower, score3, true, 1)
@@ -530,7 +595,32 @@ public class SpecimenAutoFIXED_FailsSafes extends LinearOpMode {
                                         new SetBrushStateCommand(Brush.BrushState.IDLE)
                                 ),
 
-
+                        //FAIL SAFES FOR TAKE 4
+                        new ConditionalCommand(
+                                new SequentialCommandGroup(
+                                        new IntakeRetractFailSafeCommand(),
+                                        new WaitCommand(2000),
+                                        new SetBrushStateCommand(Brush.BrushState.INTAKING),
+                                        new SetExtendoStateCommand(Extendo.ExtendoState.TAKE_SPECIMEN_AUTO),
+                                        new WaitUntilCommand(robot.brush::isSample).withTimeout(Globals.TIMEOUT_SPECIMEN_INTAKING),
+                                        new SetBrushStateCommand(Brush.BrushState.IDLE)
+                                ),
+                                new ConditionalCommand(
+                                        new SequentialCommandGroup(
+                                                new SetBrushStateCommand(Brush.BrushState.SPITTING_HUMAN_PLAYER),
+                                                new WaitCommand(500),
+                                                new IntakeRetractFailSafeCommand(),
+                                                new WaitCommand(2000),
+                                                new SetBrushStateCommand(Brush.BrushState.INTAKING),
+                                                new SetExtendoStateCommand(Extendo.ExtendoState.TAKE_SPECIMEN_AUTO),
+                                                new WaitUntilCommand(robot.brush::isSample).withTimeout(Globals.TIMEOUT_SPECIMEN_INTAKING),
+                                                new SetBrushStateCommand(Brush.BrushState.IDLE)
+                                        ),
+                                        new DoesNothingCommand(),
+                                        () -> robot.brush.specimenBlocked == Brush.SpecimenBlocked.BLOCKED
+                                ),
+                                () -> robot.brush.sampleState == Brush.SampleState.ISNOT
+                        ),
 
 
 
@@ -547,12 +637,13 @@ public class SpecimenAutoFIXED_FailsSafes extends LinearOpMode {
                         new WaitCommand(250),
                         new FollowPath(follower, score4SMALL, true, 1),
                         new InstantCommand(() -> specimenPaths.setScore4SmallCompleted()),
-//                        new WaitCommand(200),
+
                         new PutSpecimenCommand(),
-                        new WaitCommand(200),
-                        new OuttakeGoBackToIdleFromHighRungCommand()
-
-
+//                        new WaitCommand(200),
+                        new FollowPath(follower, goBack, true, 1)
+                                .alongWith(
+                                    new OuttakeGoBackToIdleFromHighRungCommand()
+                                )
                 )
         );
 
@@ -570,7 +661,7 @@ public class SpecimenAutoFIXED_FailsSafes extends LinearOpMode {
             robot.extendo.loopAuto();
             robot.brush.loopAuto();
 
-            if(time.seconds() > 25 && !specimenPaths.allTrajectoriesCompleted()){
+            if(time.seconds() > 27 && !specimenPaths.allTrajectoriesCompleted()){
                 timeIsUp = true;
             }
 
