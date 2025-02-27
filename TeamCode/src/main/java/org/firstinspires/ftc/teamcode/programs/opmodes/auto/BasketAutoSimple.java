@@ -35,8 +35,8 @@ import org.firstinspires.ftc.teamcode.programs.subsystems.Extendo;
 import org.firstinspires.ftc.teamcode.programs.util.Robot;
 
 @Config
-@Autonomous(name = "BasketAuto")
-public class BasketAuto extends CommandOpMode {
+@Autonomous(name = "BasketAutoSimple")
+public class BasketAutoSimple extends CommandOpMode {
     private final Robot robot = Robot.getInstance();
     private final BasketPaths basketPaths = new BasketPaths();
     private Follower follower;
@@ -271,7 +271,7 @@ public class BasketAuto extends CommandOpMode {
         robot.lift.loop();
         robot.arm.loop();
         robot.extendo.loopAuto();
-        robot.brush.loopAuto();
+        robot.brush.loopAutoBasket();
 
 
         //telemetry.addData("GRAB TIMER", grabTime);

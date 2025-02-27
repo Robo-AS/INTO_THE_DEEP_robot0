@@ -479,7 +479,7 @@ public class SpecimenAutoFIXED_LINEAROPMODE extends LinearOpMode {
             robot.lift.loop();
             robot.arm.loop();
             robot.extendo.loopAuto();
-            robot.brush.loopAuto();
+            robot.brush.loopAutoSpecimen();
 
 //            telemetry.addData("X_OFFSET", follower.getXOffset());
 //            telemetry.addData("Y_OFFSET", follower.getYOffset());

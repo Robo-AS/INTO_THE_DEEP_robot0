@@ -28,7 +28,7 @@ public class TeleOpTest extends CommandOpMode {
     @Override
     public void run(){
         CommandScheduler.getInstance().run();
-        brush.updateIntakedSampleColor();
+        brush.updateSampleColor();
 
         telemetry.addData("BrushState:", brush.brushState);
         telemetry.update();

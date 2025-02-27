@@ -659,7 +659,7 @@ public class SpecimenAuto_FailSafes_DMNAJUTA extends LinearOpMode {
             robot.lift.loop();
             robot.arm.loop();
             robot.extendo.loopAuto();
-            robot.brush.loopAuto();
+            robot.brush.loopAutoSpecimen();
 
             if(time.seconds() > 27 && !specimenPaths.allTrajectoriesCompleted()){
                 timeIsUp = true;

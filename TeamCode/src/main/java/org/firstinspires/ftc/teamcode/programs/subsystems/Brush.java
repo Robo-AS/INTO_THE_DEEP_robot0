@@ -16,7 +16,9 @@ import org.firstinspires.ftc.teamcode.programs.commandbase.BrushCommands.BrushCo
 import org.firstinspires.ftc.teamcode.programs.commandbase.BrushCommands.SetBrushStateCommand;
 import org.firstinspires.ftc.teamcode.programs.commandbase.TeleOpCommands.IntakeCommands.IntakeRetractSPECIFICSampleCommand;
 import org.firstinspires.ftc.teamcode.programs.commandbase.TeleOpCommands.IntakeCommands.IntakeRetractYELLOWSampleCommand;
+import org.firstinspires.ftc.teamcode.programs.opmodes.auto.BasketPaths;
 import org.firstinspires.ftc.teamcode.programs.util.Globals;
+import org.firstinspires.ftc.teamcode.programs.util.Robot;
 
 import dev.frozenmilk.dairy.cachinghardware.CachingDcMotorEx;
 import dev.frozenmilk.dairy.cachinghardware.CachingServo;
@@ -24,7 +26,6 @@ import dev.frozenmilk.dairy.cachinghardware.CachingServo;
 @Config
 public class Brush extends SubsystemBase{
     private static Brush instance = null;
-
     public CachingDcMotorEx brushMotor;
     public CachingServo brushAngleServo;
     public CachingServo brushSampleServo;
@@ -119,7 +120,7 @@ public class Brush extends SubsystemBase{
 
         if(brushAngle == BrushAngle.DOWN){
             updateSampleState();
-            updateIntakedSampleColor();
+            updateSampleColor();
         }
 
 
@@ -150,7 +151,7 @@ public class Brush extends SubsystemBase{
                     CommandScheduler.getInstance().schedule(new BrushCommand(0, 0.5)); // Idle
 
                     if (intakedSampleColor == IntakedSampleColor.NOTHING) {
-                        updateIntakedSampleColor();
+                        updateSampleColor();
                         return;
                     }
 
@@ -180,7 +181,7 @@ public class Brush extends SubsystemBase{
     public void loopRed(){
         if(brushAngle == BrushAngle.DOWN){
             updateSampleState();
-            updateIntakedSampleColor();
+            updateSampleColor();
         }
 
 
@@ -210,7 +211,7 @@ public class Brush extends SubsystemBase{
                     CommandScheduler.getInstance().schedule(new BrushCommand(0, 0.5)); // Idle
 
                     if (intakedSampleColor == IntakedSampleColor.NOTHING) {
-                        updateIntakedSampleColor();
+                        updateSampleColor();
                         return;
                     }
 
@@ -247,7 +248,7 @@ public class Brush extends SubsystemBase{
     }
 
 
-    public void updateIntakedSampleColor(){
+    public void updateSampleColor(){
         int red = colorSensor.red();
         int blue = colorSensor.blue();
         int green = colorSensor.green();
@@ -316,9 +317,6 @@ public class Brush extends SubsystemBase{
     }
 
 
-//    public void updatePreviousBrushState(BrushState state){
-//        previousBrushState = state;
-//    }
 
     public void updateShouldVibrate(){
         Globals.shouldVibrate = true;
@@ -332,7 +330,7 @@ public class Brush extends SubsystemBase{
 
 
 
-    public void loopAuto(){
+    public void loopAutoSpecimen(){
         switch (brushState) {
             case SPITTING_HUMAN_PLAYER:
                 CommandScheduler.getInstance().schedule(new BrushCommand(-1, 0));
@@ -357,6 +355,72 @@ public class Brush extends SubsystemBase{
         }
     }
 
+
+    public void loopAutoBasket(){
+        switch (brushState) {
+            case SPITTING_HUMAN_PLAYER:
+                CommandScheduler.getInstance().schedule(new BrushCommand(-1, 0));
+                break;
+
+            case SPITTING:
+                CommandScheduler.getInstance().schedule(new BrushCommand(-1, 0.5));
+                break;
+
+            case OUTTAKING:
+                CommandScheduler.getInstance().schedule(new BrushCommand(0, 1));
+                break;
+
+            case IDLE:
+                CommandScheduler.getInstance().schedule(new BrushCommand(0, 0.5));
+                break;
+
+            case INTAKING:
+                CommandScheduler.getInstance().schedule(new BrushCommand(Globals.BRUSH_MOTOR_SPEED, Globals.BRUSH_SAMPLE_SERVO_SPEED_INTAKING));
+                break;
+
+            case THROWING:
+                CommandScheduler.getInstance().schedule(new BrushCommand(Globals.BRUSH_MOTOR_SPEED, 1));
+                break;
+        }
+    }
+
+    public void loopBlueAuto(){
+
+        if(brushAngle == BrushAngle.DOWN){
+            updateSampleState();
+            updateSampleColor();
+        }
+
+
+        switch (brushState) {
+            case SPITTING_HUMAN_PLAYER:
+                CommandScheduler.getInstance().schedule(new BrushCommand(-1, 0));
+                break;
+
+            case SPITTING:
+                CommandScheduler.getInstance().schedule(new BrushCommand(-1, 0.5));
+                break;
+
+            case OUTTAKING:
+                CommandScheduler.getInstance().schedule(new BrushCommand(0, 1));
+                break;
+
+            case IDLE:
+                CommandScheduler.getInstance().schedule(new BrushCommand(0, 0.5));
+                break;
+
+            case INTAKING:
+                CommandScheduler.getInstance().schedule(new BrushCommand(Globals.BRUSH_MOTOR_SPEED, Globals.BRUSH_SAMPLE_SERVO_SPEED_INTAKING));
+                updateSampleState();
+                updateSampleColor();
+                break;
+
+            case THROWING:
+                CommandScheduler.getInstance().schedule(new BrushCommand(Globals.BRUSH_MOTOR_SPEED, 1));
+                break;
+        }
+    }
+
     public void updateSampleStateAuto(double distance){
         if(distance < 3){
             sampleState = SampleState.IS;
@@ -376,5 +440,19 @@ public class Brush extends SubsystemBase{
             specimenBlocked = SpecimenBlocked.BLOCKED;
         else specimenBlocked = SpecimenBlocked.NOT_BLOCKED;
     }
+
+//    public boolean isRightSampleColourAutoBlue(){
+//        updateSampleColor();
+//        switch (desiredSampleColor) {
+//            case BOTH:
+//                return ((intakedSampleColor == IntakedSampleColor.BLUE) || (intakedSampleColor == IntakedSampleColor.YELLOW));
+//            case BLUE:
+//                return intakedSampleColor == IntakedSampleColor.BLUE;
+//            case YELLOW:
+//                return intakedSampleColor == IntakedSampleColor.YELLOW;
+//            default:
+//                return false;
+//        }
+//    }
 
 }

@@ -32,20 +32,24 @@ public class Extendo extends SubsystemBase {
         TAKE_SAMPLE_SPECIMEN,
         TAKE_SPECIMEN_AUTO,
         RETRACT_AUTO_FAIL_SAFE,
-        HANG
+        HANG,
+        TAKE_SAMPLE_SUBMERSIBLE_1,
+        TAKE_SAMPLE_SUBMERSIBLE_2
     }
 
     public ExtendoState extendoState = ExtendoState.RETRACTING;
-    public int EXTENDING_MINIMUM = 400; //550
+    public int EXTENDING_MINIMUM = 400;
     public int RETRACTING = -5;
-    public int EXTENDING_MINIMUM_AUTO = 400; //550
-    public int TAKE_SAMPLE_AUTO = 730;//1000
-    public int TAKE_SAMPLE_AUTO_NEAR_WALL = 1160;//1600
+    public int EXTENDING_MINIMUM_AUTO = 400;
+    public int TAKE_SAMPLE_AUTO = 730;
+    public int TAKE_SAMPLE_AUTO_NEAR_WALL = 1160;
 
-    public int TAKE_SAMPLE_SPECIMEN = 1160; //1600
-    public int TAKE_SPECIMEN_AUTO = 730; //1000
+    public int TAKE_SAMPLE_SPECIMEN = 1160;
+    public int TAKE_SPECIMEN_AUTO = 730;
     public int RETRACT_AUTO_FAIL_SAFE = 500;
-    public int HANG = 950;//1300
+    public int HANG = 950;
+    public int TAKE_SAMPLE_SUBMERSIBLE_1 = 900;
+    public int TAKE_SAMPLE_SUBMERSIBLE_2 = 900;
 
 
     private PIDController extendo_pid;
@@ -63,6 +67,7 @@ public class Extendo extends SubsystemBase {
     MotionProfile profile;
     public static int previousTarget = 0;
     public static double maxVelocity = 1000000, maxAcceleration = 10000;
+    public static double maxVelocitySubmersible = 1000, maxAccelerationSubmersible = 10000;
 
     public Extendo(){
         extendo_pid = new PIDController(p_extendo, i_extendo, d_extendo);
@@ -155,6 +160,13 @@ public class Extendo extends SubsystemBase {
             case HANG:
                 targetPosition = HANG;
                 break;
+            case TAKE_SAMPLE_SUBMERSIBLE_1:
+                targetPosition = TAKE_SAMPLE_SUBMERSIBLE_1;
+                break;
+            case TAKE_SAMPLE_SUBMERSIBLE_2:
+                targetPosition = TAKE_SAMPLE_SUBMERSIBLE_2;
+                break;
+
         }
     }
 
@@ -193,12 +205,23 @@ public class Extendo extends SubsystemBase {
 
 
         if(targetPosition != previousTarget){
-            profile = MotionProfileGenerator.generateSimpleMotionProfile(
-                    new MotionState(previousTarget, 0),
-                    new MotionState(targetPosition, 0),
-                    maxVelocity,
-                    maxAcceleration
-            );
+            if(extendoState == ExtendoState.TAKE_SAMPLE_SUBMERSIBLE_1 || extendoState == ExtendoState.TAKE_SAMPLE_SUBMERSIBLE_2){
+                profile = MotionProfileGenerator.generateSimpleMotionProfile(
+                        new MotionState(previousTarget, 0),
+                        new MotionState(targetPosition, 0),
+                        maxVelocitySubmersible,
+                        maxAccelerationSubmersible
+                );
+            }
+            else{
+                profile = MotionProfileGenerator.generateSimpleMotionProfile(
+                        new MotionState(previousTarget, 0),
+                        new MotionState(targetPosition, 0),
+                        maxVelocity,
+                        maxAcceleration
+                );
+            }
+
 
             time.reset();
             previousTarget = targetPosition;

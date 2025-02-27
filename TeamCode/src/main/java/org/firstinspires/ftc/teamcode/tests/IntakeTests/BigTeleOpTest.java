@@ -52,7 +52,7 @@ public class BigTeleOpTest extends CommandOpMode {
     public void run(){
         CommandScheduler.getInstance().run();
 
-        brush.updateIntakedSampleColor();
+        brush.updateSampleColor();
         if(brush.brushState == Brush.BrushState.IDLE){
             CommandScheduler.getInstance().schedule(new BrushIdleCommandTEST(brush));
         }
@@ -65,7 +65,7 @@ public class BigTeleOpTest extends CommandOpMode {
         else if(brush.brushState == Brush.BrushState.INTAKING && brush.sampleState == Brush.SampleState.IS){
             CommandScheduler.getInstance().schedule(new BrushIdleCommandTEST(brush));
             while(brush.intakedSampleColor == Brush.IntakedSampleColor.NOTHING){
-                brush.updateIntakedSampleColor();
+                brush.updateSampleColor();
             }
 
             if(brush.isRightSampleColorTeleOpBlue()){

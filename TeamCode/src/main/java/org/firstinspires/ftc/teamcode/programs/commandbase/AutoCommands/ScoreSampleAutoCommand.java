@@ -17,11 +17,11 @@ public class ScoreSampleAutoCommand extends SequentialCommandGroup {
                 new WaitUntilCommand(Lift::canOpenClaw),
                 new WaitCommand(50),
                 new SetClawStateCommand(Arm.ClawState.OPEN),
-                new WaitCommand(300),
-                new SetArmStateCommand(Arm.ArmState.INIT),
-                new SetClawStateCommand(Arm.ClawState.OPEN),
-                new SetWristStateCommand(Arm.WristState.INIT),
-                new SetLiftStateCommand(Lift.LiftState.IDLE)
+                new WaitCommand(300)
+//                new SetArmStateCommand(Arm.ArmState.INIT),
+//                new SetClawStateCommand(Arm.ClawState.OPEN),
+//                new SetWristStateCommand(Arm.WristState.INIT),
+//                new SetLiftStateCommand(Lift.LiftState.IDLE)
 
         );
     }

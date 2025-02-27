@@ -6,7 +6,6 @@ import com.arcrobotics.ftclib.command.CommandOpMode;
 import com.arcrobotics.ftclib.command.CommandScheduler;
 import com.arcrobotics.ftclib.command.SequentialCommandGroup;
 import com.arcrobotics.ftclib.command.WaitCommand;
-import com.arcrobotics.ftclib.command.WaitUntilCommand;
 import com.pedropathing.commands.FollowPath;
 import com.pedropathing.follower.Follower;
 import com.pedropathing.localization.Pose;
@@ -19,21 +18,11 @@ import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 
 import org.firstinspires.ftc.teamcode.pedroPathing.constants.FConstants;
 import org.firstinspires.ftc.teamcode.pedroPathing.constants.LConstants;
-import org.firstinspires.ftc.teamcode.programs.commandbase.ArmCommands.SetClawStateCommand;
-import org.firstinspires.ftc.teamcode.programs.commandbase.AutoCommands.IntakeRetractAutoCommand;
-import org.firstinspires.ftc.teamcode.programs.commandbase.AutoCommands.OuttakeGoHighBasketAutoCommand;
-import org.firstinspires.ftc.teamcode.programs.commandbase.BrushCommands.SetBrushAngleCommand;
-import org.firstinspires.ftc.teamcode.programs.commandbase.BrushCommands.SetBrushStateCommand;
-import org.firstinspires.ftc.teamcode.programs.commandbase.ExtendoCommands.SetExtendoStateCommand;
-import org.firstinspires.ftc.teamcode.programs.commandbase.TeleOpCommands.IntakeCommands.IntakeRetractCommand;
-import org.firstinspires.ftc.teamcode.programs.subsystems.Arm;
-import org.firstinspires.ftc.teamcode.programs.subsystems.Brush;
-import org.firstinspires.ftc.teamcode.programs.subsystems.Extendo;
 import org.firstinspires.ftc.teamcode.programs.util.Robot;
 
 @Config
-@Autonomous(name = "BasketAutoTestTrajectories")
-public class BasketAutoTestTrajectories extends CommandOpMode {
+@Autonomous(name = "BasketAutoTestTrajectories_TANGENTIAL")
+public class BasketAutoTestTrajectories_TANGENTIAL extends CommandOpMode {
     private final Robot robot = Robot.getInstance();
 
     private Follower follower;
@@ -51,16 +40,20 @@ public class BasketAutoTestTrajectories extends CommandOpMode {
     public static Pose score3Pose = new Pose(16.5, 129.5, Math.toRadians(-45));
 
     public static Pose submersible1Pose = new Pose(59.434720608912535, 93.92507791217606, Math.toRadians(270));
-    public static Pose submersible1ControlPoint = new Pose(57.328765941667605, 117.09057925187031, Math.toRadians(270));
+    public static Pose submersible1ControlPoint1 = new Pose(26.675425785102476, 119.19653391911525, Math.toRadians(270));
+    public static Pose submersible1ControlPoint2 = new Pose(56.158791126531526, 117.79256414095195, Math.toRadians(270));
 
     public static Pose scoreSubmersible1Pose = new Pose(16.5, 129.5, Math.toRadians(-45));
-    public static Pose scoreSubmersible1ControlPoint = new Pose(57.328765941667605, 117.09057925187031, Math.toRadians(-45));
+    public static Pose scoreSubmersible1ControlPoint1 = new Pose(56.158791126531526, 117.79256414095195, Math.toRadians(-45));
+    public static Pose scoreSubmersible1ControlPoint2 = new Pose(26.675425785102476, 119.19653391911525, Math.toRadians(-45));
 
     public static Pose submersible2Pose = new Pose(63.88062490642961, 94.15907287520326, Math.toRadians(275));
-    public static Pose submersible2ControlPoint = new Pose(60.83869038707582, 118.02655910397917, Math.toRadians(275));
+    public static Pose submersible2ControlPoint1 = new Pose(28.313390526292977, 118.26055406700638, Math.toRadians(275));
+    public static Pose submersible2ControlPoint2 = new Pose(62.242660165239116, 113.81464976948931, Math.toRadians(275));
 
     public static Pose scoreSubmbersible2Pose = new Pose(16.5, 129.5, Math.toRadians(-45));
-    public static Pose scoreSubmersible2ControlPoint = new Pose(60.83869038707582, 118.02655910397917, Math.toRadians(-45));
+    public static Pose scoreSubmersible2ControlPoint1 = new Pose(62.242660165239116, 113.81464976948931, Math.toRadians(-45));
+    public static Pose scoreSubmersible2ControlPoint2 = new Pose(28.313390526292977, 118.26055406700638, Math.toRadians(-45));
 
     @Override
     public void initialize() {
@@ -118,23 +111,25 @@ public class BasketAutoTestTrajectories extends CommandOpMode {
                 .build();
 
         PathChain submersible1 = follower.pathBuilder()
-                .addPath(new BezierCurve(new Point(score3Pose), new Point(submersible1ControlPoint), new Point(submersible1Pose)))
-                .setLinearHeadingInterpolation(score3Pose.getHeading(), submersible1Pose.getHeading())
+                .addPath(new BezierCurve(new Point(score3Pose), new Point(submersible1ControlPoint1),  new Point(submersible1ControlPoint2), new Point(submersible1Pose)))
+                .setTangentHeadingInterpolation()
                 .build();
 
         PathChain scoreSubmersible1 = follower.pathBuilder()
-                .addPath(new BezierCurve(new Point(submersible1Pose), new Point(scoreSubmersible1ControlPoint), new Point(scoreSubmersible1Pose)))
-                .setLinearHeadingInterpolation(submersible1Pose.getHeading(), scoreSubmersible1Pose.getHeading())
+                .addPath(new BezierCurve(new Point(submersible1Pose), new Point(scoreSubmersible1ControlPoint1), new Point(scoreSubmersible1ControlPoint2), new Point(scoreSubmersible1Pose)))
+                .setTangentHeadingInterpolation()
+                .setReversed(true)
                 .build();
 
         PathChain submersible2 = follower.pathBuilder()
-                .addPath(new BezierCurve(new Point(scoreSubmersible1Pose), new Point(submersible2ControlPoint), new Point(submersible2Pose)))
-                .setLinearHeadingInterpolation(scoreSubmersible1Pose.getHeading(), submersible2Pose.getHeading())
+                .addPath(new BezierCurve(new Point(scoreSubmersible1Pose), new Point(submersible2ControlPoint1), new Point(submersible2ControlPoint2), new Point(submersible2Pose)))
+                .setTangentHeadingInterpolation()
                 .build();
 
         PathChain scoreSubmersible2 = follower.pathBuilder()
-                .addPath(new BezierCurve(new Point(submersible2Pose), new Point(scoreSubmersible2ControlPoint), new Point(scoreSubmbersible2Pose)))
-                .setLinearHeadingInterpolation(submersible2Pose.getHeading(), scoreSubmbersible2Pose.getHeading())
+                .addPath(new BezierCurve(new Point(submersible2Pose), new Point(scoreSubmersible2ControlPoint1), new Point(scoreSubmersible2ControlPoint2), new Point(scoreSubmbersible2Pose)))
+                .setTangentHeadingInterpolation()
+                .setReversed(true)
                 .build();
 
         CommandScheduler.getInstance().schedule(
@@ -177,7 +172,7 @@ public class BasketAutoTestTrajectories extends CommandOpMode {
         robot.lift.loop();
         robot.arm.loop();
         robot.extendo.loopAuto();
-        robot.brush.loopAuto();
+        robot.brush.loopAutoBasket();
 
 
     }

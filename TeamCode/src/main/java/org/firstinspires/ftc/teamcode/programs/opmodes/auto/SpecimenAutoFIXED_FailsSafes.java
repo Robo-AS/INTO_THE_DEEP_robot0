@@ -568,7 +568,7 @@ public class SpecimenAutoFIXED_FailsSafes extends LinearOpMode {
             robot.lift.loop();
             robot.arm.loop();
             robot.extendo.loopAuto();
-            robot.brush.loopAuto();
+            robot.brush.loopAutoSpecimen();
 
             if(time.seconds() > 25 && !specimenPaths.allTrajectoriesCompleted()){
                 timeIsUp = true;
