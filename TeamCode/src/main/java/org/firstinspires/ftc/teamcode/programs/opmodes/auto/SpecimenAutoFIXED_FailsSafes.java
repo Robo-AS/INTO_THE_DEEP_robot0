@@ -41,7 +41,7 @@ import org.firstinspires.ftc.teamcode.programs.subsystems.Lift;
 import org.firstinspires.ftc.teamcode.programs.util.Globals;
 import org.firstinspires.ftc.teamcode.programs.util.Robot;
 
-@Autonomous(name = "SpecimenAutoFIXED_FailsSafes")
+//@Autonomous(name = "SpecimenAutoFIXED_FailsSafes")
 public class SpecimenAutoFIXED_FailsSafes extends LinearOpMode {
     private final Robot robot = Robot.getInstance();
     private Follower follower;

@@ -16,9 +16,7 @@ import org.firstinspires.ftc.teamcode.programs.commandbase.BrushCommands.BrushCo
 import org.firstinspires.ftc.teamcode.programs.commandbase.BrushCommands.SetBrushStateCommand;
 import org.firstinspires.ftc.teamcode.programs.commandbase.TeleOpCommands.IntakeCommands.IntakeRetractSPECIFICSampleCommand;
 import org.firstinspires.ftc.teamcode.programs.commandbase.TeleOpCommands.IntakeCommands.IntakeRetractYELLOWSampleCommand;
-import org.firstinspires.ftc.teamcode.programs.opmodes.auto.BasketPaths;
 import org.firstinspires.ftc.teamcode.programs.util.Globals;
-import org.firstinspires.ftc.teamcode.programs.util.Robot;
 
 import dev.frozenmilk.dairy.cachinghardware.CachingDcMotorEx;
 import dev.frozenmilk.dairy.cachinghardware.CachingServo;
@@ -384,7 +382,7 @@ public class Brush extends SubsystemBase{
         }
     }
 
-    public void loopBlueAuto(){
+    public void loopAuto(){
 
         if(brushAngle == BrushAngle.DOWN){
             updateSampleState();

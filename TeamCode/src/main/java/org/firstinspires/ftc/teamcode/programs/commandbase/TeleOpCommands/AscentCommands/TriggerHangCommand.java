@@ -1,8 +1,9 @@
-package org.firstinspires.ftc.teamcode.programs.commandbase.TeleOpCommands.HangCommands;
+package org.firstinspires.ftc.teamcode.programs.commandbase.TeleOpCommands.AscentCommands;
 
 import com.arcrobotics.ftclib.command.InstantCommand;
 import com.arcrobotics.ftclib.command.SequentialCommandGroup;
 
+import org.firstinspires.ftc.teamcode.programs.commandbase.HangCommands.SetHangStateCommand;
 import org.firstinspires.ftc.teamcode.programs.subsystems.Hang;
 import org.firstinspires.ftc.teamcode.programs.subsystems.MecanumDriveTrain;
 import org.firstinspires.ftc.teamcode.programs.util.Globals;

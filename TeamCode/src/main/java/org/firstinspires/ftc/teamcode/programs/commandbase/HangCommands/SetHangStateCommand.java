@@ -1,4 +1,4 @@
-package org.firstinspires.ftc.teamcode.programs.commandbase.TeleOpCommands.HangCommands;
+package org.firstinspires.ftc.teamcode.programs.commandbase.HangCommands;
 
 import com.arcrobotics.ftclib.command.InstantCommand;
 

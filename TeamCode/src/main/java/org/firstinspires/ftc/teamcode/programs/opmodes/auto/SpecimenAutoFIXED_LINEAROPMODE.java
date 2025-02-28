@@ -30,7 +30,7 @@ import org.firstinspires.ftc.teamcode.programs.subsystems.Brush;
 import org.firstinspires.ftc.teamcode.programs.subsystems.Extendo;
 import org.firstinspires.ftc.teamcode.programs.util.Robot;
 
-@Autonomous(name = "SpecimenAutoFIXED")
+//@Autonomous(name = "SpecimenAutoFIXED")
 public class SpecimenAutoFIXED_LINEAROPMODE extends LinearOpMode {
     private final Robot robot = Robot.getInstance();
     private Follower follower;

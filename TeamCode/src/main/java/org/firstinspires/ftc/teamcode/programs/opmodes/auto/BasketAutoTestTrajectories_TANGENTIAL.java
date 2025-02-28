@@ -20,8 +20,8 @@ import org.firstinspires.ftc.teamcode.pedroPathing.constants.FConstants;
 import org.firstinspires.ftc.teamcode.pedroPathing.constants.LConstants;
 import org.firstinspires.ftc.teamcode.programs.util.Robot;
 
-@Config
-@Autonomous(name = "BasketAutoTestTrajectories_TANGENTIAL")
+//@Config
+//@Autonomous(name = "BasketAutoTestTrajectories_TANGENTIAL")
 public class BasketAutoTestTrajectories_TANGENTIAL extends CommandOpMode {
     private final Robot robot = Robot.getInstance();
 

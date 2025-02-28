@@ -1,7 +1,5 @@
 package org.firstinspires.ftc.teamcode.programs.opmodes.teleop;
 
-import android.provider.Settings;
-
 import com.acmerobotics.dashboard.FtcDashboard;
 import com.acmerobotics.dashboard.telemetry.MultipleTelemetry;
 import com.arcrobotics.ftclib.command.CommandOpMode;
@@ -14,17 +12,15 @@ import com.arcrobotics.ftclib.gamepad.GamepadEx;
 import com.arcrobotics.ftclib.gamepad.GamepadKeys;
 import com.qualcomm.robotcore.hardware.Gamepad;
 
-
 import org.firstinspires.ftc.teamcode.programs.commandbase.ArmCommands.SetClawStateCommand;
 import org.firstinspires.ftc.teamcode.programs.commandbase.BrushCommands.SetBrushStateCommand;
 import org.firstinspires.ftc.teamcode.programs.commandbase.DoesNothingCommand;
 import org.firstinspires.ftc.teamcode.programs.commandbase.LiftCommands.SetLiftStateCommand;
 import org.firstinspires.ftc.teamcode.programs.commandbase.SetDesiredColorCommand;
 import org.firstinspires.ftc.teamcode.programs.commandbase.SetSweeperStateCommand;
-import org.firstinspires.ftc.teamcode.programs.commandbase.TeleOpCommands.HangCommands.GoHangLevel2Position;
-import org.firstinspires.ftc.teamcode.programs.commandbase.TeleOpCommands.HangCommands.SetSafetyStateCommand;
-import org.firstinspires.ftc.teamcode.programs.commandbase.TeleOpCommands.HangCommands.TriggerHangCommand;
-import org.firstinspires.ftc.teamcode.programs.commandbase.TeleOpCommands.HangCommands.UntriggerHangCommand;
+import org.firstinspires.ftc.teamcode.programs.commandbase.TeleOpCommands.AscentCommands.GoHangLevel2Position;
+import org.firstinspires.ftc.teamcode.programs.commandbase.HangCommands.SetSafetyStateCommand;
+import org.firstinspires.ftc.teamcode.programs.commandbase.TeleOpCommands.AscentCommands.TriggerHangCommand;
 import org.firstinspires.ftc.teamcode.programs.commandbase.TeleOpCommands.IntakeCommands.IntakeIdleCommand;
 import org.firstinspires.ftc.teamcode.programs.commandbase.TeleOpCommands.IntakeCommands.IntakeIntakingCommand;
 import org.firstinspires.ftc.teamcode.programs.commandbase.TeleOpCommands.IntakeCommands.IntakeRetractCommand;
@@ -201,28 +197,7 @@ public class TeleOpBlue extends CommandOpMode {
                         )
                 );
 
-
-
         //HANG
-//        gamepadEx.getGamepadButton(GamepadKeys.Button.Y)//triunghi
-//                .whenPressed(
-//                        () -> CommandScheduler.getInstance().schedule(
-//                                new ConditionalCommand(
-//                                        new GoHangLevel2Position(),
-//                                        new ConditionalCommand(
-//                                                new SetLiftStateCommand(Lift.LiftState.IDLE),
-//                                                new ConditionalCommand(
-//                                                        new SetExtendoStateCommand(Extendo.ExtendoState.RETRACTING),
-//                                                        new DoesNothingCommand(),
-//                                                        () -> robot.lift.liftState == Lift.LiftState.IDLE && robot.extendo.extendoState == Extendo.ExtendoState.HANG
-//                                                ),
-//                                                () -> robot.lift.liftState == Lift.LiftState.HIGH_BASKET && robot.extendo.extendoState == Extendo.ExtendoState.HANG
-//                                        ),
-//                                        () -> robot.lift.liftState != Lift.LiftState.HIGH_BASKET && robot.extendo.extendoState != Extendo.ExtendoState.HANG
-//                                )
-//                        )
-//                );
-
         gamepadEx.getGamepadButton(GamepadKeys.Button.Y)//triunghi
                 .whenPressed(
                         () -> CommandScheduler.getInstance().schedule(
@@ -274,7 +249,6 @@ public class TeleOpBlue extends CommandOpMode {
                                         )
                                 )
                         );
-
 
         // OPEN/CLOSE CLAW
         gamepadEx.getGamepadButton(GamepadKeys.Button.B)

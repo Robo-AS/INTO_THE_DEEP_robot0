@@ -20,8 +20,8 @@ import org.firstinspires.ftc.teamcode.pedroPathing.constants.FConstants;
 import org.firstinspires.ftc.teamcode.pedroPathing.constants.LConstants;
 import org.firstinspires.ftc.teamcode.programs.util.Robot;
 
-@Config
-@Autonomous(name = "BasketAutoTestTrajectories_LINEAR")
+//@Config
+//@Autonomous(name = "BasketAutoTestTrajectories_LINEAR")
 public class BasketAutoTestTrajectories_LINEAR extends CommandOpMode {
     private final Robot robot = Robot.getInstance();
 

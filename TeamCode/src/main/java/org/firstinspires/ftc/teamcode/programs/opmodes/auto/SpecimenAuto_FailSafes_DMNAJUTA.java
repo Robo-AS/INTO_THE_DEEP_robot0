@@ -3,6 +3,7 @@ package org.firstinspires.ftc.teamcode.programs.opmodes.auto;
 import com.arcrobotics.ftclib.command.CommandScheduler;
 import com.arcrobotics.ftclib.command.ConditionalCommand;
 import com.arcrobotics.ftclib.command.InstantCommand;
+import com.arcrobotics.ftclib.command.RunCommand;
 import com.arcrobotics.ftclib.command.SequentialCommandGroup;
 import com.arcrobotics.ftclib.command.WaitCommand;
 import com.arcrobotics.ftclib.command.WaitUntilCommand;
@@ -35,10 +36,9 @@ import org.firstinspires.ftc.teamcode.programs.subsystems.Arm;
 import org.firstinspires.ftc.teamcode.programs.subsystems.Brush;
 import org.firstinspires.ftc.teamcode.programs.subsystems.Extendo;
 import org.firstinspires.ftc.teamcode.programs.subsystems.Lift;
-import org.firstinspires.ftc.teamcode.programs.util.Globals;
 import org.firstinspires.ftc.teamcode.programs.util.Robot;
 
-@Autonomous(name = "SpecimenAuto_FailSafes_DMNAJUTA")
+@Autonomous(name = "SpecimenAuto_FailSafes_DMNAJUTA🦄")
 public class SpecimenAuto_FailSafes_DMNAJUTA extends LinearOpMode {
     private final Robot robot = Robot.getInstance();
     private Follower follower;
@@ -256,13 +256,14 @@ public class SpecimenAuto_FailSafes_DMNAJUTA extends LinearOpMode {
 
         while (opModeInInit()){
             //here i should recalibrate the pinpoint4
+//            follower.setStartingPose(startPose);
 //            follower.update();
         }
 
 
         CommandScheduler.getInstance().schedule(
                 new SequentialCommandGroup(
-//                        new RunCommand(() -> follower.update()),
+                        //new RunCommand(() -> follower.update()),
                         new InstantCommand(time::reset),
                         new SetClawStateCommand(Arm.ClawState.OPEN),//don't ask
                         new FollowPath(follower, scorePreload, true, 1)
@@ -343,21 +344,12 @@ public class SpecimenAuto_FailSafes_DMNAJUTA extends LinearOpMode {
                                 .andThen(
                                         new InstantCommand(() -> specimenPaths.setBring3Take1Completed()),
                                         new SetExtendoStateCommand(Extendo.ExtendoState.TAKE_SPECIMEN_AUTO),
-                                        new WaitUntilCommand(robot.brush::isSample).withTimeout(Globals.TIMEOUT_SPECIMEN_INTAKING),
+                                        new WaitUntilCommand(robot.brush::isSample).withTimeout(1500),
                                         new SetBrushStateCommand(Brush.BrushState.IDLE)
                                 ),
 
 
-                        //FAIL SAFES FOR TAKE 1
                         new ConditionalCommand(
-                                new SequentialCommandGroup(
-                                        new IntakeRetractFailSafeCommand(),
-                                        new WaitCommand(2000),
-                                        new SetBrushStateCommand(Brush.BrushState.INTAKING),
-                                        new SetExtendoStateCommand(Extendo.ExtendoState.TAKE_SPECIMEN_AUTO),
-                                        new WaitUntilCommand(robot.brush::isSample).withTimeout(Globals.TIMEOUT_SPECIMEN_INTAKING),
-                                        new SetBrushStateCommand(Brush.BrushState.IDLE)
-                                ),
                                 new ConditionalCommand(
                                         new SequentialCommandGroup(
                                                 new SetBrushStateCommand(Brush.BrushState.SPITTING_HUMAN_PLAYER),
@@ -366,40 +358,51 @@ public class SpecimenAuto_FailSafes_DMNAJUTA extends LinearOpMode {
                                                 new WaitCommand(2000),
                                                 new SetBrushStateCommand(Brush.BrushState.INTAKING),
                                                 new SetExtendoStateCommand(Extendo.ExtendoState.TAKE_SPECIMEN_AUTO),
-                                                new WaitUntilCommand(robot.brush::isSample).withTimeout(Globals.TIMEOUT_SPECIMEN_INTAKING),
+                                                new WaitUntilCommand(robot.brush::isSample).withTimeout(1500),
                                                 new SetBrushStateCommand(Brush.BrushState.IDLE)
                                         ),
                                         new DoesNothingCommand(),
                                         () -> robot.brush.specimenBlocked == Brush.SpecimenBlocked.BLOCKED
                                 ),
-                                () -> robot.brush.sampleState == Brush.SampleState.ISNOT
-                        ),
-
-                        new ConditionalCommand(
                                 new SequentialCommandGroup(
                                         new IntakeRetractFailSafeCommand(),
                                         new WaitCommand(2000),
                                         new SetBrushStateCommand(Brush.BrushState.INTAKING),
                                         new SetExtendoStateCommand(Extendo.ExtendoState.TAKE_SPECIMEN_AUTO),
-                                        new WaitUntilCommand(robot.brush::isSample).withTimeout(Globals.TIMEOUT_SPECIMEN_INTAKING),
+                                        new WaitUntilCommand(robot.brush::isSample).withTimeout(1500),
                                         new SetBrushStateCommand(Brush.BrushState.IDLE)
                                 ),
+                                () -> robot.brush.sampleState == Brush.SampleState.ISNOT
+                        ),
+
+                        new ConditionalCommand(
                                 new ConditionalCommand(
                                         new SequentialCommandGroup(
                                                 new SetBrushStateCommand(Brush.BrushState.SPITTING_HUMAN_PLAYER),
-                                                new WaitCommand(500),
+                                                new WaitCommand(1000),
                                                 new IntakeRetractFailSafeCommand(),
                                                 new WaitCommand(2000),
                                                 new SetBrushStateCommand(Brush.BrushState.INTAKING),
                                                 new SetExtendoStateCommand(Extendo.ExtendoState.TAKE_SPECIMEN_AUTO),
-                                                new WaitUntilCommand(robot.brush::isSample).withTimeout(Globals.TIMEOUT_SPECIMEN_INTAKING),
+                                                new WaitUntilCommand(robot.brush::isSample).withTimeout(1500),
                                                 new SetBrushStateCommand(Brush.BrushState.IDLE)
                                         ),
                                         new DoesNothingCommand(),
                                         () -> robot.brush.specimenBlocked == Brush.SpecimenBlocked.BLOCKED
                                 ),
+                                new SequentialCommandGroup(
+                                        new IntakeRetractFailSafeCommand(),
+                                        new WaitCommand(2000),
+                                        new SetBrushStateCommand(Brush.BrushState.INTAKING),
+                                        new SetExtendoStateCommand(Extendo.ExtendoState.TAKE_SPECIMEN_AUTO),
+                                        new WaitUntilCommand(robot.brush::isSample).withTimeout(1500),
+                                        new SetBrushStateCommand(Brush.BrushState.IDLE)
+                                ),
                                 () -> robot.brush.sampleState == Brush.SampleState.ISNOT
                         ),
+
+
+
 
 
 
@@ -441,34 +444,60 @@ public class SpecimenAuto_FailSafes_DMNAJUTA extends LinearOpMode {
                                         new InstantCommand(() -> specimenPaths.setTake2Completed()),
                                         new WaitCommand(100),
                                         new SetExtendoStateCommand(Extendo.ExtendoState.TAKE_SPECIMEN_AUTO),
-                                        new WaitUntilCommand(robot.brush::isSample).withTimeout(Globals.TIMEOUT_SPECIMEN_INTAKING),
+                                        new WaitUntilCommand(robot.brush::isSample).withTimeout(1500),
                                         new SetBrushStateCommand(Brush.BrushState.IDLE)
                                 ),
 
 
                         //FAIL SAFES FOR TAKE 2
                         new ConditionalCommand(
+                                new ConditionalCommand(
+                                        new SequentialCommandGroup(
+                                                new SetBrushStateCommand(Brush.BrushState.SPITTING_HUMAN_PLAYER),
+                                                new WaitCommand(1000),
+                                                new IntakeRetractFailSafeCommand(),
+                                                new WaitCommand(2000),
+                                                new SetBrushStateCommand(Brush.BrushState.INTAKING),
+                                                new SetExtendoStateCommand(Extendo.ExtendoState.TAKE_SPECIMEN_AUTO),
+                                                new WaitUntilCommand(robot.brush::isSample).withTimeout(1500),
+                                                new SetBrushStateCommand(Brush.BrushState.IDLE)
+                                        ),
+                                        new DoesNothingCommand(),
+                                        () -> robot.brush.specimenBlocked == Brush.SpecimenBlocked.BLOCKED
+                                ),
                                 new SequentialCommandGroup(
                                         new IntakeRetractFailSafeCommand(),
                                         new WaitCommand(2000),
                                         new SetBrushStateCommand(Brush.BrushState.INTAKING),
                                         new SetExtendoStateCommand(Extendo.ExtendoState.TAKE_SPECIMEN_AUTO),
-                                        new WaitUntilCommand(robot.brush::isSample).withTimeout(Globals.TIMEOUT_SPECIMEN_INTAKING),
+                                        new WaitUntilCommand(robot.brush::isSample).withTimeout(1500),
                                         new SetBrushStateCommand(Brush.BrushState.IDLE)
                                 ),
+                                () -> robot.brush.sampleState == Brush.SampleState.ISNOT
+                        ),
+
+                        new ConditionalCommand(
                                 new ConditionalCommand(
                                         new SequentialCommandGroup(
                                                 new SetBrushStateCommand(Brush.BrushState.SPITTING_HUMAN_PLAYER),
-                                                new WaitCommand(500),
+                                                new WaitCommand(1000),
                                                 new IntakeRetractFailSafeCommand(),
                                                 new WaitCommand(2000),
                                                 new SetBrushStateCommand(Brush.BrushState.INTAKING),
                                                 new SetExtendoStateCommand(Extendo.ExtendoState.TAKE_SPECIMEN_AUTO),
-                                                new WaitUntilCommand(robot.brush::isSample).withTimeout(Globals.TIMEOUT_SPECIMEN_INTAKING),
+                                                new WaitUntilCommand(robot.brush::isSample).withTimeout(1500),
                                                 new SetBrushStateCommand(Brush.BrushState.IDLE)
                                         ),
                                         new DoesNothingCommand(),
                                         () -> robot.brush.specimenBlocked == Brush.SpecimenBlocked.BLOCKED
+                                ),
+                                new SequentialCommandGroup(
+                                        new IntakeRetractFailSafeCommand(),
+                                        new WaitCommand(2000),
+                                        new SetBrushStateCommand(Brush.BrushState.INTAKING),
+                                        new SetExtendoStateCommand(Extendo.ExtendoState.TAKE_SPECIMEN_AUTO),
+                                        new WaitUntilCommand(robot.brush::isSample).withTimeout(1500),
+                                        new SetBrushStateCommand(Brush.BrushState.IDLE)
                                 ),
                                 () -> robot.brush.sampleState == Brush.SampleState.ISNOT
                         ),
@@ -498,17 +527,11 @@ public class SpecimenAuto_FailSafes_DMNAJUTA extends LinearOpMode {
                                                 new OuttakeGoBackToIdleFromHighRungCommand()
                                         ),
 
-                                        new ConditionalCommand(
-                                                new SequentialCommandGroup(
-                                                        new WaitCommand(5000)//gen astepti pana se opreste auto-ul by itself pentru ca creier
-                                                ),
-                                                new SequentialCommandGroup(
-                                                        new SetExtendoStateCommand(Extendo.ExtendoState.EXTENDING_MINIMUM_AUTO),
-                                                        new WaitCommand(500),
-                                                        new SetBrushAngleCommand(Brush.BrushAngle.DOWN_AUTO),
-                                                        new SetBrushStateCommand(Brush.BrushState.INTAKING)
-                                                ),
-                                                () -> timeIsUp
+                                        new SequentialCommandGroup(
+                                                new SetExtendoStateCommand(Extendo.ExtendoState.EXTENDING_MINIMUM_AUTO),
+                                                new WaitCommand(500),
+                                                new SetBrushAngleCommand(Brush.BrushAngle.DOWN_AUTO),
+                                                new SetBrushStateCommand(Brush.BrushState.INTAKING)
                                         )
 
                                 )
@@ -516,42 +539,61 @@ public class SpecimenAuto_FailSafes_DMNAJUTA extends LinearOpMode {
                                         new InstantCommand(() -> specimenPaths.setTake3Completed()),
                                         new WaitCommand(100),
                                         new SetExtendoStateCommand(Extendo.ExtendoState.TAKE_SPECIMEN_AUTO),
-                                        new WaitUntilCommand(robot.brush::isSample).withTimeout(Globals.TIMEOUT_SPECIMEN_INTAKING),
+                                        new WaitUntilCommand(robot.brush::isSample).withTimeout(1500),
                                         new SetBrushStateCommand(Brush.BrushState.IDLE)
                                 ),
+
 
                         //FAIL SAFES FOR TAKE 3
                         new ConditionalCommand(
                                 new ConditionalCommand(
                                         new SequentialCommandGroup(
-                                                new SetBrushStateCommand(Brush.BrushState.IDLE),
-                                                new SetBrushAngleCommand(Brush.BrushAngle.UP),
-                                                new SetExtendoStateCommand(Extendo.ExtendoState.RETRACTING)
+                                                new SetBrushStateCommand(Brush.BrushState.SPITTING_HUMAN_PLAYER),
+                                                new WaitCommand(1000),
+                                                new IntakeRetractFailSafeCommand(),
+                                                new WaitCommand(2000),
+                                                new SetBrushStateCommand(Brush.BrushState.INTAKING),
+                                                new SetExtendoStateCommand(Extendo.ExtendoState.TAKE_SPECIMEN_AUTO),
+                                                new WaitUntilCommand(robot.brush::isSample).withTimeout(1500),
+                                                new SetBrushStateCommand(Brush.BrushState.IDLE)
                                         ),
-                                        new ConditionalCommand(
-                                                new SequentialCommandGroup(
-                                                    new SetBrushStateCommand(Brush.BrushState.SPITTING_HUMAN_PLAYER),
-                                                    new WaitCommand(500),
-                                                    new IntakeRetractFailSafeCommand(),
-                                                    new WaitCommand(2000),
-                                                    new SetBrushStateCommand(Brush.BrushState.INTAKING),
-                                                    new SetExtendoStateCommand(Extendo.ExtendoState.TAKE_SPECIMEN_AUTO),
-                                                    new WaitUntilCommand(robot.brush::isSample).withTimeout(Globals.TIMEOUT_SPECIMEN_INTAKING),
-                                                    new SetBrushStateCommand(Brush.BrushState.IDLE)
-                                                ),
-                                                new SequentialCommandGroup(
-                                                    new IntakeRetractFailSafeCommand(),
-                                                    new WaitCommand(2000),
-                                                    new SetBrushStateCommand(Brush.BrushState.INTAKING),
-                                                    new SetExtendoStateCommand(Extendo.ExtendoState.TAKE_SPECIMEN_AUTO),
-                                                    new WaitUntilCommand(robot.brush::isSample).withTimeout(Globals.TIMEOUT_SPECIMEN_INTAKING),
-                                                    new SetBrushStateCommand(Brush.BrushState.IDLE)
-                                                ),
-                                                () -> robot.brush.specimenBlocked == Brush.SpecimenBlocked.BLOCKED
-                                        ),
-                                        () -> timeIsUp
+                                        new DoesNothingCommand(),
+                                        () -> robot.brush.specimenBlocked == Brush.SpecimenBlocked.BLOCKED
                                 ),
-                                new DoesNothingCommand(),
+                                new SequentialCommandGroup(
+                                        new IntakeRetractFailSafeCommand(),
+                                        new WaitCommand(2000),
+                                        new SetBrushStateCommand(Brush.BrushState.INTAKING),
+                                        new SetExtendoStateCommand(Extendo.ExtendoState.TAKE_SPECIMEN_AUTO),
+                                        new WaitUntilCommand(robot.brush::isSample).withTimeout(1500),
+                                        new SetBrushStateCommand(Brush.BrushState.IDLE)
+                                ),
+                                () -> robot.brush.sampleState == Brush.SampleState.ISNOT
+                        ),
+
+                        new ConditionalCommand(
+                                new ConditionalCommand(
+                                        new SequentialCommandGroup(
+                                                new SetBrushStateCommand(Brush.BrushState.SPITTING_HUMAN_PLAYER),
+                                                new WaitCommand(1000),
+                                                new IntakeRetractFailSafeCommand(),
+                                                new WaitCommand(2000),
+                                                new SetBrushStateCommand(Brush.BrushState.INTAKING),
+                                                new SetExtendoStateCommand(Extendo.ExtendoState.TAKE_SPECIMEN_AUTO),
+                                                new WaitUntilCommand(robot.brush::isSample).withTimeout(1500),
+                                                new SetBrushStateCommand(Brush.BrushState.IDLE)
+                                        ),
+                                        new DoesNothingCommand(),
+                                        () -> robot.brush.specimenBlocked == Brush.SpecimenBlocked.BLOCKED
+                                ),
+                                new SequentialCommandGroup(
+                                        new IntakeRetractFailSafeCommand(),
+                                        new WaitCommand(2000),
+                                        new SetBrushStateCommand(Brush.BrushState.INTAKING),
+                                        new SetExtendoStateCommand(Extendo.ExtendoState.TAKE_SPECIMEN_AUTO),
+                                        new WaitUntilCommand(robot.brush::isSample).withTimeout(1500),
+                                        new SetBrushStateCommand(Brush.BrushState.IDLE)
+                                ),
                                 () -> robot.brush.sampleState == Brush.SampleState.ISNOT
                         ),
 
@@ -597,27 +639,53 @@ public class SpecimenAuto_FailSafes_DMNAJUTA extends LinearOpMode {
 
                         //FAIL SAFES FOR TAKE 4
                         new ConditionalCommand(
+                                new ConditionalCommand(
+                                        new SequentialCommandGroup(
+                                                new SetBrushStateCommand(Brush.BrushState.SPITTING_HUMAN_PLAYER),
+                                                new WaitCommand(1000),
+                                                new IntakeRetractFailSafeCommand(),
+                                                new WaitCommand(2000),
+                                                new SetBrushStateCommand(Brush.BrushState.INTAKING),
+                                                new SetExtendoStateCommand(Extendo.ExtendoState.TAKE_SPECIMEN_AUTO),
+                                                new WaitUntilCommand(robot.brush::isSample).withTimeout(1500),
+                                                new SetBrushStateCommand(Brush.BrushState.IDLE)
+                                        ),
+                                        new DoesNothingCommand(),
+                                        () -> robot.brush.specimenBlocked == Brush.SpecimenBlocked.BLOCKED
+                                ),
                                 new SequentialCommandGroup(
                                         new IntakeRetractFailSafeCommand(),
                                         new WaitCommand(2000),
                                         new SetBrushStateCommand(Brush.BrushState.INTAKING),
                                         new SetExtendoStateCommand(Extendo.ExtendoState.TAKE_SPECIMEN_AUTO),
-                                        new WaitUntilCommand(robot.brush::isSample).withTimeout(Globals.TIMEOUT_SPECIMEN_INTAKING),
+                                        new WaitUntilCommand(robot.brush::isSample).withTimeout(1500),
                                         new SetBrushStateCommand(Brush.BrushState.IDLE)
                                 ),
+                                () -> robot.brush.sampleState == Brush.SampleState.ISNOT
+                        ),
+
+                        new ConditionalCommand(
                                 new ConditionalCommand(
                                         new SequentialCommandGroup(
                                                 new SetBrushStateCommand(Brush.BrushState.SPITTING_HUMAN_PLAYER),
-                                                new WaitCommand(500),
+                                                new WaitCommand(1000),
                                                 new IntakeRetractFailSafeCommand(),
                                                 new WaitCommand(2000),
                                                 new SetBrushStateCommand(Brush.BrushState.INTAKING),
                                                 new SetExtendoStateCommand(Extendo.ExtendoState.TAKE_SPECIMEN_AUTO),
-                                                new WaitUntilCommand(robot.brush::isSample).withTimeout(Globals.TIMEOUT_SPECIMEN_INTAKING),
+                                                new WaitUntilCommand(robot.brush::isSample).withTimeout(1500),
                                                 new SetBrushStateCommand(Brush.BrushState.IDLE)
                                         ),
                                         new DoesNothingCommand(),
                                         () -> robot.brush.specimenBlocked == Brush.SpecimenBlocked.BLOCKED
+                                ),
+                                new SequentialCommandGroup(
+                                        new IntakeRetractFailSafeCommand(),
+                                        new WaitCommand(2000),
+                                        new SetBrushStateCommand(Brush.BrushState.INTAKING),
+                                        new SetExtendoStateCommand(Extendo.ExtendoState.TAKE_SPECIMEN_AUTO),
+                                        new WaitUntilCommand(robot.brush::isSample).withTimeout(1500),
+                                        new SetBrushStateCommand(Brush.BrushState.IDLE)
                                 ),
                                 () -> robot.brush.sampleState == Brush.SampleState.ISNOT
                         ),
@@ -700,6 +768,13 @@ public class SpecimenAuto_FailSafes_DMNAJUTA extends LinearOpMode {
             telemetry.addData("Hz", 1000000000 / (loop - loopTime));
             loopTime = loop;
             telemetry.update();
+
+
+            telemetry.addData("X", follower.getXOffset());
+            telemetry.addData("Y", follower.getYOffset());
+
+
+            telemetry.addData("Heading", follower.getHeadingOffset());
         }
 
 

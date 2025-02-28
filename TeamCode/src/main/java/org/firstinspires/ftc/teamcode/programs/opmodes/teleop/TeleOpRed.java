@@ -5,6 +5,8 @@ import com.acmerobotics.dashboard.telemetry.MultipleTelemetry;
 import com.arcrobotics.ftclib.command.CommandOpMode;
 import com.arcrobotics.ftclib.command.CommandScheduler;
 import com.arcrobotics.ftclib.command.ConditionalCommand;
+import com.arcrobotics.ftclib.command.SequentialCommandGroup;
+import com.arcrobotics.ftclib.command.WaitCommand;
 import com.arcrobotics.ftclib.command.button.Trigger;
 import com.arcrobotics.ftclib.gamepad.GamepadEx;
 import com.arcrobotics.ftclib.gamepad.GamepadKeys;
@@ -14,9 +16,12 @@ import org.firstinspires.ftc.teamcode.programs.commandbase.ArmCommands.SetClawSt
 import org.firstinspires.ftc.teamcode.programs.commandbase.BrushCommands.SetBrushStateCommand;
 import org.firstinspires.ftc.teamcode.programs.commandbase.DoesNothingCommand;
 import org.firstinspires.ftc.teamcode.programs.commandbase.ExtendoCommands.SetExtendoStateCommand;
+import org.firstinspires.ftc.teamcode.programs.commandbase.HangCommands.SetSafetyStateCommand;
 import org.firstinspires.ftc.teamcode.programs.commandbase.LiftCommands.SetLiftStateCommand;
 import org.firstinspires.ftc.teamcode.programs.commandbase.SetDesiredColorCommand;
-import org.firstinspires.ftc.teamcode.programs.commandbase.TeleOpCommands.HangCommands.GoHangLevel2Position;
+import org.firstinspires.ftc.teamcode.programs.commandbase.SetSweeperStateCommand;
+import org.firstinspires.ftc.teamcode.programs.commandbase.TeleOpCommands.AscentCommands.GoHangLevel2Position;
+import org.firstinspires.ftc.teamcode.programs.commandbase.TeleOpCommands.AscentCommands.TriggerHangCommand;
 import org.firstinspires.ftc.teamcode.programs.commandbase.TeleOpCommands.IntakeCommands.IntakeIdleCommand;
 import org.firstinspires.ftc.teamcode.programs.commandbase.TeleOpCommands.IntakeCommands.IntakeIntakingCommand;
 import org.firstinspires.ftc.teamcode.programs.commandbase.TeleOpCommands.IntakeCommands.IntakeRetractCommand;
@@ -33,7 +38,9 @@ import org.firstinspires.ftc.teamcode.programs.commandbase.TeleOpCommands.Outtak
 import org.firstinspires.ftc.teamcode.programs.subsystems.Arm;
 import org.firstinspires.ftc.teamcode.programs.subsystems.Brush;
 import org.firstinspires.ftc.teamcode.programs.subsystems.Extendo;
+import org.firstinspires.ftc.teamcode.programs.subsystems.Hang;
 import org.firstinspires.ftc.teamcode.programs.subsystems.Lift;
+import org.firstinspires.ftc.teamcode.programs.subsystems.Sweeper;
 import org.firstinspires.ftc.teamcode.programs.util.Globals;
 import org.firstinspires.ftc.teamcode.programs.util.Robot;
 import org.firstinspires.ftc.teamcode.utils.geometry.Pose;
@@ -55,9 +62,13 @@ public class TeleOpRed extends CommandOpMode {
 
         gamepadEx = new GamepadEx(gamepad1);
 
+        Globals.HANGING_LEVEL_2 = false;
+        Globals.HANGING_LEVEL_3 = false;
+
 
         robot.initializeHardware(hardwareMap);
         robot.initializeRobot();
+        //robot.mecanumDriveTrain.resetTargetPositions();
 
 
         //Choosing sample color button logic
@@ -91,7 +102,6 @@ public class TeleOpRed extends CommandOpMode {
                                 new SetBrushStateCommand(robot.brush.previousBrushState)
                         )
                 );
-
 
 
 
@@ -188,23 +198,35 @@ public class TeleOpRed extends CommandOpMode {
                         )
                 );
 
-
-        //NEAUTOMATIVAT
-        gamepadEx.getGamepadButton(GamepadKeys.Button.X)
+        //HANG
+        gamepadEx.getGamepadButton(GamepadKeys.Button.Y)//triunghi
                 .whenPressed(
                         () -> CommandScheduler.getInstance().schedule(
                                 new ConditionalCommand(
                                         new GoHangLevel2Position(),
                                         new ConditionalCommand(
                                                 new SetLiftStateCommand(Lift.LiftState.IDLE),
-                                                new ConditionalCommand(
-                                                        new SetExtendoStateCommand(Extendo.ExtendoState.RETRACTING),
-                                                        new DoesNothingCommand(),
-                                                        () -> robot.lift.liftState == Lift.LiftState.IDLE && robot.extendo.extendoState == Extendo.ExtendoState.HANG
-                                                ),
+                                                new DoesNothingCommand(),
                                                 () -> robot.lift.liftState == Lift.LiftState.HIGH_BASKET && robot.extendo.extendoState == Extendo.ExtendoState.HANG
                                         ),
                                         () -> robot.lift.liftState != Lift.LiftState.HIGH_BASKET && robot.extendo.extendoState != Extendo.ExtendoState.HANG
+                                )
+                        )
+                );
+
+
+        gamepadEx.getGamepadButton(GamepadKeys.Button.X)//patrat
+                .whenPressed(
+                        () -> CommandScheduler.getInstance().schedule(
+                                new ConditionalCommand(
+                                        new TriggerHangCommand(),
+                                        //new UntriggerHangCommand(),
+                                        new ConditionalCommand(
+                                                new SetSafetyStateCommand(Hang.SafetyState.TRIGGERED),
+                                                new DoesNothingCommand(),
+                                                () -> robot.hang.safetyState == Hang.SafetyState.IDLE && Globals.HANGING_LEVEL_2
+                                        ),
+                                        () -> robot.hang.hangState == Hang.HangState.IDLE && Globals.HANGING_LEVEL_2
                                 )
                         )
                 );
@@ -224,7 +246,7 @@ public class TeleOpRed extends CommandOpMode {
                         )
                 );
 
-
+        // OPEN/CLOSE CLAW
         gamepadEx.getGamepadButton(GamepadKeys.Button.B)
                 .whenPressed(
                         () -> CommandScheduler.getInstance().schedule(
@@ -232,6 +254,23 @@ public class TeleOpRed extends CommandOpMode {
                                         new SetClawStateCommand(Arm.ClawState.OPEN),
                                         new SetClawStateCommand(Arm.ClawState.CLOSED),
                                         () -> robot.arm.clawState == Arm.ClawState.CLOSED
+                                )
+                        )
+                );
+
+
+        gamepadEx.getGamepadButton(GamepadKeys.Button.RIGHT_STICK_BUTTON)
+                .whenPressed(
+                        () -> CommandScheduler.getInstance().schedule(
+                                new ConditionalCommand(
+                                        new SequentialCommandGroup(
+                                                new SetSweeperStateCommand(Sweeper.SweeperState.OPEN),
+                                                new WaitCommand(500),
+                                                new SetSweeperStateCommand(Sweeper.SweeperState.CLOSED)
+                                        ),
+
+                                        new DoesNothingCommand(),
+                                        () -> robot.sweeper.sweeperState == Sweeper.SweeperState.CLOSED
                                 )
                         )
                 );
@@ -248,6 +287,11 @@ public class TeleOpRed extends CommandOpMode {
         robot.extendo.loop(gamepadEx.getLeftY());
         robot.lift.loop();
         robot.arm.loop();
+
+        //PENTRU LEVEL 3 HANG
+        if(Globals.HANGING_LEVEL_3) {
+            robot.mecanumDriveTrain.updateTargetPositionHang(-gamepadEx.getRightY());
+        }
 
         //applying expo function for mecanum
         exponentialJoystickCoord_X_TURN = (Math.pow(gamepad1.left_stick_x, 3) + liniarCoefTerm * gamepad1.left_stick_x) * contantTerm;
@@ -297,12 +341,19 @@ public class TeleOpRed extends CommandOpMode {
 
 
 //        telemetry.addData("PINPOINT HEAD", robot.arm.getPinpointHeading());
-
-
-
 //        if(gamepad1.cross)
 //            robot.arm.updatePINPOINT();
 //        telemetry.addData("PROFILE", robot.arm.getProfile());
+
+        telemetry.addData("HANG_2", Globals.HANGING_LEVEL_2);
+        telemetry.addData("HANG_3", Globals.HANGING_LEVEL_3);
+        telemetry.addData("Current Position Left", robot.mecanumDriveTrain.getCurrentPotionLeft());
+        telemetry.addData("Current Position Right", robot.mecanumDriveTrain.getCurrentPositionRight());
+        telemetry.addData("Target Positon", robot.mecanumDriveTrain.getTargetPositionLeft());
+
+
+        telemetry.addData("Hang State", robot.hang.hangState);
+        telemetry.addData("Safety State", robot.hang.safetyState);
 
         double loop = System.nanoTime();
         telemetry.addData("Hz", 1000000000 / (loop - loopTime));

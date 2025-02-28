@@ -38,8 +38,8 @@ import org.firstinspires.ftc.teamcode.programs.subsystems.Extendo;
 import org.firstinspires.ftc.teamcode.programs.util.Robot;
 
 @Config
-@Autonomous(name = "BasketAutoSubmersible")
-public class BasketAutoSubmersible extends CommandOpMode {
+@Autonomous(name = "BasketAutoSubmersibleBLUE🟦")
+public class BasketAutoSubmersibleBLUE extends CommandOpMode {
     private final Robot robot = Robot.getInstance();
     private final BasketPaths basketPaths = new BasketPaths();
     private Follower follower;
@@ -453,7 +453,7 @@ public class BasketAutoSubmersible extends CommandOpMode {
 
         if(!basketPaths.getscore3())
             robot.brush.loopAutoBasket();
-        else robot.brush.loopBlueAuto();
+        else robot.brush.loopAuto();
 
 
         //telemetry.addData("GRAB TIMER", grabTime);
