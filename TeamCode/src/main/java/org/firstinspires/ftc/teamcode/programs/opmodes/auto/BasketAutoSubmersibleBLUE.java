@@ -312,7 +312,6 @@ public class BasketAutoSubmersibleBLUE extends CommandOpMode {
 
 
                         //DE AICI INCEPE SUBMERSIBLE
-
                         new FollowPath(follower, submersible1, true, 1)
                                 .alongWith(
                                         new SequentialCommandGroup(
@@ -370,7 +369,7 @@ public class BasketAutoSubmersibleBLUE extends CommandOpMode {
 
                                 ),
                         new ScoreSampleAutoCommand(),
-                        //new OuttakeGoBackToIdleFromHighBasketCommand(),
+
 
 
                         ///////////////////////////////////////////////////////////////////////////////////////////////////////////
