@@ -38,8 +38,8 @@ import org.firstinspires.ftc.teamcode.programs.subsystems.Extendo;
 import org.firstinspires.ftc.teamcode.programs.util.Robot;
 
 @Config
-@Autonomous(name = "BasketAutoSubmersibleRED🟥")
-public class BasketAutoSubmersibleRED extends CommandOpMode {
+@Autonomous(name = "BasketAutoSubmersibleBLUE_FAIL_SAFES_DMN_AJUTA🟦")
+public class BasketAutoSubmersibleBLUE_FAIL_SAFES_DMN_AJUTA extends CommandOpMode {
     private final Robot robot = Robot.getInstance();
     private final BasketPaths basketPaths = new BasketPaths();
     private Follower follower;
@@ -335,9 +335,14 @@ public class BasketAutoSubmersibleRED extends CommandOpMode {
                                                 new SetBrushStateCommand(Brush.BrushState.IDLE)
                                         ),
                                         new DoesNothingCommand(),
-                                        () -> robot.brush.intakedSampleColor == Brush.IntakedSampleColor.BLUE
+                                        () -> robot.brush.intakedSampleColor == Brush.IntakedSampleColor.RED
                                 ),
-                                new DoesNothingCommand(),
+                                new SequentialCommandGroup(
+                                        new SetBrushStateCommand(Brush.BrushState.INTAKING),
+                                        new SetExtendoStateCommand(Extendo.ExtendoState.MAXIMUM),
+                                        new WaitUntilCommand(robot.brush::isSample).withTimeout(2000),
+                                        new SetBrushStateCommand(Brush.BrushState.IDLE)
+                                ),
                                 () -> robot.brush.sampleState == Brush.SampleState.IS
                         ),
 
@@ -349,7 +354,7 @@ public class BasketAutoSubmersibleRED extends CommandOpMode {
                                                 new SetBrushStateCommand(Brush.BrushState.IDLE)
                                         ),
                                         new DoesNothingCommand(),
-                                        () -> robot.brush.intakedSampleColor == Brush.IntakedSampleColor.BLUE
+                                        () -> robot.brush.intakedSampleColor == Brush.IntakedSampleColor.RED
                                 ),
                                 new DoesNothingCommand(),
                                 () -> robot.brush.sampleState == Brush.SampleState.IS
@@ -397,9 +402,16 @@ public class BasketAutoSubmersibleRED extends CommandOpMode {
                                                 new SetBrushStateCommand(Brush.BrushState.IDLE)
                                         ),
                                         new DoesNothingCommand(),
-                                        () -> robot.brush.intakedSampleColor == Brush.IntakedSampleColor.BLUE
+                                        () -> robot.brush.intakedSampleColor == Brush.IntakedSampleColor.RED
                                 ),
-                                new DoesNothingCommand(),
+
+                                new SequentialCommandGroup(
+                                        new SetBrushStateCommand(Brush.BrushState.INTAKING),
+                                        new SetExtendoStateCommand(Extendo.ExtendoState.MAXIMUM),
+                                        new WaitUntilCommand(robot.brush::isSample).withTimeout(2000),
+                                        new SetBrushStateCommand(Brush.BrushState.IDLE)
+                                ),
+
                                 () -> robot.brush.sampleState == Brush.SampleState.IS
                         ),
 
@@ -411,7 +423,7 @@ public class BasketAutoSubmersibleRED extends CommandOpMode {
                                                 new SetBrushStateCommand(Brush.BrushState.IDLE)
                                         ),
                                         new DoesNothingCommand(),
-                                        () -> robot.brush.intakedSampleColor == Brush.IntakedSampleColor.BLUE
+                                        () -> robot.brush.intakedSampleColor == Brush.IntakedSampleColor.RED
                                 ),
                                 new DoesNothingCommand(),
                                 () -> robot.brush.sampleState == Brush.SampleState.IS

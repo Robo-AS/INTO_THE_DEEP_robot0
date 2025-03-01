@@ -35,8 +35,8 @@ public class MecanumDriveTrain extends WSubsystem implements Drivetrain {
     public static double targetPositionLeft = 0, targetPositionRight = 0;
     public static double currentPositionLeft = 0, currentPositionRight = 0;
     public static double joystickConstantLeft = 10, joystickConstantRight = 10;
-    public static double minPositionLeft = 0, maxPositionLeft = 2550;
-    public static double minPositionRight = 0, maxPositionRight = 2550;
+    public static double minPositionLeft = 0, maxPositionLeft = 2650;
+    public static double minPositionRight = 0, maxPositionRight = 2650;
 
     public MecanumDriveTrain(){
         left_pid = new PIDController(p, i, d);

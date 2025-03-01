@@ -34,7 +34,8 @@ public class Extendo extends SubsystemBase {
         RETRACT_AUTO_FAIL_SAFE,
         HANG,
         TAKE_SAMPLE_SUBMERSIBLE_1,
-        TAKE_SAMPLE_SUBMERSIBLE_2
+        TAKE_SAMPLE_SUBMERSIBLE_2,
+        MAXIMUM
     }
 
     public ExtendoState extendoState = ExtendoState.RETRACTING;
@@ -50,6 +51,7 @@ public class Extendo extends SubsystemBase {
     public int HANG = 950;
     public int TAKE_SAMPLE_SUBMERSIBLE_1 = 900;
     public int TAKE_SAMPLE_SUBMERSIBLE_2 = 900;
+    public int MAXIMUM = 1160;
 
 
     private PIDController extendo_pid;
@@ -165,6 +167,9 @@ public class Extendo extends SubsystemBase {
                 break;
             case TAKE_SAMPLE_SUBMERSIBLE_2:
                 targetPosition = TAKE_SAMPLE_SUBMERSIBLE_2;
+                break;
+            case MAXIMUM:
+                targetPosition = MAXIMUM;
                 break;
 
         }

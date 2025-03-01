@@ -1,4 +1,4 @@
-package org.firstinspires.ftc.teamcode.programs.opmodes.auto;
+package org.firstinspires.ftc.teamcode.tests.AUTO_TESTS;
 
 
 import com.acmerobotics.dashboard.config.Config;
@@ -18,6 +18,7 @@ import com.pedropathing.pathgen.PathChain;
 import com.pedropathing.pathgen.Point;
 import com.pedropathing.util.Constants;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
+import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.teamcode.pedroPathing.constants.FConstants;
@@ -32,14 +33,17 @@ import org.firstinspires.ftc.teamcode.programs.commandbase.BrushCommands.SetBrus
 import org.firstinspires.ftc.teamcode.programs.commandbase.DoesNothingCommand;
 import org.firstinspires.ftc.teamcode.programs.commandbase.ExtendoCommands.SetExtendoStateCommand;
 import org.firstinspires.ftc.teamcode.programs.commandbase.TeleOpCommands.OuttakeCommands.OuttakeGoBackToIdleFromHighBasketCommand;
+import org.firstinspires.ftc.teamcode.programs.opmodes.auto.BasketPaths;
 import org.firstinspires.ftc.teamcode.programs.subsystems.Arm;
 import org.firstinspires.ftc.teamcode.programs.subsystems.Brush;
 import org.firstinspires.ftc.teamcode.programs.subsystems.Extendo;
 import org.firstinspires.ftc.teamcode.programs.util.Robot;
 
+
+//asta e ala bun
 @Config
-@Autonomous(name = "BasketAutoSubmersibleRED🟥")
-public class BasketAutoSubmersibleRED extends CommandOpMode {
+@Autonomous(name = "BasketAutoSubmersibleBLUE_LINEAR_OP_MODE🟦")
+public class BasketAutoSubmersibleBLUE_LINEAR_OP_MODE extends LinearOpMode {
     private final Robot robot = Robot.getInstance();
     private final BasketPaths basketPaths = new BasketPaths();
     private Follower follower;
@@ -73,8 +77,9 @@ public class BasketAutoSubmersibleRED extends CommandOpMode {
     public static Pose scoreSubmersible2ControlPoint = new Pose(68.79451913000112, 124.34442310571397, Math.toRadians(-45));
 
 
+
     @Override
-    public void initialize() {
+    public void runOpMode() throws InterruptedException {
         robot.brush.desiredSampleColor = Brush.DesiredSampleColor.BOTH;
         CommandScheduler.getInstance().reset();
 
@@ -154,6 +159,12 @@ public class BasketAutoSubmersibleRED extends CommandOpMode {
                 .setLinearHeadingInterpolation(submersible2Pose.getHeading(), scoreSubmbersible2Pose.getHeading())
                 .build();
 
+        while(opModeInInit()){
+            follower.update();
+        }
+
+
+
         CommandScheduler.getInstance().schedule(
                 new SequentialCommandGroup(
                         new SetClawStateCommand(Arm.ClawState.OPEN), //don't ask
@@ -201,8 +212,8 @@ public class BasketAutoSubmersibleRED extends CommandOpMode {
                                         new FollowPath(follower, score1, true, 1)
                                                 .alongWith(
                                                         new SequentialCommandGroup(
-                                                            new IntakeRetractAutoCommand(),
-                                                            new OuttakeGoHighBasketAutoCommand()
+                                                                new IntakeRetractAutoCommand(),
+                                                                new OuttakeGoHighBasketAutoCommand()
                                                         )
                                                 ),
                                         new ScoreSampleAutoCommand()
@@ -324,7 +335,7 @@ public class BasketAutoSubmersibleRED extends CommandOpMode {
                         new SetBrushStateCommand(Brush.BrushState.INTAKING),
                         new SetBrushAngleCommand(Brush.BrushAngle.DOWN),
                         new SetExtendoStateCommand(Extendo.ExtendoState.TAKE_SAMPLE_SUBMERSIBLE_1),
-                        new WaitUntilCommand(robot.brush::isSample).withTimeout(2000),
+                        new WaitUntilCommand(robot.brush::isSample).withTimeout(1500),
                         new SetBrushStateCommand(Brush.BrushState.IDLE),
 
                         new ConditionalCommand(
@@ -335,9 +346,14 @@ public class BasketAutoSubmersibleRED extends CommandOpMode {
                                                 new SetBrushStateCommand(Brush.BrushState.IDLE)
                                         ),
                                         new DoesNothingCommand(),
-                                        () -> robot.brush.intakedSampleColor == Brush.IntakedSampleColor.BLUE
+                                        () -> robot.brush.intakedSampleColor == Brush.IntakedSampleColor.RED
                                 ),
-                                new DoesNothingCommand(),
+                                new SequentialCommandGroup(
+                                        new SetBrushStateCommand(Brush.BrushState.INTAKING),
+                                        new SetExtendoStateCommand(Extendo.ExtendoState.MAXIMUM),
+                                        new WaitUntilCommand(robot.brush::isSample).withTimeout(1500),
+                                        new SetBrushStateCommand(Brush.BrushState.IDLE)
+                                ),
                                 () -> robot.brush.sampleState == Brush.SampleState.IS
                         ),
 
@@ -349,9 +365,18 @@ public class BasketAutoSubmersibleRED extends CommandOpMode {
                                                 new SetBrushStateCommand(Brush.BrushState.IDLE)
                                         ),
                                         new DoesNothingCommand(),
-                                        () -> robot.brush.intakedSampleColor == Brush.IntakedSampleColor.BLUE
+                                        () -> robot.brush.intakedSampleColor == Brush.IntakedSampleColor.RED
                                 ),
-                                new DoesNothingCommand(),
+                                new ConditionalCommand(
+                                        new SequentialCommandGroup(
+                                                new SetBrushStateCommand(Brush.BrushState.INTAKING),
+                                                new SetExtendoStateCommand(Extendo.ExtendoState.MAXIMUM),
+                                                new WaitUntilCommand(robot.brush::isSample).withTimeout(1500),
+                                                new SetBrushStateCommand(Brush.BrushState.IDLE)
+                                        ),
+                                        new DoesNothingCommand(),
+                                        () -> robot.extendo.extendoState != Extendo.ExtendoState.MAXIMUM
+                                ),
                                 () -> robot.brush.sampleState == Brush.SampleState.IS
                         ),
 
@@ -386,7 +411,7 @@ public class BasketAutoSubmersibleRED extends CommandOpMode {
                         new SetBrushStateCommand(Brush.BrushState.INTAKING),
                         new SetBrushAngleCommand(Brush.BrushAngle.DOWN),
                         new SetExtendoStateCommand(Extendo.ExtendoState.TAKE_SAMPLE_SUBMERSIBLE_2),
-                        new WaitUntilCommand(robot.brush::isSample).withTimeout(2000),
+                        new WaitUntilCommand(robot.brush::isSample).withTimeout(1500),
                         new SetBrushStateCommand(Brush.BrushState.IDLE),
 
                         new ConditionalCommand(
@@ -397,9 +422,14 @@ public class BasketAutoSubmersibleRED extends CommandOpMode {
                                                 new SetBrushStateCommand(Brush.BrushState.IDLE)
                                         ),
                                         new DoesNothingCommand(),
-                                        () -> robot.brush.intakedSampleColor == Brush.IntakedSampleColor.BLUE
+                                        () -> robot.brush.intakedSampleColor == Brush.IntakedSampleColor.RED
                                 ),
-                                new DoesNothingCommand(),
+                                new SequentialCommandGroup(
+                                        new SetBrushStateCommand(Brush.BrushState.INTAKING),
+                                        new SetExtendoStateCommand(Extendo.ExtendoState.MAXIMUM),
+                                        new WaitUntilCommand(robot.brush::isSample).withTimeout(1500),
+                                        new SetBrushStateCommand(Brush.BrushState.IDLE)
+                                ),
                                 () -> robot.brush.sampleState == Brush.SampleState.IS
                         ),
 
@@ -411,9 +441,18 @@ public class BasketAutoSubmersibleRED extends CommandOpMode {
                                                 new SetBrushStateCommand(Brush.BrushState.IDLE)
                                         ),
                                         new DoesNothingCommand(),
-                                        () -> robot.brush.intakedSampleColor == Brush.IntakedSampleColor.BLUE
+                                        () -> robot.brush.intakedSampleColor == Brush.IntakedSampleColor.RED
                                 ),
-                                new DoesNothingCommand(),
+                                new ConditionalCommand(
+                                        new SequentialCommandGroup(
+                                                new SetBrushStateCommand(Brush.BrushState.INTAKING),
+                                                new SetExtendoStateCommand(Extendo.ExtendoState.MAXIMUM),
+                                                new WaitUntilCommand(robot.brush::isSample).withTimeout(1500),
+                                                new SetBrushStateCommand(Brush.BrushState.IDLE)
+                                        ),
+                                        new DoesNothingCommand(),
+                                        () -> robot.extendo.extendoState != Extendo.ExtendoState.MAXIMUM
+                                ),
                                 () -> robot.brush.sampleState == Brush.SampleState.IS
                         ),
 
@@ -437,43 +476,41 @@ public class BasketAutoSubmersibleRED extends CommandOpMode {
         );
 
 
+
+        while(opModeIsActive()){
+            follower.update();
+            CommandScheduler.getInstance().run();
+
+
+            //robot.loop();
+            robot.lift.loop();
+            robot.arm.loop();
+            robot.extendo.loopAuto();
+
+            if(!basketPaths.getscore3())
+                robot.brush.loopAutoBasket();
+            else robot.brush.loopAuto();
+
+
+            //telemetry.addData("GRAB TIMER", grabTime);
+            telemetry.addData("Score_1", basketPaths.getscore1());
+            telemetry.addData("Score_2", basketPaths.getscore2());
+            telemetry.addData("Score_3", basketPaths.getscore3());
+
+
+            telemetry.addData("COLOUR", robot.brush.intakedSampleColor);
+            telemetry.addData("THERE IS", robot.brush.sampleState);
+            telemetry.addData("DESIRED", robot.brush.desiredSampleColor);
+
+
+            double loop = System.nanoTime();
+            telemetry.addData("Hz", 1000000000 / (loop - loopTime));
+            loopTime = loop;
+            telemetry.update();
+
+
+        }
+
+
     }
-
-    @Override
-    public void run(){
-        follower.update();
-        CommandScheduler.getInstance().run();
-
-
-        //robot.loop();
-        robot.lift.loop();
-        robot.arm.loop();
-        robot.extendo.loopAuto();
-
-        if(!basketPaths.getscore3())
-            robot.brush.loopAutoBasket();
-        else robot.brush.loopAuto();
-
-
-        //telemetry.addData("GRAB TIMER", grabTime);
-        telemetry.addData("Score_1", basketPaths.getscore1());
-        telemetry.addData("Score_2", basketPaths.getscore2());
-        telemetry.addData("Score_3", basketPaths.getscore3());
-
-
-        telemetry.addData("COLOUR", robot.brush.intakedSampleColor);
-        telemetry.addData("THERE IS", robot.brush.sampleState);
-        telemetry.addData("DESIRED", robot.brush.desiredSampleColor);
-
-
-        double loop = System.nanoTime();
-        telemetry.addData("Hz", 1000000000 / (loop - loopTime));
-        loopTime = loop;
-        telemetry.update();
-
-
-    }
-
-
-
 }
