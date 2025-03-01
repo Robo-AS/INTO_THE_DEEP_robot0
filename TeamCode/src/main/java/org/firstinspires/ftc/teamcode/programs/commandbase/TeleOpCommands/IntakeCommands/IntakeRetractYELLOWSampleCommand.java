@@ -24,7 +24,7 @@ public class IntakeRetractYELLOWSampleCommand extends SequentialCommandGroup {
                 new SetJoystickConstantCommand(Globals.EXTENDO_JOYSTICK_CONSTANT_UP),
                 new SetBrushStateCommand(Brush.BrushState.SPITTING),
                 new SetExtendoStateCommand(Extendo.ExtendoState.RETRACTING),
-                new WaitCommand(500),//SPITTING
+                new WaitCommand(500),
                 new SetBrushStateCommand(Brush.BrushState.IDLE),
                 new WaitUntilCommand(Extendo::canOuttakeSample),
                 new SetBrushStateCommand(Brush.BrushState.OUTTAKING),

@@ -256,9 +256,7 @@ public class SpecimenAuto_FailSafes_DMNAJUTA extends LinearOpMode {
 
 
         while (opModeInInit()){
-            //here i should recalibrate the pinpoint4
-//            follower.setStartingPose(startPose);
-//            follower.update();
+            follower.update();
         }
 
 

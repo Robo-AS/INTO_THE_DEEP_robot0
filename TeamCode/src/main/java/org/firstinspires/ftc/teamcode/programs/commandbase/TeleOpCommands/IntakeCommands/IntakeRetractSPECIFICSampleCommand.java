@@ -22,7 +22,7 @@ public class IntakeRetractSPECIFICSampleCommand extends SequentialCommandGroup {
                 new SetJoystickConstantCommand(Globals.EXTENDO_JOYSTICK_CONSTANT_UP),
                 new SetBrushStateCommand(Brush.BrushState.SPITTING),
                 new SetExtendoStateCommand(Extendo.ExtendoState.RETRACTING),
-                new WaitCommand(500),
+                new WaitCommand(100),
                 new SetBrushStateCommand(Brush.BrushState.IDLE)
         );
     }
