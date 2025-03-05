@@ -44,7 +44,7 @@ public class Lift extends SubsystemBase{
     public static int LOW_BASKET = 400;
     public int LOW_RUNG = 0;
     public static int PUT_SPECIMEN = 160;//150
-    public static int UP_FOR_IDLE = 300;
+    public static int UP_FOR_IDLE = 300;//300
     public static int HIGH_BASKET_AUTO = 840 ;//870//am schimbat aici gen ca dadusem joc mecanism de hang si fara ala se plia mai bine lift-ul (aparent)
     public int IDLE = 0;
 
