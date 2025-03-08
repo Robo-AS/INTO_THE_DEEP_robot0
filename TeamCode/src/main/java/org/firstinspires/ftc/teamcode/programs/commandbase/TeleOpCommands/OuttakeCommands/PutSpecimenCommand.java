@@ -12,7 +12,6 @@ import org.firstinspires.ftc.teamcode.programs.subsystems.Lift;
 public class PutSpecimenCommand extends SequentialCommandGroup {
     public PutSpecimenCommand(){
         super(
-                //new SetArmStateCommand(Arm.ArmState.PUT_SPECIMEN),
                 new SetLiftStateCommand(Lift.LiftState.PUT_SPECIMEN),
                 new WaitCommand(150),//250
                 new SetClawStateCommand(Arm.ClawState.OPEN)

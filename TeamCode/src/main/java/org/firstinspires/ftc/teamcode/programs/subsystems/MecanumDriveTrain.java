@@ -11,7 +11,7 @@ import com.qualcomm.robotcore.util.Range;
 import org.firstinspires.ftc.teamcode.programs.util.Globals;
 import org.firstinspires.ftc.teamcode.utils.Drivetrain;
 import org.firstinspires.ftc.teamcode.utils.WSubsystem;
-import org.firstinspires.ftc.teamcode.utils.geometry.Pose;
+import org.firstinspires.ftc.teamcode.utils.geometry.PoseRR;
 import org.firstinspires.ftc.teamcode.utils.geometry.Vector2D;
 
 import dev.frozenmilk.dairy.cachinghardware.CachingDcMotorEx;
@@ -32,8 +32,8 @@ public class MecanumDriveTrain extends WSubsystem implements Drivetrain {
     //PIDs for Hang:
     private final PIDController left_pid, right_pid;
     public static double p = 0.01, i = 0, d = 0;
-    public static double targetPositionLeft = 0, targetPositionRight = 0;
-    public static double currentPositionLeft = 0, currentPositionRight = 0;
+    public double targetPositionLeft = 0, targetPositionRight = 0;
+    public double currentPositionLeft = 0, currentPositionRight = 0;
     public static double joystickConstantLeft = 10, joystickConstantRight = 10;
     public static double minPositionLeft = 0, maxPositionLeft = 2650;
     public static double minPositionRight = 0, maxPositionRight = 2650;
@@ -58,15 +58,15 @@ public class MecanumDriveTrain extends WSubsystem implements Drivetrain {
 
         dtFrontLeftMotor = new CachingDcMotorEx(hardwareMap.get(DcMotorEx.class, "frontLeftMotor"));
         dtFrontLeftMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
-//        dtFrontLeftMotor.setDirection(DcMotorSimple.Direction.REVERSE);
+        dtFrontLeftMotor.setDirection(DcMotorSimple.Direction.REVERSE);
 
         dtBackRightMotor = new CachingDcMotorEx(hardwareMap.get(DcMotorEx.class, "backRightMotor"));
         dtBackRightMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
-        dtBackRightMotor.setDirection(DcMotorSimple.Direction.REVERSE);
+        dtBackRightMotor.setDirection(DcMotorSimple.Direction.FORWARD);
 
         dtFrontRightMotor = new CachingDcMotorEx(hardwareMap.get(DcMotorEx.class, "frontRightMotor"));
         dtFrontRightMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
-        //dtFrontRightMotor.setDirection(DcMotorSimple.Direction.REVERSE);
+        dtFrontRightMotor.setDirection(DcMotorSimple.Direction.FORWARD);
 
 //        sensor = hardwareMap.voltageSensor.iterator().next().getVoltage();
 
@@ -83,26 +83,26 @@ public class MecanumDriveTrain extends WSubsystem implements Drivetrain {
 
 
     @Override
-    public void set(Pose pose) {
+    public void set(PoseRR pose) {
         set(pose, 0);
     }
 
-    public void set(double forwardSpeed, double strafeSpeed, double turnSpeed, double gyroAngle) {
+    public void set(double strafeSpeed, double forwardSpeed, double turnSpeed, double gyroAngle) {
 
-        Vector2D input = new Vector2D(forwardSpeed, strafeSpeed).rotate(-gyroAngle);
+        Vector2D input = new Vector2D(strafeSpeed, forwardSpeed).rotate(-gyroAngle);
         double actualks = ks; // *12/getVoltage();
 
         if(!Globals.HANGING_LEVEL_3){
-            forwardSpeed = Range.clip(input.x, -1, 1);
-            strafeSpeed = Range.clip(input.y, -1, 1);
+            strafeSpeed = Range.clip(input.x, -1, 1);
+            forwardSpeed = Range.clip(input.y, -1, 1);
             turnSpeed = Range.clip(turnSpeed, -1, 1);
 
             double[] wheelSpeeds = new double[4];
 
-            wheelSpeeds[frontLeft] = (forwardSpeed - strafeSpeed + turnSpeed)*(1-actualks) + actualks*Math.signum((forwardSpeed - strafeSpeed + turnSpeed));
-            wheelSpeeds[frontRight] = (forwardSpeed + strafeSpeed + turnSpeed)*(1-actualks) + actualks*Math.signum(forwardSpeed + strafeSpeed + turnSpeed);
-            wheelSpeeds[backLeft] = (forwardSpeed + strafeSpeed - turnSpeed)*(1-actualks) + actualks*Math.signum(forwardSpeed + strafeSpeed - turnSpeed);
-            wheelSpeeds[backRight] = (forwardSpeed - strafeSpeed - turnSpeed)*(1-actualks) + actualks*Math.signum(forwardSpeed - strafeSpeed - turnSpeed);  //(forwardSpeed - strafeSpeed + turnSpeed)*(1-actualks) + actualks*Math.signum((forwardSpeed - strafeSpeed + turnSpeed));
+            wheelSpeeds[frontLeft] = (forwardSpeed + strafeSpeed + turnSpeed)*(1-actualks) + actualks*Math.signum((forwardSpeed + strafeSpeed + turnSpeed));
+            wheelSpeeds[frontRight] = (forwardSpeed - strafeSpeed - turnSpeed)*(1-actualks) + actualks*Math.signum(forwardSpeed - strafeSpeed - turnSpeed);
+            wheelSpeeds[backLeft] = (forwardSpeed - strafeSpeed + turnSpeed)*(1-actualks) + actualks*Math.signum(forwardSpeed - strafeSpeed + turnSpeed);
+            wheelSpeeds[backRight] = (forwardSpeed + strafeSpeed - turnSpeed)*(1-actualks) + actualks*Math.signum(forwardSpeed + strafeSpeed - turnSpeed);  //(forwardSpeed - strafeSpeed + turnSpeed)*(1-actualks) + actualks*Math.signum((forwardSpeed - strafeSpeed + turnSpeed));
 
             double max = 1;
             for (double wheelSpeed : wheelSpeeds) max = Math.max(max, Math.abs(wheelSpeed));
@@ -146,7 +146,7 @@ public class MecanumDriveTrain extends WSubsystem implements Drivetrain {
     }
 
 
-    public void set(Pose pose, double angle) {
+    public void set(PoseRR pose, double angle) {
         set(pose.x, pose.y, pose.heading, angle);
     }
 

@@ -7,6 +7,7 @@ import com.qualcomm.hardware.rev.RevColorSensorV3;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
+import com.qualcomm.robotcore.hardware.DigitalChannel;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.Servo;
 
@@ -28,6 +29,7 @@ public class Brush extends SubsystemBase{
     public CachingServo brushAngleServo;
     public CachingServo brushSampleServo;
     public RevColorSensorV3 colorSensor;
+    public DigitalChannel proximitySensor;
 
     public enum BrushState {
         INTAKING,
@@ -439,18 +441,5 @@ public class Brush extends SubsystemBase{
         else specimenBlocked = SpecimenBlocked.NOT_BLOCKED;
     }
 
-//    public boolean isRightSampleColourAutoBlue(){
-//        updateSampleColor();
-//        switch (desiredSampleColor) {
-//            case BOTH:
-//                return ((intakedSampleColor == IntakedSampleColor.BLUE) || (intakedSampleColor == IntakedSampleColor.YELLOW));
-//            case BLUE:
-//                return intakedSampleColor == IntakedSampleColor.BLUE;
-//            case YELLOW:
-//                return intakedSampleColor == IntakedSampleColor.YELLOW;
-//            default:
-//                return false;
-//        }
-//    }
 
 }

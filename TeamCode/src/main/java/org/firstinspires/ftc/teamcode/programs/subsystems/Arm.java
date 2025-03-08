@@ -5,6 +5,8 @@ import com.acmerobotics.roadrunner.profile.MotionProfile;
 import com.acmerobotics.roadrunner.profile.MotionProfileGenerator;
 import com.acmerobotics.roadrunner.profile.MotionState;
 import com.arcrobotics.ftclib.command.SubsystemBase;
+import com.pedropathing.follower.Follower;
+import com.pedropathing.localization.GoBildaPinpointDriver;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.util.ElapsedTime;
@@ -16,13 +18,15 @@ public class Arm extends SubsystemBase {
     private static Arm instance = null;
     public CachingServo rightServo, leftServo;
     public CachingServo clawServo, wristServo;
+    GoBildaPinpointDriver pinpoint;
+
+
 
 
     public enum ArmState{
         INIT,
         HIGH_BASKET,
-        HIGH_RUNG,
-        PUT_SPECIMEN,
+        HIGH_RUNG
     }
 
     public enum ClawState{
@@ -51,8 +55,7 @@ public class Arm extends SubsystemBase {
 
     public static double INIT = 0;
     public static double HIGH_BASKET = 230;
-    public static double HIGH_RUNG = 325;//220
-    public static double PUT_SPECIMEN = 280;
+    public static double HIGH_RUNG = 325;
 
 
     //MOTION PROFILING STUFF
@@ -62,7 +65,11 @@ public class Arm extends SubsystemBase {
     public static double maxVelocity = 10000, maxAcceleration = 2500;
 
     double sideAngle = 0;
-    public static double minAngle = -30, maxAngle = 30;
+    public static double minAngleBASKET = -30, maxAngleBASKET = 30;
+    public static double minAngleSPECIMEN = -10, maxAngleSPECIMEN = 10;
+
+
+
 
     public static Arm getInstance(){
         if (instance == null) {
@@ -85,6 +92,8 @@ public class Arm extends SubsystemBase {
         wristServo = new CachingServo(hardwareMap.get(Servo.class, "wristServo"));
         wristServo.setDirection(Servo.Direction.FORWARD);
 
+        pinpoint = hardwareMap.get(GoBildaPinpointDriver.class,"pinpoint");
+
     }
 
 
@@ -93,25 +102,26 @@ public class Arm extends SubsystemBase {
         leftServo.setPosition(INIT_leftServo);
         clawServo.setPosition(OPEN_clawServo);
         wristServo.setPosition(INIT_wristServo);
+        pinpoint.resetPosAndIMU();
         sideAngle = 0;
     }
 
-    public void testInit(){
-//        pinpoint.resetPosAndIMU();
-//        sideAngle = 0;
-        rightServo.setPosition(positionToAngleRight(HIGH_RUNG));
-        leftServo.setPosition(positionToAngleLeft(HIGH_RUNG));
-    }
+
 
 
 
     public void loop(){
-//        if(armState == ArmState.HIGH_RUNG){
-//             sideAngle = getPinpointHeading();
-//        }
-//        else sideAngle = 0;
+        if(armState == ArmState.HIGH_RUNG || armState == ArmState.HIGH_BASKET) {
+            sideAngle = getPinpointHeading();
+            sideAngle = ((sideAngle + 180) % 360 + 360) % 360 - 180;
+        }
+        else sideAngle = 0;
 
-//        sideAngle = Math.max(minAngle, Math.min(maxAngle, targetPosition));
+
+        if(armState == ArmState.HIGH_RUNG)
+            sideAngle = Math.max(minAngleSPECIMEN, Math.min(maxAngleSPECIMEN, sideAngle));
+        else if(armState == ArmState.HIGH_BASKET)
+            sideAngle = Math.max(minAngleBASKET, Math.min(maxAngleBASKET, sideAngle));
 
         if(targetPosition != previousTarget){
             profile = MotionProfileGenerator.generateSimpleMotionProfile(
@@ -137,28 +147,6 @@ public class Arm extends SubsystemBase {
 
     }
 
-    public void testLOOP(){
-        rightServo.setPosition(positionToAngleRight(INIT_rightServo));
-        leftServo.setPosition(positionToAngleLeft(INIT_leftServo));
-        clawServo.setPosition(OPEN_clawServo);
-        wristServo.setPosition(INIT_wristServo);
-
-//        double heading = pinpoint.getHeading() * (180/Math.PI);
-//        if(heading > 360){
-//            pinpoint.resetPosAndIMU();
-//        }
-//
-//        sideAngle = heading;
-//
-//        sideAngle = Math.max(-30, Math.min(30, targetPosition));
-//
-//        if(armState == ArmState.HIGH_BASKET){
-//            rightServo.setPosition(positionToAngleRight(0));
-//            leftServo.setPosition(positionToAngleLeft(0));
-//        }
-    }
-
-
 
 
 
@@ -177,15 +165,6 @@ public class Arm extends SubsystemBase {
             case HIGH_RUNG:
                 targetPosition = HIGH_RUNG;
                 break;
-
-            case PUT_SPECIMEN:
-                rightServo.setPosition(positionToAngleRight(PUT_SPECIMEN));
-                leftServo.setPosition(positionToAngleLeft(PUT_SPECIMEN));
-                previousTarget = PUT_SPECIMEN;
-                targetPosition = PUT_SPECIMEN;
-                profile = null;
-                break;
-
         }
     }
 
@@ -238,6 +217,41 @@ public class Arm extends SubsystemBase {
 
     public MotionProfile getProfile(){
         return profile;
+    }
+
+    public double getPinpointHeading(){
+        pinpoint.update();
+        return pinpoint.getHeading() * (180/Math.PI);
+    }
+
+
+
+    public void testInit(){
+//        pinpoint.resetPosAndIMU();
+//        sideAngle = 0;
+        rightServo.setPosition(positionToAngleRight(HIGH_RUNG));
+        leftServo.setPosition(positionToAngleLeft(HIGH_RUNG));
+    }
+
+    public void testLOOP(){
+        rightServo.setPosition(positionToAngleRight(INIT_rightServo));
+        leftServo.setPosition(positionToAngleLeft(INIT_leftServo));
+        clawServo.setPosition(OPEN_clawServo);
+        wristServo.setPosition(INIT_wristServo);
+
+//        double heading = pinpoint.getHeading() * (180/Math.PI);
+//        if(heading > 360){
+//            pinpoint.resetPosAndIMU();
+//        }
+//
+//        sideAngle = heading;
+//
+//        sideAngle = Math.max(-30, Math.min(30, targetPosition));
+//
+//        if(armState == ArmState.HIGH_BASKET){
+//            rightServo.setPosition(positionToAngleRight(0));
+//            leftServo.setPosition(positionToAngleLeft(0));
+//        }
     }
 
 

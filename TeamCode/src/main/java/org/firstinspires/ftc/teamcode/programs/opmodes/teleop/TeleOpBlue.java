@@ -43,7 +43,7 @@ import org.firstinspires.ftc.teamcode.programs.util.Globals;
 import org.firstinspires.ftc.teamcode.programs.util.Robot;
 import org.firstinspires.ftc.teamcode.programs.subsystems.Brush;
 import org.firstinspires.ftc.teamcode.programs.commandbase.ExtendoCommands.SetExtendoStateCommand;
-import org.firstinspires.ftc.teamcode.utils.geometry.Pose;
+import org.firstinspires.ftc.teamcode.utils.geometry.PoseRR;
 
 
 @com.qualcomm.robotcore.eventloop.opmode.TeleOp(name = "🟦TeleOpBlue🟦", group = "OpModes")
@@ -219,7 +219,6 @@ public class TeleOpBlue extends CommandOpMode {
                                 () -> CommandScheduler.getInstance().schedule(
                                         new ConditionalCommand(
                                                 new TriggerHangCommand(),
-                                                //new UntriggerHangCommand(),
                                                 new ConditionalCommand(
                                                         new SetSafetyStateCommand(Hang.SafetyState.TRIGGERED),
                                                         new DoesNothingCommand(),
@@ -304,7 +303,7 @@ public class TeleOpBlue extends CommandOpMode {
         exponentialJoystickCoord_Y = (Math.pow(gamepad1.right_stick_y, 3) + liniarCoefTerm * gamepad1.right_stick_y) * contantTerm;
 
         double turnSpeed = robot.extendo.extendoState == Extendo.ExtendoState.EXTENDING_MINIMUM ? -exponentialJoystickCoord_X_TURN/Globals.DECREASE_TURN_SPEED_CONSTANT :-exponentialJoystickCoord_X_TURN;
-        Pose drive = new Pose(-exponentialJoystickCoord_X_FORWARD, -exponentialJoystickCoord_Y, turnSpeed);
+        PoseRR drive = new PoseRR(-exponentialJoystickCoord_X_FORWARD, -exponentialJoystickCoord_Y, turnSpeed);
         robot.mecanumDriveTrain.set(drive, 0);
 
 
@@ -342,24 +341,24 @@ public class TeleOpBlue extends CommandOpMode {
 //        telemetry.addData("JoystickConstant", robot.extendo.getJoystickConstant());
 //        telemetry.addData("SHOULD VIBRATE", Globals.shouldVibrate);
 
-        telemetry.addData("Current Position LIFT", robot.lift.liftMotor.getCurrentPosition());
-        telemetry.addData("Target Position LIFT", robot.lift.getTargetPosition());
+//        telemetry.addData("Current Position LIFT", robot.lift.liftMotor.getCurrentPosition());
+//        telemetry.addData("Target Position LIFT", robot.lift.getTargetPosition());
 
 
-//        telemetry.addData("PINPOINT HEAD", robot.arm.getPinpointHeading());
+        telemetry.addData("PINPOINT HEAD", robot.arm.getPinpointHeading());
 //        if(gamepad1.cross)
 //            robot.arm.updatePINPOINT();
-//        telemetry.addData("PROFILE", robot.arm.getProfile());
+        telemetry.addData("PROFILE", robot.arm.getProfile());
 
-        telemetry.addData("HANG_2", Globals.HANGING_LEVEL_2);
-        telemetry.addData("HANG_3", Globals.HANGING_LEVEL_3);
-        telemetry.addData("Current Position Left", robot.mecanumDriveTrain.getCurrentPotionLeft());
-        telemetry.addData("Current Position Right", robot.mecanumDriveTrain.getCurrentPositionRight());
-        telemetry.addData("Target Positon", robot.mecanumDriveTrain.getTargetPositionLeft());
+//        telemetry.addData("HANG_2", Globals.HANGING_LEVEL_2);
+//        telemetry.addData("HANG_3", Globals.HANGING_LEVEL_3);
+//        telemetry.addData("Current Position Left", robot.mecanumDriveTrain.getCurrentPotionLeft());
+//        telemetry.addData("Current Position Right", robot.mecanumDriveTrain.getCurrentPositionRight());
+//        telemetry.addData("Target Positon", robot.mecanumDriveTrain.getTargetPositionLeft());
 
 
-        telemetry.addData("Hang State", robot.hang.hangState);
-        telemetry.addData("Safety State", robot.hang.safetyState);
+//        telemetry.addData("Hang State", robot.hang.hangState);
+//        telemetry.addData("Safety State", robot.hang.safetyState);
 
 
         double loop = System.nanoTime();

@@ -81,19 +81,11 @@ public class Robot {
     }
 
 
-
-
     public void loop(){
         for (LynxModule hub : allHubs) {
             hub.clearBulkCache();
         }
     }
-
-    public boolean isSpecimenBlocked(){
-        CurrentUnit currentUnit = CurrentUnit.AMPS;
-        return brush.brushMotor.getCurrent(currentUnit) > 5;
-    }
-
 
 
 }

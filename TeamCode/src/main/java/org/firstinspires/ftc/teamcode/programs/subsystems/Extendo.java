@@ -57,7 +57,7 @@ public class Extendo extends SubsystemBase {
     private PIDController extendo_pid;
     public static double p_extendo = 0.007, i_extendo = 0.11, d_extendo = 0.00006;
 
-    public static int targetPosition = 0;
+    public int targetPosition = 0;
     public static int currentPosition;
     public static int minPosition = 400, maxPosition = 1160;//550, 1600
 

@@ -5,57 +5,57 @@ import org.firstinspires.ftc.vision.apriltag.AprilTagPoseFtc;
 
 import java.util.Locale;
 
-public class Pose extends Point {
+public class PoseRR extends Point {
 
     public double heading;
 
-    public Pose(double x, double y, double heading) {
+    public PoseRR(double x, double y, double heading) {
         super(x, y);
         this.heading = AngleUnit.normalizeRadians(heading);
     }
 
-    public Pose(Point p, double heading) {
+    public PoseRR(Point p, double heading) {
         this(p.x, p.y, heading);
     }
 
-    public Pose(Vector2D vec, double heading) {
+    public PoseRR(Vector2D vec, double heading) {
         this(vec.x, vec.y, heading);
     }
 
-    public Pose() {
+    public PoseRR() {
         this(0, 0, 0);
     }
 
-    public Pose(AprilTagPoseFtc ftcPose) {
+    public PoseRR(AprilTagPoseFtc ftcPose) {
         this.heading = Math.toRadians(-ftcPose.yaw);
         this.x = ftcPose.x * Math.cos(heading) - ftcPose.y * Math.sin(heading);
         this.y = ftcPose.x * Math.sin(heading) + ftcPose.y * Math.cos(heading);
     }
 
-    public void set(Pose other) {
+    public void set(PoseRR other) {
         this.x = other.x;
         this.y = other.y;
         this.heading = other.heading;
     }
 
-    public Pose add(Pose other) {
-        return new Pose(x + other.x, y + other.y, heading + other.heading);
+    public PoseRR add(PoseRR other) {
+        return new PoseRR(x + other.x, y + other.y, heading + other.heading);
     }
 
-    public Pose subtract(Pose other) {
-        return new Pose(this.x - other.x, this.y - other.y, AngleUnit.normalizeRadians(this.heading - other.heading));
+    public PoseRR subtract(PoseRR other) {
+        return new PoseRR(this.x - other.x, this.y - other.y, AngleUnit.normalizeRadians(this.heading - other.heading));
     }
 
-    public Pose divide(Pose other) {
-        return new Pose(this.x / other.x, this.y / other.y, this.heading / other.heading);
+    public PoseRR divide(PoseRR other) {
+        return new PoseRR(this.x / other.x, this.y / other.y, this.heading / other.heading);
     }
 
-    public Pose scale(double scalar){
-        return new Pose(this.x * scalar, this.y * scalar, this.heading * scalar);
+    public PoseRR scale(double scalar){
+        return new PoseRR(this.x * scalar, this.y * scalar, this.heading * scalar);
     }
 
-    public Pose subt(Pose other) {
-        return new Pose(x - other.x, y - other.y, heading - other.heading);
+    public PoseRR subt(PoseRR other) {
+        return new PoseRR(x - other.x, y - other.y, heading - other.heading);
     }
 
     public Vector2D toVec2D() {

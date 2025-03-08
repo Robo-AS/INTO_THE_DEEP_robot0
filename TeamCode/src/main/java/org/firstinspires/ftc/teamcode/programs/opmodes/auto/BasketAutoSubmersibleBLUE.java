@@ -37,6 +37,7 @@ import org.firstinspires.ftc.teamcode.programs.opmodes.auto.BasketPaths;
 import org.firstinspires.ftc.teamcode.programs.subsystems.Arm;
 import org.firstinspires.ftc.teamcode.programs.subsystems.Brush;
 import org.firstinspires.ftc.teamcode.programs.subsystems.Extendo;
+import org.firstinspires.ftc.teamcode.programs.util.Globals;
 import org.firstinspires.ftc.teamcode.programs.util.Robot;
 
 
@@ -480,6 +481,8 @@ public class BasketAutoSubmersibleBLUE extends LinearOpMode {
         while(opModeIsActive()){
             follower.update();
             CommandScheduler.getInstance().run();
+
+            Globals.lastAutoPose = follower.getPose();
 
 
             //robot.loop();

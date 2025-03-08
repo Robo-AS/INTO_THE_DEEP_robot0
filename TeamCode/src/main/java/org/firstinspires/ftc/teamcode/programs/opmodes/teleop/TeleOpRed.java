@@ -10,8 +10,13 @@ import com.arcrobotics.ftclib.command.WaitCommand;
 import com.arcrobotics.ftclib.command.button.Trigger;
 import com.arcrobotics.ftclib.gamepad.GamepadEx;
 import com.arcrobotics.ftclib.gamepad.GamepadKeys;
+import com.pedropathing.follower.Follower;
+import com.pedropathing.localization.Pose;
+import com.pedropathing.util.Constants;
 import com.qualcomm.robotcore.hardware.Gamepad;
 
+import org.firstinspires.ftc.teamcode.pedroPathing.constants.FConstants;
+import org.firstinspires.ftc.teamcode.pedroPathing.constants.LConstants;
 import org.firstinspires.ftc.teamcode.programs.commandbase.ArmCommands.SetClawStateCommand;
 import org.firstinspires.ftc.teamcode.programs.commandbase.BrushCommands.SetBrushStateCommand;
 import org.firstinspires.ftc.teamcode.programs.commandbase.DoesNothingCommand;
@@ -43,13 +48,16 @@ import org.firstinspires.ftc.teamcode.programs.subsystems.Lift;
 import org.firstinspires.ftc.teamcode.programs.subsystems.Sweeper;
 import org.firstinspires.ftc.teamcode.programs.util.Globals;
 import org.firstinspires.ftc.teamcode.programs.util.Robot;
-import org.firstinspires.ftc.teamcode.utils.geometry.Pose;
+import org.firstinspires.ftc.teamcode.utils.geometry.PoseRR;
 
 
 @com.qualcomm.robotcore.eventloop.opmode.TeleOp(name = "🟥TeleOpRed🟥", group = "OpModes")
 public class TeleOpRed extends CommandOpMode {
+    public Follower follower;
     private final Robot robot = Robot.getInstance();
     public GamepadEx gamepadEx;
+
+    public Pose startPose;
 
     double exponentialJoystickCoord_X_TURN, exponentialJoystickCoord_X_FORWARD, exponentialJoystickCoord_Y;
     public static double contantTerm = 0.6, liniarCoefTerm = 0.7;
@@ -57,6 +65,11 @@ public class TeleOpRed extends CommandOpMode {
 
     @Override
     public void initialize(){
+        Constants.setConstants(FConstants.class, LConstants.class);
+        follower = new Follower(hardwareMap);
+        follower.setStartingPose(Globals.lastAutoPose);
+
+
         telemetry = new MultipleTelemetry(telemetry, FtcDashboard.getInstance().getTelemetry());
         CommandScheduler.getInstance().reset();
 
@@ -68,7 +81,6 @@ public class TeleOpRed extends CommandOpMode {
 
         robot.initializeHardware(hardwareMap);
         robot.initializeRobot();
-        //robot.mecanumDriveTrain.resetTargetPositions();
 
 
         //Choosing sample color button logic
@@ -276,10 +288,15 @@ public class TeleOpRed extends CommandOpMode {
                 );
 
 
+
+
     }
 
     @Override
     public void run(){
+        startPose = follower.getPose();
+        follower.update();
+
         CommandScheduler.getInstance().run();
 
         robot.loop();
@@ -299,7 +316,7 @@ public class TeleOpRed extends CommandOpMode {
         exponentialJoystickCoord_Y = (Math.pow(gamepad1.right_stick_y, 3) + liniarCoefTerm * gamepad1.right_stick_y) * contantTerm;
 
         double turnSpeed = robot.extendo.extendoState == Extendo.ExtendoState.EXTENDING_MINIMUM ? -exponentialJoystickCoord_X_TURN/Globals.DECREASE_TURN_SPEED_CONSTANT :-exponentialJoystickCoord_X_TURN;
-        Pose drive = new Pose(-exponentialJoystickCoord_X_FORWARD, -exponentialJoystickCoord_Y, turnSpeed);
+        PoseRR drive = new PoseRR(-exponentialJoystickCoord_X_FORWARD, -exponentialJoystickCoord_Y, -turnSpeed);
         robot.mecanumDriveTrain.set(drive, 0);
 
 
@@ -361,4 +378,6 @@ public class TeleOpRed extends CommandOpMode {
         telemetry.update();
 
     }
+
+
 }

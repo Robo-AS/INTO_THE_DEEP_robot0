@@ -1,6 +1,7 @@
 package org.firstinspires.ftc.teamcode.programs.util;
 
 import com.acmerobotics.dashboard.config.Config;
+import com.pedropathing.localization.Pose;
 
 @Config
 public class Globals {
@@ -47,6 +48,9 @@ public class Globals {
         HANGING_LEVEL_3 = false;
 
     }
+
+
+    public static Pose lastAutoPose = new Pose(0, 0, Math.toRadians(0));
 
 
 }
