@@ -11,6 +11,8 @@ import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
+import org.firstinspires.ftc.teamcode.programs.util.Globals;
+
 import dev.frozenmilk.dairy.cachinghardware.CachingServo;
 
 @Config
@@ -67,6 +69,7 @@ public class Arm extends SubsystemBase {
     double sideAngle = 0;
     public static double minAngleBASKET = -30, maxAngleBASKET = 30;
     public static double minAngleSPECIMEN = -10, maxAngleSPECIMEN = 10;
+    public boolean pinpointDisabled = false;
 
 
 
@@ -102,7 +105,7 @@ public class Arm extends SubsystemBase {
         leftServo.setPosition(INIT_leftServo);
         clawServo.setPosition(OPEN_clawServo);
         wristServo.setPosition(INIT_wristServo);
-        pinpoint.resetPosAndIMU();
+        //pinpoint.resetPosAndIMU();
         sideAngle = 0;
     }
 
@@ -111,8 +114,10 @@ public class Arm extends SubsystemBase {
 
 
     public void loop(){
-        if(armState == ArmState.HIGH_RUNG || armState == ArmState.HIGH_BASKET) {
-            sideAngle = getPinpointHeading();
+        if((armState == ArmState.HIGH_RUNG || armState == ArmState.HIGH_BASKET) && !pinpointDisabled) {
+            double currentHeading = getPinpointHeading();
+            double referenceHeading = (armState == ArmState.HIGH_RUNG) ? 0 : 135;
+            sideAngle = currentHeading - referenceHeading + 180;
             sideAngle = ((sideAngle + 180) % 360 + 360) % 360 - 180;
         }
         else sideAngle = 0;
@@ -143,7 +148,6 @@ public class Arm extends SubsystemBase {
             rightServo.setPosition(positionToAngleRight(targetMotionProfile));
             leftServo.setPosition(positionToAngleLeft(targetMotionProfile));
         }
-
 
     }
 
@@ -252,6 +256,10 @@ public class Arm extends SubsystemBase {
 //            rightServo.setPosition(positionToAngleRight(0));
 //            leftServo.setPosition(positionToAngleLeft(0));
 //        }
+    }
+
+    public void disablePinpoint(){
+        pinpointDisabled = true;
     }
 
 

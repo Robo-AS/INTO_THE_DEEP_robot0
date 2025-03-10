@@ -37,6 +37,7 @@ import org.firstinspires.ftc.teamcode.programs.opmodes.auto.BasketPaths;
 import org.firstinspires.ftc.teamcode.programs.subsystems.Arm;
 import org.firstinspires.ftc.teamcode.programs.subsystems.Brush;
 import org.firstinspires.ftc.teamcode.programs.subsystems.Extendo;
+import org.firstinspires.ftc.teamcode.programs.util.Globals;
 import org.firstinspires.ftc.teamcode.programs.util.Robot;
 
 
@@ -82,7 +83,7 @@ public class BasketAutoSubmersibleRED extends LinearOpMode {
     public void runOpMode() throws InterruptedException {
         robot.brush.desiredSampleColor = Brush.DesiredSampleColor.BOTH;
         CommandScheduler.getInstance().reset();
-
+        Globals.RUNNED_AUTO_BASKET = true;
 
         Constants.setConstants(FConstants.class, LConstants.class);
         follower = new Follower(hardwareMap);

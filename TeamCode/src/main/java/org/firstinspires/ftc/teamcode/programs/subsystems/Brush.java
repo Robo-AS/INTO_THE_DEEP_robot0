@@ -2,7 +2,9 @@ package org.firstinspires.ftc.teamcode.programs.subsystems;
 
 import com.acmerobotics.dashboard.config.Config;
 import com.arcrobotics.ftclib.command.CommandScheduler;
+import com.arcrobotics.ftclib.command.SequentialCommandGroup;
 import com.arcrobotics.ftclib.command.SubsystemBase;
+import com.arcrobotics.ftclib.command.WaitCommand;
 import com.qualcomm.hardware.rev.RevColorSensorV3;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
@@ -10,6 +12,7 @@ import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.DigitalChannel;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.Servo;
+import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.robotcore.external.navigation.CurrentUnit;
 import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
@@ -30,6 +33,8 @@ public class Brush extends SubsystemBase{
     public CachingServo brushSampleServo;
     public RevColorSensorV3 colorSensor;
     public DigitalChannel proximitySensor;
+    private ElapsedTime timer = new ElapsedTime();
+    public boolean disabled = false;
 
     public enum BrushState {
         INTAKING,
@@ -102,6 +107,7 @@ public class Brush extends SubsystemBase{
         brushSampleServo.setDirection(Servo.Direction.FORWARD);
 
         colorSensor = hardwareMap.get(RevColorSensorV3.class, "colorSensor");
+        proximitySensor = hardwareMap.get(DigitalChannel.class, "proximitySensor");
     }
 
 
@@ -112,17 +118,18 @@ public class Brush extends SubsystemBase{
         sampleState = SampleState.ISNOT;
         intakedSampleColor = IntakedSampleColor.NOTHING;
         brushAngleServo.setPosition(Globals.BRUSH_POSITION_UP);
+        timer.reset();
+        disabled = false;
     }
 
 
 
     public void loopBlue(){
-
         if(brushAngle == BrushAngle.DOWN){
             updateSampleState();
             updateSampleColor();
+//            updateSampleStateDigital();
         }
-
 
         switch (brushState) {
             case SPITTING_HUMAN_PLAYER:
@@ -146,24 +153,32 @@ public class Brush extends SubsystemBase{
                     CommandScheduler.getInstance().schedule(
                             new BrushCommand(Globals.BRUSH_MOTOR_SPEED, Globals.BRUSH_SAMPLE_SERVO_SPEED_INTAKING)
                     );
+                    timer.reset();
                 }
                 else if (sampleState == SampleState.IS) {
                     CommandScheduler.getInstance().schedule(new BrushCommand(0, 0.5)); // Idle
 
-                    if (intakedSampleColor == IntakedSampleColor.NOTHING) {
-                        updateSampleColor();
-                        return;
-                    }
-
-                    if (isRightSampleColorTeleOpBlue()) {
-                        if (intakedSampleColor == IntakedSampleColor.YELLOW) {
-                            CommandScheduler.getInstance().schedule(new IntakeRetractYELLOWSampleCommand());
-                        } else {
-                            CommandScheduler.getInstance().schedule(new IntakeRetractSPECIFICSampleCommand());
+                    if (!disabled){
+                        if (intakedSampleColor == IntakedSampleColor.NOTHING) {
+                            if (timer.seconds() > 1) {
+                                disabled = true;
+                            }
+                            updateSampleColor();
+                            return;
                         }
-                    } else {
-                        CommandScheduler.getInstance().schedule(new SetBrushStateCommand(BrushState.THROWING));
+
+
+                        if (isRightSampleColorTeleOpBlue()) {
+                            if (intakedSampleColor == IntakedSampleColor.YELLOW) {
+                                CommandScheduler.getInstance().schedule(new IntakeRetractYELLOWSampleCommand());
+                            } else {
+                                CommandScheduler.getInstance().schedule(new IntakeRetractSPECIFICSampleCommand());
+                            }
+                        } else {
+                            CommandScheduler.getInstance().schedule(new SetBrushStateCommand(BrushState.THROWING));
+                        }
                     }
+                    else CommandScheduler.getInstance().schedule(new IntakeRetractSPECIFICSampleCommand());
                 }
                 break;
 
@@ -182,6 +197,8 @@ public class Brush extends SubsystemBase{
         if(brushAngle == BrushAngle.DOWN){
             updateSampleState();
             updateSampleColor();
+//            updateSampleStateDigital();
+
         }
 
 
@@ -208,7 +225,8 @@ public class Brush extends SubsystemBase{
                             new BrushCommand(Globals.BRUSH_MOTOR_SPEED, Globals.BRUSH_SAMPLE_SERVO_SPEED_INTAKING)
                     );
                 } else if (sampleState == SampleState.IS) {
-                    CommandScheduler.getInstance().schedule(new BrushCommand(0, 0.5)); // Idle
+                    CommandScheduler.getInstance().schedule(new BrushCommand(0, 0.5));// Idle
+
 
                     if (intakedSampleColor == IntakedSampleColor.NOTHING) {
                         updateSampleColor();
@@ -266,6 +284,13 @@ public class Brush extends SubsystemBase{
     public void updateSampleState(){
         double distance = colorSensor.getDistance(DistanceUnit.CM);
         if(distance < 3){
+            sampleState = SampleState.IS;
+        }
+        else sampleState = SampleState.ISNOT;
+    }
+
+    public void updateSampleStateDigital(){
+        if(!proximitySensor.getState()){
             sampleState = SampleState.IS;
         }
         else sampleState = SampleState.ISNOT;
@@ -439,6 +464,11 @@ public class Brush extends SubsystemBase{
         if (brushMotor.getCurrent(currentUnit) > 5)
             specimenBlocked = SpecimenBlocked.BLOCKED;
         else specimenBlocked = SpecimenBlocked.NOT_BLOCKED;
+    }
+
+
+    public boolean getREVState(){
+        return disabled;
     }
 
 

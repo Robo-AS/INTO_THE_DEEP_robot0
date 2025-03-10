@@ -6,7 +6,7 @@ import com.pedropathing.localization.Pose;
 @Config
 public class Globals {
     public static double BRUSH_MOTOR_SPEED = 1;//0.75
-    public static double BRUSH_SAMPLE_SERVO_SPEED_INTAKING= 0.57; //0.8
+    public static double BRUSH_SAMPLE_SERVO_SPEED_INTAKING= 0.6; //0.57
     public static double BRUSH_SAMPLE_SERVO_SPEED_THROWING = 1;
     public static double BRUSH_POSITION_UP = 0.72;
     public static double BRUSH_POSITION_DOWN = 0.05;
@@ -51,6 +51,9 @@ public class Globals {
 
 
     public static Pose lastAutoPose = new Pose(0, 0, Math.toRadians(0));
+    public static boolean RUNNED_AUTO_BASKET = false;
+    public static boolean RUNNED_AUTO_SPECIMEN = false;
+
 
 
 }

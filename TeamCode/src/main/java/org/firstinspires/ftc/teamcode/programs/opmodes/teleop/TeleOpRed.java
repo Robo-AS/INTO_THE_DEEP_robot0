@@ -5,6 +5,7 @@ import com.acmerobotics.dashboard.telemetry.MultipleTelemetry;
 import com.arcrobotics.ftclib.command.CommandOpMode;
 import com.arcrobotics.ftclib.command.CommandScheduler;
 import com.arcrobotics.ftclib.command.ConditionalCommand;
+import com.arcrobotics.ftclib.command.InstantCommand;
 import com.arcrobotics.ftclib.command.SequentialCommandGroup;
 import com.arcrobotics.ftclib.command.WaitCommand;
 import com.arcrobotics.ftclib.command.button.Trigger;
@@ -53,11 +54,10 @@ import org.firstinspires.ftc.teamcode.utils.geometry.PoseRR;
 
 @com.qualcomm.robotcore.eventloop.opmode.TeleOp(name = "🟥TeleOpRed🟥", group = "OpModes")
 public class TeleOpRed extends CommandOpMode {
-    public Follower follower;
     private final Robot robot = Robot.getInstance();
     public GamepadEx gamepadEx;
 
-    public Pose startPose;
+
 
     double exponentialJoystickCoord_X_TURN, exponentialJoystickCoord_X_FORWARD, exponentialJoystickCoord_Y;
     public static double contantTerm = 0.6, liniarCoefTerm = 0.7;
@@ -65,11 +65,6 @@ public class TeleOpRed extends CommandOpMode {
 
     @Override
     public void initialize(){
-        Constants.setConstants(FConstants.class, LConstants.class);
-        follower = new Follower(hardwareMap);
-        follower.setStartingPose(Globals.lastAutoPose);
-
-
         telemetry = new MultipleTelemetry(telemetry, FtcDashboard.getInstance().getTelemetry());
         CommandScheduler.getInstance().reset();
 
@@ -199,11 +194,7 @@ public class TeleOpRed extends CommandOpMode {
                 .whenPressed(
                         () -> CommandScheduler.getInstance().schedule(
                                 new ConditionalCommand(
-                                        new ConditionalCommand(
-                                                new OuttakeCommand(),
-                                                new DoesNothingCommand(),
-                                                () -> robot.brush.sampleState == Brush.SampleState.IS && robot.brush.intakedSampleColor == Brush.IntakedSampleColor.RED
-                                        ),
+                                        new OuttakeCommand(),
                                         new DoesNothingCommand(),
                                         () -> robot.extendo.extendoState == Extendo.ExtendoState.RETRACTING
                                 )
@@ -232,7 +223,6 @@ public class TeleOpRed extends CommandOpMode {
                         () -> CommandScheduler.getInstance().schedule(
                                 new ConditionalCommand(
                                         new TriggerHangCommand(),
-                                        //new UntriggerHangCommand(),
                                         new ConditionalCommand(
                                                 new SetSafetyStateCommand(Hang.SafetyState.TRIGGERED),
                                                 new DoesNothingCommand(),
@@ -243,7 +233,7 @@ public class TeleOpRed extends CommandOpMode {
                         )
                 );
 
-        gamepadEx.getGamepadButton(GamepadKeys.Button.A)
+        gamepadEx.getGamepadButton(GamepadKeys.Button.A)//cross
                 .whenPressed(
                         () -> CommandScheduler.getInstance().schedule(
                                 new ConditionalCommand(
@@ -259,7 +249,7 @@ public class TeleOpRed extends CommandOpMode {
                 );
 
         // OPEN/CLOSE CLAW
-        gamepadEx.getGamepadButton(GamepadKeys.Button.B)
+        gamepadEx.getGamepadButton(GamepadKeys.Button.B)//circle
                 .whenPressed(
                         () -> CommandScheduler.getInstance().schedule(
                                 new ConditionalCommand(
@@ -287,6 +277,12 @@ public class TeleOpRed extends CommandOpMode {
                         )
                 );
 
+        gamepadEx.getGamepadButton(GamepadKeys.Button.BACK)
+                .whenPressed(
+                        () -> CommandScheduler.getInstance().schedule(
+                                new InstantCommand(robot.arm::disablePinpoint)
+                        )
+                );
 
 
 
@@ -294,9 +290,6 @@ public class TeleOpRed extends CommandOpMode {
 
     @Override
     public void run(){
-        startPose = follower.getPose();
-        follower.update();
-
         CommandScheduler.getInstance().run();
 
         robot.loop();
@@ -316,7 +309,7 @@ public class TeleOpRed extends CommandOpMode {
         exponentialJoystickCoord_Y = (Math.pow(gamepad1.right_stick_y, 3) + liniarCoefTerm * gamepad1.right_stick_y) * contantTerm;
 
         double turnSpeed = robot.extendo.extendoState == Extendo.ExtendoState.EXTENDING_MINIMUM ? -exponentialJoystickCoord_X_TURN/Globals.DECREASE_TURN_SPEED_CONSTANT :-exponentialJoystickCoord_X_TURN;
-        PoseRR drive = new PoseRR(-exponentialJoystickCoord_X_FORWARD, -exponentialJoystickCoord_Y, -turnSpeed);
+        PoseRR drive = new PoseRR(exponentialJoystickCoord_X_FORWARD, -exponentialJoystickCoord_Y, -turnSpeed);
         robot.mecanumDriveTrain.set(drive, 0);
 
 
@@ -337,10 +330,13 @@ public class TeleOpRed extends CommandOpMode {
 
 
 
+
+
 //        telemetry.addData("BrushState:", robot.brush.brushState);
 //        telemetry.addData("PreviousBrushState:", robot.brush.previousBrushState);
         telemetry.addData("DesiredColor", robot.brush.desiredSampleColor);
         telemetry.addData("IntakedColor:", robot.brush.intakedSampleColor);
+        //telemetry.addData("ProximitySensor:", robot.brush.proximitySensor.getState());
 //        telemetry.addData("SampleState:", robot.brush.sampleState);
 //        telemetry.addData("AngleServoPosition", robot.brush.brushAngleServo.getPosition());
 //        telemetry.addData("Brush Angle", robot.brush.brushAngle);
@@ -371,6 +367,18 @@ public class TeleOpRed extends CommandOpMode {
 
         telemetry.addData("Hang State", robot.hang.hangState);
         telemetry.addData("Safety State", robot.hang.safetyState);
+
+        telemetry.addData("RUNNED BASKET",Globals.RUNNED_AUTO_BASKET);
+
+        telemetry.addData("Power FRONT RIGHT", robot.mecanumDriveTrain.getPosetFronRight());
+        telemetry.addData("Power FRONT LEFT", robot.mecanumDriveTrain.getPosetFronLeft());
+        telemetry.addData("Power BACK RIGHT", robot.mecanumDriveTrain.getPosetBackRight());
+        telemetry.addData("Power BACK LEFT", robot.mecanumDriveTrain.getPosetBackLeft());
+
+
+        telemetry.addData("Pinpoint DISABLED", robot.arm.pinpointDisabled);
+
+
 
         double loop = System.nanoTime();
         telemetry.addData("Hz", 1000000000 / (loop - loopTime));

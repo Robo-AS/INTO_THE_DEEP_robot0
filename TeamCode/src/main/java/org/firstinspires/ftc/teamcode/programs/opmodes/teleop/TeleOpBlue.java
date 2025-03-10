@@ -186,11 +186,7 @@ public class TeleOpBlue extends CommandOpMode {
                 .whenPressed(
                         () -> CommandScheduler.getInstance().schedule(
                                 new ConditionalCommand(
-                                        new ConditionalCommand(
-                                                new OuttakeCommand(),
-                                                new DoesNothingCommand(),
-                                                () -> robot.brush.sampleState == Brush.SampleState.IS && robot.brush.intakedSampleColor == Brush.IntakedSampleColor.BLUE
-                                        ),
+                                        new OuttakeCommand(),
                                         new DoesNothingCommand(),
                                         () -> robot.extendo.extendoState == Extendo.ExtendoState.RETRACTING
                                 )
@@ -303,7 +299,7 @@ public class TeleOpBlue extends CommandOpMode {
         exponentialJoystickCoord_Y = (Math.pow(gamepad1.right_stick_y, 3) + liniarCoefTerm * gamepad1.right_stick_y) * contantTerm;
 
         double turnSpeed = robot.extendo.extendoState == Extendo.ExtendoState.EXTENDING_MINIMUM ? -exponentialJoystickCoord_X_TURN/Globals.DECREASE_TURN_SPEED_CONSTANT :-exponentialJoystickCoord_X_TURN;
-        PoseRR drive = new PoseRR(-exponentialJoystickCoord_X_FORWARD, -exponentialJoystickCoord_Y, turnSpeed);
+        PoseRR drive = new PoseRR(exponentialJoystickCoord_X_FORWARD, -exponentialJoystickCoord_Y, -turnSpeed);
         robot.mecanumDriveTrain.set(drive, 0);
 
 
@@ -328,8 +324,10 @@ public class TeleOpBlue extends CommandOpMode {
 //        telemetry.addData("BrushState:", robot.brush.brushState);
 //        telemetry.addData("PreviousBrushState:", robot.brush.previousBrushState);
 //        telemetry.addData("DesiredColor", robot.brush.desiredSampleColor);
-//        telemetry.addData("IntakedColor:", robot.brush.intakedSampleColor);
-//        telemetry.addData("SampleState:", robot.brush.sampleState);
+        telemetry.addData("IntakedColor:", robot.brush.intakedSampleColor);
+        telemetry.addData("SampleState:", robot.brush.sampleState);
+        telemetry.addData("REVState:", robot.brush.getREVState());
+
 //        telemetry.addData("AngleServoPosition", robot.brush.brushAngleServo.getPosition());
 //        telemetry.addData("Brush Angle", robot.brush.brushAngle);
 
@@ -360,6 +358,7 @@ public class TeleOpBlue extends CommandOpMode {
 //        telemetry.addData("Hang State", robot.hang.hangState);
 //        telemetry.addData("Safety State", robot.hang.safetyState);
 
+        telemetry.addData("RUNNED BASKET",Globals.RUNNED_AUTO_BASKET);
 
         double loop = System.nanoTime();
         telemetry.addData("Hz", 1000000000 / (loop - loopTime));

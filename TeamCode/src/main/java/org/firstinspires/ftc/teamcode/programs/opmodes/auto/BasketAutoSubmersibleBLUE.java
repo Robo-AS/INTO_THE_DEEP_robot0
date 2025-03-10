@@ -83,6 +83,7 @@ public class BasketAutoSubmersibleBLUE extends LinearOpMode {
     public void runOpMode() throws InterruptedException {
         robot.brush.desiredSampleColor = Brush.DesiredSampleColor.BOTH;
         CommandScheduler.getInstance().reset();
+        Globals.RUNNED_AUTO_BASKET = true;
 
 
         Constants.setConstants(FConstants.class, LConstants.class);

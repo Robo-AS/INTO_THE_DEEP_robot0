@@ -29,8 +29,8 @@ public class Hang extends SubsystemBase {
 
     public static double IDLE = 0.55;
     public static double TRIGGERED = 0.4;
-    public static double IDLE_SAFETY = 0.56;//0.54
-    public static double TRIGGERED_SAFETY = 0.4;
+    public static double IDLE_SAFETY = 0.54;//0.54
+    public static double TRIGGERED_SAFETY = 0.3;//0.4
 
 
     public static Hang getInstance(){

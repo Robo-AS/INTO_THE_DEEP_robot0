@@ -13,7 +13,8 @@ public class TriggerHangCommand extends SequentialCommandGroup {
         super(
                 new SetHangStateCommand(Hang.HangState.TRIGGERED),
                 new InstantCommand(Globals::isHangingLevel3),
-                new InstantCommand(MecanumDriveTrain::resetEncoders)
+                new InstantCommand(MecanumDriveTrain::resetEncoders),
+                new InstantCommand(MecanumDriveTrain::setRotation)
         );
 
     }

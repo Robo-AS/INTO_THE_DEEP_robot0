@@ -35,8 +35,8 @@ public class MecanumDriveTrain extends WSubsystem implements Drivetrain {
     public double targetPositionLeft = 0, targetPositionRight = 0;
     public double currentPositionLeft = 0, currentPositionRight = 0;
     public static double joystickConstantLeft = 10, joystickConstantRight = 10;
-    public static double minPositionLeft = 0, maxPositionLeft = 2650;
-    public static double minPositionRight = 0, maxPositionRight = 2650;
+    public static double minPositionLeft = 0, maxPositionLeft = 2750;
+    public static double minPositionRight = 0, maxPositionRight = 2750;
 
     public MecanumDriveTrain(){
         left_pid = new PIDController(p, i, d);
@@ -135,6 +135,15 @@ public class MecanumDriveTrain extends WSubsystem implements Drivetrain {
             double powerLeft = left_pid.calculate(currentPositionLeft, targetPositionLeft);
             double powerRight = right_pid.calculate(currentPositionRight, -targetPositionRight);
 
+            if(currentPositionLeft < 2500){
+                powerLeft = Math.min(powerLeft, 0.8);
+                powerRight = Math.max(powerRight, -0.8);
+            }
+            else if(currentPositionLeft > 2500){
+                powerLeft = Math.min(powerLeft, 0.7);
+                powerRight = Math.max(powerRight, -0.7);
+            }
+
             dtFrontLeftMotor.setPower(powerLeft);
             dtFrontRightMotor.setPower(powerRight);
 
@@ -190,6 +199,20 @@ public class MecanumDriveTrain extends WSubsystem implements Drivetrain {
         dtFrontRightMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         dtFrontRightMotor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
     }
+
+    public static void setRotation(){
+        dtBackLeftMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        dtBackLeftMotor.setDirection(DcMotorSimple.Direction.REVERSE);
+
+        dtFrontLeftMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        dtFrontLeftMotor.setDirection(DcMotorSimple.Direction.FORWARD);
+
+        dtBackRightMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        dtBackRightMotor.setDirection(DcMotorSimple.Direction.REVERSE);
+
+        dtFrontRightMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        dtFrontRightMotor.setDirection(DcMotorSimple.Direction.FORWARD);
+    }
     
 
     public double getCurrentPotionLeft(){
@@ -219,6 +242,22 @@ public class MecanumDriveTrain extends WSubsystem implements Drivetrain {
         targetPositionLeft = 0;
     }
 
+
+    public double getPosetFronRight(){
+        return dtFrontRightMotor.getPower();
+    }
+
+    public double getPosetFronLeft(){
+        return dtFrontLeftMotor.getPower();
+    }
+
+    public double getPosetBackRight(){
+        return dtBackRightMotor.getPower();
+    }
+
+    public double getPosetBackLeft(){
+        return dtBackLeftMotor.getPower();
+    }
 
 
 }
