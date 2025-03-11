@@ -5,12 +5,12 @@ import com.acmerobotics.roadrunner.profile.MotionProfile;
 import com.acmerobotics.roadrunner.profile.MotionProfileGenerator;
 import com.acmerobotics.roadrunner.profile.MotionState;
 import com.arcrobotics.ftclib.command.SubsystemBase;
-import com.pedropathing.follower.Follower;
 import com.pedropathing.localization.GoBildaPinpointDriver;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
+import org.firstinspires.ftc.teamcode.programs.opmodes.auto.BasketPaths;
 import org.firstinspires.ftc.teamcode.programs.util.Globals;
 
 import dev.frozenmilk.dairy.cachinghardware.CachingServo;
@@ -95,7 +95,8 @@ public class Arm extends SubsystemBase {
         wristServo = new CachingServo(hardwareMap.get(Servo.class, "wristServo"));
         wristServo.setDirection(Servo.Direction.FORWARD);
 
-        pinpoint = hardwareMap.get(GoBildaPinpointDriver.class,"pinpoint");
+        if(Globals.TELEOP)
+            pinpoint = hardwareMap.get(GoBildaPinpointDriver.class,"pinpoint");
 
     }
 
@@ -113,7 +114,37 @@ public class Arm extends SubsystemBase {
 
 
 
-    public void loop(){
+    public void loopAuto(){
+        if(armState == ArmState.HIGH_BASKET && BasketPaths.getInstance().SCORE_PRELOAD_COMPLETED)
+            sideAngle = 30;
+        else sideAngle = 0;
+
+
+        if(targetPosition != previousTarget){
+            profile = MotionProfileGenerator.generateSimpleMotionProfile(
+                    new MotionState(previousTarget, 0),
+                    new MotionState(targetPosition, 0),
+                    maxVelocity,
+                    maxAcceleration
+            );
+
+            time.reset();
+            previousTarget = targetPosition;
+        }
+
+        //MotionState targetState = profile == null ? new MotionState(0, 0) : profile.get(time.seconds());
+//        double targetMotionProfile = targetState.getX();
+        if(profile!= null){
+            MotionState targetState = profile.get(time.seconds());
+            double targetMotionProfile = targetState.getX();
+            rightServo.setPosition(positionToAngleRight(targetMotionProfile));
+            leftServo.setPosition(positionToAngleLeft(targetMotionProfile));
+        }
+
+    }
+
+
+    public void loopTeleOp(){
         if((armState == ArmState.HIGH_RUNG || armState == ArmState.HIGH_BASKET) && !pinpointDisabled) {
             double currentHeading = getPinpointHeading();
             double referenceHeading = (armState == ArmState.HIGH_RUNG) ? 0 : 135;

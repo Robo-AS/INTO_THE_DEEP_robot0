@@ -2,7 +2,6 @@ package org.firstinspires.ftc.teamcode.tests.AUTO_TESTS;
 
 
 import com.acmerobotics.dashboard.config.Config;
-import com.arcrobotics.ftclib.command.CommandOpMode;
 import com.arcrobotics.ftclib.command.CommandScheduler;
 import com.arcrobotics.ftclib.command.ConditionalCommand;
 import com.arcrobotics.ftclib.command.InstantCommand;
@@ -318,7 +317,7 @@ public class BasketAutoSubmersibleBLUE_LINEAR_OP_MODE extends LinearOpMode {
                                 () -> !basketPaths.getscore3()
                         ),
 
-                        new InstantCommand(basketPaths::setScore3Completed), //doar pentru schimbare de loop-uri am asta
+                        new InstantCommand(basketPaths::setScore3Completed), //doar pentru schimbare de loopAuto-uri am asta
 
 
 
@@ -482,9 +481,9 @@ public class BasketAutoSubmersibleBLUE_LINEAR_OP_MODE extends LinearOpMode {
             CommandScheduler.getInstance().run();
 
 
-            //robot.loop();
+            //robot.loopAuto();
             robot.lift.loop();
-            robot.arm.loop();
+            robot.arm.loopAuto();
             robot.extendo.loopAuto();
 
             if(!basketPaths.getscore3())

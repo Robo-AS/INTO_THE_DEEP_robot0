@@ -1,5 +1,7 @@
 package org.firstinspires.ftc.teamcode.tests;
 
+import com.acmerobotics.dashboard.FtcDashboard;
+import com.acmerobotics.dashboard.telemetry.MultipleTelemetry;
 import com.qualcomm.hardware.adafruit.AdafruitI2cColorSensor;
 import com.qualcomm.hardware.rev.RevColorSensorV3;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
@@ -10,9 +12,10 @@ import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
 @TeleOp(name = "ColorSensorTest", group = "Tests")
 public class ColorSensorTest extends LinearOpMode {
     public RevColorSensorV3 colorSensor0;//declare
-    public AdafruitI2cColorSensor ada;
+    private final FtcDashboard dashboard = FtcDashboard.getInstance();
     @Override
     public void runOpMode(){
+        telemetry = new MultipleTelemetry(telemetry, dashboard.getTelemetry());
         colorSensor0 = hardwareMap.get(RevColorSensorV3.class, "colorSensor"); //mapping
 
         waitForStart();
@@ -23,9 +26,9 @@ public class ColorSensorTest extends LinearOpMode {
             int red = colorSensor0.red();
             int green = colorSensor0.green();
             int blue = colorSensor0.blue();
-            int alpha = colorSensor0.alpha(); // Combined light intensity
-            int argb = colorSensor0.argb();   // Packed ARGB color
-            double distance = colorSensor0.getDistance(DistanceUnit.CM);
+//            int alpha = colorSensor0.alpha(); // Combined light intensity
+//            int argb = colorSensor0.argb();   // Packed ARGB color
+//            double distance = colorSensor0.getDistance(DistanceUnit.CM);
 
 //            if(distance < 3)
 //                telemetry.addData("There is piece", true);
@@ -34,8 +37,8 @@ public class ColorSensorTest extends LinearOpMode {
             telemetry.addData("Red", red);
             telemetry.addData("Green", green);
             telemetry.addData("Blue", blue);
-            telemetry.addData("Alpha", alpha);
-            telemetry.addData("ARGB", argb);
+//            telemetry.addData("Alpha", alpha);
+//            telemetry.addData("ARGB", argb);
 
 
             if(blue > 400)

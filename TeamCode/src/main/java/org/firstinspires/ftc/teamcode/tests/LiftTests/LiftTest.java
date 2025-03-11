@@ -55,7 +55,7 @@ public class LiftTest extends CommandOpMode {
         CommandScheduler.getInstance().run();
 
 
-//        lift.loop();
+//        lift.loopAuto();
 //        lift.testLoop();
 
         // Create a telemetry packet for FTCDashboard

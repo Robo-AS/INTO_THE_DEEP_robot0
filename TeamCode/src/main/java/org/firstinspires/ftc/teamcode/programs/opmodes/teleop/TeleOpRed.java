@@ -70,6 +70,7 @@ public class TeleOpRed extends CommandOpMode {
 
         gamepadEx = new GamepadEx(gamepad1);
 
+        Globals.TELEOP = true;
         Globals.HANGING_LEVEL_2 = false;
         Globals.HANGING_LEVEL_3 = false;
 
@@ -296,7 +297,7 @@ public class TeleOpRed extends CommandOpMode {
         robot.brush.loopRed();
         robot.extendo.loop(gamepadEx.getLeftY());
         robot.lift.loop();
-        robot.arm.loop();
+        robot.arm.loopTeleOp();
 
         //PENTRU LEVEL 3 HANG
         if(Globals.HANGING_LEVEL_3) {

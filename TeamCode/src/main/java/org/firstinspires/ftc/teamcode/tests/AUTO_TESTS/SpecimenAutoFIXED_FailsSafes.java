@@ -284,7 +284,7 @@ public class SpecimenAutoFIXED_FailsSafes extends LinearOpMode {
                                                 new SetExtendoStateCommand(Extendo.ExtendoState.EXTENDING_MINIMUM_AUTO)
                                         )
                                 )
-                                .andThen(new SetBrushAngleCommand(Brush.BrushAngle.DOWN_AUTO)),
+                                .andThen(new SetBrushAngleCommand(Brush.BrushAngle.DOWN_AUTO_SPECIMEN)),
 
                         new FollowPath(follower, bring1, true, 1)
                                 .alongWith(
@@ -302,7 +302,7 @@ public class SpecimenAutoFIXED_FailsSafes extends LinearOpMode {
 
 
                                 )
-                                .andThen(new SetBrushAngleCommand(Brush.BrushAngle.DOWN_AUTO)),
+                                .andThen(new SetBrushAngleCommand(Brush.BrushAngle.DOWN_AUTO_SPECIMEN)),
 
 
                         new FollowPath(follower, bring2, true, 1)
@@ -328,7 +328,7 @@ public class SpecimenAutoFIXED_FailsSafes extends LinearOpMode {
                                                 new WaitCommand(1200),//2000
                                                 new SetExtendoStateCommand(Extendo.ExtendoState.EXTENDING_MINIMUM_AUTO),
                                                 new WaitCommand(500),
-                                                new SetBrushAngleCommand(Brush.BrushAngle.DOWN_AUTO),
+                                                new SetBrushAngleCommand(Brush.BrushAngle.DOWN_AUTO_SPECIMEN),
                                                 new SetBrushStateCommand(Brush.BrushState.INTAKING)
 
 
@@ -424,7 +424,7 @@ public class SpecimenAutoFIXED_FailsSafes extends LinearOpMode {
                                         new SequentialCommandGroup(
                                                 new SetExtendoStateCommand(Extendo.ExtendoState.EXTENDING_MINIMUM_AUTO),
                                                 new WaitCommand(500),
-                                                new SetBrushAngleCommand(Brush.BrushAngle.DOWN_AUTO),
+                                                new SetBrushAngleCommand(Brush.BrushAngle.DOWN_AUTO_SPECIMEN),
                                                 new SetBrushStateCommand(Brush.BrushState.INTAKING)
                                         )
 
@@ -470,7 +470,7 @@ public class SpecimenAutoFIXED_FailsSafes extends LinearOpMode {
                                         new SequentialCommandGroup(
                                                 new SetExtendoStateCommand(Extendo.ExtendoState.EXTENDING_MINIMUM_AUTO),
                                                 new WaitCommand(500),
-                                                new SetBrushAngleCommand(Brush.BrushAngle.DOWN_AUTO),
+                                                new SetBrushAngleCommand(Brush.BrushAngle.DOWN_AUTO_SPECIMEN),
                                                 new SetBrushStateCommand(Brush.BrushState.INTAKING)
                                         )
 
@@ -513,7 +513,7 @@ public class SpecimenAutoFIXED_FailsSafes extends LinearOpMode {
                                         new SequentialCommandGroup(
                                                 new SetExtendoStateCommand(Extendo.ExtendoState.EXTENDING_MINIMUM_AUTO),
                                                 new WaitCommand(500),
-                                                new SetBrushAngleCommand(Brush.BrushAngle.DOWN_AUTO),
+                                                new SetBrushAngleCommand(Brush.BrushAngle.DOWN_AUTO_SPECIMEN),
                                                 new SetBrushStateCommand(Brush.BrushState.INTAKING)
                                         )
 
@@ -561,9 +561,9 @@ public class SpecimenAutoFIXED_FailsSafes extends LinearOpMode {
             CommandScheduler.getInstance().run();
 
 
-            //robot.loop();
+            //robot.loopAuto();
             robot.lift.loop();
-            robot.arm.loop();
+            robot.arm.loopAuto();
             robot.extendo.loopAuto();
             robot.brush.loopAutoSpecimen();
 

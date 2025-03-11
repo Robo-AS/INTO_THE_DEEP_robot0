@@ -5,6 +5,7 @@ import com.acmerobotics.dashboard.telemetry.MultipleTelemetry;
 import com.arcrobotics.ftclib.command.CommandOpMode;
 import com.arcrobotics.ftclib.command.CommandScheduler;
 import com.arcrobotics.ftclib.command.ConditionalCommand;
+import com.arcrobotics.ftclib.command.InstantCommand;
 import com.arcrobotics.ftclib.command.SequentialCommandGroup;
 import com.arcrobotics.ftclib.command.WaitCommand;
 import com.arcrobotics.ftclib.command.button.Trigger;
@@ -64,6 +65,7 @@ public class TeleOpBlue extends CommandOpMode {
 
         Globals.HANGING_LEVEL_2 = false;
         Globals.HANGING_LEVEL_3 = false;
+        Globals.TELEOP = true;
 
         robot.initializeHardware(hardwareMap);
         robot.initializeRobot();
@@ -275,6 +277,14 @@ public class TeleOpBlue extends CommandOpMode {
                 );
 
 
+        gamepadEx.getGamepadButton(GamepadKeys.Button.BACK)
+                .whenPressed(
+                        () -> CommandScheduler.getInstance().schedule(
+                                new InstantCommand(robot.arm::disablePinpoint)
+                        )
+                );
+
+
 
     }
 
@@ -286,7 +296,7 @@ public class TeleOpBlue extends CommandOpMode {
         robot.brush.loopBlue();
         robot.extendo.loop(gamepadEx.getLeftY());
         robot.lift.loop();
-        robot.arm.loop();
+        robot.arm.loopTeleOp();
 
         //PENTRU LEVEL 3 HANG
         if(Globals.HANGING_LEVEL_3) {

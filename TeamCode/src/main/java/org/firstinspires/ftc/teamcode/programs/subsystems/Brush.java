@@ -2,9 +2,7 @@ package org.firstinspires.ftc.teamcode.programs.subsystems;
 
 import com.acmerobotics.dashboard.config.Config;
 import com.arcrobotics.ftclib.command.CommandScheduler;
-import com.arcrobotics.ftclib.command.SequentialCommandGroup;
 import com.arcrobotics.ftclib.command.SubsystemBase;
-import com.arcrobotics.ftclib.command.WaitCommand;
 import com.qualcomm.hardware.rev.RevColorSensorV3;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
@@ -48,7 +46,7 @@ public class Brush extends SubsystemBase{
     public enum BrushAngle{
         UP,
         DOWN,
-        DOWN_AUTO
+        DOWN_AUTO_SPECIMEN
     }
 
     public enum IntakedSampleColor {
@@ -126,9 +124,9 @@ public class Brush extends SubsystemBase{
 
     public void loopBlue(){
         if(brushAngle == BrushAngle.DOWN){
-            updateSampleState();
+//            updateSampleState();
             updateSampleColor();
-//            updateSampleStateDigital();
+            updateSampleStateDigital();
         }
 
         switch (brushState) {
@@ -195,10 +193,9 @@ public class Brush extends SubsystemBase{
 
     public void loopRed(){
         if(brushAngle == BrushAngle.DOWN){
-            updateSampleState();
+//            updateSampleState();
             updateSampleColor();
-//            updateSampleStateDigital();
-
+            updateSampleStateDigital();
         }
 
 
@@ -266,19 +263,58 @@ public class Brush extends SubsystemBase{
     }
 
 
-    public void updateSampleColor(){
+//    public void updateSampleColor(){
+//        int red = colorSensor.red();
+//        int blue = colorSensor.blue();
+//        int green = colorSensor.green();
+//
+//        if(green > 700)
+//            intakedSampleColor = IntakedSampleColor.YELLOW;
+//        else if(blue > 300 && green < 700)
+//            intakedSampleColor = IntakedSampleColor.BLUE;
+//        else if(red > 300 && green < 700)
+//            intakedSampleColor = IntakedSampleColor.RED;
+//        else intakedSampleColor = IntakedSampleColor.NOTHING;
+//    }
+
+
+    public void updateSampleColor() {
         int red = colorSensor.red();
         int blue = colorSensor.blue();
         int green = colorSensor.green();
 
-        if(green > 700)
+        final int LOW_THRESHOLD = 100; // Below this, assume no sample is intaked
+        final int DIFFERENCE_THRESHOLD = 50; // Minimum difference required between highest and second highest
+
+        // If all values are low, assume no sample is intaked
+        if (red < LOW_THRESHOLD && blue < LOW_THRESHOLD && green < LOW_THRESHOLD) {
+            intakedSampleColor = IntakedSampleColor.NOTHING;
+            return;
+        }
+
+        // Find the maximum, second maximum, and minimum color values
+        int maxColor = Math.max(red, Math.max(blue, green));
+        int minColor = Math.min(red, Math.min(blue, green));
+        int midColor = red + blue + green - maxColor - minColor; // The middle value
+
+        // Ensure that the dominant color is significantly higher than the second-highest
+        if (maxColor - midColor < DIFFERENCE_THRESHOLD) {
+            intakedSampleColor = IntakedSampleColor.NOTHING;
+            return;
+        }
+
+        // Determine the most dominant color
+        if (maxColor == green) {
             intakedSampleColor = IntakedSampleColor.YELLOW;
-        else if(blue > 300 && green < 700)
-            intakedSampleColor = IntakedSampleColor.BLUE;
-        else if(red > 300 && green < 700)
+        } else if (maxColor == red) {
             intakedSampleColor = IntakedSampleColor.RED;
-        else intakedSampleColor = IntakedSampleColor.NOTHING;
+        } else {
+            intakedSampleColor = IntakedSampleColor.BLUE;
+        }
     }
+
+
+
 
 
     public void updateSampleState(){
@@ -295,6 +331,7 @@ public class Brush extends SubsystemBase{
         }
         else sampleState = SampleState.ISNOT;
     }
+
 
 
     public boolean isRightSampleColorTeleOpBlue() {
@@ -333,8 +370,8 @@ public class Brush extends SubsystemBase{
             case DOWN:
                 brushAngleServo.setPosition(Globals.BRUSH_POSITION_DOWN);
                 break;
-            case DOWN_AUTO:
-                brushAngleServo.setPosition(Globals.BRUSH_POSITION_DOWN_AUTO);
+            case DOWN_AUTO_SPECIMEN:
+                brushAngleServo.setPosition(Globals.BRUSH_POSITION_DOWN_AUTO_SPECIMEN);
                 break;
 
 
@@ -412,7 +449,7 @@ public class Brush extends SubsystemBase{
     public void loopAuto(){
 
         if(brushAngle == BrushAngle.DOWN){
-            updateSampleState();
+            updateSampleStateDigital();
             updateSampleColor();
         }
 
@@ -436,7 +473,8 @@ public class Brush extends SubsystemBase{
 
             case INTAKING:
                 CommandScheduler.getInstance().schedule(new BrushCommand(Globals.BRUSH_MOTOR_SPEED, Globals.BRUSH_SAMPLE_SERVO_SPEED_INTAKING));
-                updateSampleState();
+//                updateSampleState();
+                updateSampleStateDigital();
                 updateSampleColor();
                 break;
 
@@ -459,6 +497,9 @@ public class Brush extends SubsystemBase{
         return distance < 3;
     }
 
+
+
+
     public void isSpecimenBlocked(){
         CurrentUnit currentUnit = CurrentUnit.AMPS;
         if (brushMotor.getCurrent(currentUnit) > 5)
@@ -469,6 +510,12 @@ public class Brush extends SubsystemBase{
 
     public boolean getREVState(){
         return disabled;
+    }
+
+
+    public boolean isSampleDigital(){
+        updateSampleStateDigital();
+        return !proximitySensor.getState();
     }
 
 

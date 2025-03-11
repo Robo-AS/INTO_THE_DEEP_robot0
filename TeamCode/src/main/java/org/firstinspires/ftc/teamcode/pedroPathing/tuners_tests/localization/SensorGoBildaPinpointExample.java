@@ -152,7 +152,7 @@ public class SensorGoBildaPinpointExample extends LinearOpMode {
             }
 
             /*
-            This code prints the loop frequency of the REV Control Hub. This frequency is effected
+            This code prints the loopAuto frequency of the REV Control Hub. This frequency is effected
             by I²C reads/writes. So it's good to keep an eye on. This code calculates the amount
             of time each cycle takes and finds the frequency (number of updates per second) from
             that cycle time.

@@ -166,9 +166,9 @@ public class BasketAutoTestTrajectories_TANGENTIAL extends CommandOpMode {
         CommandScheduler.getInstance().run();
 
 
-        //robot.loop();
+        //robot.loopAuto();
         robot.lift.loop();
-        robot.arm.loop();
+        robot.arm.loopAuto();
         robot.extendo.loopAuto();
         robot.brush.loopAutoBasket();
 

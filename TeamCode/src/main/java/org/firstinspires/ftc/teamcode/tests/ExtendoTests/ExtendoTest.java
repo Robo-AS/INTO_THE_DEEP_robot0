@@ -43,7 +43,7 @@ public class ExtendoTest extends CommandOpMode {
         CommandScheduler.getInstance().run();
 
 
-        //extendo.loop(gamepadEx.gamepad.left_stick_y);
+        //extendo.loopAuto(gamepadEx.gamepad.left_stick_y);
 
 
 

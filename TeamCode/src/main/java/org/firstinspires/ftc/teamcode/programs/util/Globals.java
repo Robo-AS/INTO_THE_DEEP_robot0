@@ -8,9 +8,9 @@ public class Globals {
     public static double BRUSH_MOTOR_SPEED = 1;//0.75
     public static double BRUSH_SAMPLE_SERVO_SPEED_INTAKING= 0.6; //0.57
     public static double BRUSH_SAMPLE_SERVO_SPEED_THROWING = 1;
-    public static double BRUSH_POSITION_UP = 0.72;
-    public static double BRUSH_POSITION_DOWN = 0.05;
-    public static double BRUSH_POSITION_DOWN_AUTO = 0.2;
+    public static double BRUSH_POSITION_UP = 0.745;
+    public static double BRUSH_POSITION_DOWN = 0.1;
+    public static double BRUSH_POSITION_DOWN_AUTO_SPECIMEN = 0.2;
 
 
     // Mecanum
@@ -55,5 +55,6 @@ public class Globals {
     public static boolean RUNNED_AUTO_SPECIMEN = false;
 
 
+    public static boolean TELEOP = false;
 
 }

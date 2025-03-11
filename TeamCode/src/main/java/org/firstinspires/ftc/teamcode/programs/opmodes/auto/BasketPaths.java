@@ -19,6 +19,7 @@ public class BasketPaths {
     public boolean GRAB_2_COMPLETED = false;
     public boolean GRAB_3_COMPLETED = false;
 
+    public boolean SCORE_PRELOAD_COMPLETED = false;
     public boolean SCORE_1_COMPLETED = false;
     public boolean SCORE_2_COMPLETED = false;
     public boolean SCORE_3_COMPLETED = false;
@@ -29,8 +30,10 @@ public class BasketPaths {
         GRAB_3_COMPLETED = false;
     }
 
+
     public void setGrab2Completed(){ GRAB_2_COMPLETED = true; }
     public void setGrab3Completed(){ GRAB_3_COMPLETED = true; }
+    public void setScorePreloadCompleted(){ SCORE_PRELOAD_COMPLETED = true; }
     public void setScore1Completed(){ SCORE_1_COMPLETED = true; }
     public void setScore2Completed(){ SCORE_2_COMPLETED = true; }
     public void setScore3Completed(){ SCORE_3_COMPLETED = true; }

@@ -3,7 +3,6 @@ package org.firstinspires.ftc.teamcode.programs.opmodes.auto;
 import com.arcrobotics.ftclib.command.CommandScheduler;
 import com.arcrobotics.ftclib.command.ConditionalCommand;
 import com.arcrobotics.ftclib.command.InstantCommand;
-import com.arcrobotics.ftclib.command.RunCommand;
 import com.arcrobotics.ftclib.command.SequentialCommandGroup;
 import com.arcrobotics.ftclib.command.WaitCommand;
 import com.arcrobotics.ftclib.command.WaitUntilCommand;
@@ -122,6 +121,7 @@ public class SpecimenAuto_FailSafes_DMNAJUTA extends LinearOpMode {
     @Override
     public void runOpMode() throws InterruptedException {
         CommandScheduler.getInstance().reset();
+        Globals.TELEOP = false;
 
         Constants.setConstants(FConstants.class, LConstants.class);
         follower = new Follower(hardwareMap);
@@ -290,7 +290,7 @@ public class SpecimenAuto_FailSafes_DMNAJUTA extends LinearOpMode {
                                                 new SetExtendoStateCommand(Extendo.ExtendoState.EXTENDING_MINIMUM_AUTO)
                                         )
                                 )
-                                .andThen(new SetBrushAngleCommand(Brush.BrushAngle.DOWN_AUTO)),
+                                .andThen(new SetBrushAngleCommand(Brush.BrushAngle.DOWN_AUTO_SPECIMEN)),
 
                         new FollowPath(follower, bring1, true, 1)
                                 .alongWith(
@@ -308,7 +308,7 @@ public class SpecimenAuto_FailSafes_DMNAJUTA extends LinearOpMode {
 
 
                                 )
-                                .andThen(new SetBrushAngleCommand(Brush.BrushAngle.DOWN_AUTO)),
+                                .andThen(new SetBrushAngleCommand(Brush.BrushAngle.DOWN_AUTO_SPECIMEN)),
 
 
                         new FollowPath(follower, bring2, true, 1)
@@ -334,7 +334,7 @@ public class SpecimenAuto_FailSafes_DMNAJUTA extends LinearOpMode {
                                                 new WaitCommand(1200),//2000
                                                 new SetExtendoStateCommand(Extendo.ExtendoState.EXTENDING_MINIMUM_AUTO),
                                                 new WaitCommand(500),
-                                                new SetBrushAngleCommand(Brush.BrushAngle.DOWN_AUTO),
+                                                new SetBrushAngleCommand(Brush.BrushAngle.DOWN_AUTO_SPECIMEN),
                                                 new SetBrushStateCommand(Brush.BrushState.INTAKING)
 
 
@@ -343,7 +343,7 @@ public class SpecimenAuto_FailSafes_DMNAJUTA extends LinearOpMode {
                                 .andThen(
                                         new InstantCommand(() -> specimenPaths.setBring3Take1Completed()),
                                         new SetExtendoStateCommand(Extendo.ExtendoState.TAKE_SPECIMEN_AUTO),
-                                        new WaitUntilCommand(robot.brush::isSample).withTimeout(Globals.TIMEOUT_SPECIMEN_INTAKING),
+                                        new WaitUntilCommand(robot.brush::isSampleDigital).withTimeout(Globals.TIMEOUT_SPECIMEN_INTAKING),
                                         new SetBrushStateCommand(Brush.BrushState.IDLE)
                                 ),
 
@@ -359,7 +359,7 @@ public class SpecimenAuto_FailSafes_DMNAJUTA extends LinearOpMode {
                                                 new WaitCommand(2000),
                                                 new SetBrushStateCommand(Brush.BrushState.INTAKING),
                                                 new SetExtendoStateCommand(Extendo.ExtendoState.TAKE_SPECIMEN_AUTO),
-                                                new WaitUntilCommand(robot.brush::isSample).withTimeout(Globals.TIMEOUT_SPECIMEN_INTAKING),
+                                                new WaitUntilCommand(robot.brush::isSampleDigital).withTimeout(Globals.TIMEOUT_SPECIMEN_INTAKING),
                                                 new SetBrushStateCommand(Brush.BrushState.IDLE)
                                         ),
                                         new SequentialCommandGroup(
@@ -367,7 +367,7 @@ public class SpecimenAuto_FailSafes_DMNAJUTA extends LinearOpMode {
                                                 new WaitCommand(2000),
                                                 new SetBrushStateCommand(Brush.BrushState.INTAKING),
                                                 new SetExtendoStateCommand(Extendo.ExtendoState.TAKE_SPECIMEN_AUTO),
-                                                new WaitUntilCommand(robot.brush::isSample).withTimeout(Globals.TIMEOUT_SPECIMEN_INTAKING),
+                                                new WaitUntilCommand(robot.brush::isSampleDigital).withTimeout(Globals.TIMEOUT_SPECIMEN_INTAKING),
                                                 new SetBrushStateCommand(Brush.BrushState.IDLE)
                                         ),
                                         () -> robot.brush.specimenBlocked == Brush.SpecimenBlocked.BLOCKED
@@ -385,7 +385,7 @@ public class SpecimenAuto_FailSafes_DMNAJUTA extends LinearOpMode {
                                                 new WaitCommand(2000),
                                                 new SetBrushStateCommand(Brush.BrushState.INTAKING),
                                                 new SetExtendoStateCommand(Extendo.ExtendoState.TAKE_SPECIMEN_AUTO),
-                                                new WaitUntilCommand(robot.brush::isSample).withTimeout(Globals.TIMEOUT_SPECIMEN_INTAKING),
+                                                new WaitUntilCommand(robot.brush::isSampleDigital).withTimeout(Globals.TIMEOUT_SPECIMEN_INTAKING),
                                                 new SetBrushStateCommand(Brush.BrushState.IDLE)
                                         ),
                                         new SequentialCommandGroup(
@@ -393,7 +393,7 @@ public class SpecimenAuto_FailSafes_DMNAJUTA extends LinearOpMode {
                                                 new WaitCommand(2000),
                                                 new SetBrushStateCommand(Brush.BrushState.INTAKING),
                                                 new SetExtendoStateCommand(Extendo.ExtendoState.TAKE_SPECIMEN_AUTO),
-                                                new WaitUntilCommand(robot.brush::isSample).withTimeout(Globals.TIMEOUT_SPECIMEN_INTAKING),
+                                                new WaitUntilCommand(robot.brush::isSampleDigital).withTimeout(Globals.TIMEOUT_SPECIMEN_INTAKING),
                                                 new SetBrushStateCommand(Brush.BrushState.IDLE)
                                         ),
                                         () -> robot.brush.specimenBlocked == Brush.SpecimenBlocked.BLOCKED
@@ -434,7 +434,7 @@ public class SpecimenAuto_FailSafes_DMNAJUTA extends LinearOpMode {
                                         new SequentialCommandGroup(
                                                 new SetExtendoStateCommand(Extendo.ExtendoState.EXTENDING_MINIMUM_AUTO),
                                                 new WaitCommand(500),
-                                                new SetBrushAngleCommand(Brush.BrushAngle.DOWN_AUTO),
+                                                new SetBrushAngleCommand(Brush.BrushAngle.DOWN_AUTO_SPECIMEN),
                                                 new SetBrushStateCommand(Brush.BrushState.INTAKING)
                                         )
 
@@ -445,7 +445,7 @@ public class SpecimenAuto_FailSafes_DMNAJUTA extends LinearOpMode {
                                         new InstantCommand(() -> specimenPaths.setTake2Completed()),
                                         new WaitCommand(100),
                                         new SetExtendoStateCommand(Extendo.ExtendoState.TAKE_SPECIMEN_AUTO),
-                                        new WaitUntilCommand(robot.brush::isSample).withTimeout(Globals.TIMEOUT_SPECIMEN_INTAKING),
+                                        new WaitUntilCommand(robot.brush::isSampleDigital).withTimeout(Globals.TIMEOUT_SPECIMEN_INTAKING),
                                         new SetBrushStateCommand(Brush.BrushState.IDLE)
                                 ),
 
@@ -460,7 +460,7 @@ public class SpecimenAuto_FailSafes_DMNAJUTA extends LinearOpMode {
                                                 new WaitCommand(2000),
                                                 new SetBrushStateCommand(Brush.BrushState.INTAKING),
                                                 new SetExtendoStateCommand(Extendo.ExtendoState.TAKE_SPECIMEN_AUTO),
-                                                new WaitUntilCommand(robot.brush::isSample).withTimeout(Globals.TIMEOUT_SPECIMEN_INTAKING),
+                                                new WaitUntilCommand(robot.brush::isSampleDigital).withTimeout(Globals.TIMEOUT_SPECIMEN_INTAKING),
                                                 new SetBrushStateCommand(Brush.BrushState.IDLE)
                                         ),
                                         new SequentialCommandGroup(
@@ -468,7 +468,7 @@ public class SpecimenAuto_FailSafes_DMNAJUTA extends LinearOpMode {
                                                 new WaitCommand(2000),
                                                 new SetBrushStateCommand(Brush.BrushState.INTAKING),
                                                 new SetExtendoStateCommand(Extendo.ExtendoState.TAKE_SPECIMEN_AUTO),
-                                                new WaitUntilCommand(robot.brush::isSample).withTimeout(Globals.TIMEOUT_SPECIMEN_INTAKING),
+                                                new WaitUntilCommand(robot.brush::isSampleDigital).withTimeout(Globals.TIMEOUT_SPECIMEN_INTAKING),
                                                 new SetBrushStateCommand(Brush.BrushState.IDLE)
                                         ),
                                         () -> robot.brush.specimenBlocked == Brush.SpecimenBlocked.BLOCKED
@@ -486,7 +486,7 @@ public class SpecimenAuto_FailSafes_DMNAJUTA extends LinearOpMode {
                                                 new WaitCommand(2000),
                                                 new SetBrushStateCommand(Brush.BrushState.INTAKING),
                                                 new SetExtendoStateCommand(Extendo.ExtendoState.TAKE_SPECIMEN_AUTO),
-                                                new WaitUntilCommand(robot.brush::isSample).withTimeout(Globals.TIMEOUT_SPECIMEN_INTAKING),
+                                                new WaitUntilCommand(robot.brush::isSampleDigital).withTimeout(Globals.TIMEOUT_SPECIMEN_INTAKING),
                                                 new SetBrushStateCommand(Brush.BrushState.IDLE)
                                         ),
                                         new SequentialCommandGroup(
@@ -494,7 +494,7 @@ public class SpecimenAuto_FailSafes_DMNAJUTA extends LinearOpMode {
                                                 new WaitCommand(2000),
                                                 new SetBrushStateCommand(Brush.BrushState.INTAKING),
                                                 new SetExtendoStateCommand(Extendo.ExtendoState.TAKE_SPECIMEN_AUTO),
-                                                new WaitUntilCommand(robot.brush::isSample).withTimeout(Globals.TIMEOUT_SPECIMEN_INTAKING),
+                                                new WaitUntilCommand(robot.brush::isSampleDigital).withTimeout(Globals.TIMEOUT_SPECIMEN_INTAKING),
                                                 new SetBrushStateCommand(Brush.BrushState.IDLE)
                                         ),
                                         () -> robot.brush.specimenBlocked == Brush.SpecimenBlocked.BLOCKED
@@ -532,7 +532,7 @@ public class SpecimenAuto_FailSafes_DMNAJUTA extends LinearOpMode {
                                         new SequentialCommandGroup(
                                                 new SetExtendoStateCommand(Extendo.ExtendoState.EXTENDING_MINIMUM_AUTO),
                                                 new WaitCommand(500),
-                                                new SetBrushAngleCommand(Brush.BrushAngle.DOWN_AUTO),
+                                                new SetBrushAngleCommand(Brush.BrushAngle.DOWN_AUTO_SPECIMEN),
                                                 new SetBrushStateCommand(Brush.BrushState.INTAKING)
                                         )
 
@@ -541,7 +541,7 @@ public class SpecimenAuto_FailSafes_DMNAJUTA extends LinearOpMode {
                                         new InstantCommand(() -> specimenPaths.setTake3Completed()),
                                         new WaitCommand(100),
                                         new SetExtendoStateCommand(Extendo.ExtendoState.TAKE_SPECIMEN_AUTO),
-                                        new WaitUntilCommand(robot.brush::isSample).withTimeout(Globals.TIMEOUT_SPECIMEN_INTAKING),
+                                        new WaitUntilCommand(robot.brush::isSampleDigital).withTimeout(Globals.TIMEOUT_SPECIMEN_INTAKING),
                                         new SetBrushStateCommand(Brush.BrushState.IDLE)
                                 ),
 
@@ -556,7 +556,7 @@ public class SpecimenAuto_FailSafes_DMNAJUTA extends LinearOpMode {
                                                 new WaitCommand(2000),
                                                 new SetBrushStateCommand(Brush.BrushState.INTAKING),
                                                 new SetExtendoStateCommand(Extendo.ExtendoState.TAKE_SPECIMEN_AUTO),
-                                                new WaitUntilCommand(robot.brush::isSample).withTimeout(Globals.TIMEOUT_SPECIMEN_INTAKING),
+                                                new WaitUntilCommand(robot.brush::isSampleDigital).withTimeout(Globals.TIMEOUT_SPECIMEN_INTAKING),
                                                 new SetBrushStateCommand(Brush.BrushState.IDLE)
                                         ),
                                         new SequentialCommandGroup(
@@ -564,7 +564,7 @@ public class SpecimenAuto_FailSafes_DMNAJUTA extends LinearOpMode {
                                                 new WaitCommand(2000),
                                                 new SetBrushStateCommand(Brush.BrushState.INTAKING),
                                                 new SetExtendoStateCommand(Extendo.ExtendoState.TAKE_SPECIMEN_AUTO),
-                                                new WaitUntilCommand(robot.brush::isSample).withTimeout(Globals.TIMEOUT_SPECIMEN_INTAKING),
+                                                new WaitUntilCommand(robot.brush::isSampleDigital).withTimeout(Globals.TIMEOUT_SPECIMEN_INTAKING),
                                                 new SetBrushStateCommand(Brush.BrushState.IDLE)
                                         ),
                                         () -> robot.brush.specimenBlocked == Brush.SpecimenBlocked.BLOCKED
@@ -582,7 +582,7 @@ public class SpecimenAuto_FailSafes_DMNAJUTA extends LinearOpMode {
                                                 new WaitCommand(2000),
                                                 new SetBrushStateCommand(Brush.BrushState.INTAKING),
                                                 new SetExtendoStateCommand(Extendo.ExtendoState.TAKE_SPECIMEN_AUTO),
-                                                new WaitUntilCommand(robot.brush::isSample).withTimeout(Globals.TIMEOUT_SPECIMEN_INTAKING),
+                                                new WaitUntilCommand(robot.brush::isSampleDigital).withTimeout(Globals.TIMEOUT_SPECIMEN_INTAKING),
                                                 new SetBrushStateCommand(Brush.BrushState.IDLE)
                                         ),
                                         new SequentialCommandGroup(
@@ -590,7 +590,7 @@ public class SpecimenAuto_FailSafes_DMNAJUTA extends LinearOpMode {
                                                 new WaitCommand(2000),
                                                 new SetBrushStateCommand(Brush.BrushState.INTAKING),
                                                 new SetExtendoStateCommand(Extendo.ExtendoState.TAKE_SPECIMEN_AUTO),
-                                                new WaitUntilCommand(robot.brush::isSample).withTimeout(Globals.TIMEOUT_SPECIMEN_INTAKING),
+                                                new WaitUntilCommand(robot.brush::isSampleDigital).withTimeout(Globals.TIMEOUT_SPECIMEN_INTAKING),
                                                 new SetBrushStateCommand(Brush.BrushState.IDLE)
                                         ),
                                         () -> robot.brush.specimenBlocked == Brush.SpecimenBlocked.BLOCKED
@@ -625,7 +625,7 @@ public class SpecimenAuto_FailSafes_DMNAJUTA extends LinearOpMode {
                                         new SequentialCommandGroup(
                                                 new SetExtendoStateCommand(Extendo.ExtendoState.EXTENDING_MINIMUM_AUTO),
                                                 new WaitCommand(500),
-                                                new SetBrushAngleCommand(Brush.BrushAngle.DOWN_AUTO),
+                                                new SetBrushAngleCommand(Brush.BrushAngle.DOWN_AUTO_SPECIMEN),
                                                 new SetBrushStateCommand(Brush.BrushState.INTAKING)
                                         )
 
@@ -635,7 +635,7 @@ public class SpecimenAuto_FailSafes_DMNAJUTA extends LinearOpMode {
                                         new InstantCommand(() -> specimenPaths.setTake4Completed()),
                                         new WaitCommand(100),
                                         new SetExtendoStateCommand(Extendo.ExtendoState.TAKE_SPECIMEN_AUTO),
-                                        new WaitUntilCommand(robot.brush::isSample).withTimeout(Globals.TIMEOUT_SPECIMEN_INTAKING),
+                                        new WaitUntilCommand(robot.brush::isSampleDigital).withTimeout(Globals.TIMEOUT_SPECIMEN_INTAKING),
                                         new SetBrushStateCommand(Brush.BrushState.IDLE)
                                 ),
 
@@ -649,7 +649,7 @@ public class SpecimenAuto_FailSafes_DMNAJUTA extends LinearOpMode {
                                                 new WaitCommand(2000),
                                                 new SetBrushStateCommand(Brush.BrushState.INTAKING),
                                                 new SetExtendoStateCommand(Extendo.ExtendoState.TAKE_SPECIMEN_AUTO),
-                                                new WaitUntilCommand(robot.brush::isSample).withTimeout(Globals.TIMEOUT_SPECIMEN_INTAKING),
+                                                new WaitUntilCommand(robot.brush::isSampleDigital).withTimeout(Globals.TIMEOUT_SPECIMEN_INTAKING),
                                                 new SetBrushStateCommand(Brush.BrushState.IDLE)
                                         ),
                                         new SequentialCommandGroup(
@@ -657,7 +657,7 @@ public class SpecimenAuto_FailSafes_DMNAJUTA extends LinearOpMode {
                                                 new WaitCommand(2000),
                                                 new SetBrushStateCommand(Brush.BrushState.INTAKING),
                                                 new SetExtendoStateCommand(Extendo.ExtendoState.TAKE_SPECIMEN_AUTO),
-                                                new WaitUntilCommand(robot.brush::isSample).withTimeout(Globals.TIMEOUT_SPECIMEN_INTAKING),
+                                                new WaitUntilCommand(robot.brush::isSampleDigital).withTimeout(Globals.TIMEOUT_SPECIMEN_INTAKING),
                                                 new SetBrushStateCommand(Brush.BrushState.IDLE)
                                         ),
                                         () -> robot.brush.specimenBlocked == Brush.SpecimenBlocked.BLOCKED
@@ -675,7 +675,7 @@ public class SpecimenAuto_FailSafes_DMNAJUTA extends LinearOpMode {
                                                 new WaitCommand(2000),
                                                 new SetBrushStateCommand(Brush.BrushState.INTAKING),
                                                 new SetExtendoStateCommand(Extendo.ExtendoState.TAKE_SPECIMEN_AUTO),
-                                                new WaitUntilCommand(robot.brush::isSample).withTimeout(Globals.TIMEOUT_SPECIMEN_INTAKING),
+                                                new WaitUntilCommand(robot.brush::isSampleDigital).withTimeout(Globals.TIMEOUT_SPECIMEN_INTAKING),
                                                 new SetBrushStateCommand(Brush.BrushState.IDLE)
                                         ),
                                         new SequentialCommandGroup(
@@ -683,7 +683,7 @@ public class SpecimenAuto_FailSafes_DMNAJUTA extends LinearOpMode {
                                                 new WaitCommand(2000),
                                                 new SetBrushStateCommand(Brush.BrushState.INTAKING),
                                                 new SetExtendoStateCommand(Extendo.ExtendoState.TAKE_SPECIMEN_AUTO),
-                                                new WaitUntilCommand(robot.brush::isSample).withTimeout(Globals.TIMEOUT_SPECIMEN_INTAKING),
+                                                new WaitUntilCommand(robot.brush::isSampleDigital).withTimeout(Globals.TIMEOUT_SPECIMEN_INTAKING),
                                                 new SetBrushStateCommand(Brush.BrushState.IDLE)
                                         ),
                                         () -> robot.brush.specimenBlocked == Brush.SpecimenBlocked.BLOCKED
@@ -725,9 +725,9 @@ public class SpecimenAuto_FailSafes_DMNAJUTA extends LinearOpMode {
             CommandScheduler.getInstance().run();
 
 
-            //robot.loop();
+//            robot.loop();
             robot.lift.loop();
-            robot.arm.loop();
+            robot.arm.loopAuto();
             robot.extendo.loopAuto();
             robot.brush.loopAutoSpecimen();
 

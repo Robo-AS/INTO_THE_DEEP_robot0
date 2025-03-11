@@ -39,12 +39,11 @@ import org.firstinspires.ftc.teamcode.programs.util.Globals;
 import org.firstinspires.ftc.teamcode.programs.util.Robot;
 
 
-//asta e ala bun
 @Config
-@Autonomous(name = "BasketAutoSubmersibleBLUE🟦")
-public class BasketAutoSubmersibleBLUE extends LinearOpMode {
+@Autonomous(name = "BasketAutoSubmersibleRED_CU_UNGHI_BRAT💪🟥")
+public class BasketAutoSubmersibleRED_CU_UNGHI_BRAT extends LinearOpMode {
     private final Robot robot = Robot.getInstance();
-    private final BasketPaths basketPaths = new BasketPaths();
+    private final BasketPaths basketPaths = BasketPaths.getInstance();
     private Follower follower;
     private double loopTime = 0;
 
@@ -55,25 +54,31 @@ public class BasketAutoSubmersibleBLUE extends LinearOpMode {
     public static Pose preloadPose = new Pose(13, 127, Math.toRadians(-45));
 
     public static Pose grab1Pose = new Pose(26, 120.8, Math.toRadians(0));
-    public static Pose score1Pose = new Pose(16.5, 129.5, Math.toRadians(-45));
+    public static Pose score1Pose = new Pose(16.5, 129.5, Math.toRadians(-15));
 
     public static Pose grab2Pose = new Pose(26, 130, Math.toRadians(0));
-    public static Pose score2Pose = new Pose(16.5, 129.5, Math.toRadians(-45));
+    public static Pose score2Pose = new Pose(16.5, 129.5, Math.toRadians(-15));
 
     public static Pose grab3Pose = new Pose(28, 134, Math.toRadians(14));
-    public static Pose score3Pose = new Pose(16.5, 129.5, Math.toRadians(-45));
+    public static Pose score3Pose = new Pose(16.5, 129.5, Math.toRadians(-15));
 
     public static Pose submersible1Pose = new Pose(60.13670549799417, 94.98909806006719, Math.toRadians(270));
     public static Pose submersible1ControlPoint = new Pose(62.71065009129354, 116.8565842888431, Math.toRadians(270));
 
-    public static Pose scoreSubmersible1Pose = new Pose(16.5, 129.5, Math.toRadians(-45));
-    public static Pose scoreSubmersible1ControlPoint = new Pose(62.71065009129354, 117.09057925187031, Math.toRadians(-45));
+    public static Pose scoreSubmersible1Pose = new Pose(16.5, 129.5, Math.toRadians(-15));
+    public static Pose scoreSubmersible1ControlPoint = new Pose(62.71065009129354, 117.09057925187031, Math.toRadians(-15));
 
     public static Pose submersible2Pose = new Pose(64.58260979551126, 94.98909806006719, Math.toRadians(275));
     public static Pose submersible2ControlPoint = new Pose(68.79451913000112, 124.34442310571397, Math.toRadians(275));
 
-    public static Pose scoreSubmbersible2Pose = new Pose(15, 129.5, Math.toRadians(-45));
-    public static Pose scoreSubmersible2ControlPoint = new Pose(68.79451913000112, 124.34442310571397, Math.toRadians(-45));
+    public static Pose scoreSubmbersible2Pose = new Pose(15, 129.5, Math.toRadians(-15));
+    public static Pose scoreSubmersible2ControlPoint = new Pose(68.79451913000112, 124.34442310571397, Math.toRadians(-15));
+
+    public static Pose submersible3Pose = new Pose(64.58260979551126, 94.98909806006719, Math.toRadians(265));
+    public static Pose submersible3ControlPoint = new Pose(68.79451913000112, 124.34442310571397, Math.toRadians(265));
+
+    public static Pose scoreSubmbersible3Pose = new Pose(15, 129.5, Math.toRadians(-15));
+    public static Pose scoreSubmersible3ControlPoint = new Pose(68.79451913000112, 124.34442310571397, Math.toRadians(-15));
 
 
 
@@ -83,7 +88,6 @@ public class BasketAutoSubmersibleBLUE extends LinearOpMode {
         CommandScheduler.getInstance().reset();
         Globals.RUNNED_AUTO_BASKET = true;
         Globals.TELEOP = false;
-
 
         Constants.setConstants(FConstants.class, LConstants.class);
         follower = new Follower(hardwareMap);
@@ -160,6 +164,18 @@ public class BasketAutoSubmersibleBLUE extends LinearOpMode {
                 .setLinearHeadingInterpolation(submersible2Pose.getHeading(), scoreSubmbersible2Pose.getHeading())
                 .build();
 
+        PathChain submersible3 = follower.pathBuilder()
+                .addPath(new BezierCurve(new Point(scoreSubmbersible2Pose), new Point(submersible3ControlPoint), new Point(submersible3Pose)))
+                .setLinearHeadingInterpolation(scoreSubmbersible2Pose.getHeading(), submersible3Pose.getHeading())
+                .build();
+
+
+        PathChain scoreSubmersible3 = follower.pathBuilder()
+                .addPath(new BezierCurve(new Point(submersible3Pose), new Point(scoreSubmersible3ControlPoint), new Point(scoreSubmbersible3Pose)))
+                .setLinearHeadingInterpolation(submersible3Pose.getHeading(), scoreSubmbersible3Pose.getHeading())
+                .build();
+
+
         while(opModeInInit()){
             follower.update();
         }
@@ -179,7 +195,7 @@ public class BasketAutoSubmersibleBLUE extends LinearOpMode {
                                         )
 
                                 ),
-
+                        new InstantCommand(basketPaths::setScorePreloadCompleted),
 
                         new FollowPath(follower, grab1, true, 1)
                                 .alongWith(
@@ -345,9 +361,10 @@ public class BasketAutoSubmersibleBLUE extends LinearOpMode {
                                                 new SetBrushStateCommand(Brush.BrushState.THROWING),
                                                 new WaitCommand(500),
                                                 new SetBrushStateCommand(Brush.BrushState.IDLE)
+//                                                new WaitCommand(500) //asteapta putin ca sa aiba timp sa iasa rosul
                                         ),
                                         new DoesNothingCommand(),
-                                        () -> robot.brush.intakedSampleColor == Brush.IntakedSampleColor.RED
+                                        () -> robot.brush.intakedSampleColor == Brush.IntakedSampleColor.BLUE
                                 ),
                                 new SequentialCommandGroup(
                                         new SetBrushStateCommand(Brush.BrushState.INTAKING),
@@ -366,7 +383,7 @@ public class BasketAutoSubmersibleBLUE extends LinearOpMode {
                                                 new SetBrushStateCommand(Brush.BrushState.IDLE)
                                         ),
                                         new DoesNothingCommand(),
-                                        () -> robot.brush.intakedSampleColor == Brush.IntakedSampleColor.RED
+                                        () -> robot.brush.intakedSampleColor == Brush.IntakedSampleColor.BLUE
                                 ),
                                 new ConditionalCommand(
                                         new SequentialCommandGroup(
@@ -421,9 +438,10 @@ public class BasketAutoSubmersibleBLUE extends LinearOpMode {
                                                 new SetBrushStateCommand(Brush.BrushState.THROWING),
                                                 new WaitCommand(500),
                                                 new SetBrushStateCommand(Brush.BrushState.IDLE)
+//                                                new WaitCommand(500) //asteapta putin ca sa aiba timp sa iasa rosul
                                         ),
                                         new DoesNothingCommand(),
-                                        () -> robot.brush.intakedSampleColor == Brush.IntakedSampleColor.RED
+                                        () -> robot.brush.intakedSampleColor == Brush.IntakedSampleColor.BLUE
                                 ),
                                 new SequentialCommandGroup(
                                         new SetBrushStateCommand(Brush.BrushState.INTAKING),
@@ -442,7 +460,7 @@ public class BasketAutoSubmersibleBLUE extends LinearOpMode {
                                                 new SetBrushStateCommand(Brush.BrushState.IDLE)
                                         ),
                                         new DoesNothingCommand(),
-                                        () -> robot.brush.intakedSampleColor == Brush.IntakedSampleColor.RED
+                                        () -> robot.brush.intakedSampleColor == Brush.IntakedSampleColor.BLUE
                                 ),
                                 new ConditionalCommand(
                                         new SequentialCommandGroup(
@@ -473,6 +491,83 @@ public class BasketAutoSubmersibleBLUE extends LinearOpMode {
                         new ScoreSampleAutoCommand(),
                         new OuttakeGoBackToIdleFromHighBasketCommand()
 
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+//
+//
+//                        new FollowPath(follower, submersible3, true, 1)
+//                                .alongWith(
+//                                        new SequentialCommandGroup(
+//                                                new OuttakeGoBackToIdleFromHighBasketCommand(),
+//                                                new WaitCommand(1000),
+//                                                new SetExtendoStateCommand(Extendo.ExtendoState.EXTENDING_MINIMUM_AUTO)
+//                                        )
+//
+//                                ),
+//                        new SetBrushStateCommand(Brush.BrushState.INTAKING),
+//                        new SetBrushAngleCommand(Brush.BrushAngle.DOWN),
+//                        new SetExtendoStateCommand(Extendo.ExtendoState.TAKE_SAMPLE_SUBMERSIBLE_2),
+//                        new WaitUntilCommand(robot.brush::isSampleDigital).withTimeout(1500),
+//                        new SetBrushStateCommand(Brush.BrushState.IDLE),
+//
+//                        new ConditionalCommand(
+//                                new ConditionalCommand(
+//                                        new SequentialCommandGroup(
+//                                                new SetBrushStateCommand(Brush.BrushState.THROWING),
+//                                                new WaitCommand(500),
+//                                                new SetBrushStateCommand(Brush.BrushState.IDLE)
+////                                                new WaitCommand(500) //asteapta putin ca sa aiba timp sa iasa rosul
+//                                        ),
+//                                        new DoesNothingCommand(),
+//                                        () -> robot.brush.intakedSampleColor == Brush.IntakedSampleColor.BLUE
+//                                ),
+//                                new SequentialCommandGroup(
+//                                        new SetBrushStateCommand(Brush.BrushState.INTAKING),
+//                                        new SetExtendoStateCommand(Extendo.ExtendoState.MAXIMUM),
+//                                        new WaitUntilCommand(robot.brush::isSampleDigital).withTimeout(1500),
+//                                        new SetBrushStateCommand(Brush.BrushState.IDLE)
+//                                ),
+//                                () -> robot.brush.sampleState == Brush.SampleState.IS
+//                        ),
+//
+//                        new ConditionalCommand(
+//                                new ConditionalCommand(
+//                                        new SequentialCommandGroup(
+//                                                new SetBrushStateCommand(Brush.BrushState.THROWING),
+//                                                new WaitCommand(500),
+//                                                new SetBrushStateCommand(Brush.BrushState.IDLE)
+//                                        ),
+//                                        new DoesNothingCommand(),
+//                                        () -> robot.brush.intakedSampleColor == Brush.IntakedSampleColor.BLUE
+//                                ),
+//                                new ConditionalCommand(
+//                                        new SequentialCommandGroup(
+//                                                new SetBrushStateCommand(Brush.BrushState.INTAKING),
+//                                                new SetExtendoStateCommand(Extendo.ExtendoState.MAXIMUM),
+//                                                new WaitUntilCommand(robot.brush::isSampleDigital).withTimeout(1500),
+//                                                new SetBrushStateCommand(Brush.BrushState.IDLE)
+//                                        ),
+//                                        new DoesNothingCommand(),
+//                                        () -> robot.extendo.extendoState != Extendo.ExtendoState.MAXIMUM
+//                                ),
+//                                () -> robot.brush.sampleState == Brush.SampleState.IS
+//                        ),
+//
+//
+//
+//
+//
+//                        new FollowPath(follower, scoreSubmersible3, true, 1)
+//                                .alongWith(
+//                                        new SequentialCommandGroup(
+//                                                new IntakeRetractSubmersibleAutoCommand(),
+//                                                new WaitCommand(500),
+//                                                new OuttakeGoHighBasketAutoCommand()
+//                                        )
+//
+//                                ),
+//                        new ScoreSampleAutoCommand(),
+//                        new OuttakeGoBackToIdleFromHighBasketCommand()
+
                 )
         );
 
@@ -482,10 +577,8 @@ public class BasketAutoSubmersibleBLUE extends LinearOpMode {
             follower.update();
             CommandScheduler.getInstance().run();
 
-//            Globals.lastAutoPose = follower.getPose();
 
-
-//            robot.loop();
+            //robot.loop();
             robot.lift.loop();
             robot.arm.loopAuto();
             robot.extendo.loopAuto();
