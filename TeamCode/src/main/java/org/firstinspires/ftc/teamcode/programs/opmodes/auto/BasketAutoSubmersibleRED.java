@@ -84,6 +84,7 @@ public class BasketAutoSubmersibleRED extends LinearOpMode {
         Globals.RUNNED_AUTO_BASKET = true;
         Globals.TELEOP = false;
 
+
         Constants.setConstants(FConstants.class, LConstants.class);
         follower = new Follower(hardwareMap);
         follower.setStartingPose(startPose);
@@ -343,8 +344,8 @@ public class BasketAutoSubmersibleRED extends LinearOpMode {
                                         new SequentialCommandGroup(
                                                 new SetBrushStateCommand(Brush.BrushState.THROWING),
                                                 new WaitCommand(500),
-                                                new SetBrushStateCommand(Brush.BrushState.IDLE),
-                                                new WaitCommand(500) //asteapta putin ca sa aiba timp sa iasa rosul
+                                                new SetBrushStateCommand(Brush.BrushState.IDLE)
+//                                                new WaitCommand(500) //asteapta putin ca sa aiba timp sa iasa rosul
                                         ),
                                         new DoesNothingCommand(),
                                         () -> robot.brush.intakedSampleColor == Brush.IntakedSampleColor.BLUE
@@ -420,8 +421,8 @@ public class BasketAutoSubmersibleRED extends LinearOpMode {
                                         new SequentialCommandGroup(
                                                 new SetBrushStateCommand(Brush.BrushState.THROWING),
                                                 new WaitCommand(500),
-                                                new SetBrushStateCommand(Brush.BrushState.IDLE),
-                                                new WaitCommand(500) //asteapta putin ca sa aiba timp sa iasa rosul
+                                                new SetBrushStateCommand(Brush.BrushState.IDLE)
+//                                                new WaitCommand(500) //asteapta putin ca sa aiba timp sa iasa rosul
                                         ),
                                         new DoesNothingCommand(),
                                         () -> robot.brush.intakedSampleColor == Brush.IntakedSampleColor.BLUE

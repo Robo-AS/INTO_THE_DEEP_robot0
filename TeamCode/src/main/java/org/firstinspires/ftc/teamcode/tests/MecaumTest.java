@@ -8,7 +8,7 @@ import org.firstinspires.ftc.teamcode.programs.subsystems.MecanumDriveTrain;
 import org.firstinspires.ftc.teamcode.utils.geometry.PoseRR;
 
 
-@TeleOp(name = "MECANUM_TEST", group = "Tests")
+//@TeleOp(name = "MECANUM_TEST", group = "Tests")
 public class MecaumTest extends CommandOpMode {
     private final MecanumDriveTrain mecanumDriveTrain = MecanumDriveTrain.getInstance();
     private GamepadEx gamepadEx;

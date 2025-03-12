@@ -13,7 +13,7 @@ public class OuttakeGoHighBascketCommand extends SequentialCommandGroup {
     public OuttakeGoHighBascketCommand(){
         super(
             new SetLiftStateCommand(Lift.LiftState.HIGH_BASKET),
-            new WaitUntilCommand(Lift::canRotateArmHighBasket),
+            new WaitUntilCommand(Lift.getInstance()::canRotateArmHighBasket),
             new SetWristStateCommand(Arm.WristState.HIGH_BASKET),
             new SetArmStateCommand(Arm.ArmState.HIGH_BASKET)
         );

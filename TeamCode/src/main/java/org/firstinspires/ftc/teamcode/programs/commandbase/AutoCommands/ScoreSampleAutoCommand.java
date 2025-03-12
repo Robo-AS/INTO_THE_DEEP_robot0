@@ -14,7 +14,7 @@ import org.firstinspires.ftc.teamcode.programs.subsystems.Lift;
 public class ScoreSampleAutoCommand extends SequentialCommandGroup {
     public ScoreSampleAutoCommand(){
         super(
-                new WaitUntilCommand(Lift::canOpenClaw),
+                new WaitUntilCommand(Lift.getInstance()::canOpenClaw),
                 new WaitCommand(50),
                 new SetClawStateCommand(Arm.ClawState.OPEN),
                 new WaitCommand(300)

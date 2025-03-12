@@ -20,7 +20,7 @@ import org.firstinspires.ftc.teamcode.programs.subsystems.Lift;
 import org.firstinspires.ftc.teamcode.programs.util.Globals;
 import org.firstinspires.ftc.teamcode.programs.util.Robot;
 
-@TeleOp(name = "ExtendoTest", group = "Tests")
+//@TeleOp(name = "ExtendoTest", group = "Tests")
 public class ExtendoTest extends CommandOpMode {
     private final Extendo extendo = Extendo.getInstance();
     private final Brush brush = Brush.getInstance();

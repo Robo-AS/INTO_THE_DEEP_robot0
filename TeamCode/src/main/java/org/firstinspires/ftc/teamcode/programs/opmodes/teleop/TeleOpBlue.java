@@ -336,12 +336,14 @@ public class TeleOpBlue extends CommandOpMode {
 //        telemetry.addData("DesiredColor", robot.brush.desiredSampleColor);
         telemetry.addData("IntakedColor:", robot.brush.intakedSampleColor);
         telemetry.addData("SampleState:", robot.brush.sampleState);
-        telemetry.addData("REVState:", robot.brush.getREVState());
+        telemetry.addData("SENSOR DISABLED?:", robot.brush.getREVState());
 
 //        telemetry.addData("AngleServoPosition", robot.brush.brushAngleServo.getPosition());
 //        telemetry.addData("Brush Angle", robot.brush.brushAngle);
 
-//        telemetry.addData("Current Position EXTENDO", robot.extendo.extendoMotor.getCurrentPosition());
+        telemetry.addData("Current Position EXTENDO", robot.extendo.extendoMotor.getCurrentPosition());
+        telemetry.addData("LAST EXTENDO POS", Globals.lastExtendoPos);
+
 //        telemetry.addData("Target Position", robot.extendo.getTargetPosition());
 //        telemetry.addData("Extendo State", robot.extendo.extendoState);
 //        telemetry.addData("Joystick Y", gamepadEx.gamepad.left_stick_y);
@@ -349,14 +351,17 @@ public class TeleOpBlue extends CommandOpMode {
 //        telemetry.addData("JoystickConstant", robot.extendo.getJoystickConstant());
 //        telemetry.addData("SHOULD VIBRATE", Globals.shouldVibrate);
 
-//        telemetry.addData("Current Position LIFT", robot.lift.liftMotor.getCurrentPosition());
+        telemetry.addData("Current Position LIFT", robot.lift.liftMotor.getCurrentPosition());
+        telemetry.addData("LAST LIFT POS", Globals.lastLiftPos);
+
+//        telemetry.addData("Reset Lift?", robot.lift.gerResetLift());
 //        telemetry.addData("Target Position LIFT", robot.lift.getTargetPosition());
 
 
-        telemetry.addData("PINPOINT HEAD", robot.arm.getPinpointHeading());
+//        telemetry.addData("PINPOINT HEAD", robot.arm.getPinpointHeading());
 //        if(gamepad1.cross)
 //            robot.arm.updatePINPOINT();
-        telemetry.addData("PROFILE", robot.arm.getProfile());
+//        telemetry.addData("PROFILE", robot.arm.getProfile());
 
 //        telemetry.addData("HANG_2", Globals.HANGING_LEVEL_2);
 //        telemetry.addData("HANG_3", Globals.HANGING_LEVEL_3);

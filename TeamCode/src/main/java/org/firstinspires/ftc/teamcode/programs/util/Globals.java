@@ -57,4 +57,8 @@ public class Globals {
 
     public static boolean TELEOP = false;
 
+
+    public static int lastLiftPos = 0;
+    public static int lastExtendoPos = 0;
+
 }

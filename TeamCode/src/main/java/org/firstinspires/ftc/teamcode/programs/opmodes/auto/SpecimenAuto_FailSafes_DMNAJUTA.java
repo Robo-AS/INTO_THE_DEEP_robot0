@@ -139,6 +139,11 @@ public class SpecimenAuto_FailSafes_DMNAJUTA extends LinearOpMode {
         robot.hang.initializeHardware(hardwareMap);
         robot.hang.initialize();
 
+
+        //AICI RESETEZ ENCODERELE CA NU LE MAI RESETEZ IN INIT_UL LA HARWARE CA SA NU LE MAI DAU RESET SI IN TELEOP
+        robot.extendo.resetEncoders();
+        robot.lift.resetEncoders();
+
         PathChain scorePreload = follower.pathBuilder()
                 .addPath(new BezierLine(new Point(startPose), new Point(preloadPose)))
                 .setConstantHeadingInterpolation(preloadPose.getHeading())
@@ -746,6 +751,10 @@ public class SpecimenAuto_FailSafes_DMNAJUTA extends LinearOpMode {
 //            telemetry.addData("Y", currentPose.getY());
 //            telemetry.addData("Heading", Math.toDegrees(currentPose.getHeading()));
 
+
+            telemetry.addData("Current Position LIFT", robot.lift.liftMotor.getCurrentPosition());
+            telemetry.addData("Current Position EXTENDO", robot.extendo.extendoMotor.getCurrentPosition());
+
             telemetry.addData("Time", time.seconds());
 
             telemetry.addData("bring3_take1", specimenPaths.getBring3Take1Completed());
@@ -771,12 +780,6 @@ public class SpecimenAuto_FailSafes_DMNAJUTA extends LinearOpMode {
             loopTime = loop;
             telemetry.update();
 
-
-            telemetry.addData("X", follower.getXOffset());
-            telemetry.addData("Y", follower.getYOffset());
-
-
-            telemetry.addData("Heading", follower.getHeadingOffset());
         }
 
 

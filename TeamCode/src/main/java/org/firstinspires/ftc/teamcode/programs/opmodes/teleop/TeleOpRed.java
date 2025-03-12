@@ -342,15 +342,17 @@ public class TeleOpRed extends CommandOpMode {
 //        telemetry.addData("AngleServoPosition", robot.brush.brushAngleServo.getPosition());
 //        telemetry.addData("Brush Angle", robot.brush.brushAngle);
 
-//        telemetry.addData("Current Position", robot.extendo.extendoMotor.getCurrentPosition());
+        telemetry.addData("Current Position", robot.extendo.extendoMotor.getCurrentPosition());
 //        telemetry.addData("Target Position", robot.extendo.getTargetPosition());
-//        telemetry.addData("Extendo State", robot.extendo.extendoState);
+        telemetry.addData("Extendo State", robot.extendo.extendoState);
+        telemetry.addData("Last Extendo State", Extendo.getLastEncoderPos());
+
 //        telemetry.addData("Joystick Y", gamepadEx.gamepad.left_stick_y);
 //        telemetry.addData("Joystick Y MODIFIED", robot.extendo.getExponentialJoystickCoef());
 //        telemetry.addData("JoystickConstant", robot.extendo.getJoystickConstant());
 //        telemetry.addData("SHOULD VIBRATE", Globals.shouldVibrate);
 
-//        telemetry.addData("Current Position", robot.lift.liftMotor.getCurrentPosition());
+        telemetry.addData("Current Position", robot.lift.liftMotor.getCurrentPosition());
 //        telemetry.addData("Target Position", robot.lift.getTargetPosition());
 
 

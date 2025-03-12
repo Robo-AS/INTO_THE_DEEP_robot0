@@ -221,25 +221,33 @@ public class Brush extends SubsystemBase{
                     CommandScheduler.getInstance().schedule(
                             new BrushCommand(Globals.BRUSH_MOTOR_SPEED, Globals.BRUSH_SAMPLE_SERVO_SPEED_INTAKING)
                     );
-                } else if (sampleState == SampleState.IS) {
+                    timer.reset();
+                }
+                else if (sampleState == SampleState.IS) {
                     CommandScheduler.getInstance().schedule(new BrushCommand(0, 0.5));// Idle
 
 
-                    if (intakedSampleColor == IntakedSampleColor.NOTHING) {
-                        updateSampleColor();
-                        return;
-                    }
-
-
-                    if (isRightSampleColorTeleOpRed()) {
-                        if (intakedSampleColor == IntakedSampleColor.YELLOW) {
-                            CommandScheduler.getInstance().schedule(new IntakeRetractYELLOWSampleCommand());
-                        } else {
-                            CommandScheduler.getInstance().schedule(new IntakeRetractSPECIFICSampleCommand());
+                    if (!disabled){
+                        if (intakedSampleColor == IntakedSampleColor.NOTHING) {
+                            if (timer.seconds() > 1) {
+                                disabled = true;
+                            }
+                            updateSampleColor();
+                            return;
                         }
-                    } else {
-                        CommandScheduler.getInstance().schedule(new SetBrushStateCommand(BrushState.THROWING));
+
+
+                        if (isRightSampleColorTeleOpRed()) {
+                            if (intakedSampleColor == IntakedSampleColor.YELLOW) {
+                                CommandScheduler.getInstance().schedule(new IntakeRetractYELLOWSampleCommand());
+                            } else {
+                                CommandScheduler.getInstance().schedule(new IntakeRetractSPECIFICSampleCommand());
+                            }
+                        } else {
+                            CommandScheduler.getInstance().schedule(new SetBrushStateCommand(BrushState.THROWING));
+                        }
                     }
+                    else CommandScheduler.getInstance().schedule(new IntakeRetractSPECIFICSampleCommand());
                 }
                 break;
 
@@ -268,6 +276,14 @@ public class Brush extends SubsystemBase{
 //        int blue = colorSensor.blue();
 //        int green = colorSensor.green();
 //
+//        final int LOW_THRESHOLD = 200; // Below this, assume no sample is intaked
+//
+//        // If all values are low, assume no sample is intaked
+//        if (red < LOW_THRESHOLD && blue < LOW_THRESHOLD && green < LOW_THRESHOLD) {
+//            intakedSampleColor = IntakedSampleColor.NOTHING;
+//            return;
+//        }
+//
 //        if(green > 700)
 //            intakedSampleColor = IntakedSampleColor.YELLOW;
 //        else if(blue > 300 && green < 700)
@@ -283,8 +299,7 @@ public class Brush extends SubsystemBase{
         int blue = colorSensor.blue();
         int green = colorSensor.green();
 
-        final int LOW_THRESHOLD = 100; // Below this, assume no sample is intaked
-        final int DIFFERENCE_THRESHOLD = 50; // Minimum difference required between highest and second highest
+        final int LOW_THRESHOLD = 200; // Below this, assume no sample is intaked
 
         // If all values are low, assume no sample is intaked
         if (red < LOW_THRESHOLD && blue < LOW_THRESHOLD && green < LOW_THRESHOLD) {
@@ -292,28 +307,19 @@ public class Brush extends SubsystemBase{
             return;
         }
 
-        // Find the maximum, second maximum, and minimum color values
-        int maxColor = Math.max(red, Math.max(blue, green));
-        int minColor = Math.min(red, Math.min(blue, green));
-        int midColor = red + blue + green - maxColor - minColor; // The middle value
+        double redGreenRatio = (double) red / green; // Compare red to green
 
-        // Ensure that the dominant color is significantly higher than the second-highest
-        if (maxColor - midColor < DIFFERENCE_THRESHOLD) {
-            intakedSampleColor = IntakedSampleColor.NOTHING;
-            return;
-        }
-
-        // Determine the most dominant color
-        if (maxColor == green) {
-            intakedSampleColor = IntakedSampleColor.YELLOW;
-        } else if (maxColor == red) {
-            intakedSampleColor = IntakedSampleColor.RED;
+        // Classify colors using optimized thresholds
+        if (redGreenRatio < 1.0 && green > 500) {
+            intakedSampleColor = IntakedSampleColor.YELLOW; // Yellow has high green and low R/G ratio
+        } else if (blue > 300 && green < 700) {
+            intakedSampleColor = IntakedSampleColor.BLUE; // Blue has dominant blue value
+        } else if (redGreenRatio > 1.5) {
+            intakedSampleColor = IntakedSampleColor.RED; // Red has high R/G ratio
         } else {
-            intakedSampleColor = IntakedSampleColor.BLUE;
+            intakedSampleColor = IntakedSampleColor.NOTHING; // Unclear case
         }
     }
-
-
 
 
 

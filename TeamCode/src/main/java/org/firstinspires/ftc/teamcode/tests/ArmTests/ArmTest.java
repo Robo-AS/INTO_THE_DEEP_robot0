@@ -28,7 +28,7 @@ public class ArmTest extends CommandOpMode {
 
         gamepadEx = new GamepadEx(gamepad1);
         arm.initializeHardware(hardwareMap);
-        arm.testInit();
+        //arm.testInit();
 
     }
 

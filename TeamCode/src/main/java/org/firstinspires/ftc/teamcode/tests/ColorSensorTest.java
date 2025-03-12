@@ -34,8 +34,8 @@ public class ColorSensorTest extends LinearOpMode {
 //                telemetry.addData("There is piece", true);
 //            else telemetry.addData("There is piece", false);
 
-            telemetry.addData("Red", red);
             telemetry.addData("Green", green);
+            telemetry.addData("Red", red);
             telemetry.addData("Blue", blue);
 //            telemetry.addData("Alpha", alpha);
 //            telemetry.addData("ARGB", argb);

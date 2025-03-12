@@ -14,7 +14,7 @@ import org.firstinspires.ftc.teamcode.programs.subsystems.Extendo;
 public class OuttakeCommand extends SequentialCommandGroup {
     public OuttakeCommand(){
         super(
-                new WaitUntilCommand(Extendo::canOuttakeSample),
+                new WaitUntilCommand(Extendo.getInstance()::canOuttakeSample),
                 new SetBrushStateCommand(Brush.BrushState.OUTTAKING),
                 new WaitCommand(250),
                 new ShouldVibrateCommand(),

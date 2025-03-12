@@ -19,7 +19,7 @@ import org.firstinspires.ftc.teamcode.programs.subsystems.Brush;
 import org.firstinspires.ftc.teamcode.programs.subsystems.Lift;
 import org.firstinspires.ftc.teamcode.programs.util.Robot;
 
-@TeleOp(name = "LiftTest", group = "Tests")
+//@TeleOp(name = "LiftTest", group = "Tests")
 public class LiftTest extends CommandOpMode {
     private final Lift lift = Lift.getInstance();
     private GamepadEx gamepadEx;

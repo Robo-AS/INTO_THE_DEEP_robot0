@@ -45,20 +45,20 @@ public class Lift extends SubsystemBase{
     public static int LOW_RUNG = 0;
     public static int PUT_SPECIMEN = 160;//150
     public static int UP_FOR_IDLE = 300;//300
-    public static int HIGH_BASKET_AUTO = 840 ;//870//am schimbat aici gen ca dadusem joc mecanism de hang si fara ala se plia mai bine lift-ul (aparent)
+    public static int HIGH_BASKET_AUTO = 840 ;
     public static int IDLE = 0;
 
 
 
     private PIDController lift_pid;
     public int targetPosition;
-    public static int currentPosition;
+    public int currentPosition;
 
     public static double p_lift = 0.0056, d_lift = 0.00009, i_lift = 0.15;
     public static double p_hang = 0.04, d_hang = 0, i_hang = 0;
 
     MotionProfile profile;
-    public static int previousTarget = 0;
+    public int previousTarget = 0;
     public static double maxVelocityUP = 10000000, maxAccelerationUP = 200000;
     public static double maxVelocityDOWN = 1000000, maxAccelerationDOWN = 4000;
     public static double maxVelocityPUT_SPECIMEN = 10000000, maxAccelerationPUT_SPECIMEN = 60000;
@@ -82,29 +82,47 @@ public class Lift extends SubsystemBase{
         liftMotor = new CachingDcMotorEx(hardwareMap.get(DcMotorEx.class, "liftMotor"));
         liftMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         liftMotor.setDirection(DcMotorSimple.Direction.FORWARD);
-        liftMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        //liftMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         liftMotor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
 
         followerMotor = new CachingDcMotorEx(hardwareMap.get(DcMotorEx.class, "followerMotor"));
         followerMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         followerMotor.setDirection(DcMotorSimple.Direction.FORWARD);
+        //followerMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        followerMotor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+    }
+
+    public void resetEncoders(){
+        liftMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        liftMotor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+
         followerMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         followerMotor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
-
-
     }
 
     public void initialize(){
         lift_pid.reset();
         liftState = LiftState.IDLE;
-        targetPosition = 0;
-        previousTarget = 0;
+
+        currentPosition = liftMotor.getCurrentPosition();
+        targetPosition = currentPosition;
+        previousTarget = currentPosition;
+
+
+
+        profile = MotionProfileGenerator.generateSimpleMotionProfile(
+                new MotionState(currentPosition, 0),
+                new MotionState(targetPosition, 0),
+                maxVelocityDOWN,
+                maxAccelerationDOWN
+        );
+
+        time.reset();
     }
 
 
     public void loop(){
         currentPosition = liftMotor.getCurrentPosition();
-
         if(Globals.HANGING_LEVEL_2){
             p_lift = p_hang;
             d_lift = d_hang;
@@ -219,11 +237,11 @@ public class Lift extends SubsystemBase{
         return targetPosition;
     }
 
-    public static boolean canRotateWrist(){
+    public boolean canRotateWrist(){
         return currentPosition >= 250;
     }
 
-    public static boolean canRotateArmHighBasket(){
+    public boolean canRotateArmHighBasket(){
         return currentPosition >= 150;
     }
 
@@ -256,7 +274,7 @@ public class Lift extends SubsystemBase{
     }
 
 
-    public static boolean canOpenClaw(){
+    public boolean canOpenClaw(){
         return currentPosition > 800;
     }
 }

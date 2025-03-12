@@ -9,7 +9,7 @@ import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import org.firstinspires.ftc.teamcode.programs.subsystems.Brush;
 
 
-@TeleOp(name="TELEOP TEST")
+//@TeleOp(name="TELEOP TEST")
 public class TeleOpTest extends CommandOpMode {
     private GamepadEx gamepadEx;
     private Brush brush;

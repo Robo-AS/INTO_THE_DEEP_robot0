@@ -11,7 +11,7 @@ import com.qualcomm.robotcore.util.ElapsedTime;
 import org.firstinspires.ftc.teamcode.programs.subsystems.Arm;
 import org.firstinspires.ftc.teamcode.programs.subsystems.Sweeper;
 
-@TeleOp(name = "SweeperTest", group = "Tests")
+//@TeleOp(name = "SweeperTest", group = "Tests")
 public class SweeperTest extends CommandOpMode {
     private final Sweeper sweeper = Sweeper.getInstance();
     private GamepadEx gamepadEx;

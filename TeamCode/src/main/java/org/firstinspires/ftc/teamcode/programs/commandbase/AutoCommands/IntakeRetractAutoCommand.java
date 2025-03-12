@@ -20,7 +20,7 @@ public class IntakeRetractAutoCommand extends SequentialCommandGroup {
                 //new SetBrushStateCommand(Brush.BrushState.IDLE),
                 new SetBrushAngleCommand(Brush.BrushAngle.UP),
                 new SetExtendoStateCommand(Extendo.ExtendoState.RETRACTING),
-                new WaitUntilCommand(Extendo::canOuttakeSample),
+                new WaitUntilCommand(Extendo.getInstance()::canOuttakeSample),
                 new SetBrushStateCommand(Brush.BrushState.OUTTAKING),
                 new WaitCommand(200),
                 new SetBrushStateCommand(Brush.BrushState.IDLE),

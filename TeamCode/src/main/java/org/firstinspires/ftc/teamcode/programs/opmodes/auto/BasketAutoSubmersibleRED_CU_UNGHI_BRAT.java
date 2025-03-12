@@ -107,6 +107,12 @@ public class BasketAutoSubmersibleRED_CU_UNGHI_BRAT extends LinearOpMode {
         basketPaths.resetTrajectoryes();
 
 
+        //AICI RESETEZ ENCODERELE CA NU LE MAI RESETEZ IN INIT_UL LA HARWARE CA SA NU LE MAI DAU RESET SI IN TELEOP
+        robot.extendo.resetEncoders();
+        robot.lift.resetEncoders();
+
+
+
 
 
         PathChain scorePreload = follower.pathBuilder()
@@ -586,6 +592,11 @@ public class BasketAutoSubmersibleRED_CU_UNGHI_BRAT extends LinearOpMode {
             if(!basketPaths.getscore3())
                 robot.brush.loopAutoBasket();
             else robot.brush.loopAuto();
+
+
+            telemetry.addData("SCORE_PRELOAD_COMPLETED", basketPaths.SCORE_PRELOAD_COMPLETED);
+            telemetry.addData("Current Position LIFT", robot.lift.liftMotor.getCurrentPosition());
+            telemetry.addData("Current Position EXTENDO", robot.extendo.extendoMotor.getCurrentPosition());
 
 
             //telemetry.addData("GRAB TIMER", grabTime);

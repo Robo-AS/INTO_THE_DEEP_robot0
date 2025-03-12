@@ -35,10 +35,11 @@ public class Extendo extends SubsystemBase {
         HANG,
         TAKE_SAMPLE_SUBMERSIBLE_1,
         TAKE_SAMPLE_SUBMERSIBLE_2,
-        MAXIMUM
+        MAXIMUM,
+        NOTHING
     }
 
-    public ExtendoState extendoState = ExtendoState.RETRACTING;
+    public ExtendoState extendoState = ExtendoState.NOTHING;
     public int EXTENDING_MINIMUM = 400;
     public int RETRACTING = -5;
     public int EXTENDING_MINIMUM_AUTO = 400;
@@ -57,8 +58,9 @@ public class Extendo extends SubsystemBase {
     private PIDController extendo_pid;
     public static double p_extendo = 0.007, i_extendo = 0.11, d_extendo = 0.00006;
 
+    public static int lastEncoderPos;
     public int targetPosition = 0;
-    public static int currentPosition;
+    public int currentPosition;
     public static int minPosition = 400, maxPosition = 1160;//550, 1600
 
 //    public static double joystickConstant = 30; //15, 50
@@ -87,6 +89,11 @@ public class Extendo extends SubsystemBase {
         extendoMotor = new CachingDcMotorEx(hardwareMap.get(DcMotorEx.class, "extendoMotor"));
         extendoMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         extendoMotor.setDirection(DcMotorSimple.Direction.REVERSE);
+        //extendoMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        extendoMotor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+    }
+
+    public void resetEncoders(){
         extendoMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         extendoMotor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
     }
@@ -94,16 +101,29 @@ public class Extendo extends SubsystemBase {
     public void initialize() {
         extendo_pid.reset();
         extendoState = ExtendoState.RETRACTING;
-        targetPosition = 0;
-        previousTarget = 0;
+
+        currentPosition = extendoMotor.getCurrentPosition();
+        targetPosition = currentPosition;
+        previousTarget = currentPosition;
         joystickConstant = Globals.EXTENDO_JOYSTICK_CONSTANT_UP;
+
+
+        profile = MotionProfileGenerator.generateSimpleMotionProfile(
+                new MotionState(currentPosition, 0),
+                new MotionState(targetPosition, 0),
+                maxVelocity,
+                maxAcceleration
+        );
+
+        time.reset();
+
+
     }
 
 
     public void loop(double joystickYCoord){
         currentPosition = extendoMotor.getCurrentPosition();
-
-
+        lastEncoderPos = currentPosition;
         if(targetPosition != previousTarget){
             profile = MotionProfileGenerator.generateSimpleMotionProfile(
                     new MotionState(previousTarget, 0),
@@ -200,7 +220,7 @@ public class Extendo extends SubsystemBase {
     public double getJoystickConstant(){return joystickConstant;}
 
 
-    public static boolean canOuttakeSample(){
+    public boolean canOuttakeSample(){
         return currentPosition <= 300;
     }
 
@@ -239,6 +259,10 @@ public class Extendo extends SubsystemBase {
         double power = extendo_pid.calculate(currentPosition, targetMotionProfile);
         extendo_pid.setPID(p_extendo, i_extendo, d_extendo);
         extendoMotor.setPower(power);
+    }
+
+    public static int getLastEncoderPos(){
+        return lastEncoderPos;
     }
 
 

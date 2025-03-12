@@ -26,7 +26,7 @@ public class IntakeRetractYELLOWSampleCommand extends SequentialCommandGroup {
                 new SetExtendoStateCommand(Extendo.ExtendoState.RETRACTING),
                 new WaitCommand(500),
                 new SetBrushStateCommand(Brush.BrushState.IDLE),
-                new WaitUntilCommand(Extendo::canOuttakeSample),
+                new WaitUntilCommand(Extendo.getInstance()::canOuttakeSample),
                 new SetBrushStateCommand(Brush.BrushState.OUTTAKING),
                 new WaitCommand(100),
                 new ShouldVibrateCommand(),
