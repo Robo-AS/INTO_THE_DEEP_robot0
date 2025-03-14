@@ -54,24 +54,24 @@ public class BasketAutoSubmersibleBLUE_CU_UNGHI_BRAT extends LinearOpMode {
     public static Pose preloadPose = new Pose(13, 127, Math.toRadians(-45));
 
     public static Pose grab1Pose = new Pose(26, 120.8, Math.toRadians(0));
-    public static Pose score1Pose = new Pose(16.5, 129.5, Math.toRadians(-15));
+    public static Pose score1Pose = new Pose(16, 130, Math.toRadians(-15));
 
     public static Pose grab2Pose = new Pose(26, 130, Math.toRadians(0));
-    public static Pose score2Pose = new Pose(16.5, 129.5, Math.toRadians(-15));
+    public static Pose score2Pose = new Pose(16, 130, Math.toRadians(-15));
 
     public static Pose grab3Pose = new Pose(28, 134, Math.toRadians(14));
-    public static Pose score3Pose = new Pose(16.5, 129.5, Math.toRadians(-15));
+    public static Pose score3Pose = new Pose(16, 130, Math.toRadians(-15));
 
     public static Pose submersible1Pose = new Pose(60.13670549799417, 94.98909806006719, Math.toRadians(270));
     public static Pose submersible1ControlPoint = new Pose(62.71065009129354, 116.8565842888431, Math.toRadians(270));
 
-    public static Pose scoreSubmersible1Pose = new Pose(16.5, 129.5, Math.toRadians(-15));
+    public static Pose scoreSubmersible1Pose = new Pose(16, 130, Math.toRadians(-15));
     public static Pose scoreSubmersible1ControlPoint = new Pose(62.71065009129354, 117.09057925187031, Math.toRadians(-15));
 
     public static Pose submersible2Pose = new Pose(64.58260979551126, 94.98909806006719, Math.toRadians(275));
     public static Pose submersible2ControlPoint = new Pose(68.79451913000112, 124.34442310571397, Math.toRadians(275));
 
-    public static Pose scoreSubmbersible2Pose = new Pose(15, 129.5, Math.toRadians(-15));
+    public static Pose scoreSubmbersible2Pose = new Pose(14.5, 130, Math.toRadians(-15));
     public static Pose scoreSubmersible2ControlPoint = new Pose(68.79451913000112, 124.34442310571397, Math.toRadians(-15));
 
     public static Pose submersible3Pose = new Pose(64.58260979551126, 94.98909806006719, Math.toRadians(265));
