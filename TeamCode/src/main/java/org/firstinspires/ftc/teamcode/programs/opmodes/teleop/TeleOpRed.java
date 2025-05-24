@@ -337,22 +337,24 @@ public class TeleOpRed extends CommandOpMode {
 //        telemetry.addData("PreviousBrushState:", robot.brush.previousBrushState);
         telemetry.addData("DesiredColor", robot.brush.desiredSampleColor);
         telemetry.addData("IntakedColor:", robot.brush.intakedSampleColor);
+        telemetry.addData("SENSOR DISABLED", robot.brush.getREVState());
+
         //telemetry.addData("ProximitySensor:", robot.brush.proximitySensor.getState());
 //        telemetry.addData("SampleState:", robot.brush.sampleState);
 //        telemetry.addData("AngleServoPosition", robot.brush.brushAngleServo.getPosition());
 //        telemetry.addData("Brush Angle", robot.brush.brushAngle);
 
-        telemetry.addData("Current Position", robot.extendo.extendoMotor.getCurrentPosition());
+//        telemetry.addData("Current Position", robot.extendo.extendoMotor.getCurrentPosition());
 //        telemetry.addData("Target Position", robot.extendo.getTargetPosition());
-        telemetry.addData("Extendo State", robot.extendo.extendoState);
-        telemetry.addData("Last Extendo State", Extendo.getLastEncoderPos());
+//        telemetry.addData("Extendo State", robot.extendo.extendoState);
+//        telemetry.addData("Last Extendo State", Extendo.getLastEncoderPos());
 
 //        telemetry.addData("Joystick Y", gamepadEx.gamepad.left_stick_y);
 //        telemetry.addData("Joystick Y MODIFIED", robot.extendo.getExponentialJoystickCoef());
 //        telemetry.addData("JoystickConstant", robot.extendo.getJoystickConstant());
 //        telemetry.addData("SHOULD VIBRATE", Globals.shouldVibrate);
 
-        telemetry.addData("Current Position", robot.lift.liftMotor.getCurrentPosition());
+//        telemetry.addData("Current Position", robot.lift.liftMotor.getCurrentPosition());
 //        telemetry.addData("Target Position", robot.lift.getTargetPosition());
 
 
@@ -361,25 +363,25 @@ public class TeleOpRed extends CommandOpMode {
 //            robot.arm.updatePINPOINT();
 //        telemetry.addData("PROFILE", robot.arm.getProfile());
 
-        telemetry.addData("HANG_2", Globals.HANGING_LEVEL_2);
-        telemetry.addData("HANG_3", Globals.HANGING_LEVEL_3);
-        telemetry.addData("Current Position Left", robot.mecanumDriveTrain.getCurrentPotionLeft());
-        telemetry.addData("Current Position Right", robot.mecanumDriveTrain.getCurrentPositionRight());
-        telemetry.addData("Target Positon", robot.mecanumDriveTrain.getTargetPositionLeft());
+//        telemetry.addData("HANG_2", Globals.HANGING_LEVEL_2);
+//        telemetry.addData("HANG_3", Globals.HANGING_LEVEL_3);
+//        telemetry.addData("Current Position Left", robot.mecanumDriveTrain.getCurrentPotionLeft());
+//        telemetry.addData("Current Position Right", robot.mecanumDriveTrain.getCurrentPositionRight());
+//        telemetry.addData("Target Positon", robot.mecanumDriveTrain.getTargetPositionLeft());
 
 
-        telemetry.addData("Hang State", robot.hang.hangState);
-        telemetry.addData("Safety State", robot.hang.safetyState);
+//        telemetry.addData("Hang State", robot.hang.hangState);
+//        telemetry.addData("Safety State", robot.hang.safetyState);
+//
+//        telemetry.addData("RUNNED BASKET",Globals.RUNNED_AUTO_BASKET);
+//
+//        telemetry.addData("Power FRONT RIGHT", robot.mecanumDriveTrain.getPosetFronRight());
+//        telemetry.addData("Power FRONT LEFT", robot.mecanumDriveTrain.getPosetFronLeft());
+//        telemetry.addData("Power BACK RIGHT", robot.mecanumDriveTrain.getPosetBackRight());
+//        telemetry.addData("Power BACK LEFT", robot.mecanumDriveTrain.getPosetBackLeft());
 
-        telemetry.addData("RUNNED BASKET",Globals.RUNNED_AUTO_BASKET);
 
-        telemetry.addData("Power FRONT RIGHT", robot.mecanumDriveTrain.getPosetFronRight());
-        telemetry.addData("Power FRONT LEFT", robot.mecanumDriveTrain.getPosetFronLeft());
-        telemetry.addData("Power BACK RIGHT", robot.mecanumDriveTrain.getPosetBackRight());
-        telemetry.addData("Power BACK LEFT", robot.mecanumDriveTrain.getPosetBackLeft());
-
-
-        telemetry.addData("Pinpoint DISABLED", robot.arm.pinpointDisabled);
+//        telemetry.addData("Pinpoint DISABLED", robot.arm.pinpointDisabled);
 
 
 

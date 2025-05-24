@@ -124,9 +124,9 @@ public class Brush extends SubsystemBase{
 
     public void loopBlue(){
         if(brushAngle == BrushAngle.DOWN){
-//            updateSampleState();
+            updateSampleState();
             updateSampleColor();
-            updateSampleStateDigital();
+//            updateSampleStateDigital();
         }
 
         switch (brushState) {
@@ -193,9 +193,9 @@ public class Brush extends SubsystemBase{
 
     public void loopRed(){
         if(brushAngle == BrushAngle.DOWN){
-//            updateSampleState();
+            updateSampleState();
             updateSampleColor();
-            updateSampleStateDigital();
+//            updateSampleStateDigital();
         }
 
 

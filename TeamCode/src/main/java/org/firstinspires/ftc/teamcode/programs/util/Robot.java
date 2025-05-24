@@ -3,6 +3,7 @@ import com.pedropathing.follower.Follower;
 import com.pedropathing.localization.Pose;
 import com.pedropathing.localization.PoseUpdater;
 import com.pedropathing.util.Constants;
+import com.qualcomm.hardware.limelightvision.Limelight3A;
 import com.qualcomm.hardware.lynx.LynxModule;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 
@@ -31,6 +32,9 @@ public class Robot {
     public Arm arm;
     public Hang hang;
     public Sweeper sweeper;
+
+    private Limelight3A limelight;
+
 
 
 

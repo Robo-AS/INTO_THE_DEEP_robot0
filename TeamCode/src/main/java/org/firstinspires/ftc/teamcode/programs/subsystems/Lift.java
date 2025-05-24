@@ -108,8 +108,6 @@ public class Lift extends SubsystemBase{
         targetPosition = currentPosition;
         previousTarget = currentPosition;
 
-
-
         profile = MotionProfileGenerator.generateSimpleMotionProfile(
                 new MotionState(currentPosition, 0),
                 new MotionState(targetPosition, 0),

@@ -336,13 +336,15 @@ public class TeleOpBlue extends CommandOpMode {
 //        telemetry.addData("DesiredColor", robot.brush.desiredSampleColor);
         telemetry.addData("IntakedColor:", robot.brush.intakedSampleColor);
         telemetry.addData("SampleState:", robot.brush.sampleState);
-        telemetry.addData("SENSOR DISABLED?:", robot.brush.getREVState());
+        telemetry.addData("SENSOR DISABLED?", robot.brush.getREVState());
+
+//        telemetry.addData("SENSOR DISABLED?:", robot.brush.getREVState());
 
 //        telemetry.addData("AngleServoPosition", robot.brush.brushAngleServo.getPosition());
 //        telemetry.addData("Brush Angle", robot.brush.brushAngle);
 
-        telemetry.addData("Current Position EXTENDO", robot.extendo.extendoMotor.getCurrentPosition());
-        telemetry.addData("LAST EXTENDO POS", Globals.lastExtendoPos);
+//        telemetry.addData("Current Position EXTENDO", robot.extendo.extendoMotor.getCurrentPosition());
+//        telemetry.addData("LAST EXTENDO POS", Globals.lastExtendoPos);
 
 //        telemetry.addData("Target Position", robot.extendo.getTargetPosition());
 //        telemetry.addData("Extendo State", robot.extendo.extendoState);
@@ -351,8 +353,8 @@ public class TeleOpBlue extends CommandOpMode {
 //        telemetry.addData("JoystickConstant", robot.extendo.getJoystickConstant());
 //        telemetry.addData("SHOULD VIBRATE", Globals.shouldVibrate);
 
-        telemetry.addData("Current Position LIFT", robot.lift.liftMotor.getCurrentPosition());
-        telemetry.addData("LAST LIFT POS", Globals.lastLiftPos);
+//        telemetry.addData("Current Position LIFT", robot.lift.liftMotor.getCurrentPosition());
+//        telemetry.addData("LAST LIFT POS", Globals.lastLiftPos);
 
 //        telemetry.addData("Reset Lift?", robot.lift.gerResetLift());
 //        telemetry.addData("Target Position LIFT", robot.lift.getTargetPosition());
@@ -373,7 +375,7 @@ public class TeleOpBlue extends CommandOpMode {
 //        telemetry.addData("Hang State", robot.hang.hangState);
 //        telemetry.addData("Safety State", robot.hang.safetyState);
 
-        telemetry.addData("RUNNED BASKET",Globals.RUNNED_AUTO_BASKET);
+//        telemetry.addData("RUNNED BASKET",Globals.RUNNED_AUTO_BASKET);
 
         double loop = System.nanoTime();
         telemetry.addData("Hz", 1000000000 / (loop - loopTime));
