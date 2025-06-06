@@ -41,11 +41,11 @@ public class Extendo extends SubsystemBase {
 
     public ExtendoState extendoState = ExtendoState.NOTHING;
     public static int EXTENDING_MINIMUM = 330;
-    public static int RETRACTING = -10;
+    public static int RETRACTING = -5;
     public static int HANG = 800;
 
-    public int EXTENDING_MINIMUM_AUTO = 330;
-    public int TAKE_SAMPLE_AUTO = 730;
+    public int EXTENDING_MINIMUM_AUTO = 815;
+    public int TAKE_SAMPLE_AUTO = 1000;
     public int TAKE_SAMPLE_AUTO_NEAR_WALL = 1160;
 
     public int TAKE_SAMPLE_SPECIMEN = 1160;
@@ -202,7 +202,6 @@ public class Extendo extends SubsystemBase {
 
     public void updateTargetPositionHang(double joystickYCoord){
         exponentialJoystickCoef = (Math.pow(joystickYCoord, 3) + liniarCoefTerm * joystickYCoord) * contantTerm;
-
         targetPosition += (int)(exponentialJoystickCoef * joystickConstant);
         targetPosition = Math.max(RETRACTING, Math.min(HANG, targetPosition));
     }
@@ -222,11 +221,13 @@ public class Extendo extends SubsystemBase {
         return currentPosition <= 300;
     }
 
+    public boolean canPutIntakeDown(){
+        return currentPosition >= 200;
+    }
+
 
     public void loopAuto(){
         currentPosition = extendoMotor.getCurrentPosition();
-
-
         if(targetPosition != previousTarget){
             if(extendoState == ExtendoState.TAKE_SAMPLE_SUBMERSIBLE_1 || extendoState == ExtendoState.TAKE_SAMPLE_SUBMERSIBLE_2){
                 profile = MotionProfileGenerator.generateSimpleMotionProfile(

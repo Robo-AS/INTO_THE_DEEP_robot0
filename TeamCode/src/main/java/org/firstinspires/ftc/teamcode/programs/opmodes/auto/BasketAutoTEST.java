@@ -28,26 +28,14 @@ public class BasketAutoTEST extends LinearOpMode {
     public static Pose startPose = new Pose(7, 112, Math.toRadians(-90));
     public static Pose preloadPose = new Pose(13, 127, Math.toRadians(-45));
 
-    public static Pose grab1Pose = new Pose(26, 120.8, Math.toRadians(0));
-    public static Pose score1Pose = new Pose(16.5, 129.5, Math.toRadians(-45));
+    public static Pose grab1Pose = new Pose(21.038961038961038, 128.57142857142858, Math.toRadians(-9));
+    public static Pose score1Pose = new Pose(15.792207792207792, 130.9090909090909, Math.toRadians(-15));
 
-    public static Pose grab2Pose = new Pose(26, 130, Math.toRadians(0));
-    public static Pose score2Pose = new Pose(16.5, 129.5, Math.toRadians(-45));
+    public static Pose grab2Pose = new Pose(21.506493506493506, 131.37662337662337, Math.toRadians(0));
+    public static Pose score2Pose = new Pose(15.792207792207792, 130.9090909090909, Math.toRadians(-15));
 
-    public static Pose grab3Pose = new Pose(28, 134, Math.toRadians(14));
-    public static Pose score3Pose = new Pose(16.5, 129.5, Math.toRadians(-45));
-
-    public static Pose submersible1Pose = new Pose(60.13670549799417, 94.98909806006719, Math.toRadians(270));
-    public static Pose submersible1ControlPoint = new Pose(62.71065009129354, 116.8565842888431, Math.toRadians(270));
-
-    public static Pose scoreSubmersible1Pose = new Pose(16.5, 129.5, Math.toRadians(-45));
-    public static Pose scoreSubmersible1ControlPoint = new Pose(62.71065009129354, 117.09057925187031, Math.toRadians(-45));
-
-    public static Pose submersible2Pose = new Pose(64.58260979551126, 94.98909806006719, Math.toRadians(275));
-    public static Pose submersible2ControlPoint = new Pose(68.79451913000112, 124.34442310571397, Math.toRadians(275));
-
-    public static Pose scoreSubmbersible2Pose = new Pose(15, 129.5, Math.toRadians(-45));
-    public static Pose scoreSubmersible2ControlPoint = new Pose(68.79451913000112, 124.34442310571397, Math.toRadians(-45));
+    public static Pose grab3Pose = new Pose(21.038961038961038, 133.71428571428572, Math.toRadians(16));
+    public static Pose score3Pose = new Pose(15.792207792207792, 130.9090909090909, Math.toRadians(-15));
 
     @Override
     public void runOpMode() throws InterruptedException {
@@ -92,25 +80,6 @@ public class BasketAutoTEST extends LinearOpMode {
                 .setLinearHeadingInterpolation(grab3Pose.getHeading(), score3Pose.getHeading())
                 .build();
 
-        PathChain submersible1 = follower.pathBuilder()
-                .addPath(new BezierCurve(new Point(score3Pose), new Point(submersible1ControlPoint), new Point(submersible1Pose)))
-                .setLinearHeadingInterpolation(score3Pose.getHeading(), submersible1Pose.getHeading())
-                .build();
-
-        PathChain scoreSubmersible1 = follower.pathBuilder()
-                .addPath(new BezierCurve(new Point(submersible1Pose), new Point(scoreSubmersible1ControlPoint), new Point(scoreSubmersible1Pose)))
-                .setLinearHeadingInterpolation(submersible1Pose.getHeading(), scoreSubmersible1Pose.getHeading())
-                .build();
-
-        PathChain submersible2 = follower.pathBuilder()
-                .addPath(new BezierCurve(new Point(scoreSubmersible1Pose), new Point(submersible2ControlPoint), new Point(submersible2Pose)))
-                .setLinearHeadingInterpolation(scoreSubmersible1Pose.getHeading(), submersible2Pose.getHeading())
-                .build();
-
-        PathChain scoreSubmersible2 = follower.pathBuilder()
-                .addPath(new BezierCurve(new Point(submersible2Pose), new Point(scoreSubmersible2ControlPoint), new Point(scoreSubmbersible2Pose)))
-                .setLinearHeadingInterpolation(submersible2Pose.getHeading(), scoreSubmbersible2Pose.getHeading())
-                .build();
 
 
         CommandScheduler.getInstance().schedule(
@@ -121,11 +90,7 @@ public class BasketAutoTEST extends LinearOpMode {
                         new FollowPath(follower, grab2, true, 1),
                         new FollowPath(follower, score2, true, 1),
                         new FollowPath(follower, grab3, true, 1),
-                        new FollowPath(follower, score3, true, 1),
-                        new FollowPath(follower, submersible1, true, 1),
-                        new FollowPath(follower, scoreSubmersible1, true, 1),
-                        new FollowPath(follower, submersible2, true, 1),
-                        new FollowPath(follower, scoreSubmersible2, true, 1)
+                        new FollowPath(follower, score3, true, 1)
 
                 )
         );

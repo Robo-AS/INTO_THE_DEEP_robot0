@@ -277,6 +277,24 @@ public class Intake extends SubsystemBase {
         }
     }
 
+    public void loopAuto(){
+        currentAxonAngle = (int) (analogInput.getVoltage() / 3.3 * 360);
+        if (firstRead) {
+            previousAxonAngle = currentAxonAngle;
+            firstRead = false;
+            return;
+        }
+
+        int delta = currentAxonAngle - previousAxonAngle;
+
+        if(delta > 180)
+            rotations --;
+        else if (delta < -180)
+            rotations ++;
+
+        previousAxonAngle = currentAxonAngle;
+        totalAxonAngle = (rotations * 360) + (currentAxonAngle);
+    }
 
 
 
@@ -352,9 +370,11 @@ public class Intake extends SubsystemBase {
     public boolean canStopOuttakingYELLOW_1(){
         return (totalAxonAngle - initialAxonAngle) >= 120;
     }
-    public boolean canStopOuttakingYELLOW_2(){
+    public boolean canStopOuttakingYELLOW_2_TELEOP(){
         return (totalAxonAngle - initialAxonAngle) >= 80;//60
     }
+
+
 
     public boolean canStartSpittingYELLOW(){
         return (totalAxonAngle - initialAxonAngle) >= 50;//30
@@ -378,6 +398,14 @@ public class Intake extends SubsystemBase {
 
     public boolean canStopThrowingWrongSample(){
         return (totalAxonAngle - initialAxonAngle) >= 130;
+    }
+
+
+    public boolean canStopOuttakingYELLOW_2_AUTO(){
+        return (totalAxonAngle - initialAxonAngle) >= 30;
+    }
+    public boolean canCloseClaw_AUTO(){
+        return (totalAxonAngle - initialAxonAngle) >=10;
     }
 
 

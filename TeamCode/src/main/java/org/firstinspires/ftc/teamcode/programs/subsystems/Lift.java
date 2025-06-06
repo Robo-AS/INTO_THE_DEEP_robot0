@@ -225,7 +225,7 @@ public class Lift extends SubsystemBase{
     }
 
     public boolean canRotateArmHighBasket(){
-        return currentPosition >= 75;//150
+        return currentPosition >= 75;//75
     }
 
 

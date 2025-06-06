@@ -17,7 +17,7 @@ public class OuttakeGoBackToIdleFromHighBasketCommand extends SequentialCommandG
                 new SetArmStateCommand(Arm.ArmState.INIT),
                 new SetClawStateCommand(Arm.ClawState.OPEN),
                 new SetWristStateCommand(Arm.WristState.INIT),
-                new WaitCommand(200),
+                new WaitCommand(50),
                 new SetLiftStateCommand(Lift.LiftState.IDLE)
 
         );

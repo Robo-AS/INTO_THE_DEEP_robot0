@@ -56,7 +56,7 @@ public class LiftTest extends CommandOpMode {
 
 
 //        lift.loopAuto();
-        lift.loop();
+//        lift.loop();
 
 
         telemetry.addData("Current Position", lift.liftMotor.getCurrentPosition());
