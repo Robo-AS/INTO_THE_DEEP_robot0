@@ -41,7 +41,6 @@ import org.firstinspires.ftc.teamcode.programs.util.NEWRobot;
 
 
 
-
 @Config
 @Autonomous(name = "NEW_BasketAutoSubmersibleBLUE_CU_UNGHI_BRAT💪🟦")
 public class NEW_BasketAutoSubmersibleBLUE_CU_UNGHI_BRAT extends LinearOpMode {
@@ -187,8 +186,6 @@ public class NEW_BasketAutoSubmersibleBLUE_CU_UNGHI_BRAT extends LinearOpMode {
 //            follower.update();
 //        }
 
-        waitForStart();
-
         CommandScheduler.getInstance().schedule(
                 new SequentialCommandGroup(
                         new SetClawStateCommand(Arm.ClawState.OPEN), //don't ask
@@ -323,7 +320,15 @@ public class NEW_BasketAutoSubmersibleBLUE_CU_UNGHI_BRAT extends LinearOpMode {
                                 ),
                                 () -> !basketPaths.getscore3()
                         ),
-                        new InstantCommand(basketPaths::setScore3Completed)
+                        new InstantCommand(basketPaths::setScore3Completed),
+
+
+                        new FollowPath(follower, submersible1, true, 1)
+                                .alongWith(
+                                        new OuttakeGoBackToIdleFromHighBasketCommand()
+                                )
+
+
 
 
 

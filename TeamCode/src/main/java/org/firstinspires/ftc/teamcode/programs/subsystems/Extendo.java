@@ -270,5 +270,10 @@ public class Extendo extends SubsystemBase {
     }
 
 
+    public void updateTargetPositionLimelight(int position){
+        targetPosition = position;
+    }
+
+
 
 }

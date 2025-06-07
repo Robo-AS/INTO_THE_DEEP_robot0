@@ -1,5 +1,4 @@
 package org.firstinspires.ftc.teamcode.programs.util;
-import com.qualcomm.hardware.limelightvision.Limelight3A;
 import com.qualcomm.hardware.lynx.LynxModule;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 
@@ -26,7 +25,6 @@ public class NEWRobot {
     public Hang hang;
     public Sweeper sweeper;
 
-    private Limelight3A limelight;
 
 
 
