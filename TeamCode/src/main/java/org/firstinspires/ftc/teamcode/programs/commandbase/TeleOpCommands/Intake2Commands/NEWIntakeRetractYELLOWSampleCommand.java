@@ -19,7 +19,7 @@ public class NEWIntakeRetractYELLOWSampleCommand extends SequentialCommandGroup 
     public NEWIntakeRetractYELLOWSampleCommand(){
         super(
                 new NEWIntakeIdleCommand(),
-                new WaitCommand(70),
+                new WaitCommand(200),
                 new SetExtendoStateCommand(Extendo.ExtendoState.RETRACTING),
                 new SetRollersStateCommand(Intake.RollersState.OUTTAKING),
                 new WaitUntilCommand(Intake.getInstance()::canStartSpittingYELLOW),

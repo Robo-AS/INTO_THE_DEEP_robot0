@@ -1,4 +1,5 @@
 package org.firstinspires.ftc.teamcode.programs.util;
+import com.qualcomm.hardware.limelightvision.Limelight3A;
 import com.qualcomm.hardware.lynx.LynxModule;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 
@@ -7,6 +8,7 @@ import org.firstinspires.ftc.teamcode.programs.subsystems.Extendo;
 import org.firstinspires.ftc.teamcode.programs.subsystems.Hang;
 import org.firstinspires.ftc.teamcode.programs.subsystems.Intake;
 import org.firstinspires.ftc.teamcode.programs.subsystems.Lift;
+import org.firstinspires.ftc.teamcode.programs.subsystems.Limelight;
 import org.firstinspires.ftc.teamcode.programs.subsystems.MecanumDriveTrain;
 import org.firstinspires.ftc.teamcode.programs.subsystems.Sweeper;
 
@@ -24,6 +26,7 @@ public class NEWRobot {
     public Arm arm;
     public Hang hang;
     public Sweeper sweeper;
+    //public Limelight limelightCamera;
 
 
 
@@ -38,6 +41,7 @@ public class NEWRobot {
         arm = Arm.getInstance();
         hang = Hang.getInstance();
         sweeper = Sweeper.getInstance();
+       // limelightCamera = Limelight.getInstance();
     }
 
     public static NEWRobot getInstance() {
@@ -57,6 +61,7 @@ public class NEWRobot {
         arm.initializeHardware(hardwareMap);
         hang.initializeHardware(hardwareMap);
         sweeper.initializeHardware(hardwareMap);
+        //limelightCamera.initializeHardware(hardwareMap);
 
 
         allHubs = hardwareMap.getAll(LynxModule.class);
@@ -73,6 +78,7 @@ public class NEWRobot {
         arm.initialize();
         hang.initialize();
         sweeper.initialize();
+        //limelightCamera.initialize();
     }
 
 

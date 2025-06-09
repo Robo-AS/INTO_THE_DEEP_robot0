@@ -23,17 +23,14 @@ import org.firstinspires.ftc.teamcode.pedroPathing.constants.FConstants;
 import org.firstinspires.ftc.teamcode.pedroPathing.constants.LConstants;
 import org.firstinspires.ftc.teamcode.programs.commandbase.ArmCommands.SetClawStateCommand;
 import org.firstinspires.ftc.teamcode.programs.commandbase.AutoCommands.IntakeRetractAutoCommand;
-import org.firstinspires.ftc.teamcode.programs.commandbase.AutoCommands.IntakeRetractSubmersibleAutoCommand;
 import org.firstinspires.ftc.teamcode.programs.commandbase.AutoCommands.OuttakeGoHighBasketAutoCommand;
 import org.firstinspires.ftc.teamcode.programs.commandbase.AutoCommands.ScoreSampleAutoCommand;
-import org.firstinspires.ftc.teamcode.programs.commandbase.BrushCommands.SetBrushAngleCommand;
 import org.firstinspires.ftc.teamcode.programs.commandbase.DoesNothingCommand;
 import org.firstinspires.ftc.teamcode.programs.commandbase.ExtendoCommands.SetExtendoStateCommand;
 import org.firstinspires.ftc.teamcode.programs.commandbase.IntakeCommand.SetIntakeAngleCommand;
 import org.firstinspires.ftc.teamcode.programs.commandbase.IntakeCommand.SetIntakeStateCommand;
 import org.firstinspires.ftc.teamcode.programs.commandbase.TeleOpCommands.OuttakeCommands.OuttakeGoBackToIdleFromHighBasketCommand;
 import org.firstinspires.ftc.teamcode.programs.subsystems.Arm;
-import org.firstinspires.ftc.teamcode.programs.subsystems.Brush;
 import org.firstinspires.ftc.teamcode.programs.subsystems.Extendo;
 import org.firstinspires.ftc.teamcode.programs.subsystems.Intake;
 import org.firstinspires.ftc.teamcode.programs.util.Globals;
@@ -63,11 +60,12 @@ public class NEW_BasketAutoSubmersibleBLUE_CU_UNGHI_BRAT extends LinearOpMode {
     public static Pose grab3Pose = new Pose(21.038961038961038, 133.71428571428572, Math.toRadians(15));
     public static Pose score3Pose = new Pose(15.792207792207792, 130.9090909090909, Math.toRadians(-15));
 
-    public static Pose submersible1Pose = new Pose(60.13670549799417, 94.98909806006719, Math.toRadians(270));
-    public static Pose submersible1ControlPoint = new Pose(62.71065009129354, 116.8565842888431, Math.toRadians(270));
+    public static Pose submersible1Pose = new Pose(60.311688311688314, 94.77922077922078, Math.toRadians(270));
+    public static Pose submersible1ControlPoint = new Pose(60.54545454545455, 119.92207792207793, Math.toRadians(270));
 
-    public static Pose scoreSubmersible1Pose = new Pose(16, 130, Math.toRadians(-15));
-    public static Pose scoreSubmersible1ControlPoint = new Pose(62.71065009129354, 117.09057925187031, Math.toRadians(-15));
+    public static Pose scoreSubmersible1Pose = new Pose(15.896103896103895, 130.67532467532467, Math.toRadians(-15));
+    public static Pose scoreSubmersible1ControlPoint = new Pose(60.54545454545455, 119.92207792207793, Math.toRadians(-15));
+
 
     public static Pose submersible2Pose = new Pose(64.58260979551126, 94.98909806006719, Math.toRadians(275));
     public static Pose submersible2ControlPoint = new Pose(68.79451913000112, 124.34442310571397, Math.toRadians(275));
@@ -150,14 +148,25 @@ public class NEW_BasketAutoSubmersibleBLUE_CU_UNGHI_BRAT extends LinearOpMode {
                 .setLinearHeadingInterpolation(grab3Pose.getHeading(), score3Pose.getHeading())
                 .build();
 
+//        PathChain submersible1 = follower.pathBuilder()
+//                .addPath(new BezierCurve(new Point(score3Pose), new Point(submersible1ControlPoint), new Point(submersible1Pose)))
+//                .setLinearHeadingInterpolation(score3Pose.getHeading(), submersible1Pose.getHeading())
+//                .build();
         PathChain submersible1 = follower.pathBuilder()
                 .addPath(new BezierCurve(new Point(score3Pose), new Point(submersible1ControlPoint), new Point(submersible1Pose)))
-                .setLinearHeadingInterpolation(score3Pose.getHeading(), submersible1Pose.getHeading())
+                .setTangentHeadingInterpolation()
+                .setReversed(false)
+                .setZeroPowerAccelerationMultiplier(16)
                 .build();
 
+//        PathChain scoreSubmersible1 = follower.pathBuilder()
+//                .addPath(new BezierCurve(new Point(submersible1Pose), new Point(scoreSubmersible1ControlPoint), new Point(scoreSubmersible1Pose)))
+//                .setLinearHeadingInterpolation(submersible1Pose.getHeading(), scoreSubmersible1Pose.getHeading())
+//                .build();
         PathChain scoreSubmersible1 = follower.pathBuilder()
                 .addPath(new BezierCurve(new Point(submersible1Pose), new Point(scoreSubmersible1ControlPoint), new Point(scoreSubmersible1Pose)))
-                .setLinearHeadingInterpolation(submersible1Pose.getHeading(), scoreSubmersible1Pose.getHeading())
+                .setTangentHeadingInterpolation()
+                .setReversed(true)
                 .build();
 
         PathChain submersible2 = follower.pathBuilder()
@@ -315,7 +324,7 @@ public class NEW_BasketAutoSubmersibleBLUE_CU_UNGHI_BRAT extends LinearOpMode {
                                         new OuttakeGoBackToIdleFromHighBasketCommand()
                                 ),
                                 new SequentialCommandGroup(
-                                        new SetBrushAngleCommand(Brush.BrushAngle.UP),
+                                        new SetIntakeAngleCommand(Intake.IntakeAngle.UP),
                                         new SetExtendoStateCommand(Extendo.ExtendoState.RETRACTING)
                                 ),
                                 () -> !basketPaths.getscore3()

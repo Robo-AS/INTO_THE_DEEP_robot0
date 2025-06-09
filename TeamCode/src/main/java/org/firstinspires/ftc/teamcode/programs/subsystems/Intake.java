@@ -94,8 +94,8 @@ public class Intake extends SubsystemBase {
         NOT_BLOCKED
     }
 
-    public static double UP_ANGLE = 0.97;
-    public static double DOWN_ANGLE = 0.45;
+    public static double UP_ANGLE = 0.37;
+    public static double DOWN_ANGLE = 0.95;
     public static double DOWN_AUTO_SPECIMEN_ANGLE = 0.2;
     public int rotations = 0;
 
@@ -242,14 +242,14 @@ public class Intake extends SubsystemBase {
                 break;
 
 
-            case OUTTAKING:
-                brushMotor.setPower(0);
-                rollersServo.setPosition(1);
-                break;
-            case SPITTING:
-                brushMotor.setPower(-1);
-                rollersServo.setPosition(0.5);
-                break;
+//            case OUTTAKING:
+//                brushMotor.setPower(0);
+//                rollersServo.setPosition(1);
+//                break;
+//            case SPITTING:
+//                brushMotor.setPower(-1);
+//                rollersServo.setPosition(0.5);
+//                break;
         }
     }
 
@@ -368,44 +368,44 @@ public class Intake extends SubsystemBase {
 
 
     public boolean canStopOuttakingYELLOW_1(){
-        return (totalAxonAngle - initialAxonAngle) >= 120;
+        return (totalAxonAngle - initialAxonAngle) >= 70;
     }
     public boolean canStopOuttakingYELLOW_2_TELEOP(){
-        return (totalAxonAngle - initialAxonAngle) >= 80;//60
+        return (totalAxonAngle - initialAxonAngle) >= 70;//60
     }
 
 
 
     public boolean canStartSpittingYELLOW(){
-        return (totalAxonAngle - initialAxonAngle) >= 50;//30
+        return (totalAxonAngle - initialAxonAngle) >= 40;//30
     }
     public boolean canStopSpittingYELLOW(){
-        return (totalAxonAngle - initialAxonAngle) >= 80;
+        return (totalAxonAngle - initialAxonAngle) >= 70;
     }
 
     public boolean canStopOuttakingYELLOWAfterEJECT(){
-        return (totalAxonAngle - initialAxonAngle) >= 100;
+        return (totalAxonAngle - initialAxonAngle) >= 90;
     }
 
 
     public boolean canStopOuttakingALIENCE_SPECIFIC_1(){
-        return (totalAxonAngle - initialAxonAngle) >= 30;//50
+        return (totalAxonAngle - initialAxonAngle) >= 20;//50
     }
 
     public boolean canStopOuttakingALIENCE_SPECIFIC_2(){
-        return (totalAxonAngle - initialAxonAngle) >= 170;//160
+        return (totalAxonAngle - initialAxonAngle) >= 160;//160
     }
 
     public boolean canStopThrowingWrongSample(){
-        return (totalAxonAngle - initialAxonAngle) >= 130;
+        return (totalAxonAngle - initialAxonAngle) >= 120;
     }
 
 
     public boolean canStopOuttakingYELLOW_2_AUTO(){
-        return (totalAxonAngle - initialAxonAngle) >= 30;
+        return (totalAxonAngle - initialAxonAngle) >= 20;
     }
     public boolean canCloseClaw_AUTO(){
-        return (totalAxonAngle - initialAxonAngle) >=10;
+        return (totalAxonAngle - initialAxonAngle) >=15;
     }
 
 

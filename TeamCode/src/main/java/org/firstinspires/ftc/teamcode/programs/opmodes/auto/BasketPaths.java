@@ -2,8 +2,6 @@ package org.firstinspires.ftc.teamcode.programs.opmodes.auto;
 
 import com.acmerobotics.dashboard.config.Config;
 
-import org.firstinspires.ftc.teamcode.programs.util.Robot;
-
 
 @Config
 public class BasketPaths {

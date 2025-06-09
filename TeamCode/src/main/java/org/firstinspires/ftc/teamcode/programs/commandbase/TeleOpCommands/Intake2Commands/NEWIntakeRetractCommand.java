@@ -16,10 +16,11 @@ public class NEWIntakeRetractCommand extends SequentialCommandGroup {
         super(
                 new SetIntakeStateCommand(Intake.IntakeState.IDLE),
                 new SetIntakeAngleCommand(Intake.IntakeAngle.UP),
+                new WaitCommand(200),
+                new SetExtendoStateCommand(Extendo.ExtendoState.RETRACTING),
                 new SetJoystickConstantCommand(Globals.EXTENDO_JOYSTICK_CONSTANT_UP),
                 new SetIntakeStateCommand(Intake.IntakeState.SPITTING),
-                new SetExtendoStateCommand(Extendo.ExtendoState.RETRACTING),
-                new WaitCommand(500),
+                new WaitCommand(100),
                 new SetIntakeStateCommand(Intake.IntakeState.IDLE)
         );
     }

@@ -18,9 +18,9 @@ import org.firstinspires.ftc.teamcode.programs.subsystems.Intake;
 public class IntakeRetractSPECIFICAfterEJECTCommand extends SequentialCommandGroup {
     public IntakeRetractSPECIFICAfterEJECTCommand(){
         super(
-                new ShouldVibrateCommand(),
                 new NEWIntakeIdleCommand(),
-                new WaitCommand(100),
+                new ShouldVibrateCommand(),
+                new WaitCommand(200),
                 new SetExtendoStateCommand(Extendo.ExtendoState.RETRACTING),
                 new SetBrushStateCommand(Intake.BrushState.SPITTING),
                 new WaitCommand(50),

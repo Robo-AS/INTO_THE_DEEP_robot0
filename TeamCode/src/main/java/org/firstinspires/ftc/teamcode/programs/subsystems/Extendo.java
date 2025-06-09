@@ -218,7 +218,7 @@ public class Extendo extends SubsystemBase {
 
 
     public boolean canOuttakeSample(){
-        return currentPosition <= 300;
+        return currentPosition <= 10;
     }
 
     public boolean canPutIntakeDown(){

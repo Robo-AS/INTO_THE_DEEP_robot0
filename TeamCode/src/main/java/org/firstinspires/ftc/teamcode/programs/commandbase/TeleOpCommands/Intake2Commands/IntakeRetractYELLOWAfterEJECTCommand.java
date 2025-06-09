@@ -19,7 +19,7 @@ public class IntakeRetractYELLOWAfterEJECTCommand extends SequentialCommandGroup
     public IntakeRetractYELLOWAfterEJECTCommand(){
         super(
                 new NEWIntakeIdleCommand(),
-                new WaitCommand(70),
+                new WaitCommand(200),
                 new SetExtendoStateCommand(Extendo.ExtendoState.RETRACTING),
                 new SetBrushStateCommand(Intake.BrushState.SPITTING),
                 new WaitCommand(50),

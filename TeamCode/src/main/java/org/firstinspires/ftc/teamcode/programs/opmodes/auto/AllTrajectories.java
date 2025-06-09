@@ -14,12 +14,12 @@ import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 
 import org.firstinspires.ftc.teamcode.pedroPathing.constants.FConstants;
 import org.firstinspires.ftc.teamcode.pedroPathing.constants.LConstants;
-import org.firstinspires.ftc.teamcode.programs.util.Robot;
+import org.firstinspires.ftc.teamcode.programs.util.NEWRobot;
 
 
 @Autonomous(name = "AllTrajectories")
 public class AllTrajectories extends LinearOpMode {
-    private final Robot robot = Robot.getInstance();
+    private final NEWRobot robot = NEWRobot.getInstance();
     private Follower follower;
 
 

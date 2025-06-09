@@ -24,10 +24,11 @@ public class IntakeRetractAutoCommand extends SequentialCommandGroup {
                 new WaitUntilCommand(Extendo.getInstance()::canOuttakeSample),
                 new InstantCommand(() -> Intake.getInstance().setInitialAxonAngle()),
                 new SetRollersStateCommand(Intake.RollersState.OUTTAKING),
-                new WaitUntilCommand(Intake.getInstance()::canCloseClaw_AUTO),
-                new SetClawStateCommand(Arm.ClawState.CLOSED),
+//                new WaitUntilCommand(Intake.getInstance()::canCloseClaw_AUTO),
+//                new SetClawStateCommand(Arm.ClawState.CLOSED),
                 new WaitUntilCommand(Intake.getInstance()::canStopOuttakingYELLOW_2_AUTO),
-                new SetRollersStateCommand(Intake.RollersState.IDLE)
+                new SetRollersStateCommand(Intake.RollersState.IDLE),
+                new SetClawStateCommand(Arm.ClawState.CLOSED)
 
 
         );
