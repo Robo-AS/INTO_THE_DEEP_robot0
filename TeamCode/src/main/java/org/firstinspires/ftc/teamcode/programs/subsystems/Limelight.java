@@ -7,9 +7,10 @@ import com.qualcomm.hardware.limelightvision.LLResult;
 import com.qualcomm.hardware.limelightvision.Limelight3A;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 
+import org.firstinspires.ftc.teamcode.programs.util.Globals;
+
 public class Limelight extends SubsystemBase {
     private static Limelight instance = null;
-
 
     public static Limelight getInstance() {
         if (instance == null) {
@@ -52,10 +53,9 @@ public class Limelight extends SubsystemBase {
         x_distance = Math.sqrt(y_distance * y_distance + CAMERA_HEIGHT * CAMERA_HEIGHT) * Math.tan(Math.toRadians(tx)) - LATERAL_OFFSET;
         extendoDistance = (Math.sqrt((y_distance + BONUS) * (y_distance + BONUS) + x_distance * x_distance) - BONUS) * 1.81;
         targetAngle = -(Math.atan(x_distance / (y_distance + BONUS)));
+
+        Globals.extendoDistance = (int)extendoDistance;
     }
 
-    public double getTargetAngle(){
-        return targetAngle;
-    }
 
 }

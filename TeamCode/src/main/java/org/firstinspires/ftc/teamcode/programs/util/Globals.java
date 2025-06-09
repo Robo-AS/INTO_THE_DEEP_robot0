@@ -5,12 +5,6 @@ import com.pedropathing.localization.Pose;
 
 @Config
 public class Globals {
-    public static double BRUSH_MOTOR_SPEED = 1;//0.75
-    public static double BRUSH_SAMPLE_SERVO_SPEED_INTAKING= 0.6; //0.57
-    public static double BRUSH_SAMPLE_SERVO_SPEED_THROWING = 1;
-    public static double BRUSH_POSITION_UP = 0.95;
-    public static double BRUSH_POSITION_DOWN = 0.45;
-    public static double BRUSH_POSITION_DOWN_AUTO_SPECIMEN = 0.2;
 
 
     // Mecanum
@@ -31,10 +25,8 @@ public class Globals {
     public static boolean HANGING_LEVEL_2 = false;
     public static boolean HANGING_LEVEL_3 = false;
 
-
-    //Auto
-    public static int TIMEOUT_SPECIMEN_INTAKING = 1500;
-
+    //Limelight
+    public static int extendoDistance;
 
     public static void isHangingLevel2(){
         HANGING_LEVEL_2 = true;

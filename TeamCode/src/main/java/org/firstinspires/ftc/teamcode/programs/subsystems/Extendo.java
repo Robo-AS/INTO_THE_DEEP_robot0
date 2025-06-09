@@ -36,10 +36,10 @@ public class Extendo extends SubsystemBase {
         TAKE_SAMPLE_SUBMERSIBLE_1,
         TAKE_SAMPLE_SUBMERSIBLE_2,
         MAXIMUM,
-        NOTHING
+        LIMELIGHT_POSE
     }
 
-    public ExtendoState extendoState = ExtendoState.NOTHING;
+    public ExtendoState extendoState = ExtendoState.RETRACTING;
     public static int EXTENDING_MINIMUM = 330;
     public static int RETRACTING = -5;
     public static int HANG = 800;
@@ -189,6 +189,9 @@ public class Extendo extends SubsystemBase {
             case MAXIMUM:
                 targetPosition = MAXIMUM;
                 break;
+            case LIMELIGHT_POSE:
+                targetPosition = Globals.extendoDistance;
+                break;
 
         }
     }
@@ -246,7 +249,6 @@ public class Extendo extends SubsystemBase {
                 );
             }
 
-
             time.reset();
             previousTarget = targetPosition;
         }
@@ -255,8 +257,8 @@ public class Extendo extends SubsystemBase {
         MotionState targetState = profile == null ? new MotionState(0, 0) : profile.get(time.seconds());
         double targetMotionProfile = targetState.getX();
 
-        double power = extendo_pid.calculate(currentPosition, targetMotionProfile);
         extendo_pid.setPID(p_extendo, i_extendo, d_extendo);
+        double power = extendo_pid.calculate(currentPosition, targetMotionProfile);
         extendoMotor.setPower(power);
     }
 

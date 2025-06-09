@@ -26,7 +26,7 @@ public class NEWRobot {
     public Arm arm;
     public Hang hang;
     public Sweeper sweeper;
-    //public Limelight limelightCamera;
+    public Limelight limelightCamera;
 
 
 
@@ -41,7 +41,7 @@ public class NEWRobot {
         arm = Arm.getInstance();
         hang = Hang.getInstance();
         sweeper = Sweeper.getInstance();
-       // limelightCamera = Limelight.getInstance();
+        limelightCamera = Limelight.getInstance();
     }
 
     public static NEWRobot getInstance() {
@@ -61,7 +61,7 @@ public class NEWRobot {
         arm.initializeHardware(hardwareMap);
         hang.initializeHardware(hardwareMap);
         sweeper.initializeHardware(hardwareMap);
-        //limelightCamera.initializeHardware(hardwareMap);
+        limelightCamera.initializeHardware(hardwareMap);
 
 
         allHubs = hardwareMap.getAll(LynxModule.class);
@@ -78,7 +78,7 @@ public class NEWRobot {
         arm.initialize();
         hang.initialize();
         sweeper.initialize();
-        //limelightCamera.initialize();
+        limelightCamera.initialize();
     }
 
 

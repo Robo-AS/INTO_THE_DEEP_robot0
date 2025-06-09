@@ -19,6 +19,9 @@ import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 
 import org.firstinspires.ftc.teamcode.pedroPathing.constants.FConstants;
 import org.firstinspires.ftc.teamcode.pedroPathing.constants.LConstants;
+import org.firstinspires.ftc.teamcode.programs.commandbase.ExtendoCommands.SetExtendoStateCommand;
+import org.firstinspires.ftc.teamcode.programs.subsystems.Extendo;
+import org.firstinspires.ftc.teamcode.programs.util.Globals;
 import org.firstinspires.ftc.teamcode.programs.util.NEWRobot;
 
 
@@ -26,9 +29,6 @@ import org.firstinspires.ftc.teamcode.programs.util.NEWRobot;
 public class BasketAutoTEST extends LinearOpMode {
     private final NEWRobot robot = NEWRobot.getInstance();
     private Follower follower;
-    private Limelight3A limelight;
-    public static LLResult result;
-
 
     public static Pose startPose = new Pose(7, 112, Math.toRadians(-90));
     public static Pose preloadPose = new Pose(13, 127, Math.toRadians(-45));
@@ -48,21 +48,9 @@ public class BasketAutoTEST extends LinearOpMode {
     public static Pose scoreSubmersible1Pose = new Pose(15.896103896103895, 130.67532467532467, Math.toRadians(-15));
     public static Pose scoreSubmersible1ControlPoint = new Pose(60.54545454545455, 119.92207792207793, Math.toRadians(-15));
     public PathChain changeHeading;
-    private int pathChanged = 0;
-    private boolean executedALL = false;
-    private boolean executed_1 = false;
 
 
 
-    public double y_distance;
-    public double x_distance;
-    public double targetAngle;
-    public double extendoDistance;
-
-    public double CAMERA_ANGLE = 43;
-    public double CAMERA_HEIGHT = 350; // mm
-    public double LATERAL_OFFSET = 103; // mm
-    public double BONUS = 168; // mm
 
 
 
@@ -71,13 +59,28 @@ public class BasketAutoTEST extends LinearOpMode {
     @Override
     public void runOpMode() throws InterruptedException {
         CommandScheduler.getInstance().reset();
-        robot.initializeHardware(hardwareMap);
-        robot.initializeRobot();
+        follower = new Follower(hardwareMap, FConstants.class, LConstants.class);
+        follower.setStartingPose(startPose);
 
-        limelight = hardwareMap.get(Limelight3A.class, "limelight");
-        limelight.setPollRateHz(100);
-        limelight.pipelineSwitch(2);
-        limelight.start();
+        robot.lift.initializeHardware(hardwareMap);
+        robot.lift.initialize();
+        robot.arm.initializeHardware(hardwareMap);
+        robot.arm.initialize();
+        robot.extendo.initializeHardware(hardwareMap);
+        robot.extendo.initialize();
+        robot.intake.initializeHardware(hardwareMap);
+        robot.intake.initialize();
+        robot.hang.initializeHardware(hardwareMap);
+        robot.hang.initialize();
+        robot.limelightCamera.initializeHardware(hardwareMap);
+        robot.limelightCamera.initialize();
+
+
+
+        //AICI RESETEZ ENCODERELE CA NU LE MAI RESETEZ IN INIT_UL LA HARWARE CA SA NU LE MAI DAU RESET SI IN TELEOP
+        robot.extendo.resetEncoders();
+        robot.lift.resetEncoders();
+
 
 
         follower = new Follower(hardwareMap, FConstants.class, LConstants.class);
@@ -132,8 +135,6 @@ public class BasketAutoTEST extends LinearOpMode {
 
 
 
-
-
         CommandScheduler.getInstance().schedule(
                 new SequentialCommandGroup(
                         new FollowPath(follower, scorePreload, true, 1),
@@ -144,11 +145,8 @@ public class BasketAutoTEST extends LinearOpMode {
                         new FollowPath(follower, grab3, true, 1),
                         new FollowPath(follower, score3, true, 1),
                         new FollowPath(follower, submersible1, true, 1),
-                        new WaitCommand(1000),
-
-
-                        new InstantCommand(()->updateLimelight())
-
+                        new InstantCommand(this::updateLimelight),
+                        new SetExtendoStateCommand(Extendo.ExtendoState.LIMELIGHT_POSE)
 
                 )
         );
@@ -159,49 +157,36 @@ public class BasketAutoTEST extends LinearOpMode {
             follower.update();
             CommandScheduler.getInstance().run();
 
+            robot.lift.loop();
+            robot.arm.loopAuto();
+            robot.extendo.loopAuto();
+            robot.intake.loopAuto();
 
-            telemetry.addData("y_distance",y_distance);
-            telemetry.addData("x_distance", x_distance);
-            telemetry.addData("extendoDistance", extendoDistance);
-            telemetry.addData("targetAngle", targetAngle);
+
+            telemetry.addData("y_distance",robot.limelightCamera.y_distance);
+            telemetry.addData("x_distance", robot.limelightCamera.x_distance);
+            telemetry.addData("extendoDistance", robot.limelightCamera.extendoDistance);
+            telemetry.addData("targetAngle", robot.limelightCamera.targetAngle);
             telemetry.addData("EXTENDO TARGET POS:", robot.extendo.getTargetPosition());
             telemetry.addData("EXTENDO CUR POS:", robot.extendo.currentPosition);
             telemetry.addData("EXTEMDO STATE:", robot.extendo.extendoState);
-            telemetry.addData("PATH CHANGED?", pathChanged);
-            telemetry.addData("ALL?", executedALL);
+            telemetry.addData("GLOBALS EXTENDO DISTANCE:", Globals.extendoDistance);
             telemetry.update();
         }
     }
 
 
-
-//    public void buildPath(){
-//        robot.limelightCamera.updateLimelight();
-//        changeHeading = follower.pathBuilder()
-//                .addPath(new BezierPoint(new Point(submersible1Pose)))
-//                .setConstantHeadingInterpolation(robot.limelightCamera.getTargetAngle())
-//                .build();
-//    }
-
     public void updateLimelight(){
-        result=limelight.getLatestResult();
-        if (result == null) return;
-
-        double tx = result.getTx();
-        double ty = result.getTy();
-
-        y_distance = CAMERA_HEIGHT * Math.tan(Math.toRadians(ty + CAMERA_ANGLE));
-        x_distance = Math.sqrt(y_distance * y_distance + CAMERA_HEIGHT * CAMERA_HEIGHT) * Math.tan(Math.toRadians(tx)) - LATERAL_OFFSET;
-        extendoDistance = (Math.sqrt((y_distance + BONUS) * (y_distance + BONUS) + x_distance * x_distance) - BONUS) * 1.81;
-        targetAngle = -((Math.atan(x_distance / (y_distance + BONUS)))-Math.toRadians(-90));
+        robot.limelightCamera.updateLimelight();
+        robot.limelightCamera.updateLimelight();
 
         changeHeading = follower.pathBuilder()
                 .addPath(new BezierPoint(new Point(submersible1Pose)))
-                .setConstantHeadingInterpolation(targetAngle)
+                .setConstantHeadingInterpolation(robot.limelightCamera.targetAngle + Math.toRadians(-90))
                 .build();
 
         CommandScheduler.getInstance().schedule(
-                   new FollowPath(follower, changeHeading, true, 0.5)
+                new FollowPath(follower, changeHeading, true, 0.5)
         );
     }
 
