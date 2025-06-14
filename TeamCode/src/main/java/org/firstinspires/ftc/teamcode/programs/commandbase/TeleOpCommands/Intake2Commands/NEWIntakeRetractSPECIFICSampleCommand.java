@@ -1,5 +1,6 @@
 package org.firstinspires.ftc.teamcode.programs.commandbase.TeleOpCommands.Intake2Commands;
 
+import com.arcrobotics.ftclib.command.InstantCommand;
 import com.arcrobotics.ftclib.command.SequentialCommandGroup;
 import com.arcrobotics.ftclib.command.WaitCommand;
 import com.arcrobotics.ftclib.command.WaitUntilCommand;
@@ -16,12 +17,13 @@ public class NEWIntakeRetractSPECIFICSampleCommand extends SequentialCommandGrou
     public NEWIntakeRetractSPECIFICSampleCommand(){
         super(
                 new NEWIntakeIdleCommand(),
+                new InstantCommand(() -> Intake.getInstance().setInitialAxonAngle()),
                 new ShouldVibrateCommand(),
-                new WaitCommand(200),
+                new WaitCommand(100),
                 new SetExtendoStateCommand(Extendo.ExtendoState.RETRACTING),
-                new SetRollersStateCommand(Intake.RollersState.OUTTAKING),
-                new WaitUntilCommand(Intake.getInstance()::canStopOuttakingALIENCE_SPECIFIC_1),
-                new SetRollersStateCommand(Intake.RollersState.IDLE),
+                //new SetRollersStateCommand(Intake.RollersState.OUTTAKING),
+                //new WaitUntilCommand(Intake.getInstance()::canStopOuttakingALIENCE_SPECIFIC_1),
+                //new SetRollersStateCommand(Intake.RollersState.IDLE),
                 new SetBrushStateCommand(Intake.BrushState.SPITTING),
                 new WaitCommand(50),
                 new SetBrushStateCommand(Intake.BrushState.IDLE)

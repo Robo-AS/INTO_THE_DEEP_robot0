@@ -48,9 +48,7 @@ public class Intake extends SubsystemBase {
     public enum IntakeState{
         IDLE, //IDLE + IDLE
         INTAKING, //IN + IN
-        SPITTING, //IDLE + OUT
         SPITTING_HUMAN_PLAYER, //OUT + OUT
-        OUTTAKING, //IN + IDLE
         THROWING, //OUT + OUT
     }
 
@@ -240,16 +238,6 @@ public class Intake extends SubsystemBase {
                 brushMotor.setPower(-1);
                 rollersServo.setPosition(0);
                 break;
-
-
-//            case OUTTAKING:
-//                brushMotor.setPower(0);
-//                rollersServo.setPosition(1);
-//                break;
-//            case SPITTING:
-//                brushMotor.setPower(-1);
-//                rollersServo.setPosition(0.5);
-//                break;
         }
     }
 
@@ -278,6 +266,10 @@ public class Intake extends SubsystemBase {
     }
 
     public void loopAuto(){
+        if(intakeAngle == IntakeAngle.DOWN){
+            updateSampleColor();
+        }
+
         currentAxonAngle = (int) (analogInput.getVoltage() / 3.3 * 360);
         if (firstRead) {
             previousAxonAngle = currentAxonAngle;
@@ -294,11 +286,31 @@ public class Intake extends SubsystemBase {
 
         previousAxonAngle = currentAxonAngle;
         totalAxonAngle = (rotations * 360) + (currentAxonAngle);
+
+
     }
 
 
 
     public void loopBlue(){
+        currentAxonAngle = (int) (analogInput.getVoltage() / 3.3 * 360);
+        if (firstRead) {
+            previousAxonAngle = currentAxonAngle;
+            firstRead = false;
+            return;
+        }
+
+        int delta = currentAxonAngle - previousAxonAngle;
+
+        if(delta > 180)
+            rotations --;
+        else if (delta < -180)
+            rotations ++;
+
+        previousAxonAngle = currentAxonAngle;
+        totalAxonAngle = (rotations * 360) + (currentAxonAngle);
+
+
         if(intakeAngle == IntakeAngle.DOWN){
             updateSampleStateDigital();
             updateSampleColor();
@@ -324,7 +336,7 @@ public class Intake extends SubsystemBase {
                 }
 
                 if (isRightSampleColorTeleOpBlue()) {
-                    setInitialAxonAngle();
+                    //setInitialAxonAngle();
                     if(sampleThrowed){
                         if (intakedSampleColor == IntakedSampleColor.YELLOW)
                             CommandScheduler.getInstance().schedule(new IntakeRetractYELLOWAfterEJECTCommand());
@@ -347,40 +359,28 @@ public class Intake extends SubsystemBase {
         }
 
 
-        currentAxonAngle = (int) (analogInput.getVoltage() / 3.3 * 360);
-        if (firstRead) {
-            previousAxonAngle = currentAxonAngle;
-            firstRead = false;
-            return;
-        }
-
-        int delta = currentAxonAngle - previousAxonAngle;
-
-        if(delta > 180)
-            rotations --;
-        else if (delta < -180)
-            rotations ++;
-
-        previousAxonAngle = currentAxonAngle;
-        totalAxonAngle = (rotations * 360) + (currentAxonAngle);
-
     }
 
-
-    public boolean canStopOuttakingYELLOW_1(){
-        return (totalAxonAngle - initialAxonAngle) >= 70;
+    public boolean canStopOuttakingYELLOW_1_AUTO(){
+        return (totalAxonAngle - initialAxonAngle) >= 50;//50
     }
+    public boolean canStopOuttakingYELLOW_2_AUTO(){
+        return (totalAxonAngle - initialAxonAngle) >= 60;//80
+    }
+
+    public boolean canStopOuttakingYELLOW_1_TELEOP(){
+        return (totalAxonAngle - initialAxonAngle) >= 100;
+    }
+
     public boolean canStopOuttakingYELLOW_2_TELEOP(){
-        return (totalAxonAngle - initialAxonAngle) >= 70;//60
+        return (totalAxonAngle - initialAxonAngle) >= 50;
     }
-
-
 
     public boolean canStartSpittingYELLOW(){
-        return (totalAxonAngle - initialAxonAngle) >= 40;//30
+        return (totalAxonAngle - initialAxonAngle) >= 20;//30
     }
     public boolean canStopSpittingYELLOW(){
-        return (totalAxonAngle - initialAxonAngle) >= 70;
+        return (totalAxonAngle - initialAxonAngle) >= 50;
     }
 
     public boolean canStopOuttakingYELLOWAfterEJECT(){
@@ -388,24 +388,22 @@ public class Intake extends SubsystemBase {
     }
 
 
-    public boolean canStopOuttakingALIENCE_SPECIFIC_1(){
-        return (totalAxonAngle - initialAxonAngle) >= 20;//50
-    }
+//    public boolean canStopOuttakingALIENCE_SPECIFIC_1(){
+//        return (totalAxonAngle - initialAxonAngle) >= 20;//50
+//    }
 
     public boolean canStopOuttakingALIENCE_SPECIFIC_2(){
-        return (totalAxonAngle - initialAxonAngle) >= 160;//160
+        return (totalAxonAngle - initialAxonAngle) >= 150;//160
     }
 
     public boolean canStopThrowingWrongSample(){
-        return (totalAxonAngle - initialAxonAngle) >= 120;
+        return (totalAxonAngle - initialAxonAngle) >= 100;
     }
 
 
-    public boolean canStopOuttakingYELLOW_2_AUTO(){
-        return (totalAxonAngle - initialAxonAngle) >= 20;
-    }
+
     public boolean canCloseClaw_AUTO(){
-        return (totalAxonAngle - initialAxonAngle) >=15;
+        return (totalAxonAngle - initialAxonAngle) >= 10;
     }
 
 
@@ -426,6 +424,11 @@ public class Intake extends SubsystemBase {
         updateSampleStateDigital();
         return !proximitySensor.getState();
     }
+
+    public void setSampleState(SampleState state){
+        sampleState = state;
+    }
+
 
     public ElapsedTime getCurrentSpikeTimer(){
         return currentSpikeTimer;

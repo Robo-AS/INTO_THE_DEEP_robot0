@@ -25,27 +25,19 @@ public class Globals {
     public static boolean HANGING_LEVEL_2 = false;
     public static boolean HANGING_LEVEL_3 = false;
 
-    //Limelight
-    public static int extendoDistance;
+
 
     public static void isHangingLevel2(){
         HANGING_LEVEL_2 = true;
     }
     public static void isHangingLevel3(){
         HANGING_LEVEL_3 = true;
-
     }
-
-    public static void isNotHanging(){
-        HANGING_LEVEL_3 = false;
-    }
-
-
-    public static Pose lastAutoPose = new Pose(0, 0, Math.toRadians(0));
-    public static boolean RUNNED_AUTO_BASKET = false;
-    public static boolean RUNNED_AUTO_SPECIMEN = false;
-
 
     public static boolean TELEOP = false;
 
+
+
+    //Limelight
+    public static int extendoDistance;
 }

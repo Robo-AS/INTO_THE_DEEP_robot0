@@ -12,8 +12,6 @@ import com.pedropathing.pathgen.BezierLine;
 import com.pedropathing.pathgen.BezierPoint;
 import com.pedropathing.pathgen.PathChain;
 import com.pedropathing.pathgen.Point;
-import com.qualcomm.hardware.limelightvision.LLResult;
-import com.qualcomm.hardware.limelightvision.Limelight3A;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 
@@ -23,6 +21,7 @@ import org.firstinspires.ftc.teamcode.programs.commandbase.ExtendoCommands.SetEx
 import org.firstinspires.ftc.teamcode.programs.subsystems.Extendo;
 import org.firstinspires.ftc.teamcode.programs.util.Globals;
 import org.firstinspires.ftc.teamcode.programs.util.NEWRobot;
+import org.opencv.core.Mat;
 
 
 @Autonomous(name = "BasketAutoTEST")
@@ -42,12 +41,13 @@ public class BasketAutoTEST extends LinearOpMode {
     public static Pose grab3Pose = new Pose(21.038961038961038, 133.71428571428572, Math.toRadians(16));
     public static Pose score3Pose = new Pose(15.792207792207792, 130.9090909090909, Math.toRadians(-15));
 
-    public static Pose submersible1Pose = new Pose(60.311688311688314, 94.77922077922078, Math.toRadians(270));
-    public static Pose submersible1ControlPoint = new Pose(60.54545454545455, 119.92207792207793, Math.toRadians(270));
+    public static Pose submersible1Pose = new Pose(60.311688311688314, 94.77922077922078, Math.toRadians(-90));
+    public static Pose submersible1ControlPoint = new Pose(60.54545454545455, 119.92207792207793, Math.toRadians(-90));
 
     public static Pose scoreSubmersible1Pose = new Pose(15.896103896103895, 130.67532467532467, Math.toRadians(-15));
     public static Pose scoreSubmersible1ControlPoint = new Pose(60.54545454545455, 119.92207792207793, Math.toRadians(-15));
     public PathChain changeHeading;
+    PathChain initial;
 
 
 
@@ -62,16 +62,22 @@ public class BasketAutoTEST extends LinearOpMode {
         follower = new Follower(hardwareMap, FConstants.class, LConstants.class);
         follower.setStartingPose(startPose);
 
-        robot.lift.initializeHardware(hardwareMap);
-        robot.lift.initialize();
-        robot.arm.initializeHardware(hardwareMap);
-        robot.arm.initialize();
-        robot.extendo.initializeHardware(hardwareMap);
-        robot.extendo.initialize();
         robot.intake.initializeHardware(hardwareMap);
         robot.intake.initialize();
+
+        robot.extendo.initializeHardware(hardwareMap);
+        robot.extendo.initialize();
+
+        robot.lift.initializeHardware(hardwareMap);
+        robot.lift.initialize();
+
+        robot.arm.initializeHardware(hardwareMap);
+        robot.arm.initialize();
+
+
         robot.hang.initializeHardware(hardwareMap);
         robot.hang.initialize();
+
         robot.limelightCamera.initializeHardware(hardwareMap);
         robot.limelightCamera.initialize();
 
@@ -84,7 +90,7 @@ public class BasketAutoTEST extends LinearOpMode {
 
 
         follower = new Follower(hardwareMap, FConstants.class, LConstants.class);
-        follower.setStartingPose(startPose);
+        follower.setStartingPose(submersible1Pose);
 
         PathChain scorePreload = follower.pathBuilder()
                 .addPath(new BezierLine(new Point(startPose), new Point(preloadPose)))
@@ -130,23 +136,88 @@ public class BasketAutoTEST extends LinearOpMode {
 
         changeHeading = follower.pathBuilder()
                 .addPath(new BezierPoint(new Point(submersible1Pose)))
-                .setConstantHeadingInterpolation(Math.toRadians(0))
+                .setConstantHeadingInterpolation(Math.toRadians(-90))
                 .build();
+
+
+        initial = follower.pathBuilder()
+                .addPath(new BezierPoint(new Point(submersible1Pose)))
+                .setConstantHeadingInterpolation(Math.toRadians(-90))
+                .build();
+
 
 
 
         CommandScheduler.getInstance().schedule(
                 new SequentialCommandGroup(
-                        new FollowPath(follower, scorePreload, true, 1),
-                        new FollowPath(follower, grab1, true, 1),
-                        new FollowPath(follower, score1, true, 1),
-                        new FollowPath(follower, grab2, true, 1),
-                        new FollowPath(follower, score2, true, 1),
-                        new FollowPath(follower, grab3, true, 1),
-                        new FollowPath(follower, score3, true, 1),
-                        new FollowPath(follower, submersible1, true, 1),
+//                        new FollowPath(follower, scorePreload, true, 1),
+//                        new FollowPath(follower, grab1, true, 1),
+//                        new FollowPath(follower, score1, true, 1),
+//                        new FollowPath(follower, grab2, true, 1),
+//                        new FollowPath(follower, score2, true, 1),
+//                        new FollowPath(follower, grab3, true, 1),
+//                        new FollowPath(follower, score3, true, 1),
+//                        new FollowPath(follower, submersible1, true, 1),
                         new InstantCommand(this::updateLimelight),
-                        new SetExtendoStateCommand(Extendo.ExtendoState.LIMELIGHT_POSE)
+                        new SetExtendoStateCommand(Extendo.ExtendoState.LIMELIGHT_POSE),
+                        new WaitCommand(2000),
+                        new SetExtendoStateCommand(Extendo.ExtendoState.RETRACTING),
+                        new InstantCommand(()->returnToInit()),
+                        new WaitCommand(4000),
+
+
+                        new InstantCommand(this::updateLimelight),
+                        new SetExtendoStateCommand(Extendo.ExtendoState.LIMELIGHT_POSE),
+                        new WaitCommand(2000),
+                        new SetExtendoStateCommand(Extendo.ExtendoState.RETRACTING),
+                        new InstantCommand(()->returnToInit()),
+                        new WaitCommand(4000),
+
+
+
+                        new InstantCommand(this::updateLimelight),
+                        new SetExtendoStateCommand(Extendo.ExtendoState.LIMELIGHT_POSE),
+                        new WaitCommand(2000),
+                        new SetExtendoStateCommand(Extendo.ExtendoState.RETRACTING),
+                        new InstantCommand(()->returnToInit()),
+                        new WaitCommand(4000),
+
+
+                        new InstantCommand(this::updateLimelight),
+                        new SetExtendoStateCommand(Extendo.ExtendoState.LIMELIGHT_POSE),
+                        new WaitCommand(2000),
+                        new SetExtendoStateCommand(Extendo.ExtendoState.RETRACTING),
+                        new InstantCommand(()->returnToInit()),
+                        new WaitCommand(4000),
+
+                        new InstantCommand(this::updateLimelight),
+                        new SetExtendoStateCommand(Extendo.ExtendoState.LIMELIGHT_POSE),
+                        new WaitCommand(2000),
+                        new SetExtendoStateCommand(Extendo.ExtendoState.RETRACTING),
+                        new InstantCommand(()->returnToInit()),
+                        new WaitCommand(4000),
+
+                        new InstantCommand(this::updateLimelight),
+                        new SetExtendoStateCommand(Extendo.ExtendoState.LIMELIGHT_POSE),
+                        new WaitCommand(2000),
+                        new SetExtendoStateCommand(Extendo.ExtendoState.RETRACTING),
+                        new InstantCommand(()->returnToInit()),
+                        new WaitCommand(4000),
+
+                        new InstantCommand(this::updateLimelight),
+                        new SetExtendoStateCommand(Extendo.ExtendoState.LIMELIGHT_POSE),
+                        new WaitCommand(2000),
+                        new SetExtendoStateCommand(Extendo.ExtendoState.RETRACTING),
+                        new InstantCommand(()->returnToInit()),
+                        new WaitCommand(4000),
+
+                        new InstantCommand(this::updateLimelight),
+                        new SetExtendoStateCommand(Extendo.ExtendoState.LIMELIGHT_POSE),
+                        new WaitCommand(2000),
+                        new SetExtendoStateCommand(Extendo.ExtendoState.RETRACTING),
+                        new InstantCommand(()->returnToInit()),
+                        new WaitCommand(4000)
+
 
                 )
         );
@@ -177,18 +248,32 @@ public class BasketAutoTEST extends LinearOpMode {
 
 
     public void updateLimelight(){
-        robot.limelightCamera.updateLimelight();
-        robot.limelightCamera.updateLimelight();
+        robot.limelightCamera.upadateLimelightPythonSnap();
 
         changeHeading = follower.pathBuilder()
                 .addPath(new BezierPoint(new Point(submersible1Pose)))
-                .setConstantHeadingInterpolation(robot.limelightCamera.targetAngle + Math.toRadians(-90))
+                .setConstantHeadingInterpolation(robot.limelightCamera.targetAngle + Math.toRadians(-90) - Math.toRadians(0.9))
                 .build();
 
         CommandScheduler.getInstance().schedule(
                 new FollowPath(follower, changeHeading, true, 0.5)
         );
     }
+
+
+    public void returnToInit(){
+        initial = follower.pathBuilder()
+                .addPath(new BezierPoint(new Point(submersible1Pose)))
+                .setConstantHeadingInterpolation(Math.toRadians(-90))
+                .build();
+
+        CommandScheduler.getInstance().schedule(
+                new FollowPath(follower, initial, true, 0.5)
+        );
+    }
+
+
+
 
 
 

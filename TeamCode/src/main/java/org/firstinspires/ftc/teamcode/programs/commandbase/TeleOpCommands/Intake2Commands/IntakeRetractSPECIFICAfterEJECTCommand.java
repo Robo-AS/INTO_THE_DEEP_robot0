@@ -20,7 +20,7 @@ public class IntakeRetractSPECIFICAfterEJECTCommand extends SequentialCommandGro
         super(
                 new NEWIntakeIdleCommand(),
                 new ShouldVibrateCommand(),
-                new WaitCommand(200),
+                new WaitCommand(100),
                 new SetExtendoStateCommand(Extendo.ExtendoState.RETRACTING),
                 new SetBrushStateCommand(Intake.BrushState.SPITTING),
                 new WaitCommand(50),

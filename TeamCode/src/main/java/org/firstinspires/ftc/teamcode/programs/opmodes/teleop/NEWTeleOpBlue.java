@@ -328,12 +328,12 @@ public class NEWTeleOpBlue extends CommandOpMode {
 //        telemetry.addData("BrushState:", robot.brush.brushState);
 //        telemetry.addData("PreviousBrushState:", robot.brush.previousBrushState);
 //        telemetry.addData("DesiredColor", robot.brush.desiredSampleColor);
-        telemetry.addData("IntakedColor:", robot.intake.intakedSampleColor);
-        telemetry.addData("SampleState:", robot.intake.sampleState);
+//        telemetry.addData("IntakedColor:", robot.intake.intakedSampleColor);
+//        telemetry.addData("SampleState:", robot.intake.sampleState);
 //        telemetry.addData("BrushCurrent", robot.intake.brushMotor.getCurrent(CurrentUnit.AMPS));
-        telemetry.addData("CurrentSpikeTimer", robot.intake.getCurrentSpikeTimer().seconds());
+//        telemetry.addData("CurrentSpikeTimer", robot.intake.getCurrentSpikeTimer().seconds());
 
-        telemetry.addData("TIME PASSED", robot.intake.getTimePassed());
+//        telemetry.addData("TIME PASSED", robot.intake.getTimePassed());
 
 //        telemetry.addData("SENSOR DISABLED?:", robot.brush.getREVState());
 
@@ -380,7 +380,9 @@ public class NEWTeleOpBlue extends CommandOpMode {
 //        telemetry.addData("INITIAL:", robot.intake.initialAxonAngle);
 //        telemetry.addData("FIRST READ", robot.intake.firstRead);
 
-
+        telemetry.addData("Current Position", robot.extendo.extendoMotor.getCurrentPosition());
+        telemetry.addData("Target Position", robot.extendo.getTargetPosition());
+        telemetry.update();
 
 
         double loop = System.nanoTime();

@@ -1,9 +1,8 @@
 package org.firstinspires.ftc.teamcode.programs.subsystems;
 
 import com.arcrobotics.ftclib.command.SubsystemBase;
-import com.pedropathing.pathgen.BezierPoint;
-import com.pedropathing.pathgen.Point;
 import com.qualcomm.hardware.limelightvision.LLResult;
+
 import com.qualcomm.hardware.limelightvision.Limelight3A;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 
@@ -20,7 +19,6 @@ public class Limelight extends SubsystemBase {
     }
 
     public Limelight3A limelight;
-    public static LLResult result;
 
     public double y_distance;
     public double x_distance;
@@ -28,9 +26,12 @@ public class Limelight extends SubsystemBase {
     public double extendoDistance;
 
     public double CAMERA_ANGLE = 43;
-    public double CAMERA_HEIGHT = 350;
-    public double LATERAL_OFFSET = 103;
-    public double BONUS = 168;
+    public double CAMERA_HEIGHT = 350; //in mm, relative to the front of the intake -30mm(for the sample height)
+    public double LATERAL_OFFSET = -103; //in mm (the intake is 103mm to the right of the camera)
+    public double BONUS = 168; //in mm (the distance from the front of the intake to the robot center)
+
+
+    public double TUNNING_CONSTANT_ANGLE;
 
     public void initializeHardware(final HardwareMap hardwareMap){
         limelight = hardwareMap.get(Limelight3A.class, "limelight");
@@ -38,23 +39,66 @@ public class Limelight extends SubsystemBase {
 
     public void initialize(){
         limelight.setPollRateHz(100);
-        limelight.pipelineSwitch(2);
+        limelight.pipelineSwitch(0);
         limelight.start();
     }
 
-    public void updateLimelight(){
-        result = limelight.getLatestResult();
+    public void updateLimelightColorTresh(){
+        LLResult result = limelight.getLatestResult();
         if (result == null) return;
 
         double tx = result.getTx();
         double ty = result.getTy();
 
         y_distance = CAMERA_HEIGHT * Math.tan(Math.toRadians(ty + CAMERA_ANGLE));
-        x_distance = Math.sqrt(y_distance * y_distance + CAMERA_HEIGHT * CAMERA_HEIGHT) * Math.tan(Math.toRadians(tx)) - LATERAL_OFFSET;
+        x_distance = Math.sqrt(y_distance * y_distance + CAMERA_HEIGHT * CAMERA_HEIGHT) * Math.tan(Math.toRadians(tx)) + LATERAL_OFFSET;
         extendoDistance = (Math.sqrt((y_distance + BONUS) * (y_distance + BONUS) + x_distance * x_distance) - BONUS) * 1.81;
         targetAngle = -(Math.atan(x_distance / (y_distance + BONUS)));
 
         Globals.extendoDistance = (int)extendoDistance;
+    }
+
+
+//    public void upadateLimelightPythonSnap(){
+//        LLResult result = limelight.getLatestResult();
+//
+//        double[] pythonOutputs = result.getPythonOutput();
+//        if (pythonOutputs != null && pythonOutputs.length >= 1) {
+//            double tx = pythonOutputs[0];
+//            double ty = pythonOutputs[1];
+//
+//            y_distance = CAMERA_HEIGHT * Math.tan(Math.toRadians(ty + CAMERA_ANGLE));
+//            x_distance = Math.sqrt(y_distance * y_distance + CAMERA_HEIGHT * CAMERA_HEIGHT) * Math.tan(Math.toRadians(tx)) - LATERAL_OFFSET;
+//            extendoDistance = (Math.sqrt((y_distance + BONUS) * (y_distance + BONUS) + x_distance * x_distance) - BONUS) * 1.81;
+//            targetAngle = Math.atan2(x_distance, y_distance + BONUS);
+//
+//            Globals.extendoDistance = (int)extendoDistance;
+//        }
+//
+//    }
+
+
+    public void upadateLimelightPythonSnap(){
+        y_distance = 0;
+        x_distance = 0;
+        extendoDistance = 0;
+        Globals.extendoDistance = 0;
+        targetAngle = 0;
+
+        LLResult result = limelight.getLatestResult();
+
+        if (result != null) {
+            double tx = result.getTx();
+            double ty = result.getTy();
+
+            y_distance = CAMERA_HEIGHT * Math.tan(Math.toRadians(ty + CAMERA_ANGLE));
+            x_distance = Math.sqrt(y_distance * y_distance + CAMERA_HEIGHT * CAMERA_HEIGHT) * Math.tan(Math.toRadians(tx)) + LATERAL_OFFSET;
+            extendoDistance = (Math.sqrt((y_distance + BONUS) * (y_distance + BONUS) + x_distance * x_distance) - BONUS) * 1.81;
+            targetAngle = -(Math.atan(x_distance / (y_distance + BONUS)));
+
+            Globals.extendoDistance = (int)extendoDistance;
+        }
+
     }
 
 

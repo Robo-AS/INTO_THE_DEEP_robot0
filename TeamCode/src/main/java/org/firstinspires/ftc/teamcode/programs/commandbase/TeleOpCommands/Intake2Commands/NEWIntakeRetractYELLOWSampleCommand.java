@@ -19,14 +19,15 @@ public class NEWIntakeRetractYELLOWSampleCommand extends SequentialCommandGroup 
     public NEWIntakeRetractYELLOWSampleCommand(){
         super(
                 new NEWIntakeIdleCommand(),
-                new WaitCommand(200),
+                new InstantCommand(() -> Intake.getInstance().setInitialAxonAngle()),
+                new WaitCommand(100),
                 new SetExtendoStateCommand(Extendo.ExtendoState.RETRACTING),
                 new SetRollersStateCommand(Intake.RollersState.OUTTAKING),
                 new WaitUntilCommand(Intake.getInstance()::canStartSpittingYELLOW),
                 new SetBrushStateCommand(Intake.BrushState.SPITTING),
                 new WaitUntilCommand(Intake.getInstance()::canStopSpittingYELLOW),
                 new SetBrushStateCommand(Intake.BrushState.IDLE),
-                new WaitUntilCommand(Intake.getInstance()::canStopOuttakingYELLOW_1),
+                new WaitUntilCommand(Intake.getInstance()::canStopOuttakingYELLOW_1_TELEOP),
 
                 new SetIntakeStateCommand(Intake.IntakeState.IDLE),
                 new WaitUntilCommand(Extendo.getInstance()::canOuttakeSample),
@@ -35,9 +36,10 @@ public class NEWIntakeRetractYELLOWSampleCommand extends SequentialCommandGroup 
                 new SetRollersStateCommand(Intake.RollersState.OUTTAKING),
                 new WaitUntilCommand(Intake.getInstance()::canStopOuttakingYELLOW_2_TELEOP),
                 new SetRollersStateCommand(Intake.RollersState.IDLE),
+                new SetClawStateCommand(Arm.ClawState.CLOSED),
                 new ShouldVibrateCommand(),
-                new WaitCommand(100),
-                new SetClawStateCommand(Arm.ClawState.CLOSED)
+                new WaitCommand(100)
+
         );
     }
 }

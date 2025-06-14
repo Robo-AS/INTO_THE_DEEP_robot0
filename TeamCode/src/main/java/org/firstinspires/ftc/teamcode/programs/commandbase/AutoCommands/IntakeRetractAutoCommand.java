@@ -2,6 +2,7 @@ package org.firstinspires.ftc.teamcode.programs.commandbase.AutoCommands;
 
 import com.arcrobotics.ftclib.command.InstantCommand;
 import com.arcrobotics.ftclib.command.SequentialCommandGroup;
+import com.arcrobotics.ftclib.command.WaitCommand;
 import com.arcrobotics.ftclib.command.WaitUntilCommand;
 
 import org.firstinspires.ftc.teamcode.programs.commandbase.ArmCommands.SetClawStateCommand;
@@ -17,18 +18,19 @@ public class IntakeRetractAutoCommand extends SequentialCommandGroup {
         super(
                 new InstantCommand(() -> Intake.getInstance().setInitialAxonAngle()),
                 new SetIntakeAngleCommand(Intake.IntakeAngle.UP),
+                new WaitCommand(100),
                 new SetExtendoStateCommand(Extendo.ExtendoState.RETRACTING),
                 new SetRollersStateCommand(Intake.RollersState.OUTTAKING),
-                new WaitUntilCommand(Intake.getInstance()::canStopOuttakingYELLOW_1),
+                new WaitUntilCommand(Intake.getInstance()::canStopOuttakingYELLOW_1_AUTO),
                 new SetRollersStateCommand(Intake.RollersState.IDLE),
                 new WaitUntilCommand(Extendo.getInstance()::canOuttakeSample),
                 new InstantCommand(() -> Intake.getInstance().setInitialAxonAngle()),
                 new SetRollersStateCommand(Intake.RollersState.OUTTAKING),
-//                new WaitUntilCommand(Intake.getInstance()::canCloseClaw_AUTO),
-//                new SetClawStateCommand(Arm.ClawState.CLOSED),
+                new WaitUntilCommand(Intake.getInstance()::canCloseClaw_AUTO),
+                new SetClawStateCommand(Arm.ClawState.CLOSED),
                 new WaitUntilCommand(Intake.getInstance()::canStopOuttakingYELLOW_2_AUTO),
-                new SetRollersStateCommand(Intake.RollersState.IDLE),
-                new SetClawStateCommand(Arm.ClawState.CLOSED)
+                new SetRollersStateCommand(Intake.RollersState.IDLE)
+
 
 
         );

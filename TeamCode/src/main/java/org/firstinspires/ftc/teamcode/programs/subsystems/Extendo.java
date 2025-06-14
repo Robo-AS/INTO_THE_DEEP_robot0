@@ -36,12 +36,14 @@ public class Extendo extends SubsystemBase {
         TAKE_SAMPLE_SUBMERSIBLE_1,
         TAKE_SAMPLE_SUBMERSIBLE_2,
         MAXIMUM,
-        LIMELIGHT_POSE
+        LIMELIGHT_POSE,
+        LIMELIGHT_RETRACT_POSE,
+        LIMELIGHT_TAKE_POSE
     }
 
     public ExtendoState extendoState = ExtendoState.RETRACTING;
     public static int EXTENDING_MINIMUM = 330;
-    public static int RETRACTING = -5;
+    public static int RETRACTING = -15;
     public static int HANG = 800;
 
     public int EXTENDING_MINIMUM_AUTO = 815;
@@ -192,6 +194,11 @@ public class Extendo extends SubsystemBase {
             case LIMELIGHT_POSE:
                 targetPosition = Globals.extendoDistance;
                 break;
+            case LIMELIGHT_RETRACT_POSE:
+                targetPosition = Globals.extendoDistance - 200;
+                break;
+            case LIMELIGHT_TAKE_POSE:
+                targetPosition = Math.min(Globals.extendoDistance + 300, MAXIMUM);
 
         }
     }
@@ -221,11 +228,27 @@ public class Extendo extends SubsystemBase {
 
 
     public boolean canOuttakeSample(){
-        return currentPosition <= 10;
+        return currentPosition <= 200;
     }
 
     public boolean canPutIntakeDown(){
         return currentPosition >= 200;
+    }
+
+    public boolean limelightPoseFinished(){
+        return currentPosition >= (Globals.extendoDistance - 10);
+    }
+
+    public boolean limelightRetractPoseFinished(){
+        return  currentPosition <= (Globals.extendoDistance - 200 + 20) || currentPosition >= (Globals.extendoDistance - 200 - 20);
+    }
+
+    public boolean limelightTakePoseFinished(){
+        return currentPosition >= (Globals.extendoDistance + 200 - 10);
+    }
+
+    public boolean retractFinished(){
+        return currentPosition <= 20;
     }
 
 
@@ -271,10 +294,6 @@ public class Extendo extends SubsystemBase {
         extendoMotor.setPower(power);
     }
 
-
-    public void updateTargetPositionLimelight(int position){
-        targetPosition = position;
-    }
 
 
 

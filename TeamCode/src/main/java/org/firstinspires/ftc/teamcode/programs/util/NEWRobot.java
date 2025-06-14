@@ -75,10 +75,11 @@ public class NEWRobot {
         intake.initialize();
         extendo.initialize();
         lift.initialize();
+        mecanumDriveTrain.initialize();
         arm.initialize();
         hang.initialize();
         sweeper.initialize();
-        limelightCamera.initialize();
+        //limelightCamera.initialize();
     }
 
 
