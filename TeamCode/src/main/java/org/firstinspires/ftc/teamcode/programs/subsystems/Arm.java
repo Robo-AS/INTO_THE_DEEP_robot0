@@ -119,7 +119,7 @@ public class Arm extends SubsystemBase {
     public void loopAuto(){
         if(armState == ArmState.HIGH_BASKET && BasketPaths.getInstance().SCORE_PRELOAD_COMPLETED)
             sideAngle = 30;
-        else sideAngle = 0;
+        else sideAngle = 0;//0
 
 
         if(targetPosition != previousTarget){

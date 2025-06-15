@@ -15,6 +15,7 @@ public class LimelightCommand extends SequentialCommandGroup {
         super(
                 new SetExtendoStateCommand(Extendo.ExtendoState.LIMELIGHT_POSE),
                 new WaitUntilCommand(Extendo.getInstance()::limelightPoseFinished),
+//                new WaitCommand(4000),
 
                 new SetIntakeAngleCommand(Intake.IntakeAngle.DOWN),
                 new SetIntakeStateCommand(Intake.IntakeState.INTAKING),
@@ -23,7 +24,6 @@ public class LimelightCommand extends SequentialCommandGroup {
                 new WaitUntilCommand(Extendo.getInstance()::limelightRetractPoseFinished).interruptOn(Intake.getInstance()::isSampleDigital),
                 new SetExtendoStateCommand(Extendo.ExtendoState.LIMELIGHT_TAKE_POSE).interruptOn(Intake.getInstance()::isSampleDigital),
                 new WaitUntilCommand(Extendo.getInstance()::limelightTakePoseFinished).interruptOn(Intake.getInstance()::isSampleDigital),
-
                 new WaitUntilCommand(Intake.getInstance()::isSampleDigital).withTimeout(1000),
                 new SetIntakeStateCommand(Intake.IntakeState.IDLE)
         );

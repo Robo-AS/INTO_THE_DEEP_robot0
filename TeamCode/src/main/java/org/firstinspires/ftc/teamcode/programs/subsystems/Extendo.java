@@ -38,7 +38,8 @@ public class Extendo extends SubsystemBase {
         MAXIMUM,
         LIMELIGHT_POSE,
         LIMELIGHT_RETRACT_POSE,
-        LIMELIGHT_TAKE_POSE
+        LIMELIGHT_TAKE_POSE,
+        LIMELIGHT_TAKE_POSE_AFTER_THROWING
     }
 
     public ExtendoState extendoState = ExtendoState.RETRACTING;
@@ -192,13 +193,17 @@ public class Extendo extends SubsystemBase {
                 targetPosition = MAXIMUM;
                 break;
             case LIMELIGHT_POSE:
-                targetPosition = Globals.extendoDistance;
+                targetPosition = Math.min(Globals.extendoDistance, MAXIMUM);
                 break;
             case LIMELIGHT_RETRACT_POSE:
                 targetPosition = Globals.extendoDistance - 200;
                 break;
             case LIMELIGHT_TAKE_POSE:
-                targetPosition = Math.min(Globals.extendoDistance + 300, MAXIMUM);
+                targetPosition = Math.min(Globals.extendoDistance + 200, MAXIMUM);
+                break;
+            case LIMELIGHT_TAKE_POSE_AFTER_THROWING:
+                targetPosition = Math.min(currentPosition + 200, MAXIMUM);
+                break;
 
         }
     }
@@ -236,15 +241,28 @@ public class Extendo extends SubsystemBase {
     }
 
     public boolean limelightPoseFinished(){
-        return currentPosition >= (Globals.extendoDistance - 10);
+        if(targetPosition == MAXIMUM){
+            return currentPosition >= MAXIMUM - 20;
+        }
+        return currentPosition >= (Globals.extendoDistance - 20);
     }
 
     public boolean limelightRetractPoseFinished(){
-        return  currentPosition <= (Globals.extendoDistance - 200 + 20) || currentPosition >= (Globals.extendoDistance - 200 - 20);
+        return  currentPosition <= (Globals.extendoDistance - 200 + 20);
     }
 
     public boolean limelightTakePoseFinished(){
-        return currentPosition >= (Globals.extendoDistance + 200 - 10);
+        if(targetPosition == MAXIMUM){
+            return  currentPosition >= MAXIMUM - 20;
+        }
+        return currentPosition >= (Globals.extendoDistance + 200 - 20);
+    }
+
+    public boolean limelightTakePoseAfterThrowingFinished(){
+        if(targetPosition == MAXIMUM){
+            return  currentPosition >= MAXIMUM - 20;
+        }
+        return currentPosition >= targetPosition - 20;
     }
 
     public boolean retractFinished(){

@@ -5,6 +5,7 @@ import com.acmerobotics.dashboard.config.Config;
 import com.arcrobotics.ftclib.command.CommandScheduler;
 import com.arcrobotics.ftclib.command.ConditionalCommand;
 import com.arcrobotics.ftclib.command.InstantCommand;
+import com.arcrobotics.ftclib.command.ParallelCommandGroup;
 import com.arcrobotics.ftclib.command.SequentialCommandGroup;
 import com.arcrobotics.ftclib.command.WaitCommand;
 import com.arcrobotics.ftclib.command.WaitUntilCommand;
@@ -24,6 +25,7 @@ import org.firstinspires.ftc.teamcode.pedroPathing.constants.FConstants;
 import org.firstinspires.ftc.teamcode.pedroPathing.constants.LConstants;
 import org.firstinspires.ftc.teamcode.programs.commandbase.ArmCommands.SetClawStateCommand;
 import org.firstinspires.ftc.teamcode.programs.commandbase.AutoCommands.IntakeRetractAutoCommand;
+import org.firstinspires.ftc.teamcode.programs.commandbase.AutoCommands.IntakeThrowingCommandAuto;
 import org.firstinspires.ftc.teamcode.programs.commandbase.AutoCommands.LimelightCommand;
 import org.firstinspires.ftc.teamcode.programs.commandbase.AutoCommands.OuttakeGoHighBasketAutoCommand;
 import org.firstinspires.ftc.teamcode.programs.commandbase.AutoCommands.ScoreSampleAutoCommand;
@@ -64,20 +66,20 @@ public class NEW_BasketAutoSubmersibleBLUE_CU_UNGHI_BRAT_FAILSAFES extends Linea
     public static Pose grab3Pose = new Pose(21.038961038961038, 133.71428571428572, Math.toRadians(15));//6
     public static Pose score3Pose = new Pose(15.792207792207792, 130.9090909090909, Math.toRadians(-15));//7
 
-    public static Pose submersible1Pose = new Pose(60.311688311688314, 94.27922077922078, Math.toRadians(-90));//8
+    public static Pose submersible1Pose = new Pose(60.311688311688314, 93.27922077922078, Math.toRadians(-90));//8
     public static Pose submersible1ControlPoint = new Pose(60.54545454545455, 119.92207792207793, Math.toRadians(-90));
 
     public static Pose scoreSubmersible1Pose = new Pose(15.896103896103895, 130.67532467532467, Math.toRadians(-15));       //9
     public static Pose scoreSubmersible1ControlPoint = new Pose(60.54545454545455, 119.92207792207793, Math.toRadians(-15));
 
 
-    public static Pose submersible2Pose = new Pose(60.311688311688314, 94.27922077922078, Math.toRadians(-90));             //10
+    public static Pose submersible2Pose = new Pose(60.311688311688314, 93.27922077922078, Math.toRadians(-90));             //10
     public static Pose submersible2ControlPoint = new Pose(62.649350649350644, 121.79220779220779, Math.toRadians(-90));
 
     public static Pose scoreSubmbersible2Pose = new Pose(15.896103896103895, 130.67532467532467, Math.toRadians(-15));      //11
     public static Pose scoreSubmersible2ControlPoint = new Pose(62.649350649350644, 121.79220779220779, Math.toRadians(-15));
 
-    public static Pose submersible3Pose = new Pose(63.350649350649356, 94.27922077922078, Math.toRadians(-90));     //12
+    public static Pose submersible3Pose = new Pose(63.350649350649356, 92.77922077922078, Math.toRadians(-90));     //12
     public static Pose submersible3ControlPoint = new Pose(62.649350649350644, 121.79220779220779, Math.toRadians(-90));
 
     public static Pose scoreSubmbersible3Pose = new Pose(15.896103896103895, 130.67532467532467, Math.toRadians(-15));      //13
@@ -110,6 +112,8 @@ public class NEW_BasketAutoSubmersibleBLUE_CU_UNGHI_BRAT_FAILSAFES extends Linea
         robot.hang.initialize();
         robot.limelightCamera.initializeHardware(hardwareMap);
         robot.limelightCamera.initialize();
+        robot.sweeper.initializeHardware(hardwareMap);
+        robot.sweeper.initialize();
 
         basketPaths.resetTrajectoryes();
 
@@ -217,6 +221,9 @@ public class NEW_BasketAutoSubmersibleBLUE_CU_UNGHI_BRAT_FAILSAFES extends Linea
                 .addPath(new BezierPoint(new Point(submersible1Pose)))
                 .setConstantHeadingInterpolation(Math.toRadians(-90))
                 .build();
+
+
+
 
 
 
@@ -377,7 +384,7 @@ public class NEW_BasketAutoSubmersibleBLUE_CU_UNGHI_BRAT_FAILSAFES extends Linea
 //                                .alongWith(
 //                                        new OuttakeGoBackToIdleFromHighBasketCommand()
 //                                ),
-                        new WaitCommand(300),
+//                        new WaitCommand(300),
                         new InstantCommand(()->robot.limelightCamera.upadateLimelightPythonSnap()),
                         new InstantCommand(()->robot.limelightCamera.upadateLimelightPythonSnap()),
                         new InstantCommand(this::runLimelightHeadingPath_1),
@@ -389,15 +396,16 @@ public class NEW_BasketAutoSubmersibleBLUE_CU_UNGHI_BRAT_FAILSAFES extends Linea
 
                         new ConditionalCommand(
                                 new SequentialCommandGroup(
-                                        new InstantCommand(()->robot.intake.updateSampleColor()),
-                                        new InstantCommand(()->robot.intake.updateSampleColor()),
-                                        new InstantCommand(()->robot.intake.updateSampleColor()),
+//                                        new InstantCommand(()->robot.intake.updateSampleColor()),
+//                                        new InstantCommand(()->robot.intake.updateSampleColor()),
                                         new ConditionalCommand(
                                                 new SequentialCommandGroup(
-                                                        new SetIntakeStateCommand(Intake.IntakeState.THROWING),
-                                                        new WaitCommand(500),
-                                                        new SetIntakeStateCommand(Intake.IntakeState.IDLE),
-                                                        new InstantCommand(()-> robot.intake.setSampleState(Intake.SampleState.ISNOT))
+                                                        new IntakeThrowingCommandAuto(),
+                                                        new SetExtendoStateCommand(Extendo.ExtendoState.LIMELIGHT_TAKE_POSE_AFTER_THROWING).interruptOn(robot.intake::isSampleDigital),
+                                                        new WaitUntilCommand(robot.extendo::limelightTakePoseAfterThrowingFinished).interruptOn(robot.intake::isSampleDigital),
+                                                        new WaitUntilCommand(robot.intake::isSampleDigital).withTimeout(1000),
+                                                        new SetIntakeStateCommand(Intake.IntakeState.IDLE)
+
                                                 ),
                                                 new DoesNothingCommand(),
                                                 () -> robot.intake.intakedSampleColor == Intake.IntakedSampleColor.RED
@@ -407,9 +415,11 @@ public class NEW_BasketAutoSubmersibleBLUE_CU_UNGHI_BRAT_FAILSAFES extends Linea
                                 new SequentialCommandGroup(
                                         new SetIntakeAngleCommand(Intake.IntakeAngle.UP),
                                         new WaitCommand(100),
-                                        new SetExtendoStateCommand(Extendo.ExtendoState.RETRACTING),
-                                        new WaitUntilCommand(robot.extendo::retractFinished),
-                                        new InstantCommand(this::returnToInitSubmersible1),
+                                        new ParallelCommandGroup(
+                                                new SetExtendoStateCommand(Extendo.ExtendoState.RETRACTING),
+                                                new WaitUntilCommand(robot.extendo::retractFinished),
+                                                new InstantCommand(this::returnToInitSubmersible1)
+                                        ),
                                         new WaitCommand(300),
                                         new InstantCommand(()->robot.limelightCamera.upadateLimelightPythonSnap()),
                                         new InstantCommand(()->robot.limelightCamera.upadateLimelightPythonSnap()),
@@ -422,22 +432,67 @@ public class NEW_BasketAutoSubmersibleBLUE_CU_UNGHI_BRAT_FAILSAFES extends Linea
 
                         new ConditionalCommand(
                                 new SequentialCommandGroup(
-                                        new InstantCommand(()->robot.intake.updateSampleColor()),
-                                        new InstantCommand(()->robot.intake.updateSampleColor()),
-                                        new InstantCommand(()->robot.intake.updateSampleColor()),
+//                                        new InstantCommand(()->robot.intake.updateSampleColor()),
+//                                        new InstantCommand(()->robot.intake.updateSampleColor()),
                                         new ConditionalCommand(
                                                 new SequentialCommandGroup(
-                                                        new SetIntakeStateCommand(Intake.IntakeState.THROWING),
-                                                        new WaitCommand(500),
-                                                        new SetIntakeStateCommand(Intake.IntakeState.IDLE),
-                                                        new InstantCommand(()-> robot.intake.setSampleState(Intake.SampleState.ISNOT))
-
+                                                        new IntakeThrowingCommandAuto(),
+                                                        new SetExtendoStateCommand(Extendo.ExtendoState.LIMELIGHT_TAKE_POSE_AFTER_THROWING).interruptOn(robot.intake::isSampleDigital),
+                                                        new WaitUntilCommand(robot.extendo::limelightTakePoseAfterThrowingFinished).interruptOn(robot.intake::isSampleDigital),
+                                                        new WaitUntilCommand(robot.intake::isSampleDigital).withTimeout(1000),
+                                                        new SetIntakeStateCommand(Intake.IntakeState.IDLE)
                                                 ),
                                                 new DoesNothingCommand(),
                                                 () -> robot.intake.intakedSampleColor == Intake.IntakedSampleColor.RED
                                         )
                                 ),
-                                new DoesNothingCommand(),
+                                new SequentialCommandGroup(
+                                        new SetIntakeAngleCommand(Intake.IntakeAngle.UP),
+                                        new WaitCommand(100),
+                                        new ParallelCommandGroup(
+                                                new SetExtendoStateCommand(Extendo.ExtendoState.RETRACTING),
+                                                new WaitUntilCommand(robot.extendo::retractFinished),
+                                                new InstantCommand(this::returnToInitSubmersible1)
+                                        ),
+                                        new WaitCommand(300),
+                                        new InstantCommand(()->robot.limelightCamera.upadateLimelightPythonSnap()),
+                                        new InstantCommand(()->robot.limelightCamera.upadateLimelightPythonSnap()),
+                                        new InstantCommand(this::runLimelightHeadingPath_1),
+                                        new LimelightCommand()
+                                ),
+                                () ->  robot.intake.sampleState == Intake.SampleState.IS
+                        ),
+
+                        new ConditionalCommand(
+                                new SequentialCommandGroup(
+//                                        new InstantCommand(()->robot.intake.updateSampleColor()),
+//                                        new InstantCommand(()->robot.intake.updateSampleColor()),
+                                        new ConditionalCommand(
+                                                new SequentialCommandGroup(
+                                                        new IntakeThrowingCommandAuto(),
+                                                        new SetExtendoStateCommand(Extendo.ExtendoState.LIMELIGHT_TAKE_POSE_AFTER_THROWING).interruptOn(robot.intake::isSampleDigital),
+                                                        new WaitUntilCommand(robot.extendo::limelightTakePoseAfterThrowingFinished).interruptOn(robot.intake::isSampleDigital),
+                                                        new WaitUntilCommand(robot.intake::isSampleDigital).withTimeout(1000),
+                                                        new SetIntakeStateCommand(Intake.IntakeState.IDLE)
+                                                ),
+                                                new DoesNothingCommand(),
+                                                () -> robot.intake.intakedSampleColor == Intake.IntakedSampleColor.RED
+                                        )
+                                ),
+                                new SequentialCommandGroup(
+                                        new SetIntakeAngleCommand(Intake.IntakeAngle.UP),
+                                        new WaitCommand(100),
+                                        new ParallelCommandGroup(
+                                                new SetExtendoStateCommand(Extendo.ExtendoState.RETRACTING),
+                                                new WaitUntilCommand(robot.extendo::retractFinished),
+                                                new InstantCommand(this::returnToInitSubmersible1)
+                                        ),
+                                        new WaitCommand(300),
+                                        new InstantCommand(()->robot.limelightCamera.upadateLimelightPythonSnap()),
+                                        new InstantCommand(()->robot.limelightCamera.upadateLimelightPythonSnap()),
+                                        new InstantCommand(this::runLimelightHeadingPath_1),
+                                        new LimelightCommand()
+                                ),
                                 () ->  robot.intake.sampleState == Intake.SampleState.IS
                         ),
 
@@ -446,7 +501,7 @@ public class NEW_BasketAutoSubmersibleBLUE_CU_UNGHI_BRAT_FAILSAFES extends Linea
                                 .alongWith(
                                         new SequentialCommandGroup(
                                                 new IntakeRetractAutoCommand(),
-                                                new WaitCommand(500),
+                                                new WaitCommand(400),
                                                 new OuttakeGoHighBasketAutoCommand()
                                         )
                                 ),
@@ -467,15 +522,15 @@ public class NEW_BasketAutoSubmersibleBLUE_CU_UNGHI_BRAT_FAILSAFES extends Linea
 
                         new ConditionalCommand(
                                 new SequentialCommandGroup(
-                                        new InstantCommand(()->robot.intake.updateSampleColor()),
-                                        new InstantCommand(()->robot.intake.updateSampleColor()),
-                                        new InstantCommand(()->robot.intake.updateSampleColor()),
+//                                        new InstantCommand(()->robot.intake.updateSampleColor()),
+//                                        new InstantCommand(()->robot.intake.updateSampleColor()),
                                         new ConditionalCommand(
                                                 new SequentialCommandGroup(
-                                                        new SetIntakeStateCommand(Intake.IntakeState.THROWING),
-                                                        new WaitCommand(500),
-                                                        new SetIntakeStateCommand(Intake.IntakeState.IDLE),
-                                                        new InstantCommand(()-> robot.intake.setSampleState(Intake.SampleState.ISNOT))
+                                                        new IntakeThrowingCommandAuto(),
+                                                        new SetExtendoStateCommand(Extendo.ExtendoState.LIMELIGHT_TAKE_POSE_AFTER_THROWING).interruptOn(robot.intake::isSampleDigital),
+                                                        new WaitUntilCommand(robot.extendo::limelightTakePoseAfterThrowingFinished).interruptOn(robot.intake::isSampleDigital),
+                                                        new WaitUntilCommand(robot.intake::isSampleDigital).withTimeout(1000),
+                                                        new SetIntakeStateCommand(Intake.IntakeState.IDLE)
                                                 ),
                                                 new DoesNothingCommand(),
                                                 () -> robot.intake.intakedSampleColor == Intake.IntakedSampleColor.RED
@@ -485,9 +540,12 @@ public class NEW_BasketAutoSubmersibleBLUE_CU_UNGHI_BRAT_FAILSAFES extends Linea
                                 new SequentialCommandGroup(
                                         new SetIntakeAngleCommand(Intake.IntakeAngle.UP),
                                         new WaitCommand(100),
-                                        new SetExtendoStateCommand(Extendo.ExtendoState.RETRACTING),
-                                        new WaitUntilCommand(robot.extendo::retractFinished),
-                                        new InstantCommand(this::returnToInitSubmersible2),
+                                        new ParallelCommandGroup(
+                                                new SetExtendoStateCommand(Extendo.ExtendoState.RETRACTING),
+                                                new WaitUntilCommand(robot.extendo::retractFinished),
+                                                new InstantCommand(this::returnToInitSubmersible2)
+                                        ),
+
                                         new WaitCommand(300),
                                         new InstantCommand(()->robot.limelightCamera.upadateLimelightPythonSnap()),
                                         new InstantCommand(()->robot.limelightCamera.upadateLimelightPythonSnap()),
@@ -500,21 +558,69 @@ public class NEW_BasketAutoSubmersibleBLUE_CU_UNGHI_BRAT_FAILSAFES extends Linea
 
                         new ConditionalCommand(
                                 new SequentialCommandGroup(
-                                        new InstantCommand(()->robot.intake.updateSampleColor()),
-                                        new InstantCommand(()->robot.intake.updateSampleColor()),
-                                        new InstantCommand(()->robot.intake.updateSampleColor()),
+//                                        new InstantCommand(()->robot.intake.updateSampleColor()),
+//                                        new InstantCommand(()->robot.intake.updateSampleColor()),
                                         new ConditionalCommand(
                                                 new SequentialCommandGroup(
-                                                        new SetIntakeStateCommand(Intake.IntakeState.THROWING),
-                                                        new WaitCommand(500),
-                                                        new SetIntakeStateCommand(Intake.IntakeState.IDLE),
-                                                        new InstantCommand(()-> robot.intake.setSampleState(Intake.SampleState.ISNOT))
+                                                        new IntakeThrowingCommandAuto(),
+                                                        new SetExtendoStateCommand(Extendo.ExtendoState.LIMELIGHT_TAKE_POSE_AFTER_THROWING).interruptOn(robot.intake::isSampleDigital),
+                                                        new WaitUntilCommand(robot.extendo::limelightTakePoseAfterThrowingFinished).interruptOn(robot.intake::isSampleDigital),
+                                                        new WaitUntilCommand(robot.intake::isSampleDigital).withTimeout(1000),
+                                                        new SetIntakeStateCommand(Intake.IntakeState.IDLE)
                                                 ),
                                                 new DoesNothingCommand(),
                                                 () -> robot.intake.intakedSampleColor == Intake.IntakedSampleColor.RED
                                         )
                                 ),
-                                new DoesNothingCommand(),
+                                new SequentialCommandGroup(
+                                        new SetIntakeAngleCommand(Intake.IntakeAngle.UP),
+                                        new WaitCommand(100),
+                                        new ParallelCommandGroup(
+                                                new SetExtendoStateCommand(Extendo.ExtendoState.RETRACTING),
+                                                new WaitUntilCommand(robot.extendo::retractFinished),
+                                                new InstantCommand(this::returnToInitSubmersible2)
+                                        ),
+                                        new WaitCommand(300),
+                                        new InstantCommand(()->robot.limelightCamera.upadateLimelightPythonSnap()),
+                                        new InstantCommand(()->robot.limelightCamera.upadateLimelightPythonSnap()),
+                                        new InstantCommand(this::runLimelightHeadingPath_2),
+                                        new LimelightCommand()
+                                ),
+                                () ->  robot.intake.sampleState == Intake.SampleState.IS
+                        ),
+
+                        new ConditionalCommand(
+                                new SequentialCommandGroup(
+//                                        new InstantCommand(()->robot.intake.updateSampleColor()),
+//                                        new InstantCommand(()->robot.intake.updateSampleColor()),
+                                        new ConditionalCommand(
+                                                new SequentialCommandGroup(
+                                                        new IntakeThrowingCommandAuto(),
+                                                        new SetExtendoStateCommand(Extendo.ExtendoState.LIMELIGHT_TAKE_POSE_AFTER_THROWING).interruptOn(robot.intake::isSampleDigital),
+                                                        new WaitUntilCommand(robot.extendo::limelightTakePoseAfterThrowingFinished).interruptOn(robot.intake::isSampleDigital),
+                                                        new WaitUntilCommand(robot.intake::isSampleDigital).withTimeout(1000),
+                                                        new SetIntakeStateCommand(Intake.IntakeState.IDLE)
+                                                ),
+                                                new DoesNothingCommand(),
+                                                () -> robot.intake.intakedSampleColor == Intake.IntakedSampleColor.RED
+                                        )
+                                ),
+
+                                new SequentialCommandGroup(
+                                        new SetIntakeAngleCommand(Intake.IntakeAngle.UP),
+                                        new WaitCommand(100),
+                                        new ParallelCommandGroup(
+                                                new SetExtendoStateCommand(Extendo.ExtendoState.RETRACTING),
+                                                new WaitUntilCommand(robot.extendo::retractFinished),
+                                                new InstantCommand(this::returnToInitSubmersible2)
+                                        ),
+
+                                        new WaitCommand(300),
+                                        new InstantCommand(()->robot.limelightCamera.upadateLimelightPythonSnap()),
+                                        new InstantCommand(()->robot.limelightCamera.upadateLimelightPythonSnap()),
+                                        new InstantCommand(this::runLimelightHeadingPath_2),
+                                        new LimelightCommand()
+                                ),
                                 () ->  robot.intake.sampleState == Intake.SampleState.IS
                         ),
 
@@ -523,7 +629,7 @@ public class NEW_BasketAutoSubmersibleBLUE_CU_UNGHI_BRAT_FAILSAFES extends Linea
                                 .alongWith(
                                         new SequentialCommandGroup(
                                                 new IntakeRetractAutoCommand(),
-                                                new WaitCommand(500),
+                                                new WaitCommand(400),
                                                 new OuttakeGoHighBasketAutoCommand()
                                         )
                                 ),
@@ -543,15 +649,15 @@ public class NEW_BasketAutoSubmersibleBLUE_CU_UNGHI_BRAT_FAILSAFES extends Linea
 
                         new ConditionalCommand(
                                 new SequentialCommandGroup(
-                                        new InstantCommand(()->robot.intake.updateSampleColor()),
-                                        new InstantCommand(()->robot.intake.updateSampleColor()),
-                                        new InstantCommand(()->robot.intake.updateSampleColor()),
+//                                        new InstantCommand(()->robot.intake.updateSampleColor()),
+//                                        new InstantCommand(()->robot.intake.updateSampleColor()),
                                         new ConditionalCommand(
                                                 new SequentialCommandGroup(
-                                                        new SetIntakeStateCommand(Intake.IntakeState.THROWING),
-                                                        new WaitCommand(500),
-                                                        new SetIntakeStateCommand(Intake.IntakeState.IDLE),
-                                                        new InstantCommand(()-> robot.intake.setSampleState(Intake.SampleState.ISNOT))
+                                                        new IntakeThrowingCommandAuto(),
+                                                        new SetExtendoStateCommand(Extendo.ExtendoState.LIMELIGHT_TAKE_POSE_AFTER_THROWING).interruptOn(robot.intake::isSampleDigital),
+                                                        new WaitUntilCommand(robot.extendo::limelightTakePoseAfterThrowingFinished).interruptOn(robot.intake::isSampleDigital),
+                                                        new WaitUntilCommand(robot.intake::isSampleDigital).withTimeout(1000),
+                                                        new SetIntakeStateCommand(Intake.IntakeState.IDLE)
                                                 ),
                                                 new DoesNothingCommand(),
                                                 () -> robot.intake.intakedSampleColor == Intake.IntakedSampleColor.RED
@@ -561,9 +667,11 @@ public class NEW_BasketAutoSubmersibleBLUE_CU_UNGHI_BRAT_FAILSAFES extends Linea
                                 new SequentialCommandGroup(
                                         new SetIntakeAngleCommand(Intake.IntakeAngle.UP),
                                         new WaitCommand(100),
-                                        new SetExtendoStateCommand(Extendo.ExtendoState.RETRACTING),
-                                        new WaitUntilCommand(robot.extendo::retractFinished),
-                                        new InstantCommand(this::returnToInitSubmersible3),
+                                        new ParallelCommandGroup(
+                                                new SetExtendoStateCommand(Extendo.ExtendoState.RETRACTING),
+                                                new WaitUntilCommand(robot.extendo::retractFinished),
+                                                new InstantCommand(this::returnToInitSubmersible3)
+                                        ),
                                         new WaitCommand(300),
                                         new InstantCommand(()->robot.limelightCamera.upadateLimelightPythonSnap()),
                                         new InstantCommand(()->robot.limelightCamera.upadateLimelightPythonSnap()),
@@ -576,21 +684,69 @@ public class NEW_BasketAutoSubmersibleBLUE_CU_UNGHI_BRAT_FAILSAFES extends Linea
 
                         new ConditionalCommand(
                                 new SequentialCommandGroup(
-                                        new InstantCommand(()->robot.intake.updateSampleColor()),
-                                        new InstantCommand(()->robot.intake.updateSampleColor()),
-                                        new InstantCommand(()->robot.intake.updateSampleColor()),
+//                                        new InstantCommand(()->robot.intake.updateSampleColor()),
+//                                        new InstantCommand(()->robot.intake.updateSampleColor()),
                                         new ConditionalCommand(
                                                 new SequentialCommandGroup(
-                                                        new SetIntakeStateCommand(Intake.IntakeState.THROWING),
-                                                        new WaitCommand(500),
-                                                        new SetIntakeStateCommand(Intake.IntakeState.IDLE),
-                                                        new InstantCommand(()-> robot.intake.setSampleState(Intake.SampleState.ISNOT))
+                                                        new IntakeThrowingCommandAuto(),
+                                                        new SetExtendoStateCommand(Extendo.ExtendoState.LIMELIGHT_TAKE_POSE_AFTER_THROWING).interruptOn(robot.intake::isSampleDigital),
+                                                        new WaitUntilCommand(robot.extendo::limelightTakePoseAfterThrowingFinished).interruptOn(robot.intake::isSampleDigital),
+                                                        new WaitUntilCommand(robot.intake::isSampleDigital).withTimeout(1000),
+                                                        new SetIntakeStateCommand(Intake.IntakeState.IDLE)
                                                 ),
                                                 new DoesNothingCommand(),
                                                 () -> robot.intake.intakedSampleColor == Intake.IntakedSampleColor.RED
                                         )
                                 ),
-                                new DoesNothingCommand(),
+                                new SequentialCommandGroup(
+                                        new SetIntakeAngleCommand(Intake.IntakeAngle.UP),
+                                        new WaitCommand(100),
+                                        new ParallelCommandGroup(
+                                                new SetExtendoStateCommand(Extendo.ExtendoState.RETRACTING),
+                                                new WaitUntilCommand(robot.extendo::retractFinished),
+                                                new InstantCommand(this::returnToInitSubmersible3)
+                                        ),
+
+                                        new WaitCommand(300),
+                                        new InstantCommand(()->robot.limelightCamera.upadateLimelightPythonSnap()),
+                                        new InstantCommand(()->robot.limelightCamera.upadateLimelightPythonSnap()),
+                                        new InstantCommand(this::runLimelightHeadingPath_3),
+                                        new LimelightCommand()
+                                ),
+                                () ->  robot.intake.sampleState == Intake.SampleState.IS
+                        ),
+
+                        new ConditionalCommand(
+                                new SequentialCommandGroup(
+//                                        new InstantCommand(()->robot.intake.updateSampleColor()),
+//                                        new InstantCommand(()->robot.intake.updateSampleColor()),
+                                        new ConditionalCommand(
+                                                new SequentialCommandGroup(
+                                                        new IntakeThrowingCommandAuto(),
+                                                        new SetExtendoStateCommand(Extendo.ExtendoState.LIMELIGHT_TAKE_POSE_AFTER_THROWING).interruptOn(robot.intake::isSampleDigital),
+                                                        new WaitUntilCommand(robot.extendo::limelightTakePoseAfterThrowingFinished).interruptOn(robot.intake::isSampleDigital),
+                                                        new WaitUntilCommand(robot.intake::isSampleDigital).withTimeout(1000),
+                                                        new SetIntakeStateCommand(Intake.IntakeState.IDLE)
+                                                ),
+                                                new DoesNothingCommand(),
+                                                () -> robot.intake.intakedSampleColor == Intake.IntakedSampleColor.RED
+                                        )
+                                ),
+
+                                new SequentialCommandGroup(
+                                        new SetIntakeAngleCommand(Intake.IntakeAngle.UP),
+                                        new WaitCommand(100),
+                                        new ParallelCommandGroup(
+                                                new SetExtendoStateCommand(Extendo.ExtendoState.RETRACTING),
+                                                new WaitUntilCommand(robot.extendo::retractFinished),
+                                                new InstantCommand(this::returnToInitSubmersible3)
+                                        ),
+                                        new WaitCommand(300),
+                                        new InstantCommand(()->robot.limelightCamera.upadateLimelightPythonSnap()),
+                                        new InstantCommand(()->robot.limelightCamera.upadateLimelightPythonSnap()),
+                                        new InstantCommand(this::runLimelightHeadingPath_3),
+                                        new LimelightCommand()
+                                ),
                                 () ->  robot.intake.sampleState == Intake.SampleState.IS
                         ),
 
@@ -599,7 +755,7 @@ public class NEW_BasketAutoSubmersibleBLUE_CU_UNGHI_BRAT_FAILSAFES extends Linea
                                 .alongWith(
                                         new SequentialCommandGroup(
                                                 new IntakeRetractAutoCommand(),
-                                                new WaitCommand(500),
+                                                new WaitCommand(400),
                                                 new OuttakeGoHighBasketAutoCommand()
                                         )
                                 ),

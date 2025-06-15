@@ -268,6 +268,11 @@ public class Intake extends SubsystemBase {
     public void loopAuto(){
         if(intakeAngle == IntakeAngle.DOWN){
             updateSampleColor();
+
+            if(brushMotor.getCurrent(CurrentUnit.AMPS) > 2.75 && currentSpikeTimer.seconds() > 1){
+                CommandScheduler.getInstance().schedule(new IntakeBlockedSamplesCommand());
+                currentSpikeTimer.reset();
+            }
         }
 
         currentAxonAngle = (int) (analogInput.getVoltage() / 3.3 * 360);
@@ -396,7 +401,11 @@ public class Intake extends SubsystemBase {
         return (totalAxonAngle - initialAxonAngle) >= 150;//160
     }
 
-    public boolean canStopThrowingWrongSample(){
+    public boolean canStopThrowingWrongSample_TELEOP(){
+        return (totalAxonAngle - initialAxonAngle) >= 100;
+    }
+
+    public boolean canStopThrowingWrongSample_AUTO(){
         return (totalAxonAngle - initialAxonAngle) >= 100;
     }
 
