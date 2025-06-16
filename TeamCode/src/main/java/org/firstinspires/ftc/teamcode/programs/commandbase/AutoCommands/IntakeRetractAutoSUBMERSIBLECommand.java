@@ -1,5 +1,6 @@
 package org.firstinspires.ftc.teamcode.programs.commandbase.AutoCommands;
 
+import com.arcrobotics.ftclib.command.InstantCommand;
 import com.arcrobotics.ftclib.command.SequentialCommandGroup;
 import com.arcrobotics.ftclib.command.WaitCommand;
 import com.arcrobotics.ftclib.command.WaitUntilCommand;
@@ -13,20 +14,27 @@ import org.firstinspires.ftc.teamcode.programs.subsystems.Arm;
 import org.firstinspires.ftc.teamcode.programs.subsystems.Extendo;
 import org.firstinspires.ftc.teamcode.programs.subsystems.Intake;
 
-public class IntakeRetractSubmersibleAutoCommand extends SequentialCommandGroup {
-    public IntakeRetractSubmersibleAutoCommand() {
+public class IntakeRetractAutoSUBMERSIBLECommand extends SequentialCommandGroup {
+    public IntakeRetractAutoSUBMERSIBLECommand() {
         super(
-
+                new InstantCommand(() -> Intake.getInstance().setInitialAxonAngle()),
                 new SetIntakeAngleCommand(Intake.IntakeAngle.UP),
                 new SetBrushStateCommand(Intake.BrushState.SPITTING),
+                new WaitCommand(100),
+                new SetBrushStateCommand(Intake.BrushState.IDLE),
                 new SetExtendoStateCommand(Extendo.ExtendoState.RETRACTING),
-                new WaitCommand(500),
-                new WaitUntilCommand(Extendo.getInstance()::canOuttakeSample),
                 new SetRollersStateCommand(Intake.RollersState.OUTTAKING),
-                new WaitCommand(200),
+                new WaitUntilCommand(Intake.getInstance()::canStopOuttakingYELLOW_1_AUTO),
                 new SetRollersStateCommand(Intake.RollersState.IDLE),
+                new WaitUntilCommand(Extendo.getInstance()::canOuttakeSample),
+                new InstantCommand(() -> Intake.getInstance().setInitialAxonAngle()),
+                new SetRollersStateCommand(Intake.RollersState.OUTTAKING),
+                new WaitUntilCommand(Intake.getInstance()::canCloseClaw_AUTO),
                 new SetClawStateCommand(Arm.ClawState.CLOSED),
-                new WaitCommand(200)
+                new WaitUntilCommand(Intake.getInstance()::canStopOuttakingYELLOW_2_AUTO),
+                new SetRollersStateCommand(Intake.RollersState.IDLE)
+
+
 
         );
     }

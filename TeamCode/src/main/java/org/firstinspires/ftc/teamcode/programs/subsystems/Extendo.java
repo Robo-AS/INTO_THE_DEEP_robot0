@@ -27,8 +27,9 @@ public class Extendo extends SubsystemBase {
         EXTENDING_MINIMUM,
         RETRACTING,
         EXTENDING_MINIMUM_AUTO,
-        TAKE_SAMPLE_AUTO,
-        TAKE_SAMPLE_AUTO_NEAR_WALL,
+        TAKE_SAMPLE_AUTO_GRAB_1,
+        TAKE_SAMPLE_AUTO_GRAB_2,
+        TAKE_SAMPLE_AUTO_GRAB_3,
         TAKE_SAMPLE_SPECIMEN,
         TAKE_SPECIMEN_AUTO,
         RETRACT_AUTO_FAIL_SAFE,
@@ -39,7 +40,8 @@ public class Extendo extends SubsystemBase {
         LIMELIGHT_POSE,
         LIMELIGHT_RETRACT_POSE,
         LIMELIGHT_TAKE_POSE,
-        LIMELIGHT_TAKE_POSE_AFTER_THROWING
+        LIMELIGHT_TAKE_POSE_AFTER_THROWING,
+        STABILER_AUTO
     }
 
     public ExtendoState extendoState = ExtendoState.RETRACTING;
@@ -48,8 +50,9 @@ public class Extendo extends SubsystemBase {
     public static int HANG = 800;
 
     public int EXTENDING_MINIMUM_AUTO = 815;
-    public int TAKE_SAMPLE_AUTO = 1000;
-    public int TAKE_SAMPLE_AUTO_NEAR_WALL = 1160;
+    public int TAKE_SAMPLE_AUTO_GRAB_1 = 900;
+    public int TAKE_SAMPLE_AUTO_GRAB_2 = 860;
+    public int TAKE_SAMPLE_AUTO_GRAB_3 = 870;
 
     public int TAKE_SAMPLE_SPECIMEN = 1160;
     public int TAKE_SPECIMEN_AUTO = 730;
@@ -58,7 +61,7 @@ public class Extendo extends SubsystemBase {
     public int TAKE_SAMPLE_SUBMERSIBLE_1 = 900;
     public int TAKE_SAMPLE_SUBMERSIBLE_2 = 900;
     public int MAXIMUM = 1150;
-
+    public int STABILER_AUTO = 500;
 
     private PIDController extendo_pid;
     public static double p_extendo = 0.014, i_extendo = 0.009, d_extendo = 0.0005;
@@ -165,12 +168,18 @@ public class Extendo extends SubsystemBase {
             case EXTENDING_MINIMUM_AUTO:
                 targetPosition = EXTENDING_MINIMUM_AUTO;
                 break;
-            case TAKE_SAMPLE_AUTO:
-                targetPosition = TAKE_SAMPLE_AUTO;
+            case TAKE_SAMPLE_AUTO_GRAB_1:
+                targetPosition = TAKE_SAMPLE_AUTO_GRAB_1;
                 break;
-            case TAKE_SAMPLE_AUTO_NEAR_WALL:
-                targetPosition = TAKE_SAMPLE_AUTO_NEAR_WALL;
+
+            case TAKE_SAMPLE_AUTO_GRAB_2:
+                targetPosition = TAKE_SAMPLE_AUTO_GRAB_2;
                 break;
+            case TAKE_SAMPLE_AUTO_GRAB_3:
+                targetPosition = TAKE_SAMPLE_AUTO_GRAB_3;
+                break;
+
+
             case TAKE_SAMPLE_SPECIMEN:
                 targetPosition = TAKE_SAMPLE_SPECIMEN;
                 break;
@@ -204,6 +213,10 @@ public class Extendo extends SubsystemBase {
             case LIMELIGHT_TAKE_POSE_AFTER_THROWING:
                 targetPosition = Math.min(currentPosition + 200, MAXIMUM);
                 break;
+            case STABILER_AUTO:
+                targetPosition = STABILER_AUTO;
+                break;
+
 
         }
     }

@@ -15,7 +15,7 @@ public class LimelightCommand extends SequentialCommandGroup {
         super(
                 new SetExtendoStateCommand(Extendo.ExtendoState.LIMELIGHT_POSE),
                 new WaitUntilCommand(Extendo.getInstance()::limelightPoseFinished),
-                new WaitCommand(2000),
+//                new WaitCommand(2000),
 
                 new SetIntakeAngleCommand(Intake.IntakeAngle.DOWN),
                 new SetIntakeStateCommand(Intake.IntakeState.INTAKING),

@@ -14,7 +14,9 @@ public class IntakeThrowingCommandAuto extends SequentialCommandGroup {
                 new InstantCommand(() -> Intake.getInstance().setInitialAxonAngle()),
                 new SetIntakeStateCommand(Intake.IntakeState.THROWING),
                 new WaitUntilCommand(Intake.getInstance()::canStopThrowingWrongSample_AUTO),
-                new InstantCommand(()-> Intake.getInstance().setSampleState(Intake.SampleState.ISNOT)),
+//                new InstantCommand(()-> Intake.getInstance().setSampleState(Intake.SampleState.ISNOT)),
+                new InstantCommand(()-> Intake.getInstance().setSampleColor(Intake.IntakedSampleColor.NOTHING)),
+
 //                new WaitCommand(4000),
                 new SetIntakeStateCommand(Intake.IntakeState.INTAKING)
         );

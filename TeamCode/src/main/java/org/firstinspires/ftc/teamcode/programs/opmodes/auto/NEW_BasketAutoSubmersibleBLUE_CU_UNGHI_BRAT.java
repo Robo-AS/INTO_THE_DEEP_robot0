@@ -46,6 +46,7 @@ public class NEW_BasketAutoSubmersibleBLUE_CU_UNGHI_BRAT extends LinearOpMode {
     private final BasketPaths basketPaths = BasketPaths.getInstance();
     private Follower follower;
     private double loopTime = 0;
+    private final int sensorTimeOut = 700;
 
     private final ElapsedTime time = new ElapsedTime();
 
@@ -241,14 +242,14 @@ public class NEW_BasketAutoSubmersibleBLUE_CU_UNGHI_BRAT extends LinearOpMode {
                                         new OuttakeGoBackToIdleFromHighBasketCommand(),
                                         new SequentialCommandGroup(
                                                 new WaitCommand(300),
-                                                new SetExtendoStateCommand(Extendo.ExtendoState.TAKE_SAMPLE_AUTO),
+                                                new SetExtendoStateCommand(Extendo.ExtendoState.TAKE_SAMPLE_AUTO_GRAB_1),
                                                 new WaitUntilCommand(robot.extendo::canPutIntakeDown),
                                                 new SetIntakeAngleCommand(Intake.IntakeAngle.DOWN),
                                                 new SetIntakeStateCommand(Intake.IntakeState.INTAKING)
                                         )
                                 ),
                         //new SetExtendoStateCommand(Extendo.ExtendoState.TAKE_SAMPLE_AUTO),
-                        new WaitUntilCommand(robot.intake::isSampleDigital).withTimeout(1000),
+                        new WaitUntilCommand(robot.intake::isSampleDigital).withTimeout(sensorTimeOut),
                         new SetIntakeStateCommand(Intake.IntakeState.IDLE),
 
                         new ConditionalCommand(
@@ -281,14 +282,14 @@ public class NEW_BasketAutoSubmersibleBLUE_CU_UNGHI_BRAT extends LinearOpMode {
                                         new OuttakeGoBackToIdleFromHighBasketCommand(),
                                         new SequentialCommandGroup(
                                                 new WaitCommand(200),
-                                                new SetExtendoStateCommand(Extendo.ExtendoState.TAKE_SAMPLE_AUTO),
+                                                new SetExtendoStateCommand(Extendo.ExtendoState.TAKE_SAMPLE_AUTO_GRAB_2),
                                                 new WaitUntilCommand(robot.extendo::canPutIntakeDown),
                                                 new SetIntakeAngleCommand(Intake.IntakeAngle.DOWN),
                                                 new SetIntakeStateCommand(Intake.IntakeState.INTAKING)
                                         )
                                 ),
                         //new SetExtendoStateCommand(Extendo.ExtendoState.TAKE_SAMPLE_AUTO),
-                        new WaitUntilCommand(robot.intake::isSampleDigital).withTimeout(1000),
+                        new WaitUntilCommand(robot.intake::isSampleDigital).withTimeout(sensorTimeOut),
                         new SetIntakeStateCommand(Intake.IntakeState.IDLE),
 
                         new ConditionalCommand(
@@ -321,14 +322,14 @@ public class NEW_BasketAutoSubmersibleBLUE_CU_UNGHI_BRAT extends LinearOpMode {
                                         new OuttakeGoBackToIdleFromHighBasketCommand(),
                                         new SequentialCommandGroup(
                                                 new WaitCommand(300),
-                                                new SetExtendoStateCommand(Extendo.ExtendoState.TAKE_SAMPLE_AUTO),
+                                                new SetExtendoStateCommand(Extendo.ExtendoState.TAKE_SAMPLE_AUTO_GRAB_3),
                                                 new WaitUntilCommand(robot.extendo::canPutIntakeDown),
                                                 new SetIntakeAngleCommand(Intake.IntakeAngle.DOWN),
                                                 new SetIntakeStateCommand(Intake.IntakeState.INTAKING)
                                         )
                                 ),
                         //new SetExtendoStateCommand(Extendo.ExtendoState.TAKE_SAMPLE_AUTO),
-                        new WaitUntilCommand(robot.intake::isSampleDigital).withTimeout(1000),
+                        new WaitUntilCommand(robot.intake::isSampleDigital).withTimeout(sensorTimeOut),
                         new SetIntakeStateCommand(Intake.IntakeState.IDLE),
 
                         new ConditionalCommand(
@@ -379,7 +380,7 @@ public class NEW_BasketAutoSubmersibleBLUE_CU_UNGHI_BRAT extends LinearOpMode {
                         new SetExtendoStateCommand(Extendo.ExtendoState.LIMELIGHT_TAKE_POSE).interruptOn(robot.intake::isSampleDigital),
                         new WaitUntilCommand(robot.extendo::limelightTakePoseFinished).interruptOn(robot.intake::isSampleDigital),
 
-                        new WaitUntilCommand(robot.intake::isSampleDigital).withTimeout(1000),
+                        new WaitUntilCommand(robot.intake::isSampleDigital).withTimeout(sensorTimeOut),
                         new SetIntakeStateCommand(Intake.IntakeState.IDLE),
 
 
@@ -415,7 +416,7 @@ public class NEW_BasketAutoSubmersibleBLUE_CU_UNGHI_BRAT extends LinearOpMode {
                         new SetExtendoStateCommand(Extendo.ExtendoState.LIMELIGHT_TAKE_POSE).interruptOn(robot.intake::isSampleDigital),
                         new WaitUntilCommand(robot.extendo::limelightTakePoseFinished).interruptOn(robot.intake::isSampleDigital),
 
-                        new WaitUntilCommand(robot.intake::isSampleDigital).withTimeout(1000),
+                        new WaitUntilCommand(robot.intake::isSampleDigital).withTimeout(sensorTimeOut),
                         new SetIntakeStateCommand(Intake.IntakeState.IDLE),
 
                         new FollowPath(follower, scoreSubmersible2, true, 1)
@@ -449,7 +450,7 @@ public class NEW_BasketAutoSubmersibleBLUE_CU_UNGHI_BRAT extends LinearOpMode {
                         new SetExtendoStateCommand(Extendo.ExtendoState.LIMELIGHT_TAKE_POSE).interruptOn(robot.intake::isSampleDigital),
                         new WaitUntilCommand(robot.extendo::limelightTakePoseFinished).interruptOn(robot.intake::isSampleDigital),
 
-                        new WaitUntilCommand(robot.intake::isSampleDigital).withTimeout(1000),
+                        new WaitUntilCommand(robot.intake::isSampleDigital).withTimeout(sensorTimeOut),
                         new SetIntakeStateCommand(Intake.IntakeState.IDLE),
 
                         new FollowPath(follower, scoreSubmersible3, true, 1)

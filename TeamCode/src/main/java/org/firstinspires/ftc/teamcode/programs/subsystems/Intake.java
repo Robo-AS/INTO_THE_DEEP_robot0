@@ -269,6 +269,7 @@ public class Intake extends SubsystemBase {
     public void loopAuto(){
         if(intakeAngle == IntakeAngle.DOWN && BasketPaths.getInstance().SCORE_3_COMPLETED){
             updateSampleColor();
+            updateSampleStateDigital();
 
             if(brushMotor.getCurrent(CurrentUnit.AMPS) > 2.75 && currentSpikeTimer.seconds() > 1){
                 CommandScheduler.getInstance().schedule(new IntakeBlockedSamplesCommand());
@@ -371,7 +372,7 @@ public class Intake extends SubsystemBase {
         return (totalAxonAngle - initialAxonAngle) >= 50;//50
     }
     public boolean canStopOuttakingYELLOW_2_AUTO(){
-        return (totalAxonAngle - initialAxonAngle) >= 60;//80
+        return (totalAxonAngle - initialAxonAngle) >= 80;
     }
 
     public boolean canStopOuttakingYELLOW_1_TELEOP(){
@@ -407,7 +408,7 @@ public class Intake extends SubsystemBase {
     }
 
     public boolean canStopThrowingWrongSample_AUTO(){
-        return (totalAxonAngle - initialAxonAngle) >= 100;
+        return (totalAxonAngle - initialAxonAngle) >= 150;//100
     }
 
 
@@ -437,6 +438,9 @@ public class Intake extends SubsystemBase {
 
     public void setSampleState(SampleState state){
         sampleState = state;
+    }
+    public void setSampleColor(IntakedSampleColor color){
+        intakedSampleColor = color;
     }
 
 
