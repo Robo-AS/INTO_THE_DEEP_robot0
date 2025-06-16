@@ -60,7 +60,7 @@ public class NEW_BasketAutoSubmersibleBLUE_CU_UNGHI_BRAT_FAILSAFES extends Linea
     public static Pose grab1Pose = new Pose(21.038961038961038, 128.57142857142858, Math.toRadians(-17));//2
     public static Pose score1Pose = new Pose(15.792207792207792, 130.9090909090909, Math.toRadians(-15));//3
 
-    public static Pose grab2Pose = new Pose(21.506493506493506, 131.37662337662337, Math.toRadians(0));//4
+    public static Pose grab2Pose = new Pose(21.506493506493506, 131.37662337662337, Math.toRadians(-3));//4
     public static Pose score2Pose = new Pose(15.792207792207792, 130.9090909090909, Math.toRadians(-15));//5
 
     public static Pose grab3Pose = new Pose(21.038961038961038, 133.71428571428572, Math.toRadians(15));//6
@@ -281,7 +281,10 @@ public class NEW_BasketAutoSubmersibleBLUE_CU_UNGHI_BRAT_FAILSAFES extends Linea
 //                                        new ScoreSampleAutoCommand()
 //                                ),
 //                                //else:
-//                                new SetExtendoStateCommand(Extendo.ExtendoState.EXTENDING_MINIMUM_AUTO),
+//                                new SequentialCommandGroup(
+//                                        new SetExtendoStateCommand(Extendo.ExtendoState.EXTENDING_MINIMUM_AUTO),
+//                                        new WaitCommand(100)
+//                                ),
 //                                //if:
 //                                () -> !basketPaths.getscore1()
 //                        ),
@@ -321,7 +324,10 @@ public class NEW_BasketAutoSubmersibleBLUE_CU_UNGHI_BRAT_FAILSAFES extends Linea
 //                                        new ScoreSampleAutoCommand()
 //                                ),
 //                                //else:
-//                                new SetExtendoStateCommand(Extendo.ExtendoState.EXTENDING_MINIMUM_AUTO),
+//                                new SequentialCommandGroup(
+//                                        new SetExtendoStateCommand(Extendo.ExtendoState.EXTENDING_MINIMUM_AUTO),
+//                                        new WaitCommand(100)
+//                                ),
 //                                //if:
 //                                () -> !basketPaths.getscore2()
 //                        ),
@@ -369,22 +375,25 @@ public class NEW_BasketAutoSubmersibleBLUE_CU_UNGHI_BRAT_FAILSAFES extends Linea
 //                        new InstantCommand(basketPaths::setScore3Completed),
 
 
-                        ///////////////////////////////////SUBMERSIBLE 1/////////////////////////////////////////
+
+
                         new SetClawStateCommand(Arm.ClawState.OPEN), //don't ask
                         new FollowPath(follower, scorePreload, true, 1),
+                        new InstantCommand(basketPaths::setScorePreloadCompleted),
                         new FollowPath(follower, grab1, true, 1),
                         new FollowPath(follower, score1, true, 1),
                         new FollowPath(follower, grab2, true, 1),
                         new FollowPath(follower, score2, true, 1),
                         new FollowPath(follower, grab3, true, 1),
                         new FollowPath(follower, score3, true, 1),
+                        new InstantCommand(basketPaths::setScore3Completed),
 
-
-                        new FollowPath(follower, submersible1, true, 1),
-//                                .alongWith(
-//                                        new OuttakeGoBackToIdleFromHighBasketCommand()
-//                                ),
-//                        new WaitCommand(300),
+                        /////////////////////////////////SUBMERSIBLE 1/////////////////////////////////////////
+                        new FollowPath(follower, submersible1, true, 1)
+                                .alongWith(
+                                        new OuttakeGoBackToIdleFromHighBasketCommand()
+                                ),
+                        new WaitCommand(300),
                         new InstantCommand(()->robot.limelightCamera.upadateLimelightPythonSnap()),
                         new InstantCommand(()->robot.limelightCamera.upadateLimelightPythonSnap()),
                         new InstantCommand(this::runLimelightHeadingPath_1),
@@ -396,8 +405,8 @@ public class NEW_BasketAutoSubmersibleBLUE_CU_UNGHI_BRAT_FAILSAFES extends Linea
 
                         new ConditionalCommand(
                                 new SequentialCommandGroup(
-//                                        new InstantCommand(()->robot.intake.updateSampleColor()),
-//                                        new InstantCommand(()->robot.intake.updateSampleColor()),
+                                        new InstantCommand(()->robot.intake.updateSampleColor()),
+                                        new InstantCommand(()->robot.intake.updateSampleColor()),
                                         new ConditionalCommand(
                                                 new SequentialCommandGroup(
                                                         new IntakeThrowingCommandAuto(),
@@ -432,8 +441,8 @@ public class NEW_BasketAutoSubmersibleBLUE_CU_UNGHI_BRAT_FAILSAFES extends Linea
 
                         new ConditionalCommand(
                                 new SequentialCommandGroup(
-//                                        new InstantCommand(()->robot.intake.updateSampleColor()),
-//                                        new InstantCommand(()->robot.intake.updateSampleColor()),
+                                        new InstantCommand(()->robot.intake.updateSampleColor()),
+                                        new InstantCommand(()->robot.intake.updateSampleColor()),
                                         new ConditionalCommand(
                                                 new SequentialCommandGroup(
                                                         new IntakeThrowingCommandAuto(),
@@ -465,8 +474,9 @@ public class NEW_BasketAutoSubmersibleBLUE_CU_UNGHI_BRAT_FAILSAFES extends Linea
 
                         new ConditionalCommand(
                                 new SequentialCommandGroup(
-//                                        new InstantCommand(()->robot.intake.updateSampleColor()),
-//                                        new InstantCommand(()->robot.intake.updateSampleColor()),
+                                        new InstantCommand(()->robot.intake.updateSampleColor()),
+                                        new InstantCommand(()->robot.intake.updateSampleColor()),
+                                        new InstantCommand(()->robot.intake.updateSampleColor()),
                                         new ConditionalCommand(
                                                 new SequentialCommandGroup(
                                                         new IntakeThrowingCommandAuto(),
@@ -501,6 +511,7 @@ public class NEW_BasketAutoSubmersibleBLUE_CU_UNGHI_BRAT_FAILSAFES extends Linea
                                 .alongWith(
                                         new SequentialCommandGroup(
                                                 new IntakeRetractAutoCommand(),
+                                                new SetExtendoStateCommand(Extendo.ExtendoState.EXTENDING_MINIMUM),
                                                 new WaitCommand(400),
                                                 new OuttakeGoHighBasketAutoCommand()
                                         )
@@ -511,7 +522,13 @@ public class NEW_BasketAutoSubmersibleBLUE_CU_UNGHI_BRAT_FAILSAFES extends Linea
                         /////////////////////////////////SUBMERSIBLE 2/////////////////////////////////////////
                         new FollowPath(follower, submersible2, true,  1)
                                 .alongWith(
-                                        new OuttakeGoBackToIdleFromHighBasketCommand()
+                                        new SequentialCommandGroup(
+                                                new OuttakeGoBackToIdleFromHighBasketCommand(),
+                                                new WaitCommand(300),
+                                                new SetExtendoStateCommand(Extendo.ExtendoState.RETRACTING)
+
+                                        )
+
                                 ),
                         new WaitCommand(300),
                         new InstantCommand(()->robot.limelightCamera.upadateLimelightPythonSnap()),
@@ -522,8 +539,8 @@ public class NEW_BasketAutoSubmersibleBLUE_CU_UNGHI_BRAT_FAILSAFES extends Linea
 
                         new ConditionalCommand(
                                 new SequentialCommandGroup(
-//                                        new InstantCommand(()->robot.intake.updateSampleColor()),
-//                                        new InstantCommand(()->robot.intake.updateSampleColor()),
+                                        new InstantCommand(()->robot.intake.updateSampleColor()),
+                                        new InstantCommand(()->robot.intake.updateSampleColor()),
                                         new ConditionalCommand(
                                                 new SequentialCommandGroup(
                                                         new IntakeThrowingCommandAuto(),
@@ -558,8 +575,8 @@ public class NEW_BasketAutoSubmersibleBLUE_CU_UNGHI_BRAT_FAILSAFES extends Linea
 
                         new ConditionalCommand(
                                 new SequentialCommandGroup(
-//                                        new InstantCommand(()->robot.intake.updateSampleColor()),
-//                                        new InstantCommand(()->robot.intake.updateSampleColor()),
+                                        new InstantCommand(()->robot.intake.updateSampleColor()),
+                                        new InstantCommand(()->robot.intake.updateSampleColor()),
                                         new ConditionalCommand(
                                                 new SequentialCommandGroup(
                                                         new IntakeThrowingCommandAuto(),
@@ -591,8 +608,8 @@ public class NEW_BasketAutoSubmersibleBLUE_CU_UNGHI_BRAT_FAILSAFES extends Linea
 
                         new ConditionalCommand(
                                 new SequentialCommandGroup(
-//                                        new InstantCommand(()->robot.intake.updateSampleColor()),
-//                                        new InstantCommand(()->robot.intake.updateSampleColor()),
+                                        new InstantCommand(()->robot.intake.updateSampleColor()),
+                                        new InstantCommand(()->robot.intake.updateSampleColor()),
                                         new ConditionalCommand(
                                                 new SequentialCommandGroup(
                                                         new IntakeThrowingCommandAuto(),
@@ -629,6 +646,7 @@ public class NEW_BasketAutoSubmersibleBLUE_CU_UNGHI_BRAT_FAILSAFES extends Linea
                                 .alongWith(
                                         new SequentialCommandGroup(
                                                 new IntakeRetractAutoCommand(),
+                                                new SetExtendoStateCommand(Extendo.ExtendoState.EXTENDING_MINIMUM),
                                                 new WaitCommand(400),
                                                 new OuttakeGoHighBasketAutoCommand()
                                         )
@@ -639,7 +657,13 @@ public class NEW_BasketAutoSubmersibleBLUE_CU_UNGHI_BRAT_FAILSAFES extends Linea
                         ///////////////////////////////////SUBMERSIBLE 3/////////////////////////////////////////
                         new FollowPath(follower, submersible3, true,  1)
                                 .alongWith(
-                                        new OuttakeGoBackToIdleFromHighBasketCommand()
+                                        new SequentialCommandGroup(
+                                                new OuttakeGoBackToIdleFromHighBasketCommand(),
+                                                new WaitCommand(300),
+                                                new SetExtendoStateCommand(Extendo.ExtendoState.RETRACTING)
+
+                                        )
+
                                 ),
                         new WaitCommand(300),
                         new InstantCommand(()->robot.limelightCamera.upadateLimelightPythonSnap()),
@@ -649,8 +673,8 @@ public class NEW_BasketAutoSubmersibleBLUE_CU_UNGHI_BRAT_FAILSAFES extends Linea
 
                         new ConditionalCommand(
                                 new SequentialCommandGroup(
-//                                        new InstantCommand(()->robot.intake.updateSampleColor()),
-//                                        new InstantCommand(()->robot.intake.updateSampleColor()),
+                                        new InstantCommand(()->robot.intake.updateSampleColor()),
+                                        new InstantCommand(()->robot.intake.updateSampleColor()),
                                         new ConditionalCommand(
                                                 new SequentialCommandGroup(
                                                         new IntakeThrowingCommandAuto(),
@@ -684,8 +708,8 @@ public class NEW_BasketAutoSubmersibleBLUE_CU_UNGHI_BRAT_FAILSAFES extends Linea
 
                         new ConditionalCommand(
                                 new SequentialCommandGroup(
-//                                        new InstantCommand(()->robot.intake.updateSampleColor()),
-//                                        new InstantCommand(()->robot.intake.updateSampleColor()),
+                                        new InstantCommand(()->robot.intake.updateSampleColor()),
+                                        new InstantCommand(()->robot.intake.updateSampleColor()),
                                         new ConditionalCommand(
                                                 new SequentialCommandGroup(
                                                         new IntakeThrowingCommandAuto(),
@@ -718,8 +742,8 @@ public class NEW_BasketAutoSubmersibleBLUE_CU_UNGHI_BRAT_FAILSAFES extends Linea
 
                         new ConditionalCommand(
                                 new SequentialCommandGroup(
-//                                        new InstantCommand(()->robot.intake.updateSampleColor()),
-//                                        new InstantCommand(()->robot.intake.updateSampleColor()),
+                                        new InstantCommand(()->robot.intake.updateSampleColor()),
+                                        new InstantCommand(()->robot.intake.updateSampleColor()),
                                         new ConditionalCommand(
                                                 new SequentialCommandGroup(
                                                         new IntakeThrowingCommandAuto(),
@@ -755,12 +779,14 @@ public class NEW_BasketAutoSubmersibleBLUE_CU_UNGHI_BRAT_FAILSAFES extends Linea
                                 .alongWith(
                                         new SequentialCommandGroup(
                                                 new IntakeRetractAutoCommand(),
+                                                new SetExtendoStateCommand(Extendo.ExtendoState.EXTENDING_MINIMUM),
                                                 new WaitCommand(400),
                                                 new OuttakeGoHighBasketAutoCommand()
                                         )
                                 ),
                         new ScoreSampleAutoCommand(),
-                        new OuttakeGoBackToIdleFromHighBasketCommand()
+                        new OuttakeGoBackToIdleFromHighBasketCommand(),
+                        new SetExtendoStateCommand(Extendo.ExtendoState.RETRACTING)
                 )
         );
 

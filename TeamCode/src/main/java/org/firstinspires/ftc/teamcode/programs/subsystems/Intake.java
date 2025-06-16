@@ -18,6 +18,7 @@ import org.firstinspires.ftc.teamcode.programs.commandbase.TeleOpCommands.Intake
 import org.firstinspires.ftc.teamcode.programs.commandbase.TeleOpCommands.Intake2Commands.IntakeThrowingCommand;
 import org.firstinspires.ftc.teamcode.programs.commandbase.TeleOpCommands.Intake2Commands.NEWIntakeRetractSPECIFICSampleCommand;
 import org.firstinspires.ftc.teamcode.programs.commandbase.TeleOpCommands.Intake2Commands.NEWIntakeRetractYELLOWSampleCommand;
+import org.firstinspires.ftc.teamcode.programs.opmodes.auto.BasketPaths;
 import org.firstinspires.ftc.teamcode.programs.util.Globals;
 
 import dev.frozenmilk.dairy.cachinghardware.CachingDcMotorEx;
@@ -266,7 +267,7 @@ public class Intake extends SubsystemBase {
     }
 
     public void loopAuto(){
-        if(intakeAngle == IntakeAngle.DOWN){
+        if(intakeAngle == IntakeAngle.DOWN && BasketPaths.getInstance().SCORE_3_COMPLETED){
             updateSampleColor();
 
             if(brushMotor.getCurrent(CurrentUnit.AMPS) > 2.75 && currentSpikeTimer.seconds() > 1){

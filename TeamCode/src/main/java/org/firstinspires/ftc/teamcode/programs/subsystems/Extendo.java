@@ -237,7 +237,7 @@ public class Extendo extends SubsystemBase {
     }
 
     public boolean canPutIntakeDown(){
-        return currentPosition >= 200;
+        return currentPosition >= 100;
     }
 
     public boolean limelightPoseFinished(){

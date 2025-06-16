@@ -80,12 +80,6 @@ public class Limelight extends SubsystemBase {
 
 
     public void upadateLimelightPythonSnap(){
-        y_distance = 0;
-        x_distance = 0;
-        extendoDistance = 0;
-        Globals.extendoDistance = 0;
-        targetAngle = 0;
-
         LLResult result = limelight.getLatestResult();
 
         if (result != null) {
@@ -98,6 +92,7 @@ public class Limelight extends SubsystemBase {
             targetAngle = -(Math.atan(x_distance / (y_distance + BONUS)));
 
             Globals.extendoDistance = (int)extendoDistance;
+
         }
 
     }

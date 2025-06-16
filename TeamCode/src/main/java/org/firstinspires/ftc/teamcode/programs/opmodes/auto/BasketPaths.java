@@ -17,7 +17,7 @@ public class BasketPaths {
     public boolean GRAB_2_COMPLETED = false;
     public boolean GRAB_3_COMPLETED = false;
 
-    public boolean SCORE_PRELOAD_COMPLETED = true;//PUNE ASTA INAPOI
+    public boolean SCORE_PRELOAD_COMPLETED = false;
     public boolean SCORE_1_COMPLETED = false;
     public boolean SCORE_2_COMPLETED = false;
     public boolean SCORE_3_COMPLETED = false;
