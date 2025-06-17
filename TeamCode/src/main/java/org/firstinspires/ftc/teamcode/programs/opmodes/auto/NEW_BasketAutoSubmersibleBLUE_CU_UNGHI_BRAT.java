@@ -242,7 +242,7 @@ public class NEW_BasketAutoSubmersibleBLUE_CU_UNGHI_BRAT extends LinearOpMode {
                                         new OuttakeGoBackToIdleFromHighBasketCommand(),
                                         new SequentialCommandGroup(
                                                 new WaitCommand(300),
-                                                new SetExtendoStateCommand(Extendo.ExtendoState.TAKE_SAMPLE_AUTO_GRAB_1),
+                                                new SetExtendoStateCommand(Extendo.ExtendoState.TAKE_SAMPLE_AUTO_BASKET_GRAB_1),
                                                 new WaitUntilCommand(robot.extendo::canPutIntakeDown),
                                                 new SetIntakeAngleCommand(Intake.IntakeAngle.DOWN),
                                                 new SetIntakeStateCommand(Intake.IntakeState.INTAKING)
@@ -282,7 +282,7 @@ public class NEW_BasketAutoSubmersibleBLUE_CU_UNGHI_BRAT extends LinearOpMode {
                                         new OuttakeGoBackToIdleFromHighBasketCommand(),
                                         new SequentialCommandGroup(
                                                 new WaitCommand(200),
-                                                new SetExtendoStateCommand(Extendo.ExtendoState.TAKE_SAMPLE_AUTO_GRAB_2),
+                                                new SetExtendoStateCommand(Extendo.ExtendoState.TAKE_SAMPLE_AUTO_BASKET_GRAB_2),
                                                 new WaitUntilCommand(robot.extendo::canPutIntakeDown),
                                                 new SetIntakeAngleCommand(Intake.IntakeAngle.DOWN),
                                                 new SetIntakeStateCommand(Intake.IntakeState.INTAKING)
@@ -322,7 +322,7 @@ public class NEW_BasketAutoSubmersibleBLUE_CU_UNGHI_BRAT extends LinearOpMode {
                                         new OuttakeGoBackToIdleFromHighBasketCommand(),
                                         new SequentialCommandGroup(
                                                 new WaitCommand(300),
-                                                new SetExtendoStateCommand(Extendo.ExtendoState.TAKE_SAMPLE_AUTO_GRAB_3),
+                                                new SetExtendoStateCommand(Extendo.ExtendoState.TAKE_SAMPLE_AUTO_BASKET_GRAB_3),
                                                 new WaitUntilCommand(robot.extendo::canPutIntakeDown),
                                                 new SetIntakeAngleCommand(Intake.IntakeAngle.DOWN),
                                                 new SetIntakeStateCommand(Intake.IntakeState.INTAKING)

@@ -15,12 +15,10 @@ public class OuttakeGoHighRungCommand extends SequentialCommandGroup {
         super(
                 new SetLiftStateCommand(Lift.LiftState.HIGH_RUNG),
                 new WaitCommand(100),
-                //new WaitUntilCommand(Lift::canRotateWrist),
                 new SetWristStateCommand(Arm.WristState.HIGH_RUNG),
                 new SetArmStateCommand(Arm.ArmState.HIGH_RUNG),
                 new WaitCommand(500),
                 new SetArmStateCommand(Arm.ArmState.HIGH_RUNG_SECURE_POSITION)
-                //new SetWristStateCommand(Arm.WristState.HIGH_RUNG)
         );
     }
 }

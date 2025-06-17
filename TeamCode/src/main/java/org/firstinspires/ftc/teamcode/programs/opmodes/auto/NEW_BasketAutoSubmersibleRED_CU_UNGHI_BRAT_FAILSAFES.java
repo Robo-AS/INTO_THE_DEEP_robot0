@@ -24,7 +24,6 @@ import com.qualcomm.robotcore.util.ElapsedTime;
 import org.firstinspires.ftc.teamcode.pedroPathing.constants.FConstants;
 import org.firstinspires.ftc.teamcode.pedroPathing.constants.LConstants;
 import org.firstinspires.ftc.teamcode.programs.commandbase.ArmCommands.SetClawStateCommand;
-import org.firstinspires.ftc.teamcode.programs.commandbase.AutoCommands.IntakeRetractAutoCommand;
 import org.firstinspires.ftc.teamcode.programs.commandbase.AutoCommands.IntakeRetractAutoSUBMERSIBLECommand;
 import org.firstinspires.ftc.teamcode.programs.commandbase.AutoCommands.IntakeThrowingCommandAuto;
 import org.firstinspires.ftc.teamcode.programs.commandbase.AutoCommands.LimelightCommand;
@@ -514,7 +513,7 @@ public class NEW_BasketAutoSubmersibleRED_CU_UNGHI_BRAT_FAILSAFES extends Linear
                                 .alongWith(
                                         new SequentialCommandGroup(
                                                 new IntakeRetractAutoSUBMERSIBLECommand(),
-                                                new SetExtendoStateCommand(Extendo.ExtendoState.STABILER_AUTO),
+                                                new SetExtendoStateCommand(Extendo.ExtendoState.STABILIZER_AUTO_BASKET),
                                                 new WaitCommand(400),
                                                 new OuttakeGoHighBasketAutoCommand()
                                         )
@@ -674,7 +673,7 @@ public class NEW_BasketAutoSubmersibleRED_CU_UNGHI_BRAT_FAILSAFES extends Linear
                                 .alongWith(
                                         new SequentialCommandGroup(
                                                 new IntakeRetractAutoSUBMERSIBLECommand(),
-                                                new SetExtendoStateCommand(Extendo.ExtendoState.STABILER_AUTO),
+                                                new SetExtendoStateCommand(Extendo.ExtendoState.STABILIZER_AUTO_BASKET),
                                                 new WaitCommand(400),
                                                 new OuttakeGoHighBasketAutoCommand()
                                         )
@@ -831,7 +830,7 @@ public class NEW_BasketAutoSubmersibleRED_CU_UNGHI_BRAT_FAILSAFES extends Linear
                                 .alongWith(
                                         new SequentialCommandGroup(
                                                 new IntakeRetractAutoSUBMERSIBLECommand(),
-                                                new SetExtendoStateCommand(Extendo.ExtendoState.STABILER_AUTO),
+                                                new SetExtendoStateCommand(Extendo.ExtendoState.STABILIZER_AUTO_BASKET),
                                                 new WaitCommand(400),
                                                 new OuttakeGoHighBasketAutoCommand()
                                         )

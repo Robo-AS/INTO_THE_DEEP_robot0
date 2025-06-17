@@ -26,42 +26,50 @@ public class Extendo extends SubsystemBase {
     public enum ExtendoState{
         EXTENDING_MINIMUM,
         RETRACTING,
-        EXTENDING_MINIMUM_AUTO,
-        TAKE_SAMPLE_AUTO_GRAB_1,
-        TAKE_SAMPLE_AUTO_GRAB_2,
-        TAKE_SAMPLE_AUTO_GRAB_3,
-        TAKE_SAMPLE_SPECIMEN,
-        TAKE_SPECIMEN_AUTO,
-        RETRACT_AUTO_FAIL_SAFE,
-        HANG,
-        TAKE_SAMPLE_SUBMERSIBLE_1,
-        TAKE_SAMPLE_SUBMERSIBLE_2,
         MAXIMUM,
+        HANG,
+
+        EXTENDING_MINIMUM_AUTO,
+
+        TAKE_SAMPLE_AUTO_BASKET_GRAB_1,
+        TAKE_SAMPLE_AUTO_BASKET_GRAB_2,
+        TAKE_SAMPLE_AUTO_BASKET_GRAB_3,
+        STABILIZER_AUTO_BASKET,
+
         LIMELIGHT_POSE,
         LIMELIGHT_RETRACT_POSE,
         LIMELIGHT_TAKE_POSE,
         LIMELIGHT_TAKE_POSE_AFTER_THROWING,
-        STABILER_AUTO
+
+        TAKE_SAMPLE_SPECIMEN_AUTO_GRAB_1,
+        TAKE_SAMPLE_SPECIMEN_AUTO_GRAB_2,
+        TAKE_SAMPLE_SPECIMEN_AUTO_GRAB_3,
+        TAKE_SPECIMEN_AUTO,
+        RETRACT_AUTO_FAIL_SAFE,
+
+
     }
 
     public ExtendoState extendoState = ExtendoState.RETRACTING;
     public static int EXTENDING_MINIMUM = 330;
     public static int RETRACTING = -15;
     public static int HANG = 800;
+    public int MAXIMUM = 1150;
 
     public int EXTENDING_MINIMUM_AUTO = 500;
-    public int TAKE_SAMPLE_AUTO_GRAB_1 = 900;
-    public int TAKE_SAMPLE_AUTO_GRAB_2 = 860;
-    public int TAKE_SAMPLE_AUTO_GRAB_3 = 870;
+    public int TAKE_SAMPLE_AUTO_BASKET_GRAB_1 = 900;
+    public int TAKE_SAMPLE_AUTO_BASKET_GRAB_2 = 860;
+    public int TAKE_SAMPLE_AUTO_BASKET_GRAB_3 = 870;
+    public int STABILIZER_AUTO_BASKET = 500;
 
-    public int TAKE_SAMPLE_SPECIMEN = 1160;
+    public int TAKE_SAMPLE_SPECIMEN_AUTO_GRAB_1 = 630;
+    public int TAKE_SAMPLE_SPECIMEN_AUTO_GRAB_2 = 760;
+    public int TAKE_SAMPLE_SPECIMEN_AUTO_GRAB_3 = 1000;
     public int TAKE_SPECIMEN_AUTO = 730;
     public int RETRACT_AUTO_FAIL_SAFE = 500;
 
-    public int TAKE_SAMPLE_SUBMERSIBLE_1 = 900;
-    public int TAKE_SAMPLE_SUBMERSIBLE_2 = 900;
-    public int MAXIMUM = 1150;
-    public int STABILER_AUTO = 500;
+
+
 
     private PIDController extendo_pid;
     public static double p_extendo = 0.014, i_extendo = 0.009, d_extendo = 0.0005;
@@ -168,20 +176,14 @@ public class Extendo extends SubsystemBase {
             case EXTENDING_MINIMUM_AUTO:
                 targetPosition = EXTENDING_MINIMUM_AUTO;
                 break;
-            case TAKE_SAMPLE_AUTO_GRAB_1:
-                targetPosition = TAKE_SAMPLE_AUTO_GRAB_1;
+            case TAKE_SAMPLE_AUTO_BASKET_GRAB_1:
+                targetPosition = TAKE_SAMPLE_AUTO_BASKET_GRAB_1;
                 break;
-
-            case TAKE_SAMPLE_AUTO_GRAB_2:
-                targetPosition = TAKE_SAMPLE_AUTO_GRAB_2;
+            case TAKE_SAMPLE_AUTO_BASKET_GRAB_2:
+                targetPosition = TAKE_SAMPLE_AUTO_BASKET_GRAB_2;
                 break;
-            case TAKE_SAMPLE_AUTO_GRAB_3:
-                targetPosition = TAKE_SAMPLE_AUTO_GRAB_3;
-                break;
-
-
-            case TAKE_SAMPLE_SPECIMEN:
-                targetPosition = TAKE_SAMPLE_SPECIMEN;
+            case TAKE_SAMPLE_AUTO_BASKET_GRAB_3:
+                targetPosition = TAKE_SAMPLE_AUTO_BASKET_GRAB_3;
                 break;
             case TAKE_SPECIMEN_AUTO:
                 targetPosition = TAKE_SPECIMEN_AUTO;
@@ -192,15 +194,9 @@ public class Extendo extends SubsystemBase {
             case HANG:
                 targetPosition = HANG;
                 break;
-            case TAKE_SAMPLE_SUBMERSIBLE_1:
-                targetPosition = TAKE_SAMPLE_SUBMERSIBLE_1;
-                break;
-            case TAKE_SAMPLE_SUBMERSIBLE_2:
-                targetPosition = TAKE_SAMPLE_SUBMERSIBLE_2;
-                break;
-            case MAXIMUM:
-                targetPosition = MAXIMUM;
-                break;
+//            case MAXIMUM:
+//                targetPosition = MAXIMUM;
+//                break;
             case LIMELIGHT_POSE:
                 targetPosition = Math.min(Globals.extendoDistance, MAXIMUM);
                 break;
@@ -213,10 +209,18 @@ public class Extendo extends SubsystemBase {
             case LIMELIGHT_TAKE_POSE_AFTER_THROWING:
                 targetPosition = Math.min(currentPosition + 200, MAXIMUM);
                 break;
-            case STABILER_AUTO:
-                targetPosition = STABILER_AUTO;
+            case STABILIZER_AUTO_BASKET:
+                targetPosition = STABILIZER_AUTO_BASKET;
                 break;
-
+            case TAKE_SAMPLE_SPECIMEN_AUTO_GRAB_1:
+                targetPosition = TAKE_SAMPLE_SPECIMEN_AUTO_GRAB_1;
+                break;
+            case TAKE_SAMPLE_SPECIMEN_AUTO_GRAB_2:
+                targetPosition = TAKE_SAMPLE_SPECIMEN_AUTO_GRAB_2;
+                break;
+            case TAKE_SAMPLE_SPECIMEN_AUTO_GRAB_3:
+                targetPosition = TAKE_SAMPLE_SPECIMEN_AUTO_GRAB_3;
+                break;
 
         }
     }
@@ -286,22 +290,13 @@ public class Extendo extends SubsystemBase {
     public void loopAuto(){
         currentPosition = extendoMotor.getCurrentPosition();
         if(targetPosition != previousTarget){
-            if(extendoState == ExtendoState.TAKE_SAMPLE_SUBMERSIBLE_1 || extendoState == ExtendoState.TAKE_SAMPLE_SUBMERSIBLE_2){
-                profile = MotionProfileGenerator.generateSimpleMotionProfile(
-                        new MotionState(previousTarget, 0),
-                        new MotionState(targetPosition, 0),
-                        maxVelocitySubmersible,
-                        maxAccelerationSubmersible
-                );
-            }
-            else{
                 profile = MotionProfileGenerator.generateSimpleMotionProfile(
                         new MotionState(previousTarget, 0),
                         new MotionState(targetPosition, 0),
                         maxVelocity,
                         maxAcceleration
                 );
-            }
+
 
             time.reset();
             previousTarget = targetPosition;
