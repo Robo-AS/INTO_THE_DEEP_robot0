@@ -79,7 +79,7 @@ public class BasketAutoTEST extends LinearOpMode {
         robot.hang.initialize();
 
         robot.limelightCamera.initializeHardware(hardwareMap);
-        robot.limelightCamera.initialize();
+        robot.limelightCamera.initializeBLUE();
 
 
 

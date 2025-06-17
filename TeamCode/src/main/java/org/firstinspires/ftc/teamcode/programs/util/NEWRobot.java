@@ -61,7 +61,7 @@ public class NEWRobot {
         arm.initializeHardware(hardwareMap);
         hang.initializeHardware(hardwareMap);
         sweeper.initializeHardware(hardwareMap);
-        limelightCamera.initializeHardware(hardwareMap);
+//        limelightCamera.initializeHardware(hardwareMap);
 
 
         allHubs = hardwareMap.getAll(LynxModule.class);

@@ -107,7 +107,7 @@ public class NEW_BasketAutoSubmersibleBLUE_CU_UNGHI_BRAT extends LinearOpMode {
         robot.hang.initializeHardware(hardwareMap);
         robot.hang.initialize();
         robot.limelightCamera.initializeHardware(hardwareMap);
-        robot.limelightCamera.initialize();
+        robot.limelightCamera.initializeBLUE();
 
         basketPaths.resetTrajectoryes();
 

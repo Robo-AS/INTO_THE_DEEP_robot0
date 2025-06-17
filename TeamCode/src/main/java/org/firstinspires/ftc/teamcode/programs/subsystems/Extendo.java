@@ -49,7 +49,7 @@ public class Extendo extends SubsystemBase {
     public static int RETRACTING = -15;
     public static int HANG = 800;
 
-    public int EXTENDING_MINIMUM_AUTO = 815;
+    public int EXTENDING_MINIMUM_AUTO = 500;
     public int TAKE_SAMPLE_AUTO_GRAB_1 = 900;
     public int TAKE_SAMPLE_AUTO_GRAB_2 = 860;
     public int TAKE_SAMPLE_AUTO_GRAB_3 = 870;
@@ -96,7 +96,7 @@ public class Extendo extends SubsystemBase {
         extendoMotor = new CachingDcMotorEx(hardwareMap.get(DcMotorEx.class, "extendoMotor"));
         extendoMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         extendoMotor.setDirection(DcMotorSimple.Direction.FORWARD);
-        extendoMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+//        extendoMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         extendoMotor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
     }
 

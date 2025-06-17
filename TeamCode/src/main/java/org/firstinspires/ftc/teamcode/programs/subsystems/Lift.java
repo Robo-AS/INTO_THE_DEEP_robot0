@@ -83,13 +83,13 @@ public class Lift extends SubsystemBase{
         liftMotor = new CachingDcMotorEx(hardwareMap.get(DcMotorEx.class, "liftMotor"));
         liftMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         liftMotor.setDirection(DcMotorSimple.Direction.FORWARD);
-        liftMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+//        liftMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         liftMotor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
 
         followerMotor = new CachingDcMotorEx(hardwareMap.get(DcMotorEx.class, "followerMotor"));
         followerMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         followerMotor.setDirection(DcMotorSimple.Direction.FORWARD);
-        followerMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+//        followerMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         followerMotor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
     }
 

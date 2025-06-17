@@ -106,7 +106,7 @@ public class TEST_LIMELIGHT_SUBMERSIBLE extends LinearOpMode {
         robot.hang.initializeHardware(hardwareMap);
         robot.hang.initialize();
         robot.limelightCamera.initializeHardware(hardwareMap);
-        robot.limelightCamera.initialize();
+        robot.limelightCamera.initializeBLUE();
 
         basketPaths.resetTrajectoryes();
 

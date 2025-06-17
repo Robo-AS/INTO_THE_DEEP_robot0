@@ -268,8 +268,8 @@ public class Intake extends SubsystemBase {
 
     public void loopAuto(){
         if(intakeAngle == IntakeAngle.DOWN && BasketPaths.getInstance().SCORE_3_COMPLETED){
-            updateSampleColor();
-            updateSampleStateDigital();
+//            updateSampleColor();
+//            updateSampleStateDigital();
 
             if(brushMotor.getCurrent(CurrentUnit.AMPS) > 2.75 && currentSpikeTimer.seconds() > 1){
                 CommandScheduler.getInstance().schedule(new IntakeBlockedSamplesCommand());

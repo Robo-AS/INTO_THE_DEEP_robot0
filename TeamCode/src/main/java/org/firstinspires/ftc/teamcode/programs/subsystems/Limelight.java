@@ -38,9 +38,15 @@ public class Limelight extends SubsystemBase {
         limelight = hardwareMap.get(Limelight3A.class, "limelight");
     }
 
-    public void initialize(){
+    public void initializeBLUE(){
         limelight.setPollRateHz(100);
         limelight.pipelineSwitch(0);
+        limelight.start();
+    }
+
+    public void initializeRED(){
+        limelight.setPollRateHz(100);
+        limelight.pipelineSwitch(1);
         limelight.start();
     }
 
