@@ -128,7 +128,13 @@ public class NEWTeleOpBlue extends CommandOpMode {
                 .whenPressed(
                         () -> CommandScheduler.getInstance().schedule(
                                 new ConditionalCommand(
-                                        new OuttakeGoHighRungCommand(),
+                                        new SequentialCommandGroup(
+                                                new SetExtendoStateCommand(Extendo.ExtendoState.EXTEND_SPECIMEN_EXIT),
+                                                new WaitCommand(50),
+                                                new OuttakeGoHighRungCommand(),
+                                                new SetExtendoStateCommand(Extendo.ExtendoState.RETRACTING)
+                                        ),
+
                                         new ConditionalCommand(
                                                 new OuttakeGoBackToIdleFromHighRungCommand(),
                                                 new ConditionalCommand(

@@ -47,6 +47,8 @@ public class Extendo extends SubsystemBase {
         TAKE_SPECIMEN_AUTO,
         RETRACT_AUTO_FAIL_SAFE,
 
+        EXTEND_HUMAN_PLAYER,
+        EXTEND_SPECIMEN_EXIT
 
     }
 
@@ -62,11 +64,15 @@ public class Extendo extends SubsystemBase {
     public int TAKE_SAMPLE_AUTO_BASKET_GRAB_3 = 870;
     public int STABILIZER_AUTO_BASKET = 500;
 
-    public int TAKE_SAMPLE_SPECIMEN_AUTO_GRAB_1 = 630;
-    public int TAKE_SAMPLE_SPECIMEN_AUTO_GRAB_2 = 760;
-    public int TAKE_SAMPLE_SPECIMEN_AUTO_GRAB_3 = 1000;
+    public int TAKE_SAMPLE_SPECIMEN_AUTO_GRAB_1 = 380;
+    public int TAKE_SAMPLE_SPECIMEN_AUTO_GRAB_2 = 600;
+    public int TAKE_SAMPLE_SPECIMEN_AUTO_GRAB_3 = 590;
     public int TAKE_SPECIMEN_AUTO = 730;
     public int RETRACT_AUTO_FAIL_SAFE = 500;
+
+    public int EXTEND_HUMAN_PLAYER = 580;
+    public int EXTEND_SPECIMEN_EXIT = 150;
+
 
 
 
@@ -97,6 +103,7 @@ public class Extendo extends SubsystemBase {
         if (instance == null) {
             instance = new Extendo();
         }
+
         return instance;
     }
 
@@ -220,6 +227,12 @@ public class Extendo extends SubsystemBase {
                 break;
             case TAKE_SAMPLE_SPECIMEN_AUTO_GRAB_3:
                 targetPosition = TAKE_SAMPLE_SPECIMEN_AUTO_GRAB_3;
+                break;
+            case EXTEND_HUMAN_PLAYER:
+                targetPosition = EXTEND_HUMAN_PLAYER;
+                break;
+            case EXTEND_SPECIMEN_EXIT:
+                targetPosition = EXTEND_SPECIMEN_EXIT;
                 break;
 
         }
