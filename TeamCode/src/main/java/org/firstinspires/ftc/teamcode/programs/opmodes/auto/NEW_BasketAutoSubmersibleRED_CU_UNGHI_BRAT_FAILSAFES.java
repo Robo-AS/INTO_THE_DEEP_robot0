@@ -24,11 +24,11 @@ import com.qualcomm.robotcore.util.ElapsedTime;
 import org.firstinspires.ftc.teamcode.pedroPathing.constants.FConstants;
 import org.firstinspires.ftc.teamcode.pedroPathing.constants.LConstants;
 import org.firstinspires.ftc.teamcode.programs.commandbase.ArmCommands.SetClawStateCommand;
-import org.firstinspires.ftc.teamcode.programs.commandbase.AutoCommands.IntakeRetractAutoSUBMERSIBLECommand;
+import org.firstinspires.ftc.teamcode.programs.commandbase.AutoCommands.BasketAuto.IntakeRetractBASKETAutoSUBMERSIBLECommand;
 import org.firstinspires.ftc.teamcode.programs.commandbase.AutoCommands.IntakeThrowingCommandAuto;
 import org.firstinspires.ftc.teamcode.programs.commandbase.AutoCommands.LimelightCommand;
-import org.firstinspires.ftc.teamcode.programs.commandbase.AutoCommands.OuttakeGoHighBasketAutoCommand;
-import org.firstinspires.ftc.teamcode.programs.commandbase.AutoCommands.ScoreSampleAutoCommand;
+import org.firstinspires.ftc.teamcode.programs.commandbase.AutoCommands.BasketAuto.OuttakeGoHighBasketAutoCommand;
+import org.firstinspires.ftc.teamcode.programs.commandbase.AutoCommands.BasketAuto.ScoreSampleAutoCommand;
 import org.firstinspires.ftc.teamcode.programs.commandbase.DoesNothingCommand;
 import org.firstinspires.ftc.teamcode.programs.commandbase.ExtendoCommands.SetExtendoStateCommand;
 import org.firstinspires.ftc.teamcode.programs.commandbase.IntakeCommand.SetIntakeAngleCommand;
@@ -512,7 +512,7 @@ public class NEW_BasketAutoSubmersibleRED_CU_UNGHI_BRAT_FAILSAFES extends Linear
                         new FollowPath(follower, scoreSubmersible1, true, 1)
                                 .alongWith(
                                         new SequentialCommandGroup(
-                                                new IntakeRetractAutoSUBMERSIBLECommand(),
+                                                new IntakeRetractBASKETAutoSUBMERSIBLECommand(),
                                                 new SetExtendoStateCommand(Extendo.ExtendoState.STABILIZER_AUTO_BASKET),
                                                 new WaitCommand(400),
                                                 new OuttakeGoHighBasketAutoCommand()
@@ -672,7 +672,7 @@ public class NEW_BasketAutoSubmersibleRED_CU_UNGHI_BRAT_FAILSAFES extends Linear
                         new FollowPath(follower, scoreSubmersible2, true, 1)
                                 .alongWith(
                                         new SequentialCommandGroup(
-                                                new IntakeRetractAutoSUBMERSIBLECommand(),
+                                                new IntakeRetractBASKETAutoSUBMERSIBLECommand(),
                                                 new SetExtendoStateCommand(Extendo.ExtendoState.STABILIZER_AUTO_BASKET),
                                                 new WaitCommand(400),
                                                 new OuttakeGoHighBasketAutoCommand()
@@ -829,7 +829,7 @@ public class NEW_BasketAutoSubmersibleRED_CU_UNGHI_BRAT_FAILSAFES extends Linear
                         new FollowPath(follower, scoreSubmersible3, true, 1)
                                 .alongWith(
                                         new SequentialCommandGroup(
-                                                new IntakeRetractAutoSUBMERSIBLECommand(),
+                                                new IntakeRetractBASKETAutoSUBMERSIBLECommand(),
                                                 new SetExtendoStateCommand(Extendo.ExtendoState.STABILIZER_AUTO_BASKET),
                                                 new WaitCommand(400),
                                                 new OuttakeGoHighBasketAutoCommand()

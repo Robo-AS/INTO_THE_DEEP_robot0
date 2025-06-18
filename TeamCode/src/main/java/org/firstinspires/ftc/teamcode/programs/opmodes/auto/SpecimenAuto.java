@@ -18,6 +18,7 @@ import com.qualcomm.robotcore.util.ElapsedTime;
 import org.firstinspires.ftc.teamcode.pedroPathing.constants.FConstants;
 import org.firstinspires.ftc.teamcode.pedroPathing.constants.LConstants;
 import org.firstinspires.ftc.teamcode.programs.commandbase.ArmCommands.SetClawStateCommand;
+import org.firstinspires.ftc.teamcode.programs.commandbase.AutoCommands.SpecimenAuto.IntakeRetractSPECIMENAutoCommand;
 import org.firstinspires.ftc.teamcode.programs.commandbase.ExtendoCommands.SetExtendoStateCommand;
 import org.firstinspires.ftc.teamcode.programs.commandbase.IntakeCommand.SetIntakeAngleCommand;
 import org.firstinspires.ftc.teamcode.programs.commandbase.IntakeCommand.SetIntakeStateCommand;
@@ -54,7 +55,32 @@ public class SpecimenAuto extends LinearOpMode {
     public static Pose grab3Pose = new Pose(35.2987012987013, 19.4025974025974, Math.toRadians(-62)); //6
     public static Pose bring3Pose = new Pose(26.883116883116884, 23.14285714285714, Math.toRadians(-150)); //7
 
-    public static Pose takeSpecimen1Pose = new Pose(27.584415584415584, 40.90909090909091, Math.toRadians(-130));
+    public static Pose takeSpecimenPose = new Pose(27.584415584415584, 40.90909090909091, Math.toRadians(-130)); //8
+
+    public static Pose score1Pose = new Pose(36.90909090909091, 60.77922077922078, Math.toRadians(180)); //9
+    public static Pose score1SMALLPose = new Pose(38.90909090909091, 60.77922077922078, Math.toRadians(180));
+
+//    public static Pose takeSpecimen2Pose = new Pose(27.584415584415584, 40.90909090909091, Math.toRadians(-130)); //10
+
+    public static Pose score2Pose = new Pose(36.90909090909091, 62.77922077922078, Math.toRadians(180)); //11
+    public static Pose score2SMALLPose = new Pose(38.90909090909091, 62.77922077922078, Math.toRadians(180));
+
+//    public static Pose takeSpecimen3Pose = new Pose(27.584415584415584, 40.90909090909091, Math.toRadians(-130)); //12
+
+    public static Pose score3Pose = new Pose(36.90909090909091, 64.77922077922078, Math.toRadians(180)); //13
+    public static Pose score3SMALLPose = new Pose(38.90909090909091, 64.77922077922078, Math.toRadians(180));
+
+//    public static Pose takeSpecimen4Pose = new Pose(27.584415584415584, 40.90909090909091, Math.toRadians(-130)); //14
+
+    public static Pose score4Pose = new Pose(36.90909090909091, 66.77922077922078, Math.toRadians(180)); //13
+    public static Pose score4SMALLPose = new Pose(38.90909090909091, 66.77922077922078, Math.toRadians(180));
+
+//    public static Pose takeSpecimen5Pose = new Pose(27.584415584415584, 40.90909090909091, Math.toRadians(-130)); //14
+
+    public static Pose score5Pose = new Pose(36.90909090909091, 68.77922077922078, Math.toRadians(180)); //13
+    public static Pose score5SMALLPose = new Pose(38.90909090909091, 68.77922077922078, Math.toRadians(180));
+
+
 
     @Override
     public void runOpMode() throws InterruptedException {
@@ -139,10 +165,101 @@ public class SpecimenAuto extends LinearOpMode {
                 .build();
 
         PathChain take1 = follower.pathBuilder()
-                .addPath(new BezierLine(new Point(bring3Pose), new Point(takeSpecimen1Pose)))
-                .setLinearHeadingInterpolation(bring3Pose.getHeading(), takeSpecimen1Pose.getHeading())
+                .addPath(new BezierLine(new Point(bring3Pose), new Point(takeSpecimenPose)))
+                .setLinearHeadingInterpolation(bring3Pose.getHeading(), takeSpecimenPose.getHeading())
                 .setZeroPowerAccelerationMultiplier(16)
                 .build();
+
+
+        PathChain score1 = follower.pathBuilder()
+                .addPath(new BezierLine(new Point(takeSpecimenPose), new Point(score1Pose)))
+                .setLinearHeadingInterpolation(takeSpecimenPose.getHeading(), score1Pose.getHeading())
+                .setZeroPowerAccelerationMultiplier(14)
+                .build();
+
+
+        PathChain score1SMALL = follower.pathBuilder()
+                .addPath(new BezierLine(new Point(score1Pose), new Point(score1SMALLPose)))
+                .setConstantHeadingInterpolation(score1SMALLPose.getHeading())
+                .setZeroPowerAccelerationMultiplier(10)
+                .build();
+
+        PathChain take2 = follower.pathBuilder()
+                .addPath(new BezierLine(new Point(score1SMALLPose), new Point(takeSpecimenPose)))
+                .setLinearHeadingInterpolation(score1SMALLPose.getHeading(), takeSpecimenPose.getHeading())
+                .setZeroPowerAccelerationMultiplier(14)
+                .build();
+
+        PathChain score2 = follower.pathBuilder()
+                .addPath(new BezierLine(new Point(takeSpecimenPose), new Point(score2Pose)))
+                .setLinearHeadingInterpolation(takeSpecimenPose.getHeading(), score2Pose.getHeading())
+                .setZeroPowerAccelerationMultiplier(14)
+                .build();
+
+        PathChain score2SMALL = follower.pathBuilder()
+                .addPath(new BezierLine(new Point(score2Pose), new Point(score2SMALLPose)))
+                .setConstantHeadingInterpolation(score2SMALLPose.getHeading())
+                .setZeroPowerAccelerationMultiplier(10)
+                .build();
+
+        PathChain take3 = follower.pathBuilder()
+                .addPath(new BezierLine(new Point(score2SMALLPose), new Point(takeSpecimenPose)))
+                .setLinearHeadingInterpolation(score2SMALLPose.getHeading(), takeSpecimenPose.getHeading())
+                .setZeroPowerAccelerationMultiplier(14)
+                .build();
+
+        PathChain score3 = follower.pathBuilder()
+                .addPath(new BezierLine(new Point(takeSpecimenPose), new Point(score3Pose)))
+                .setLinearHeadingInterpolation(takeSpecimenPose.getHeading(), score3Pose.getHeading())
+                .setZeroPowerAccelerationMultiplier(14)
+                .build();
+
+        PathChain score3SMALL = follower.pathBuilder()
+                .addPath(new BezierLine(new Point(score3Pose), new Point(score3SMALLPose)))
+                .setConstantHeadingInterpolation(score3SMALLPose.getHeading())
+                .setZeroPowerAccelerationMultiplier(10)
+                .build();
+
+        PathChain take4 = follower.pathBuilder()
+                .addPath(new BezierLine(new Point(score3SMALLPose), new Point(takeSpecimenPose)))
+                .setLinearHeadingInterpolation(score3SMALLPose.getHeading(), takeSpecimenPose.getHeading())
+                .setZeroPowerAccelerationMultiplier(14)
+                .build();
+
+        PathChain score4 = follower.pathBuilder()
+                .addPath(new BezierLine(new Point(takeSpecimenPose), new Point(score4Pose)))
+                .setLinearHeadingInterpolation(takeSpecimenPose.getHeading(), score4Pose.getHeading())
+                .setZeroPowerAccelerationMultiplier(14)
+                .build();
+
+        PathChain score4SMALL = follower.pathBuilder()
+                .addPath(new BezierLine(new Point(score4Pose), new Point(score4SMALLPose)))
+                .setConstantHeadingInterpolation(score4SMALLPose.getHeading())
+                .setZeroPowerAccelerationMultiplier(10)
+                .build();
+
+        PathChain take5 = follower.pathBuilder()
+                .addPath(new BezierLine(new Point(score4SMALLPose), new Point(takeSpecimenPose)))
+                .setLinearHeadingInterpolation(score4SMALLPose.getHeading(), takeSpecimenPose.getHeading())
+                .setZeroPowerAccelerationMultiplier(14)
+                .build();
+
+        PathChain score5 = follower.pathBuilder()
+                .addPath(new BezierLine(new Point(takeSpecimenPose), new Point(score5Pose)))
+                .setLinearHeadingInterpolation(takeSpecimenPose.getHeading(), score5Pose.getHeading())
+                .setZeroPowerAccelerationMultiplier(14)
+                .build();
+
+
+        PathChain score5SMALL = follower.pathBuilder()
+                .addPath(new BezierLine(new Point(score5Pose), new Point(score5SMALLPose)))
+                .setConstantHeadingInterpolation(score5SMALLPose.getHeading())
+                .setZeroPowerAccelerationMultiplier(10)
+                .build();
+
+
+
+
 
 
 
@@ -250,10 +367,148 @@ public class SpecimenAuto extends LinearOpMode {
                         new FollowPath(follower, take1, true, 1)
                                 .alongWith(
                                         new SetExtendoStateCommand(Extendo.ExtendoState.EXTENDING_MINIMUM_AUTO)
-                                )
+                                ),
+                        new SetIntakeAngleCommand(Intake.IntakeAngle.DOWN),
+                        new SetIntakeStateCommand(Intake.IntakeState.INTAKING),
+                        new SetExtendoStateCommand(Extendo.ExtendoState.TAKE_SPECIMEN_AUTO),
+                        new WaitUntilCommand(robot.intake::isSampleDigital).withTimeout(sensorTimeOut),
+                        new SetIntakeStateCommand(Intake.IntakeState.IDLE),
 
 
-                )
+
+                        new FollowPath(follower, score1, true, 1)
+                                .alongWith(
+                                        new SequentialCommandGroup(
+                                                new IntakeRetractSPECIMENAutoCommand(),
+                                                new SetExtendoStateCommand(Extendo.ExtendoState.EXTEND_SPECIMEN_EXIT),
+                                                new WaitCommand(50),
+                                                new OuttakeGoHighRungCommand()
+                                        )
+                                ),
+                        new WaitCommand(250),
+                        new FollowPath(follower, score1SMALL, true, 1),
+
+
+
+                        new FollowPath(follower, take2, true, 1)
+                                .alongWith(
+                                        new SequentialCommandGroup(
+                                                new PutSpecimenCommand(),
+                                                new SetExtendoStateCommand(Extendo.ExtendoState.RETRACTING),
+                                                new OuttakeGoBackToIdleFromHighRungCommand()
+                                        )
+                                ),
+                        new SetIntakeAngleCommand(Intake.IntakeAngle.DOWN),
+                        new SetIntakeStateCommand(Intake.IntakeState.INTAKING),
+                        new SetExtendoStateCommand(Extendo.ExtendoState.TAKE_SPECIMEN_AUTO),
+                        new WaitUntilCommand(robot.intake::isSampleDigital).withTimeout(sensorTimeOut),
+                        new SetIntakeStateCommand(Intake.IntakeState.IDLE),
+
+
+                        new FollowPath(follower, score2, true, 1)
+                                .alongWith(
+                                        new SequentialCommandGroup(
+                                                new IntakeRetractSPECIMENAutoCommand(),
+                                                new SetExtendoStateCommand(Extendo.ExtendoState.EXTEND_SPECIMEN_EXIT),
+                                                new WaitCommand(50),
+                                                new OuttakeGoHighRungCommand()
+                                        )
+                                ),
+                        new WaitCommand(250),
+                        new FollowPath(follower, score2SMALL, true, 1),
+
+
+
+                        new FollowPath(follower, take3, true, 1)
+                                .alongWith(
+                                        new SequentialCommandGroup(
+                                                new PutSpecimenCommand(),
+                                                new SetExtendoStateCommand(Extendo.ExtendoState.RETRACTING),
+                                                new OuttakeGoBackToIdleFromHighRungCommand()
+                                        )
+                                ),
+                        new SetIntakeAngleCommand(Intake.IntakeAngle.DOWN),
+                        new SetIntakeStateCommand(Intake.IntakeState.INTAKING),
+                        new SetExtendoStateCommand(Extendo.ExtendoState.TAKE_SPECIMEN_AUTO),
+                        new WaitUntilCommand(robot.intake::isSampleDigital).withTimeout(sensorTimeOut),
+                        new SetIntakeStateCommand(Intake.IntakeState.IDLE),
+
+
+                        new FollowPath(follower, score3, true, 1)
+                                .alongWith(
+                                        new SequentialCommandGroup(
+                                                new IntakeRetractSPECIMENAutoCommand(),
+                                                new SetExtendoStateCommand(Extendo.ExtendoState.EXTEND_SPECIMEN_EXIT),
+                                                new WaitCommand(50),
+                                                new OuttakeGoHighRungCommand()
+                                        )
+                                ),
+                        new WaitCommand(250),
+                        new FollowPath(follower, score3SMALL, true, 1),
+
+
+
+
+                        new FollowPath(follower, take4, true, 1)
+                                .alongWith(
+                                        new SequentialCommandGroup(
+                                                new PutSpecimenCommand(),
+                                                new SetExtendoStateCommand(Extendo.ExtendoState.RETRACTING),
+                                                new OuttakeGoBackToIdleFromHighRungCommand()
+                                        )
+                                ),
+                        new SetIntakeAngleCommand(Intake.IntakeAngle.DOWN),
+                        new SetIntakeStateCommand(Intake.IntakeState.INTAKING),
+                        new SetExtendoStateCommand(Extendo.ExtendoState.TAKE_SPECIMEN_AUTO),
+                        new WaitUntilCommand(robot.intake::isSampleDigital).withTimeout(sensorTimeOut),
+                        new SetIntakeStateCommand(Intake.IntakeState.IDLE),
+
+
+                        new FollowPath(follower, score4, true, 1)
+                                .alongWith(
+                                        new SequentialCommandGroup(
+                                                new IntakeRetractSPECIMENAutoCommand(),
+                                                new SetExtendoStateCommand(Extendo.ExtendoState.EXTEND_SPECIMEN_EXIT),
+                                                new WaitCommand(50),
+                                                new OuttakeGoHighRungCommand()
+                                        )
+                                ),
+                        new WaitCommand(250),
+                        new FollowPath(follower, score4SMALL, true, 1),
+
+
+
+                        new FollowPath(follower, take5, true, 1)
+                                .alongWith(
+                                        new SequentialCommandGroup(
+                                                new PutSpecimenCommand(),
+                                                new SetExtendoStateCommand(Extendo.ExtendoState.RETRACTING),
+                                                new OuttakeGoBackToIdleFromHighRungCommand()
+                                        )
+                                ),
+                        new SetIntakeAngleCommand(Intake.IntakeAngle.DOWN),
+                        new SetIntakeStateCommand(Intake.IntakeState.INTAKING),
+                        new SetExtendoStateCommand(Extendo.ExtendoState.TAKE_SPECIMEN_AUTO),
+                        new WaitUntilCommand(robot.intake::isSampleDigital).withTimeout(sensorTimeOut),
+                        new SetIntakeStateCommand(Intake.IntakeState.IDLE),
+
+
+                        new FollowPath(follower, score5, true, 1)
+                                .alongWith(
+                                        new SequentialCommandGroup(
+                                                new IntakeRetractSPECIMENAutoCommand(),
+                                                new SetExtendoStateCommand(Extendo.ExtendoState.EXTEND_SPECIMEN_EXIT),
+                                                new WaitCommand(50),
+                                                new OuttakeGoHighRungCommand()
+                                        )
+                                ),
+                        new WaitCommand(250),
+                        new FollowPath(follower, score5SMALL, true, 1),
+                        new PutSpecimenCommand(),
+                        new WaitCommand(500),
+                        new OuttakeGoBackToIdleFromHighRungCommand()
+
+                        )
         );
 
 

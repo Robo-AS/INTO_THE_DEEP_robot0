@@ -23,9 +23,9 @@ import com.qualcomm.robotcore.util.ElapsedTime;
 import org.firstinspires.ftc.teamcode.pedroPathing.constants.FConstants;
 import org.firstinspires.ftc.teamcode.pedroPathing.constants.LConstants;
 import org.firstinspires.ftc.teamcode.programs.commandbase.ArmCommands.SetClawStateCommand;
-import org.firstinspires.ftc.teamcode.programs.commandbase.AutoCommands.IntakeRetractAutoCommand;
-import org.firstinspires.ftc.teamcode.programs.commandbase.AutoCommands.OuttakeGoHighBasketAutoCommand;
-import org.firstinspires.ftc.teamcode.programs.commandbase.AutoCommands.ScoreSampleAutoCommand;
+import org.firstinspires.ftc.teamcode.programs.commandbase.AutoCommands.BasketAuto.IntakeRetractBASKETAutoCommand;
+import org.firstinspires.ftc.teamcode.programs.commandbase.AutoCommands.BasketAuto.OuttakeGoHighBasketAutoCommand;
+import org.firstinspires.ftc.teamcode.programs.commandbase.AutoCommands.BasketAuto.ScoreSampleAutoCommand;
 import org.firstinspires.ftc.teamcode.programs.commandbase.DoesNothingCommand;
 import org.firstinspires.ftc.teamcode.programs.commandbase.ExtendoCommands.SetExtendoStateCommand;
 import org.firstinspires.ftc.teamcode.programs.commandbase.IntakeCommand.SetIntakeAngleCommand;
@@ -264,7 +264,7 @@ public class NEW_BasketAutoSubmersibleBLUE_CU_UNGHI_BRAT extends LinearOpMode {
                                         new FollowPath(follower, score1, true, 1)
                                                 .alongWith(
                                                         new SequentialCommandGroup(
-                                                                new IntakeRetractAutoCommand(),
+                                                                new IntakeRetractBASKETAutoCommand(),
                                                                 new OuttakeGoHighBasketAutoCommand()
                                                         )
                                                 ),
@@ -304,7 +304,7 @@ public class NEW_BasketAutoSubmersibleBLUE_CU_UNGHI_BRAT extends LinearOpMode {
                                         new FollowPath(follower, score2, true, 1)
                                                 .alongWith(
                                                         new SequentialCommandGroup(
-                                                                new IntakeRetractAutoCommand(),
+                                                                new IntakeRetractBASKETAutoCommand(),
                                                                 new OuttakeGoHighBasketAutoCommand()
                                                         )
                                                 ),
@@ -342,7 +342,7 @@ public class NEW_BasketAutoSubmersibleBLUE_CU_UNGHI_BRAT extends LinearOpMode {
                                         new FollowPath(follower, score3, true, 1)
                                                 .alongWith(
                                                         new SequentialCommandGroup(
-                                                                new IntakeRetractAutoCommand(),
+                                                                new IntakeRetractBASKETAutoCommand(),
                                                                 new OuttakeGoHighBasketAutoCommand()
                                                         )
                                                 ),
@@ -388,7 +388,7 @@ public class NEW_BasketAutoSubmersibleBLUE_CU_UNGHI_BRAT extends LinearOpMode {
                         new FollowPath(follower, scoreSubmersible1, true, 1)
                                 .alongWith(
                                         new SequentialCommandGroup(
-                                                new IntakeRetractAutoCommand(),
+                                                new IntakeRetractBASKETAutoCommand(),
                                                 new WaitCommand(400),
                                                 new OuttakeGoHighBasketAutoCommand()
                                         )
@@ -422,7 +422,7 @@ public class NEW_BasketAutoSubmersibleBLUE_CU_UNGHI_BRAT extends LinearOpMode {
                         new FollowPath(follower, scoreSubmersible2, true, 1)
                                 .alongWith(
                                         new SequentialCommandGroup(
-                                                new IntakeRetractAutoCommand(),
+                                                new IntakeRetractBASKETAutoCommand(),
                                                 new WaitCommand(400),
                                                 new OuttakeGoHighBasketAutoCommand()
                                         )
@@ -456,7 +456,7 @@ public class NEW_BasketAutoSubmersibleBLUE_CU_UNGHI_BRAT extends LinearOpMode {
                         new FollowPath(follower, scoreSubmersible3, true, 1)
                                 .alongWith(
                                         new SequentialCommandGroup(
-                                                new IntakeRetractAutoCommand(),
+                                                new IntakeRetractBASKETAutoCommand(),
                                                 new WaitCommand(400),
                                                 new OuttakeGoHighBasketAutoCommand()
                                         )

@@ -394,12 +394,7 @@ public class Intake extends SubsystemBase {
         return (totalAxonAngle - initialAxonAngle) >= 90;
     }
 
-
-//    public boolean canStopOuttakingALIENCE_SPECIFIC_1(){
-//        return (totalAxonAngle - initialAxonAngle) >= 20;//50
-//    }
-
-    public boolean canStopOuttakingALIENCE_SPECIFIC_2(){
+    public boolean canStopOuttakingALIENCE_SPECIFIC(){
         return (totalAxonAngle - initialAxonAngle) >= 150;//160
     }
 
@@ -409,6 +404,14 @@ public class Intake extends SubsystemBase {
 
     public boolean canStopThrowingWrongSample_AUTO(){
         return (totalAxonAngle - initialAxonAngle) >= 150;//100
+    }
+
+    public boolean canStopOuttakingSPECIMEN_1_AUTO(){
+        return (totalAxonAngle - initialAxonAngle) >= 50;
+    }
+
+    public boolean canStopOuttakingSPECIMEN_2_AUTO(){
+        return (totalAxonAngle - initialAxonAngle) >= 100;
     }
 
 

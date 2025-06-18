@@ -1,13 +1,10 @@
-package org.firstinspires.ftc.teamcode.programs.commandbase.AutoCommands;
+package org.firstinspires.ftc.teamcode.programs.commandbase.AutoCommands.BasketAuto;
 
 import com.arcrobotics.ftclib.command.SequentialCommandGroup;
 import com.arcrobotics.ftclib.command.WaitCommand;
 import com.arcrobotics.ftclib.command.WaitUntilCommand;
 
-import org.firstinspires.ftc.teamcode.programs.commandbase.ArmCommands.SetArmStateCommand;
 import org.firstinspires.ftc.teamcode.programs.commandbase.ArmCommands.SetClawStateCommand;
-import org.firstinspires.ftc.teamcode.programs.commandbase.ArmCommands.SetWristStateCommand;
-import org.firstinspires.ftc.teamcode.programs.commandbase.LiftCommands.SetLiftStateCommand;
 import org.firstinspires.ftc.teamcode.programs.subsystems.Arm;
 import org.firstinspires.ftc.teamcode.programs.subsystems.Lift;
 

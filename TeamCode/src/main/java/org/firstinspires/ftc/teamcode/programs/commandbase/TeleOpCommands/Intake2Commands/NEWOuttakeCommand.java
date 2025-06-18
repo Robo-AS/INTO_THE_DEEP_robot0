@@ -6,7 +6,6 @@ import com.arcrobotics.ftclib.command.WaitCommand;
 import com.arcrobotics.ftclib.command.WaitUntilCommand;
 
 import org.firstinspires.ftc.teamcode.programs.commandbase.ArmCommands.SetClawStateCommand;
-import org.firstinspires.ftc.teamcode.programs.commandbase.IntakeCommand.SetIntakeStateCommand;
 import org.firstinspires.ftc.teamcode.programs.commandbase.IntakeCommand.SetRollersStateCommand;
 import org.firstinspires.ftc.teamcode.programs.commandbase.ShouldVibrateCommand;
 import org.firstinspires.ftc.teamcode.programs.subsystems.Arm;
@@ -19,7 +18,7 @@ public class NEWOuttakeCommand extends SequentialCommandGroup {
                 new InstantCommand(() -> Intake.getInstance().setInitialAxonAngle()),
                 new WaitUntilCommand(Extendo.getInstance()::canOuttakeSample),
                 new SetRollersStateCommand(Intake.RollersState.OUTTAKING),
-                new WaitUntilCommand(Intake.getInstance()::canStopOuttakingALIENCE_SPECIFIC_2),
+                new WaitUntilCommand(Intake.getInstance()::canStopOuttakingALIENCE_SPECIFIC),
                 new ShouldVibrateCommand(),
                 new WaitCommand(100),
                 new SetRollersStateCommand(Intake.RollersState.IDLE),

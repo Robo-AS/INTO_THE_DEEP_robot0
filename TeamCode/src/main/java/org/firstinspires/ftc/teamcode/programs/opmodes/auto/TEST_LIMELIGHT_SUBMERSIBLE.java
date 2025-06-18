@@ -3,7 +3,6 @@ package org.firstinspires.ftc.teamcode.programs.opmodes.auto;
 
 import com.acmerobotics.dashboard.config.Config;
 import com.arcrobotics.ftclib.command.CommandScheduler;
-import com.arcrobotics.ftclib.command.ConditionalCommand;
 import com.arcrobotics.ftclib.command.InstantCommand;
 import com.arcrobotics.ftclib.command.SequentialCommandGroup;
 import com.arcrobotics.ftclib.command.WaitCommand;
@@ -23,10 +22,9 @@ import com.qualcomm.robotcore.util.ElapsedTime;
 import org.firstinspires.ftc.teamcode.pedroPathing.constants.FConstants;
 import org.firstinspires.ftc.teamcode.pedroPathing.constants.LConstants;
 import org.firstinspires.ftc.teamcode.programs.commandbase.ArmCommands.SetClawStateCommand;
-import org.firstinspires.ftc.teamcode.programs.commandbase.AutoCommands.IntakeRetractAutoCommand;
-import org.firstinspires.ftc.teamcode.programs.commandbase.AutoCommands.OuttakeGoHighBasketAutoCommand;
-import org.firstinspires.ftc.teamcode.programs.commandbase.AutoCommands.ScoreSampleAutoCommand;
-import org.firstinspires.ftc.teamcode.programs.commandbase.DoesNothingCommand;
+import org.firstinspires.ftc.teamcode.programs.commandbase.AutoCommands.BasketAuto.IntakeRetractBASKETAutoCommand;
+import org.firstinspires.ftc.teamcode.programs.commandbase.AutoCommands.BasketAuto.OuttakeGoHighBasketAutoCommand;
+import org.firstinspires.ftc.teamcode.programs.commandbase.AutoCommands.BasketAuto.ScoreSampleAutoCommand;
 import org.firstinspires.ftc.teamcode.programs.commandbase.ExtendoCommands.SetExtendoStateCommand;
 import org.firstinspires.ftc.teamcode.programs.commandbase.IntakeCommand.SetIntakeAngleCommand;
 import org.firstinspires.ftc.teamcode.programs.commandbase.IntakeCommand.SetIntakeStateCommand;
@@ -259,7 +257,7 @@ public class TEST_LIMELIGHT_SUBMERSIBLE extends LinearOpMode {
                         new FollowPath(follower, scoreSubmersible1, true, 1)
                                 .alongWith(
                                         new SequentialCommandGroup(
-                                                new IntakeRetractAutoCommand(),
+                                                new IntakeRetractBASKETAutoCommand(),
                                                 new WaitCommand(500),
                                                 new OuttakeGoHighBasketAutoCommand()
                                         )
@@ -293,7 +291,7 @@ public class TEST_LIMELIGHT_SUBMERSIBLE extends LinearOpMode {
                         new FollowPath(follower, scoreSubmersible2, true, 1)
                                 .alongWith(
                                         new SequentialCommandGroup(
-                                                new IntakeRetractAutoCommand(),
+                                                new IntakeRetractBASKETAutoCommand(),
                                                 new WaitCommand(500),
                                                 new OuttakeGoHighBasketAutoCommand()
                                         )
@@ -327,7 +325,7 @@ public class TEST_LIMELIGHT_SUBMERSIBLE extends LinearOpMode {
                         new FollowPath(follower, scoreSubmersible3, true, 1)
                                 .alongWith(
                                         new SequentialCommandGroup(
-                                                new IntakeRetractAutoCommand(),
+                                                new IntakeRetractBASKETAutoCommand(),
                                                 new WaitCommand(500),
                                                 new OuttakeGoHighBasketAutoCommand()
                                         )

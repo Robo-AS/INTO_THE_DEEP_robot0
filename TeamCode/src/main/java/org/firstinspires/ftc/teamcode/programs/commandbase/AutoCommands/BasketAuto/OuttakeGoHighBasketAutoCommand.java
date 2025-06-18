@@ -1,4 +1,4 @@
-package org.firstinspires.ftc.teamcode.programs.commandbase.AutoCommands;
+package org.firstinspires.ftc.teamcode.programs.commandbase.AutoCommands.BasketAuto;
 
 import com.arcrobotics.ftclib.command.SequentialCommandGroup;
 import com.arcrobotics.ftclib.command.WaitUntilCommand;
