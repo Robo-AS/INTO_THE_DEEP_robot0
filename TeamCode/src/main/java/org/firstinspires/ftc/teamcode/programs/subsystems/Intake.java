@@ -368,6 +368,76 @@ public class Intake extends SubsystemBase {
 
     }
 
+
+    public void loopRed(){
+        currentAxonAngle = (int) (analogInput.getVoltage() / 3.3 * 360);
+        if (firstRead) {
+            previousAxonAngle = currentAxonAngle;
+            firstRead = false;
+            return;
+        }
+
+        int delta = currentAxonAngle - previousAxonAngle;
+
+        if(delta > 180)
+            rotations --;
+        else if (delta < -180)
+            rotations ++;
+
+        previousAxonAngle = currentAxonAngle;
+        totalAxonAngle = (rotations * 360) + (currentAxonAngle);
+
+
+        if(intakeAngle == IntakeAngle.DOWN){
+            updateSampleStateDigital();
+            updateSampleColor();
+        }
+
+        if(intakeState == IntakeState.INTAKING){
+            if(brushMotor.getCurrent(CurrentUnit.AMPS) > 2.75 && currentSpikeTimer.seconds() > 1){
+                CommandScheduler.getInstance().schedule(new IntakeBlockedSamplesCommand());
+                currentSpikeTimer.reset();
+            }
+
+            if(sampleState == SampleState.IS){
+                rollersServo.setPosition(0.5);
+                brushMotor.setPower(0);
+
+                if(sampleThrowed){
+                    updateSampleColor();
+                }
+
+                if (intakedSampleColor == IntakedSampleColor.NOTHING) {
+                    updateSampleColor();
+                    return;
+                }
+
+                if (isRightSampleColorTeleOpRed()) {
+                    //setInitialAxonAngle();
+                    if(sampleThrowed){
+                        if (intakedSampleColor == IntakedSampleColor.YELLOW)
+                            CommandScheduler.getInstance().schedule(new IntakeRetractYELLOWAfterEJECTCommand());
+                        else CommandScheduler.getInstance().schedule(new IntakeRetractSPECIFICAfterEJECTCommand());
+                        sampleThrowed = false;
+                    }
+                    else{
+                        if (intakedSampleColor == IntakedSampleColor.YELLOW)
+                            CommandScheduler.getInstance().schedule(new NEWIntakeRetractYELLOWSampleCommand());
+                        else CommandScheduler.getInstance().schedule(new NEWIntakeRetractSPECIFICSampleCommand());
+                    }
+                }
+                else {
+                    CommandScheduler.getInstance().schedule(new IntakeThrowingCommand());
+                    sampleThrowed = true;
+                }
+
+            }
+            else sampleThrowed = false;
+        }
+
+
+    }
+
     public boolean canStopOuttakingYELLOW_1_AUTO(){
         return (totalAxonAngle - initialAxonAngle) >= 50;//50
     }
