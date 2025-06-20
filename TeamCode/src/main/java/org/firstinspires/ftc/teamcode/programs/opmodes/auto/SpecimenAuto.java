@@ -38,7 +38,7 @@ public class SpecimenAuto extends LinearOpMode {
     private double loopTime = 0;
     private final ElapsedTime time = new ElapsedTime();
     private final SpecimenPaths specimenPaths = new SpecimenPaths();
-    private final int sensorTimeOut = 1000;
+    private final int sensorTimeOut = 1500;
 
 
     public static Pose startPose = new Pose(7.480519480519481, 64.98701298701299, Math.toRadians(180));
@@ -49,36 +49,36 @@ public class SpecimenAuto extends LinearOpMode {
     public static Pose grab1ControlPoint_1 = new Pose(28.51948051948052, 71.53246753246754, Math.toRadians(-22));
     public static Pose bring1Pose = new Pose(30.623376623376622, 26.415584415584412, Math.toRadians(-155)); //3
 
-    public static Pose grab2Pose = new Pose(30.623376623376622, 23.84415584415585, Math.toRadians(-33)); //4
+    public static Pose grab2Pose = new Pose(30.623376623376622, 23.84415584415585, Math.toRadians(-36)); //4
     public static Pose bring2Pose = new Pose(30.623376623376622, 21.27272727272727, Math.toRadians(-155)); //5
 
-    public static Pose grab3Pose = new Pose(35.2987012987013, 19.4025974025974, Math.toRadians(-62)); //6
+    public static Pose grab3Pose = new Pose(35.2987012987013, 19.4025974025974, Math.toRadians(-63)); //6
     public static Pose bring3Pose = new Pose(26.883116883116884, 23.14285714285714, Math.toRadians(-150)); //7
 
     public static Pose takeSpecimenPose = new Pose(27.584415584415584, 40.90909090909091, Math.toRadians(-130)); //8
 
     public static Pose score1Pose = new Pose(36.90909090909091, 60.77922077922078, Math.toRadians(180)); //9
-    public static Pose score1SMALLPose = new Pose(38.90909090909091, 60.77922077922078, Math.toRadians(180));
+    public static Pose score1SMALLPose = new Pose(39.40909090909091, 60.77922077922078, Math.toRadians(180));
 
 //    public static Pose takeSpecimen2Pose = new Pose(23.376623376623378, 35.53246753246753, Math.toRadians(-130)); //10
 
     public static Pose score2Pose = new Pose(36.90909090909091, 62.77922077922078, Math.toRadians(180)); //11
-    public static Pose score2SMALLPose = new Pose(38.90909090909091, 62.77922077922078, Math.toRadians(180));
+    public static Pose score2SMALLPose = new Pose(39.40909090909091, 62.77922077922078, Math.toRadians(180));
 
 //    public static Pose takeSpecimen3Pose = new Pose(27.584415584415584, 40.90909090909091, Math.toRadians(-130)); //12
 
     public static Pose score3Pose = new Pose(36.90909090909091, 64.77922077922078, Math.toRadians(180)); //13
-    public static Pose score3SMALLPose = new Pose(38.90909090909091, 64.77922077922078, Math.toRadians(180));
+    public static Pose score3SMALLPose = new Pose(39.40909090909091, 64.77922077922078, Math.toRadians(180));
 
 //    public static Pose takeSpecimen4Pose = new Pose(27.584415584415584, 40.90909090909091, Math.toRadians(-130)); //14
 
     public static Pose score4Pose = new Pose(36.90909090909091, 66.77922077922078, Math.toRadians(180)); //13
-    public static Pose score4SMALLPose = new Pose(38.90909090909091, 66.77922077922078, Math.toRadians(180));
+    public static Pose score4SMALLPose = new Pose(39.40909090909091, 66.77922077922078, Math.toRadians(180));
 
 //    public static Pose takeSpecimen5Pose = new Pose(27.584415584415584, 40.90909090909091, Math.toRadians(-130)); //14
 
 //    public static Pose score5Pose = new Pose(36.90909090909091, 68.77922077922078, Math.toRadians(180)); //13
-//    public static Pose score5SMALLPose = new Pose(38.90909090909091, 68.77922077922078, Math.toRadians(180));
+//    public static Pose score5SMALLPose = new Pose(39.40909090909091, 68.77922077922078, Math.toRadians(180));
 
 
 
@@ -269,30 +269,30 @@ public class SpecimenAuto extends LinearOpMode {
         CommandScheduler.getInstance().schedule(
                 new SequentialCommandGroup(
                         new SetClawStateCommand(Arm.ClawState.OPEN),//don't ask
-                        new FollowPath(follower, scorePreload, true, 1),
-//                                .alongWith(
-//                                        new SequentialCommandGroup(
-//                                                new SetClawStateCommand(Arm.ClawState.CLOSED),
-//                                                new WaitCommand(200),//300
-//                                                new SetExtendoStateCommand(Extendo.ExtendoState.EXTEND_SPECIMEN_EXIT),//HERE
-//                                                new OuttakeGoHighRungCommand()
-//                                        )
-//                                ),
+                        new FollowPath(follower, scorePreload, true, 1)
+                                .alongWith(
+                                        new SequentialCommandGroup(
+                                                new SetClawStateCommand(Arm.ClawState.CLOSED),
+                                                new WaitCommand(200),//300
+                                                new SetExtendoStateCommand(Extendo.ExtendoState.EXTEND_SPECIMEN_EXIT),//HERE
+                                                new OuttakeGoHighRungCommand()
+                                        )
+                                ),
 
                         new FollowPath(follower, scorePreloadSMALL, true, 1),
-//                        new WaitCommand(200),
-//                        new PutSpecimenCommand(),
-//                        new SetExtendoStateCommand(Extendo.ExtendoState.RETRACTING),//HERE
+                        new WaitCommand(200),
+                        new PutSpecimenCommand(),
+                        new SetExtendoStateCommand(Extendo.ExtendoState.RETRACTING),//HERE
 
 
                         new FollowPath(follower, grab1, true, 1)
                                 .alongWith(
                                         new SequentialCommandGroup(
                                                 new WaitCommand(200),
-                                                //new OuttakeGoBackToIdleFromHighRungCommand(),
+                                                new OuttakeGoBackToIdleFromHighRungCommand(),
                                                 new WaitCommand(500),
-                                                new SetExtendoStateCommand(Extendo.ExtendoState.EXTENDING_MINIMUM_AUTO),
-                                                new WaitUntilCommand(robot.extendo::canPutIntakeDown),
+                                                new SetExtendoStateCommand(Extendo.ExtendoState.EXTENDING_MINIMUM),
+                                                new WaitUntilCommand(robot.extendo::canPutIntakeDown_AUTO_SPECIMENS),
                                                 new SetIntakeAngleCommand(Intake.IntakeAngle.DOWN),
                                                 new SetIntakeStateCommand(Intake.IntakeState.INTAKING)
                                         )
@@ -327,22 +327,25 @@ public class SpecimenAuto extends LinearOpMode {
                         new WaitUntilCommand(robot.intake::isSampleDigital).withTimeout(sensorTimeOut),
                         new SetIntakeStateCommand(Intake.IntakeState.IDLE),
                         new SetIntakeAngleCommand(Intake.IntakeAngle.UP),
+                        new SetExtendoStateCommand(Extendo.ExtendoState.RETRACTING),
 
 
 
                         new FollowPath(follower, bring2, true, 1)
                                 .alongWith(
                                         new SequentialCommandGroup(
-                                                new SetExtendoStateCommand(Extendo.ExtendoState.EXTEND_HUMAN_PLAYER),
+
                                                 new WaitCommand(450),
-                                                new SetIntakeStateCommand(Intake.IntakeState.SPITTING_HUMAN_PLAYER)
+                                                new SetIntakeStateCommand(Intake.IntakeState.SPITTING_HUMAN_PLAYER),
+                                                new SetExtendoStateCommand(Extendo.ExtendoState.EXTEND_HUMAN_PLAYER)
+
 
                                         )
                                 ),
                         new WaitCommand(200),
                         new SetIntakeStateCommand(Intake.IntakeState.IDLE),
-
                         new SetExtendoStateCommand(Extendo.ExtendoState.EXTENDING_MINIMUM),
+
                         new FollowPath(follower, grab3, true, 1),
                         new WaitCommand(200),   //stabilize pedro
                         new SetIntakeAngleCommand(Intake.IntakeAngle.DOWN),

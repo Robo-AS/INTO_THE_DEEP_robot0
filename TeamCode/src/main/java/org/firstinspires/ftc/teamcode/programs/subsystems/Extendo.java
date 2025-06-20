@@ -64,8 +64,8 @@ public class Extendo extends SubsystemBase {
     public int TAKE_SAMPLE_AUTO_BASKET_GRAB_3 = 870;
     public int STABILIZER_AUTO_BASKET = 500;
 
-    public int TAKE_SAMPLE_SPECIMEN_AUTO_GRAB_1 = 300;
-    public int TAKE_SAMPLE_SPECIMEN_AUTO_GRAB_2 = 540;
+    public int TAKE_SAMPLE_SPECIMEN_AUTO_GRAB_1 = 350;
+    public int TAKE_SAMPLE_SPECIMEN_AUTO_GRAB_2 = 570;
     public int TAKE_SAMPLE_SPECIMEN_AUTO_GRAB_3 = 550;
     public int TAKE_SPECIMEN_AUTO = 730;
     public int RETRACT_AUTO_FAIL_SAFE = 500;
@@ -268,6 +268,10 @@ public class Extendo extends SubsystemBase {
 
     public boolean canPutIntakeDown(){
         return currentPosition >= 100;
+    }
+
+    public boolean canPutIntakeDown_AUTO_SPECIMENS(){
+        return currentPosition >= 250;
     }
 
     public boolean limelightPoseFinished(){

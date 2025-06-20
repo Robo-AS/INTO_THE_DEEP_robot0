@@ -481,7 +481,7 @@ public class Intake extends SubsystemBase {
     }
 
     public boolean canStopOuttakingSPECIMEN_2_AUTO(){
-        return (totalAxonAngle - initialAxonAngle) >= 100;
+        return (totalAxonAngle - initialAxonAngle) >= 120;
     }
 
 
