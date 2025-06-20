@@ -266,6 +266,11 @@ public class Extendo extends SubsystemBase {
         return currentPosition <= 200;
     }
 
+
+    public boolean canOuttakeSpecimen_AUTO(){
+        return currentPosition <= 300;
+    }
+
     public boolean canPutIntakeDown(){
         return currentPosition >= 100;
     }

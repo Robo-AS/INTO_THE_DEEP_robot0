@@ -21,7 +21,7 @@ public class IntakeRetractSPECIMENAutoCommand extends SequentialCommandGroup {
                 new SetRollersStateCommand(Intake.RollersState.OUTTAKING),
                 new WaitUntilCommand(Intake.getInstance()::canStopOuttakingSPECIMEN_1_AUTO),
                 new SetRollersStateCommand(Intake.RollersState.IDLE),
-                new WaitUntilCommand(Extendo.getInstance()::canOuttakeSample),
+                new WaitUntilCommand(Extendo.getInstance()::canOuttakeSpecimen_AUTO),
                 new InstantCommand(() -> Intake.getInstance().setInitialAxonAngle()),
                 new SetRollersStateCommand(Intake.RollersState.OUTTAKING),
                 new WaitUntilCommand(Intake.getInstance()::canStopOuttakingSPECIMEN_2_AUTO),

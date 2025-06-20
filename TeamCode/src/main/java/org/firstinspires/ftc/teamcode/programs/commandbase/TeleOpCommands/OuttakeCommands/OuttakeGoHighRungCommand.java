@@ -19,6 +19,7 @@ public class OuttakeGoHighRungCommand extends SequentialCommandGroup {
                 new SetArmStateCommand(Arm.ArmState.HIGH_RUNG),
                 new WaitCommand(500),
                 new SetArmStateCommand(Arm.ArmState.HIGH_RUNG_SECURE_POSITION)
+//                new WaitCommand(100)//ASTA NU ERA SI IN TELEOP, SA FACI COMANDA SEPARATA PT AUTO IN CAZ CA ITI TREBUIE
         );
     }
 }
