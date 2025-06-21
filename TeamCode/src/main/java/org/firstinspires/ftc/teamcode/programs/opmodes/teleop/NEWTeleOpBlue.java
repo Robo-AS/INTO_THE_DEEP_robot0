@@ -8,12 +8,14 @@ import com.arcrobotics.ftclib.command.ConditionalCommand;
 import com.arcrobotics.ftclib.command.InstantCommand;
 import com.arcrobotics.ftclib.command.SequentialCommandGroup;
 import com.arcrobotics.ftclib.command.WaitCommand;
+import com.arcrobotics.ftclib.command.WaitUntilCommand;
 import com.arcrobotics.ftclib.command.button.Trigger;
 import com.arcrobotics.ftclib.gamepad.GamepadEx;
 import com.arcrobotics.ftclib.gamepad.GamepadKeys;
 import com.pedropathing.commands.FollowPath;
 import com.pedropathing.follower.Follower;
 import com.pedropathing.localization.Pose;
+import com.pedropathing.pathgen.BezierCurve;
 import com.pedropathing.pathgen.BezierLine;
 import com.pedropathing.pathgen.PathChain;
 import com.pedropathing.pathgen.Point;
@@ -22,9 +24,11 @@ import com.qualcomm.robotcore.hardware.Gamepad;
 import org.firstinspires.ftc.teamcode.pedroPathing.constants.FConstants;
 import org.firstinspires.ftc.teamcode.pedroPathing.constants.LConstants;
 import org.firstinspires.ftc.teamcode.programs.commandbase.ArmCommands.SetClawStateCommand;
+import org.firstinspires.ftc.teamcode.programs.commandbase.AutoCommands.SpecimenAuto.IntakeRetractSPECIMENAutoCommand;
 import org.firstinspires.ftc.teamcode.programs.commandbase.DoesNothingCommand;
 import org.firstinspires.ftc.teamcode.programs.commandbase.ExtendoCommands.SetExtendoStateCommand;
 import org.firstinspires.ftc.teamcode.programs.commandbase.HangCommands.SetSafetyStateCommand;
+import org.firstinspires.ftc.teamcode.programs.commandbase.IntakeCommand.SetIntakeAngleCommand;
 import org.firstinspires.ftc.teamcode.programs.commandbase.IntakeCommand.SetIntakeStateCommand;
 import org.firstinspires.ftc.teamcode.programs.commandbase.LiftCommands.SetLiftStateCommand;
 import org.firstinspires.ftc.teamcode.programs.commandbase.NEWSetDesiredColorCommand;
@@ -61,10 +65,34 @@ public class NEWTeleOpBlue extends CommandOpMode {
     public GamepadEx gamepadEx;
     private Follower follower;
     public boolean AUTO_IN_TELEOP = false;
+    private final int sensorTimeOut = 1500;
 
-    private final Pose startPose = new Pose(40.2077922077922, 65.92207792207792, Math.toRadians(180));
-    private final Pose goForward = new Pose(20.2077922077922, 65.92207792207792, Math.toRadians(180));
-    private PathChain go, goBack;
+    private final Pose startPose = new Pose(42.077922077922075, 65.6883116883117, Math.toRadians(180));
+
+    public static Pose takeSpecimenPose = new Pose(27.584415584415584, 40.90909090909091, Math.toRadians(-130));
+    public static Pose takeSpecimenPoseControlPoint = new Pose(28.753246753246753, 72.46753246753246, Math.toRadians(-130));
+
+    public static Pose score1Pose = new Pose(37.40909090909091, 68.83246753246754, Math.toRadians(180));
+    public static Pose score1SMALLPose = new Pose(39.40909090909091, 68.83246753246754, Math.toRadians(180));
+
+    public static Pose score2Pose = new Pose(37.40909090909091, 70.83246753246754, Math.toRadians(180));
+    public static Pose score2SMALLPose = new Pose(39.40909090909091, 70.83246753246754, Math.toRadians(180));
+
+    public static Pose score3Pose = new Pose(37.40909090909091, 72.83246753246754, Math.toRadians(180));
+    public static Pose score3SMALLPose = new Pose(39.40909090909091, 72.83246753246754, Math.toRadians(180));
+
+    public static Pose score4Pose = new Pose(37.40909090909091, 74.83246753246754, Math.toRadians(180));
+    public static Pose score4SMALLPose = new Pose(39.40909090909091, 74.83246753246754, Math.toRadians(180));
+
+    public static Pose score5Pose = new Pose(37.40909090909091, 76.83246753246754, Math.toRadians(180));
+    public static Pose score5SMALLPose = new Pose(39.40909090909091, 76.83246753246754, Math.toRadians(180));
+
+
+    private PathChain take1, score1, score1SMALL;
+    private PathChain take2, score2, score2SMALL;
+    private PathChain take3, score3, score3SMALL;
+    private PathChain take4, score4, score4SMALL;
+    private PathChain take5, score5, score5SMALL;
 
 
     double exponentialJoystickCoord_X_TURN, exponentialJoystickCoord_X_FORWARD, exponentialJoystickCoord_Y;
@@ -332,16 +360,18 @@ public class NEWTeleOpBlue extends CommandOpMode {
 
         if(AUTO_IN_TELEOP){
             follower.update();
-        }
-        else{
-            telemetry.addData("NO FOLLOWER", "NO");
+
         }
 
         robot.loop();
-        robot.intake.loopBlue();
+//        robot.intake.loopBlue();
         robot.extendo.loop(gamepadEx.getLeftY());
         robot.lift.loop();
-        robot.arm.loopTeleOp();
+//        robot.arm.loopTeleOp();
+
+        robot.arm.loopAuto();
+        robot.intake.loopAuto();
+
 
 //        PENTRU LEVEL 3 HANG
         if(Globals.HANGING_LEVEL_3) {
@@ -453,15 +483,98 @@ public class NEWTeleOpBlue extends CommandOpMode {
         follower = new Follower(hardwareMap, FConstants.class, LConstants.class);
         follower.setStartingPose(startPose);
 
-        go = follower.pathBuilder()
-                .addPath(new BezierLine(new Point(startPose), new Point(goForward)))
-                .setLinearHeadingInterpolation(startPose.getHeading(), goForward.getHeading())
+         take1 = follower.pathBuilder()
+                .addPath(new BezierCurve(new Point(startPose), new Point(takeSpecimenPoseControlPoint), new Point(takeSpecimenPose)))
+                .setLinearHeadingInterpolation(startPose.getHeading(), takeSpecimenPose.getHeading())
+                .setZeroPowerAccelerationMultiplier(16)
                 .build();
 
-        goBack = follower.pathBuilder()
-                .addPath(new BezierLine(new Point(goForward), new Point(startPose)))
-                .setLinearHeadingInterpolation(goForward.getHeading(), startPose.getHeading())
+         score1 = follower.pathBuilder()
+                .addPath(new BezierLine(new Point(takeSpecimenPose), new Point(score1Pose)))
+                .setLinearHeadingInterpolation(takeSpecimenPose.getHeading(), score1Pose.getHeading())
+                .setZeroPowerAccelerationMultiplier(14)
                 .build();
+
+         score1SMALL = follower.pathBuilder()
+                .addPath(new BezierLine(new Point(score1Pose), new Point(score1SMALLPose)))
+                .setConstantHeadingInterpolation(score1SMALLPose.getHeading())
+                .setZeroPowerAccelerationMultiplier(10)
+                .build();
+
+        take2 = follower.pathBuilder()
+                .addPath(new BezierLine(new Point(score1SMALLPose), new Point(takeSpecimenPose)))
+                .setLinearHeadingInterpolation(score1SMALLPose.getHeading(), takeSpecimenPose.getHeading())
+                .setZeroPowerAccelerationMultiplier(16)
+                .build();
+
+        score2 = follower.pathBuilder()
+                .addPath(new BezierLine(new Point(takeSpecimenPose), new Point(score2Pose)))
+                .setLinearHeadingInterpolation(takeSpecimenPose.getHeading(), score2Pose.getHeading())
+                .setZeroPowerAccelerationMultiplier(14)
+                .build();
+
+        score2SMALL = follower.pathBuilder()
+                .addPath(new BezierLine(new Point(score2Pose), new Point(score2SMALLPose)))
+                .setConstantHeadingInterpolation(score2SMALLPose.getHeading())
+                .setZeroPowerAccelerationMultiplier(10)
+                .build();
+
+        take3 = follower.pathBuilder()
+                .addPath(new BezierLine(new Point(score2SMALLPose), new Point(takeSpecimenPose)))
+                .setLinearHeadingInterpolation(score2SMALLPose.getHeading(), takeSpecimenPose.getHeading())
+                .setZeroPowerAccelerationMultiplier(16)
+                .build();
+
+        score3 = follower.pathBuilder()
+                .addPath(new BezierLine(new Point(takeSpecimenPose), new Point(score3Pose)))
+                .setLinearHeadingInterpolation(takeSpecimenPose.getHeading(), score3Pose.getHeading())
+                .setZeroPowerAccelerationMultiplier(14)
+                .build();
+
+        score3SMALL = follower.pathBuilder()
+                .addPath(new BezierLine(new Point(score3Pose), new Point(score3SMALLPose)))
+                .setConstantHeadingInterpolation(score3SMALLPose.getHeading())
+                .setZeroPowerAccelerationMultiplier(10)
+                .build();
+
+        take4 = follower.pathBuilder()
+                .addPath(new BezierLine(new Point(score3SMALLPose), new Point(takeSpecimenPose)))
+                .setLinearHeadingInterpolation(score3SMALLPose.getHeading(), takeSpecimenPose.getHeading())
+                .setZeroPowerAccelerationMultiplier(16)
+                .build();
+
+        score4 = follower.pathBuilder()
+                .addPath(new BezierLine(new Point(takeSpecimenPose), new Point(score4Pose)))
+                .setLinearHeadingInterpolation(takeSpecimenPose.getHeading(), score4Pose.getHeading())
+                .setZeroPowerAccelerationMultiplier(14)
+                .build();
+
+        score4SMALL = follower.pathBuilder()
+                .addPath(new BezierLine(new Point(score4Pose), new Point(score4SMALLPose)))
+                .setConstantHeadingInterpolation(score4SMALLPose.getHeading())
+                .setZeroPowerAccelerationMultiplier(10)
+                .build();
+
+//        take5 = follower.pathBuilder()
+//                .addPath(new BezierLine(new Point(score4SMALLPose), new Point(takeSpecimenPose)))
+//                .setLinearHeadingInterpolation(score4SMALLPose.getHeading(), takeSpecimenPose.getHeading())
+////                .setZeroPowerAccelerationMultiplier(16)
+//                .build();
+//
+//        score5 = follower.pathBuilder()
+//                .addPath(new BezierLine(new Point(takeSpecimenPose), new Point(score5Pose)))
+//                .setLinearHeadingInterpolation(takeSpecimenPose.getHeading(), score5Pose.getHeading())
+////                .setZeroPowerAccelerationMultiplier(14)
+//                .build();
+//
+//        score5SMALL = follower.pathBuilder()
+//                .addPath(new BezierLine(new Point(score5Pose), new Point(score5SMALLPose)))
+//                .setConstantHeadingInterpolation(score5SMALLPose.getHeading())
+////                .setZeroPowerAccelerationMultiplier(10)
+//                .build();
+
+
+
 
 
 
@@ -469,35 +582,123 @@ public class NEWTeleOpBlue extends CommandOpMode {
                 new SequentialCommandGroup(
                         new InstantCommand(() -> AUTO_IN_TELEOP = true),
                         new WaitCommand(1000),
-                        new FollowPath(follower, go, true, 0.5)
-                                .alongWith(
-                                        new SetExtendoStateCommand(Extendo.ExtendoState.TAKE_SPECIMEN_AUTO)
-                                ),
 
-                        new FollowPath(follower, goBack, true, 0.5)
+                        new FollowPath(follower, take1, true, 1)
                                 .alongWith(
-                                        new SetExtendoStateCommand(Extendo.ExtendoState.RETRACTING)
+                                        new SetExtendoStateCommand(Extendo.ExtendoState.EXTENDING_MINIMUM_AUTO)
                                 ),
+                        new SetIntakeAngleCommand(Intake.IntakeAngle.DOWN),
+                        new SetIntakeStateCommand(Intake.IntakeState.INTAKING),
+                        new SetExtendoStateCommand(Extendo.ExtendoState.TAKE_SPECIMEN_AUTO),
+                        new WaitUntilCommand(robot.intake::isSampleDigital).withTimeout(sensorTimeOut),
+                        new SetIntakeStateCommand(Intake.IntakeState.IDLE),
 
-                        new FollowPath(follower, go, true, 0.5)
-                                .alongWith(
-                                        new SetExtendoStateCommand(Extendo.ExtendoState.TAKE_SPECIMEN_AUTO)
-                                ),
 
-                        new FollowPath(follower, goBack, true, 0.5)
-                                .alongWith(
-                                        new SetExtendoStateCommand(Extendo.ExtendoState.RETRACTING)
-                                ),
 
-                        new FollowPath(follower, go, true, 0.5)
+                        new FollowPath(follower, score1, true, 1)
                                 .alongWith(
-                                        new SetExtendoStateCommand(Extendo.ExtendoState.TAKE_SPECIMEN_AUTO)
+                                        new SequentialCommandGroup(
+                                                new IntakeRetractSPECIMENAutoCommand(),
+                                                new SetExtendoStateCommand(Extendo.ExtendoState.EXTEND_SPECIMEN_EXIT),
+                                                new WaitCommand(50),
+                                                new OuttakeGoHighRungCommand()
+                                        )
                                 ),
+//                        new WaitCommand(250),
+                        new FollowPath(follower, score1SMALL, true, 1),
 
-                        new FollowPath(follower, goBack, true, 0.5)
+                        new FollowPath(follower, take2, true, 1)
                                 .alongWith(
-                                        new SetExtendoStateCommand(Extendo.ExtendoState.RETRACTING)
+                                        new SequentialCommandGroup(
+                                                new PutSpecimenCommand(),
+                                                new SetExtendoStateCommand(Extendo.ExtendoState.RETRACTING),
+                                                new OuttakeGoBackToIdleFromHighRungCommand()
+                                        )
                                 ),
+                        new SetIntakeAngleCommand(Intake.IntakeAngle.DOWN),
+                        new SetIntakeStateCommand(Intake.IntakeState.INTAKING),
+                        new SetExtendoStateCommand(Extendo.ExtendoState.TAKE_SPECIMEN_AUTO),
+                        new WaitUntilCommand(robot.intake::isSampleDigital).withTimeout(sensorTimeOut),
+                        new SetIntakeStateCommand(Intake.IntakeState.IDLE),
+
+
+                        new FollowPath(follower, score2, true, 1)
+                                .alongWith(
+                                        new SequentialCommandGroup(
+                                                new IntakeRetractSPECIMENAutoCommand(),
+                                                new SetExtendoStateCommand(Extendo.ExtendoState.EXTEND_SPECIMEN_EXIT),
+                                                new WaitCommand(50),
+                                                new OuttakeGoHighRungCommand()
+                                        )
+                                ),
+//                        new WaitCommand(250),
+                        new FollowPath(follower, score2SMALL, true, 1),
+
+
+
+                        new FollowPath(follower, take3, true, 1)
+                                .alongWith(
+                                        new SequentialCommandGroup(
+                                                new PutSpecimenCommand(),
+                                                new SetExtendoStateCommand(Extendo.ExtendoState.RETRACTING),
+                                                new OuttakeGoBackToIdleFromHighRungCommand()
+                                        )
+                                ),
+                        new SetIntakeAngleCommand(Intake.IntakeAngle.DOWN),
+                        new SetIntakeStateCommand(Intake.IntakeState.INTAKING),
+                        new SetExtendoStateCommand(Extendo.ExtendoState.TAKE_SPECIMEN_AUTO),
+                        new WaitUntilCommand(robot.intake::isSampleDigital).withTimeout(sensorTimeOut),
+                        new SetIntakeStateCommand(Intake.IntakeState.IDLE),
+
+
+                        new FollowPath(follower, score3, true, 1)
+                                .alongWith(
+                                        new SequentialCommandGroup(
+                                                new IntakeRetractSPECIMENAutoCommand(),
+                                                new SetExtendoStateCommand(Extendo.ExtendoState.EXTEND_SPECIMEN_EXIT),
+                                                new WaitCommand(50),
+                                                new OuttakeGoHighRungCommand()
+                                        )
+                                ),
+//                        new WaitCommand(250),
+                        new FollowPath(follower, score3SMALL, true, 1),
+
+
+
+
+                        new FollowPath(follower, take4, true, 1)
+                                .alongWith(
+                                        new SequentialCommandGroup(
+                                                new PutSpecimenCommand(),
+                                                new SetExtendoStateCommand(Extendo.ExtendoState.RETRACTING),
+                                                new OuttakeGoBackToIdleFromHighRungCommand()
+                                        )
+                                ),
+                        new SetIntakeAngleCommand(Intake.IntakeAngle.DOWN),
+                        new SetIntakeStateCommand(Intake.IntakeState.INTAKING),
+                        new SetExtendoStateCommand(Extendo.ExtendoState.TAKE_SPECIMEN_AUTO),
+                        new WaitUntilCommand(robot.intake::isSampleDigital).withTimeout(sensorTimeOut),
+                        new SetIntakeStateCommand(Intake.IntakeState.IDLE),
+
+
+                        new FollowPath(follower, score4, true, 1)
+                                .alongWith(
+                                        new SequentialCommandGroup(
+                                                new IntakeRetractSPECIMENAutoCommand(),
+                                                new SetExtendoStateCommand(Extendo.ExtendoState.EXTEND_SPECIMEN_EXIT),
+                                                new WaitCommand(50),
+                                                new OuttakeGoHighRungCommand()
+                                        )
+                                ),
+//                        new WaitCommand(250),
+                        new FollowPath(follower, score4SMALL, true, 1),
+                        new WaitCommand(200),
+                        new PutSpecimenCommand(),
+                        new WaitCommand(200),
+
+
+
+
                         new InstantCommand(() -> AUTO_IN_TELEOP = false),
                         new InstantCommand(() -> follower.breakFollowing()),
                         new InstantCommand(this::reInitializeMecanum)
