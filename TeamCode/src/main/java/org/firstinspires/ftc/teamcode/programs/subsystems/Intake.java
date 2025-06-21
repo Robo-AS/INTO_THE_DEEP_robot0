@@ -44,6 +44,7 @@ public class Intake extends SubsystemBase {
     public AnalogInput analogInput;
 
     private final ElapsedTime currentSpikeTimer = new ElapsedTime();
+//    private final ElapsedTime colorCheckTimer = new ElapsedTime();
 
 
     public enum IntakeState{
@@ -113,6 +114,10 @@ public class Intake extends SubsystemBase {
     public SampleState sampleState = SampleState.ISNOT;
     public static IntakedSampleColor intakedSampleColor = IntakedSampleColor.NOTHING;
     public SpecimenBlocked specimenBlocked = SpecimenBlocked.NOT_BLOCKED;
+//
+//
+//    public boolean colorChecked = false;
+//
 
 
 
@@ -142,6 +147,9 @@ public class Intake extends SubsystemBase {
         intakedSampleColor = IntakedSampleColor.NOTHING;
         angleServo.setPosition(UP_ANGLE);
         currentSpikeTimer.reset();
+//        colorCheckTimer.reset();
+//        colorChecked = false;
+//
 
         totalAxonAngle = 0;
         rotations = 0;
@@ -334,6 +342,17 @@ public class Intake extends SubsystemBase {
                 updateSampleColor();
                 rollersServo.setPosition(0.5);
                 brushMotor.setPower(0);
+
+
+//                if (sampleState == SampleState.IS && !colorChecked) {
+//                    colorCheckTimer.reset();
+//                    colorChecked = true;
+//                }
+//
+//                if (colorChecked && colorCheckTimer.milliseconds() >= 10) {
+//                    updateSampleColor();
+//                    colorChecked = false;
+//                }
 
 
 
