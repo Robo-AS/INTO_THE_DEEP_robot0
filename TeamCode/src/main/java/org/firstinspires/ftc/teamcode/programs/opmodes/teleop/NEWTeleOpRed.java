@@ -47,7 +47,7 @@ import org.firstinspires.ftc.teamcode.programs.util.NEWRobot;
 import org.firstinspires.ftc.teamcode.utils.geometry.PoseRR;
 
 
-@com.qualcomm.robotcore.eventloop.opmode.TeleOp(name = "🟦NEWTeleOpRed🔴", group = "OpModes")
+@com.qualcomm.robotcore.eventloop.opmode.TeleOp(name = "🔴NEWTeleOpRed🔴", group = "OpModes")
 public class NEWTeleOpRed extends CommandOpMode {
     private final NEWRobot robot = NEWRobot.getInstance();
     public GamepadEx gamepadEx;

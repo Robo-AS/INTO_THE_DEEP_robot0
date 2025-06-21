@@ -11,8 +11,16 @@ import com.arcrobotics.ftclib.command.WaitCommand;
 import com.arcrobotics.ftclib.command.button.Trigger;
 import com.arcrobotics.ftclib.gamepad.GamepadEx;
 import com.arcrobotics.ftclib.gamepad.GamepadKeys;
+import com.pedropathing.commands.FollowPath;
+import com.pedropathing.follower.Follower;
+import com.pedropathing.localization.Pose;
+import com.pedropathing.pathgen.BezierLine;
+import com.pedropathing.pathgen.PathChain;
+import com.pedropathing.pathgen.Point;
 import com.qualcomm.robotcore.hardware.Gamepad;
 
+import org.firstinspires.ftc.teamcode.pedroPathing.constants.FConstants;
+import org.firstinspires.ftc.teamcode.pedroPathing.constants.LConstants;
 import org.firstinspires.ftc.teamcode.programs.commandbase.ArmCommands.SetClawStateCommand;
 import org.firstinspires.ftc.teamcode.programs.commandbase.DoesNothingCommand;
 import org.firstinspires.ftc.teamcode.programs.commandbase.ExtendoCommands.SetExtendoStateCommand;
@@ -51,10 +59,18 @@ import org.firstinspires.ftc.teamcode.utils.geometry.PoseRR;
 public class NEWTeleOpBlue extends CommandOpMode {
     private final NEWRobot robot = NEWRobot.getInstance();
     public GamepadEx gamepadEx;
+    private Follower follower;
 
     double exponentialJoystickCoord_X_TURN, exponentialJoystickCoord_X_FORWARD, exponentialJoystickCoord_Y;
     public static double contantTerm = 0.6, liniarCoefTerm = 0.7;
     private double loopTime = 0;
+    public boolean AUTO_IN_TELEOP = false;
+
+
+    private final Pose startPose = new Pose(40.2077922077922, 65.92207792207792, Math.toRadians(180));
+    private final Pose goForward = new Pose(39.2077922077922, 65.92207792207792, Math.toRadians(180));
+
+    private PathChain go;
 
     @Override
     public void initialize(){
@@ -66,6 +82,10 @@ public class NEWTeleOpBlue extends CommandOpMode {
         Globals.HANGING_LEVEL_2 = false;
         Globals.HANGING_LEVEL_3 = false;
         Globals.TELEOP = true;
+        AUTO_IN_TELEOP = false;
+
+
+
 
         robot.initializeHardware(hardwareMap);
         robot.initializeRobot();
@@ -284,6 +304,22 @@ public class NEWTeleOpBlue extends CommandOpMode {
                         )
                 );
 
+        gamepadEx.getGamepadButton(GamepadKeys.Button.START)
+                .whenPressed(
+                        () -> CommandScheduler.getInstance().schedule(
+                                new SequentialCommandGroup(
+                                        new InstantCommand(() -> AUTO_IN_TELEOP = true),
+                                        new InstantCommand(this::initializeAUTO_IN_TELEOP),
+
+//                                        new InstantCommand(this::runAuto),
+                                        new InstantCommand(() -> AUTO_IN_TELEOP = false)
+
+                                )
+                        )
+                );
+
+
+
 
 
     }
@@ -292,6 +328,10 @@ public class NEWTeleOpBlue extends CommandOpMode {
     public void run(){
         CommandScheduler.getInstance().run();
 
+        if(AUTO_IN_TELEOP){
+            follower.update();
+        }
+
         robot.loop();
         robot.intake.loopBlue();
         robot.extendo.loop(gamepadEx.getLeftY());
@@ -299,18 +339,18 @@ public class NEWTeleOpBlue extends CommandOpMode {
         robot.arm.loopTeleOp();
 
         //PENTRU LEVEL 3 HANG
-        if(Globals.HANGING_LEVEL_3) {
-            robot.mecanumDriveTrain.updateTargetPositionHang(-gamepadEx.getRightY());
-        }
+//        if(Globals.HANGING_LEVEL_3) {
+//            robot.mecanumDriveTrain.updateTargetPositionHang(-gamepadEx.getRightY());
+//        }
 
         //applying expo function for mecanum
-        exponentialJoystickCoord_X_TURN = (Math.pow(gamepad1.left_stick_x, 3) + liniarCoefTerm * gamepad1.left_stick_x) * contantTerm;
-        exponentialJoystickCoord_X_FORWARD = (Math.pow(gamepad1.right_stick_x, 3) + liniarCoefTerm * gamepad1.right_stick_x) * contantTerm;
-        exponentialJoystickCoord_Y = (Math.pow(gamepad1.right_stick_y, 3) + liniarCoefTerm * gamepad1.right_stick_y) * contantTerm;
+//        exponentialJoystickCoord_X_TURN = (Math.pow(gamepad1.left_stick_x, 3) + liniarCoefTerm * gamepad1.left_stick_x) * contantTerm;
+//        exponentialJoystickCoord_X_FORWARD = (Math.pow(gamepad1.right_stick_x, 3) + liniarCoefTerm * gamepad1.right_stick_x) * contantTerm;
+//        exponentialJoystickCoord_Y = (Math.pow(gamepad1.right_stick_y, 3) + liniarCoefTerm * gamepad1.right_stick_y) * contantTerm;
 
-        double turnSpeed = robot.extendo.extendoState == Extendo.ExtendoState.EXTENDING_MINIMUM ? -exponentialJoystickCoord_X_TURN/Globals.DECREASE_TURN_SPEED_CONSTANT :-exponentialJoystickCoord_X_TURN;
-        PoseRR drive = new PoseRR(exponentialJoystickCoord_X_FORWARD, -exponentialJoystickCoord_Y, -turnSpeed);
-        robot.mecanumDriveTrain.set(drive, 0);
+//        double turnSpeed = robot.extendo.extendoState == Extendo.ExtendoState.EXTENDING_MINIMUM ? -exponentialJoystickCoord_X_TURN/Globals.DECREASE_TURN_SPEED_CONSTANT :-exponentialJoystickCoord_X_TURN;
+//        PoseRR drive = new PoseRR(exponentialJoystickCoord_X_FORWARD, -exponentialJoystickCoord_Y, -turnSpeed);
+//        robot.mecanumDriveTrain.set(drive, 0);
 
 
         if(robot.intake.desiredSampleColor == Intake.DesiredSampleColor.BLUE){
@@ -389,7 +429,7 @@ public class NEWTeleOpBlue extends CommandOpMode {
 //        telemetry.addData("Current Position", robot.extendo.extendoMotor.getCurrentPosition());
 //        telemetry.addData("Target Position", robot.extendo.getTargetPosition());
 //        telemetry.update();
-
+        telemetry.addData("AUTO_IN_TELEOP", AUTO_IN_TELEOP);
         telemetry.addData("SampleColor", robot.intake.intakedSampleColor);
         telemetry.addData("e?", robot.intake.sampleState);
 
@@ -397,6 +437,40 @@ public class NEWTeleOpBlue extends CommandOpMode {
         telemetry.addData("Hz", 1000000000 / (loop - loopTime));
         loopTime = loop;
         telemetry.update();
+
+    }
+
+
+
+
+    public void initializeAUTO_IN_TELEOP(){
+
+        follower = new Follower(hardwareMap, FConstants.class, LConstants.class);
+        follower.setStartingPose(startPose);
+
+        go = follower.pathBuilder()
+                .addPath(new BezierLine(new Point(startPose), new Point(goForward)))
+                .setLinearHeadingInterpolation(startPose.getHeading(), goForward.getHeading())
+                .build();
+
+        CommandScheduler.getInstance().schedule(
+                new SequentialCommandGroup(
+                        new WaitCommand(3000),
+                        new FollowPath(follower, go, true, 0.5)
+
+                )
+
+        );
+
+    }
+
+    public void reInitializeMecanum(){
+        robot.mecanumDriveTrain.initializeHardware(hardwareMap);
+        robot.mecanumDriveTrain.initialize();
+    }
+
+    public void runAuto(){
+
 
     }
 }

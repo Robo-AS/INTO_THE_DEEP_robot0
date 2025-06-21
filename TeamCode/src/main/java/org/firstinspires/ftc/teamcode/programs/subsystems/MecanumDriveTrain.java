@@ -259,4 +259,12 @@ public class MecanumDriveTrain extends WSubsystem implements Drivetrain {
     }
 
 
+    public void setZeroPower(){
+        dtBackLeftMotor.setPower(0);
+        dtFrontLeftMotor.setPower(0);
+        dtFrontRightMotor.setPower(0);
+        dtBackRightMotor.setPower(0);
+    }
+
+
 }

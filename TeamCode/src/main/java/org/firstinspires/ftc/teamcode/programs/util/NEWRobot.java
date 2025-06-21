@@ -58,7 +58,7 @@ public class NEWRobot {
         extendo.initializeHardware(hardwareMap);
         lift.initializeHardware(hardwareMap);
         mecanumDriveTrain.initializeHardware(hardwareMap);
-        arm.initializeHardware(hardwareMap);
+//        arm.initializeHardware(hardwareMap);
         hang.initializeHardware(hardwareMap);
         sweeper.initializeHardware(hardwareMap);
 //        limelightCamera.initializeHardware(hardwareMap);
@@ -76,7 +76,7 @@ public class NEWRobot {
         extendo.initialize();
         lift.initialize();
         mecanumDriveTrain.initialize();
-        arm.initialize();
+//        arm.initialize();
         hang.initialize();
         sweeper.initialize();
         //limelightCamera.initialize();
