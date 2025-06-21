@@ -60,17 +60,16 @@ public class NEWTeleOpBlue extends CommandOpMode {
     private final NEWRobot robot = NEWRobot.getInstance();
     public GamepadEx gamepadEx;
     private Follower follower;
+    public boolean AUTO_IN_TELEOP = false;
+
+    private final Pose startPose = new Pose(40.2077922077922, 65.92207792207792, Math.toRadians(180));
+    private final Pose goForward = new Pose(20.2077922077922, 65.92207792207792, Math.toRadians(180));
+    private PathChain go, goBack;
+
 
     double exponentialJoystickCoord_X_TURN, exponentialJoystickCoord_X_FORWARD, exponentialJoystickCoord_Y;
     public static double contantTerm = 0.6, liniarCoefTerm = 0.7;
     private double loopTime = 0;
-    public boolean AUTO_IN_TELEOP = false;
-
-
-    private final Pose startPose = new Pose(40.2077922077922, 65.92207792207792, Math.toRadians(180));
-    private final Pose goForward = new Pose(39.2077922077922, 65.92207792207792, Math.toRadians(180));
-
-    private PathChain go;
 
     @Override
     public void initialize(){
@@ -82,10 +81,6 @@ public class NEWTeleOpBlue extends CommandOpMode {
         Globals.HANGING_LEVEL_2 = false;
         Globals.HANGING_LEVEL_3 = false;
         Globals.TELEOP = true;
-        AUTO_IN_TELEOP = false;
-
-
-
 
         robot.initializeHardware(hardwareMap);
         robot.initializeRobot();
@@ -233,19 +228,19 @@ public class NEWTeleOpBlue extends CommandOpMode {
 
 
         gamepadEx.getGamepadButton(GamepadKeys.Button.X)//patrat
-                        .whenPressed(
-                                () -> CommandScheduler.getInstance().schedule(
+                .whenPressed(
+                        () -> CommandScheduler.getInstance().schedule(
+                                new ConditionalCommand(
+                                        new TriggerHangCommand(),
                                         new ConditionalCommand(
-                                                new TriggerHangCommand(),
-                                                new ConditionalCommand(
-                                                        new SetSafetyStateCommand(Hang.SafetyState.TRIGGERED),
-                                                        new DoesNothingCommand(),
-                                                        () -> robot.hang.safetyState == Hang.SafetyState.IDLE && Globals.HANGING_LEVEL_2
-                                                ),
-                                                () -> robot.hang.hangState == Hang.HangState.IDLE && Globals.HANGING_LEVEL_2
-                                        )
+                                                new SetSafetyStateCommand(Hang.SafetyState.TRIGGERED),
+                                                new DoesNothingCommand(),
+                                                () -> robot.hang.safetyState == Hang.SafetyState.IDLE && Globals.HANGING_LEVEL_2
+                                        ),
+                                        () -> robot.hang.hangState == Hang.HangState.IDLE && Globals.HANGING_LEVEL_2
                                 )
-                        );
+                        )
+                );
 
 
 
@@ -253,19 +248,19 @@ public class NEWTeleOpBlue extends CommandOpMode {
 
         //LOW BASKET (the X)
         gamepadEx.getGamepadButton(GamepadKeys.Button.A)
-                        .whenPressed(
-                                () -> CommandScheduler.getInstance().schedule(
+                .whenPressed(
+                        () -> CommandScheduler.getInstance().schedule(
+                                new ConditionalCommand(
+                                        new OuttakeGoLowBasketCommand(),
                                         new ConditionalCommand(
-                                                new OuttakeGoLowBasketCommand(),
-                                                new ConditionalCommand(
-                                                        new OutttakePutSampleLowBasketGoBackToIdle(),
-                                                        new OutttakeGoBackToIdleFromLowBasketCommand(),
-                                                        () -> robot.arm.clawState == Arm.ClawState.CLOSED
-                                                ),
-                                                () -> robot.lift.liftState != Lift.LiftState.LOW_BASKET
-                                        )
+                                                new OutttakePutSampleLowBasketGoBackToIdle(),
+                                                new OutttakeGoBackToIdleFromLowBasketCommand(),
+                                                () -> robot.arm.clawState == Arm.ClawState.CLOSED
+                                        ),
+                                        () -> robot.lift.liftState != Lift.LiftState.LOW_BASKET
                                 )
-                        );
+                        )
+                );
 
         // OPEN/CLOSE CLAW
         gamepadEx.getGamepadButton(GamepadKeys.Button.B)
@@ -304,21 +299,28 @@ public class NEWTeleOpBlue extends CommandOpMode {
                         )
                 );
 
+
         gamepadEx.getGamepadButton(GamepadKeys.Button.START)
                 .whenPressed(
                         () -> CommandScheduler.getInstance().schedule(
                                 new SequentialCommandGroup(
-                                        new InstantCommand(() -> AUTO_IN_TELEOP = true),
-                                        new InstantCommand(this::initializeAUTO_IN_TELEOP),
+                                        new ConditionalCommand(
+                                                new SequentialCommandGroup(
+                                                        new InstantCommand(this::initializeAUTO_IN_TELEOP)
+                                                ),
 
-//                                        new InstantCommand(this::runAuto),
-                                        new InstantCommand(() -> AUTO_IN_TELEOP = false)
+                                                new SequentialCommandGroup(
+                                                        new InstantCommand(() -> follower.breakFollowing()),
+//                                                        new InstantCommand(() -> CommandScheduler.getInstance().reset()),
+                                                        new InstantCommand(() -> AUTO_IN_TELEOP = false)
+
+                                                ),
+                                                ()-> !AUTO_IN_TELEOP
+                                        )
 
                                 )
                         )
                 );
-
-
 
 
 
@@ -331,6 +333,9 @@ public class NEWTeleOpBlue extends CommandOpMode {
         if(AUTO_IN_TELEOP){
             follower.update();
         }
+        else{
+            telemetry.addData("NO FOLLOWER", "NO");
+        }
 
         robot.loop();
         robot.intake.loopBlue();
@@ -338,19 +343,19 @@ public class NEWTeleOpBlue extends CommandOpMode {
         robot.lift.loop();
         robot.arm.loopTeleOp();
 
-        //PENTRU LEVEL 3 HANG
-//        if(Globals.HANGING_LEVEL_3) {
-//            robot.mecanumDriveTrain.updateTargetPositionHang(-gamepadEx.getRightY());
-//        }
+//        PENTRU LEVEL 3 HANG
+        if(Globals.HANGING_LEVEL_3) {
+            robot.mecanumDriveTrain.updateTargetPositionHang(-gamepadEx.getRightY());
+        }
 
         //applying expo function for mecanum
-//        exponentialJoystickCoord_X_TURN = (Math.pow(gamepad1.left_stick_x, 3) + liniarCoefTerm * gamepad1.left_stick_x) * contantTerm;
-//        exponentialJoystickCoord_X_FORWARD = (Math.pow(gamepad1.right_stick_x, 3) + liniarCoefTerm * gamepad1.right_stick_x) * contantTerm;
-//        exponentialJoystickCoord_Y = (Math.pow(gamepad1.right_stick_y, 3) + liniarCoefTerm * gamepad1.right_stick_y) * contantTerm;
+        exponentialJoystickCoord_X_TURN = (Math.pow(gamepad1.left_stick_x, 3) + liniarCoefTerm * gamepad1.left_stick_x) * contantTerm;
+        exponentialJoystickCoord_X_FORWARD = (Math.pow(gamepad1.right_stick_x, 3) + liniarCoefTerm * gamepad1.right_stick_x) * contantTerm;
+        exponentialJoystickCoord_Y = (Math.pow(gamepad1.right_stick_y, 3) + liniarCoefTerm * gamepad1.right_stick_y) * contantTerm;
 
-//        double turnSpeed = robot.extendo.extendoState == Extendo.ExtendoState.EXTENDING_MINIMUM ? -exponentialJoystickCoord_X_TURN/Globals.DECREASE_TURN_SPEED_CONSTANT :-exponentialJoystickCoord_X_TURN;
-//        PoseRR drive = new PoseRR(exponentialJoystickCoord_X_FORWARD, -exponentialJoystickCoord_Y, -turnSpeed);
-//        robot.mecanumDriveTrain.set(drive, 0);
+        double turnSpeed = robot.extendo.extendoState == Extendo.ExtendoState.EXTENDING_MINIMUM ? -exponentialJoystickCoord_X_TURN/Globals.DECREASE_TURN_SPEED_CONSTANT :-exponentialJoystickCoord_X_TURN;
+        PoseRR drive = new PoseRR(exponentialJoystickCoord_X_FORWARD, -exponentialJoystickCoord_Y, -turnSpeed);
+        robot.mecanumDriveTrain.set(drive, 0);
 
 
         if(robot.intake.desiredSampleColor == Intake.DesiredSampleColor.BLUE){
@@ -368,6 +373,9 @@ public class NEWTeleOpBlue extends CommandOpMode {
             Globals.shouldVibrate = false;
         }
 
+        telemetry.addData("AUTO_IN_TELEOP", AUTO_IN_TELEOP);
+        telemetry.addData("SampleColor", robot.intake.intakedSampleColor);
+        telemetry.addData("e?", robot.intake.sampleState);
 
 
 
@@ -429,9 +437,6 @@ public class NEWTeleOpBlue extends CommandOpMode {
 //        telemetry.addData("Current Position", robot.extendo.extendoMotor.getCurrentPosition());
 //        telemetry.addData("Target Position", robot.extendo.getTargetPosition());
 //        telemetry.update();
-        telemetry.addData("AUTO_IN_TELEOP", AUTO_IN_TELEOP);
-        telemetry.addData("SampleColor", robot.intake.intakedSampleColor);
-        telemetry.addData("e?", robot.intake.sampleState);
 
         double loop = System.nanoTime();
         telemetry.addData("Hz", 1000000000 / (loop - loopTime));
@@ -453,24 +458,61 @@ public class NEWTeleOpBlue extends CommandOpMode {
                 .setLinearHeadingInterpolation(startPose.getHeading(), goForward.getHeading())
                 .build();
 
+        goBack = follower.pathBuilder()
+                .addPath(new BezierLine(new Point(goForward), new Point(startPose)))
+                .setLinearHeadingInterpolation(goForward.getHeading(), startPose.getHeading())
+                .build();
+
+
+
         CommandScheduler.getInstance().schedule(
                 new SequentialCommandGroup(
-                        new WaitCommand(3000),
+                        new InstantCommand(() -> AUTO_IN_TELEOP = true),
+                        new WaitCommand(1000),
                         new FollowPath(follower, go, true, 0.5)
+                                .alongWith(
+                                        new SetExtendoStateCommand(Extendo.ExtendoState.TAKE_SPECIMEN_AUTO)
+                                ),
+
+                        new FollowPath(follower, goBack, true, 0.5)
+                                .alongWith(
+                                        new SetExtendoStateCommand(Extendo.ExtendoState.RETRACTING)
+                                ),
+
+                        new FollowPath(follower, go, true, 0.5)
+                                .alongWith(
+                                        new SetExtendoStateCommand(Extendo.ExtendoState.TAKE_SPECIMEN_AUTO)
+                                ),
+
+                        new FollowPath(follower, goBack, true, 0.5)
+                                .alongWith(
+                                        new SetExtendoStateCommand(Extendo.ExtendoState.RETRACTING)
+                                ),
+
+                        new FollowPath(follower, go, true, 0.5)
+                                .alongWith(
+                                        new SetExtendoStateCommand(Extendo.ExtendoState.TAKE_SPECIMEN_AUTO)
+                                ),
+
+                        new FollowPath(follower, goBack, true, 0.5)
+                                .alongWith(
+                                        new SetExtendoStateCommand(Extendo.ExtendoState.RETRACTING)
+                                ),
+                        new InstantCommand(() -> AUTO_IN_TELEOP = false),
+                        new InstantCommand(() -> follower.breakFollowing()),
+                        new InstantCommand(this::reInitializeMecanum)
 
                 )
 
         );
 
+
     }
+
+
 
     public void reInitializeMecanum(){
         robot.mecanumDriveTrain.initializeHardware(hardwareMap);
         robot.mecanumDriveTrain.initialize();
-    }
-
-    public void runAuto(){
-
-
     }
 }
