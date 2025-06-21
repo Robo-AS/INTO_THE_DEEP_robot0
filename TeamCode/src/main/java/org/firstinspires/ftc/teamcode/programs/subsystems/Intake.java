@@ -105,7 +105,7 @@ public class Intake extends SubsystemBase {
 
     public double timePassed;
 
-
+    public int isYellow = 0;
 
     public IntakeState intakeState = IntakeState.IDLE;
     public IntakeState previousIntakeState;
@@ -116,6 +116,11 @@ public class Intake extends SubsystemBase {
     public SampleState sampleState = SampleState.ISNOT;
     public IntakedSampleColor intakedSampleColor = IntakedSampleColor.NOTHING;
     public SpecimenBlocked specimenBlocked = SpecimenBlocked.NOT_BLOCKED;
+
+
+    private IntakedSampleColor lastStableColor = IntakedSampleColor.NOTHING;
+    private int sameColorCount = 0;
+    private static final int STABILITY_THRESHOLD = 3;
 
     public void initializeHardware(final HardwareMap hardwareMap){
         brushMotor = new CachingDcMotorEx(hardwareMap.get(DcMotorEx.class, "brushMotor"));
@@ -141,13 +146,18 @@ public class Intake extends SubsystemBase {
         desiredSampleColor = DesiredSampleColor.BOTH;
         sampleState = SampleState.ISNOT;
         intakedSampleColor = IntakedSampleColor.NOTHING;
+        lastStableColor = IntakedSampleColor.NOTHING;
         angleServo.setPosition(UP_ANGLE);
         currentSpikeTimer.reset();
 
         totalAxonAngle = 0;
         rotations = 0;
+        sameColorCount = 0;
+
 
     }
+
+
 
 
 
@@ -318,12 +328,11 @@ public class Intake extends SubsystemBase {
         totalAxonAngle = (rotations * 360) + (currentAxonAngle);
 
 
-        if(intakeAngle == IntakeAngle.DOWN){
-            updateSampleStateDigital();
-            updateSampleColor();
-        }
 
         if(intakeState == IntakeState.INTAKING){
+            updateSampleStateDigital();
+            updateSampleColor();
+
             if(brushMotor.getCurrent(CurrentUnit.AMPS) > 2.75 && currentSpikeTimer.seconds() > 1){
                 CommandScheduler.getInstance().schedule(new IntakeBlockedSamplesCommand());
                 currentSpikeTimer.reset();
@@ -529,6 +538,8 @@ public class Intake extends SubsystemBase {
     public double getTimePassed(){
         return timePassed;
     }
+
+
 
 
 

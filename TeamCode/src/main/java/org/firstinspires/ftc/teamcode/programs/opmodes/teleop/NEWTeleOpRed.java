@@ -386,9 +386,9 @@ public class NEWTeleOpRed extends CommandOpMode {
 //        telemetry.addData("INITIAL:", robot.intake.initialAxonAngle);
 //        telemetry.addData("FIRST READ", robot.intake.firstRead);
 
-        telemetry.addData("Current Position", robot.extendo.extendoMotor.getCurrentPosition());
-        telemetry.addData("Target Position", robot.extendo.getTargetPosition());
-        telemetry.update();
+//        telemetry.addData("Current Position", robot.extendo.extendoMotor.getCurrentPosition());
+//        telemetry.addData("Target Position", robot.extendo.getTargetPosition());
+//        telemetry.update();
 
 
         double loop = System.nanoTime();

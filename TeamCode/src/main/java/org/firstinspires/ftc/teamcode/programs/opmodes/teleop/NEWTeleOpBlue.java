@@ -386,10 +386,12 @@ public class NEWTeleOpBlue extends CommandOpMode {
 //        telemetry.addData("INITIAL:", robot.intake.initialAxonAngle);
 //        telemetry.addData("FIRST READ", robot.intake.firstRead);
 
-        telemetry.addData("Current Position", robot.extendo.extendoMotor.getCurrentPosition());
-        telemetry.addData("Target Position", robot.extendo.getTargetPosition());
-        telemetry.update();
+//        telemetry.addData("Current Position", robot.extendo.extendoMotor.getCurrentPosition());
+//        telemetry.addData("Target Position", robot.extendo.getTargetPosition());
+//        telemetry.update();
 
+        telemetry.addData("SampleColor", robot.intake.intakedSampleColor);
+        telemetry.addData("e?", robot.intake.sampleState);
 
         double loop = System.nanoTime();
         telemetry.addData("Hz", 1000000000 / (loop - loopTime));

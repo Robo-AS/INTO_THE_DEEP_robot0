@@ -38,7 +38,7 @@ public class ExtendoTest extends CommandOpMode {
 
 
         //extendo.loopAuto(gamepadEx.gamepad.left_stick_y);
-//        extendo.testPID();
+        extendo.testPID();
 //        extendo.loop(gamepadEx.getLeftY());
 
 
