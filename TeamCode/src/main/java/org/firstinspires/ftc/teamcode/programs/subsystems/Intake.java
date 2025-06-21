@@ -103,9 +103,6 @@ public class Intake extends SubsystemBase {
     public boolean firstRead = true;
     public boolean sampleThrowed = false;
 
-    public double timePassed;
-
-    public int isYellow = 0;
 
     public IntakeState intakeState = IntakeState.IDLE;
     public IntakeState previousIntakeState;
@@ -114,13 +111,10 @@ public class Intake extends SubsystemBase {
     public IntakeAngle intakeAngle = IntakeAngle.UP;
     public DesiredSampleColor desiredSampleColor = DesiredSampleColor.BOTH;
     public SampleState sampleState = SampleState.ISNOT;
-    public IntakedSampleColor intakedSampleColor = IntakedSampleColor.NOTHING;
+    public static IntakedSampleColor intakedSampleColor = IntakedSampleColor.NOTHING;
     public SpecimenBlocked specimenBlocked = SpecimenBlocked.NOT_BLOCKED;
 
 
-    private IntakedSampleColor lastStableColor = IntakedSampleColor.NOTHING;
-    private int sameColorCount = 0;
-    private static final int STABILITY_THRESHOLD = 3;
 
     public void initializeHardware(final HardwareMap hardwareMap){
         brushMotor = new CachingDcMotorEx(hardwareMap.get(DcMotorEx.class, "brushMotor"));
@@ -146,13 +140,11 @@ public class Intake extends SubsystemBase {
         desiredSampleColor = DesiredSampleColor.BOTH;
         sampleState = SampleState.ISNOT;
         intakedSampleColor = IntakedSampleColor.NOTHING;
-        lastStableColor = IntakedSampleColor.NOTHING;
         angleServo.setPosition(UP_ANGLE);
         currentSpikeTimer.reset();
 
         totalAxonAngle = 0;
         rotations = 0;
-        sameColorCount = 0;
 
 
     }
@@ -339,8 +331,11 @@ public class Intake extends SubsystemBase {
             }
 
             if(sampleState == SampleState.IS){
+                updateSampleColor();
                 rollersServo.setPosition(0.5);
                 brushMotor.setPower(0);
+
+
 
                 if(sampleThrowed){
                     updateSampleColor();
@@ -409,6 +404,7 @@ public class Intake extends SubsystemBase {
             }
 
             if(sampleState == SampleState.IS){
+                updateSampleColor();
                 rollersServo.setPosition(0.5);
                 brushMotor.setPower(0);
 
@@ -534,10 +530,6 @@ public class Intake extends SubsystemBase {
         currentSpikeTimer.reset();
     }
 
-
-    public double getTimePassed(){
-        return timePassed;
-    }
 
 
 
