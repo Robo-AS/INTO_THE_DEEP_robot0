@@ -16,7 +16,11 @@ public class SpecimenPaths {
     public boolean TAKE_4_COMPLETED = false;
     public boolean SCORE_4_COMPLETED = false;
     public boolean SCORE_4_SMALL_COMPLETED = false;
-
+    public boolean SCORE_5_SMALL_COMPLETED = false;
+    public boolean SCORE_6_SMALL_COMPLETED = false;
+    public boolean SCORE_7_SMALL_COMPLETED = false;
+    public boolean SCORE_8_SMALL_COMPLETED = false;
+    public boolean SCORE_9_SMALL_COMPLETED = false;
 
 
     public void resetTrajectoryes(){
@@ -32,6 +36,11 @@ public class SpecimenPaths {
         TAKE_4_COMPLETED = false;
         SCORE_4_COMPLETED = false;
         SCORE_4_SMALL_COMPLETED = false;
+        SCORE_5_SMALL_COMPLETED = false;
+        SCORE_6_SMALL_COMPLETED = false;
+        SCORE_7_SMALL_COMPLETED = false;
+        SCORE_8_SMALL_COMPLETED = false;
+        SCORE_9_SMALL_COMPLETED = false;
     }
 
 
@@ -47,6 +56,11 @@ public class SpecimenPaths {
     public void setTake4Completed(){ TAKE_4_COMPLETED = true;}
     public void setScore4Completed(){ SCORE_4_COMPLETED = true;}
     public void setScore4SmallCompleted(){ SCORE_4_SMALL_COMPLETED = true;}
+    public void setScore5SmallCompleted(){ SCORE_5_SMALL_COMPLETED = true;}
+    public void setScore6SmallCompleted(){ SCORE_6_SMALL_COMPLETED = true;}
+    public void setScore7SmallCompleted(){ SCORE_7_SMALL_COMPLETED = true;}
+    public void setScore8SmallCompleted(){ SCORE_8_SMALL_COMPLETED = true;}
+    public void setScore9SmallCompleted(){ SCORE_9_SMALL_COMPLETED = true;}
 
 
 
@@ -62,6 +76,11 @@ public class SpecimenPaths {
     public boolean getTake4Completed(){ return TAKE_4_COMPLETED;}
     public boolean getScore4Completed(){ return SCORE_4_COMPLETED;}
     public boolean getScore4SmallCompleted(){ return SCORE_4_SMALL_COMPLETED;}
+    public boolean getScore5SmallCompleted(){ return SCORE_5_SMALL_COMPLETED;}
+    public boolean getScore6SmallCompleted(){ return SCORE_6_SMALL_COMPLETED;}
+    public boolean getScore7SmallCompleted(){ return SCORE_7_SMALL_COMPLETED;}
+    public boolean getScore8SmallCompleted(){ return SCORE_8_SMALL_COMPLETED;}
+    public boolean getScore9SmallCompleted(){ return SCORE_9_SMALL_COMPLETED;}
 
 
     public boolean allTrajectoriesCompleted(){

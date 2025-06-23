@@ -49,6 +49,7 @@ import org.firstinspires.ftc.teamcode.programs.commandbase.TeleOpCommands.Outtak
 import org.firstinspires.ftc.teamcode.programs.commandbase.TeleOpCommands.OuttakeCommands.OutttakePutSampleHighBasketGoBackToIdle;
 import org.firstinspires.ftc.teamcode.programs.commandbase.TeleOpCommands.OuttakeCommands.OutttakePutSampleLowBasketGoBackToIdle;
 import org.firstinspires.ftc.teamcode.programs.commandbase.TeleOpCommands.OuttakeCommands.PutSpecimenCommand;
+import org.firstinspires.ftc.teamcode.programs.opmodes.auto.SpecimenPaths;
 import org.firstinspires.ftc.teamcode.programs.subsystems.Arm;
 import org.firstinspires.ftc.teamcode.programs.subsystems.Extendo;
 import org.firstinspires.ftc.teamcode.programs.subsystems.Hang;
@@ -69,6 +70,7 @@ public class NEWTeleOpBlue extends CommandOpMode {
     private final int sensorTimeOut = 1500;
     private final int waitAfterPutSpecimen = 300;
     private final int spacimentIntakingTimeOut = 1500;
+    private final SpecimenPaths specimenPaths = new SpecimenPaths();
 
     private final Pose startPose = new Pose(42.077922077922075, 65.6883116883117, Math.toRadians(180));
 
@@ -82,10 +84,10 @@ public class NEWTeleOpBlue extends CommandOpMode {
     public static Pose score2SMALLPose = new Pose(39.80909090909091, 72.83246753246754, Math.toRadians(180));
 
     public static Pose score3Pose = new Pose(37.40909090909091, 74.83246753246754, Math.toRadians(180));
-    public static Pose score3SMALLPose = new Pose(40.10909090909091, 74.83246753246754, Math.toRadians(180)); //+0.3
+    public static Pose score3SMALLPose = new Pose(40.20909090909091, 74.83246753246754, Math.toRadians(180)); //+0.4
 
     public static Pose score4Pose = new Pose(37.40909090909091, 76.83246753246754, Math.toRadians(180));
-    public static Pose score4SMALLPose = new Pose(40.10909090909091, 76.83246753246754, Math.toRadians(180));  //+0.3
+    public static Pose score4SMALLPose = new Pose(40.30909090909091, 76.83246753246754, Math.toRadians(180));  //+0.5
 
     public static Pose score5Pose = new Pose(37.40909090909091, 78.83246753246754, Math.toRadians(180));
     public static Pose score5SMALLPose = new Pose(40.60909090909091, 78.83246753246754, Math.toRadians(180)); //+0.8
@@ -753,17 +755,36 @@ public class NEWTeleOpBlue extends CommandOpMode {
                                 .alongWith(
                                         new SequentialCommandGroup(
                                                 new IntakeRetractSPECIMENAutoCommand(),
-                                                new SetExtendoStateCommand(Extendo.ExtendoState.EXTEND_SPECIMEN_EXIT),
-                                                new WaitCommand(50),
-                                                new OuttakeGoHighRungCommand()
+                                                new ConditionalCommand(
+                                                        new SequentialCommandGroup(
+                                                                new SetClawStateCommand(Arm.ClawState.OPEN),
+                                                                new InstantCommand(specimenPaths::setScore1SmallCompleted),
+                                                                new SetIntakeStateCommand(Intake.IntakeState.SPITTING_HUMAN_PLAYER),
+                                                                new WaitCommand(500),
+                                                                new SetIntakeStateCommand(Intake.IntakeState.IDLE)
+                                                        ),
+                                                        new SequentialCommandGroup(
+                                                                new SetExtendoStateCommand(Extendo.ExtendoState.EXTEND_SPECIMEN_EXIT),
+                                                                new WaitCommand(50),
+                                                                new OuttakeGoHighRungCommand()
+                                                        ),
+                                                        () -> robot.intake.isSpecimenBlockedInRollers()
+                                                )
+
                                         )
                                 ),
 //                        new WaitCommand(250),
-                        new FollowPath(follower, score1SMALL, true, 1)
-                                .alongWith(
-                                        new SetIntakeStateCommand(Intake.IntakeState.SPITTING_HUMAN_PLAYER)
+                        new ConditionalCommand(
+                                new SequentialCommandGroup(
+                                        new FollowPath(follower, score1SMALL, true, 1)
+                                                .alongWith(
+                                                        new SetIntakeStateCommand(Intake.IntakeState.SPITTING_HUMAN_PLAYER)
+                                                ),
+                                        new SetIntakeStateCommand(Intake.IntakeState.IDLE)
                                 ),
-                        new SetIntakeStateCommand(Intake.IntakeState.IDLE),
+                                new DoesNothingCommand(),
+                                () -> !specimenPaths.getScore1SmallCompleted()
+                        ),
 
 
                         new FollowPath(follower, take2, true, 1)
@@ -848,17 +869,36 @@ public class NEWTeleOpBlue extends CommandOpMode {
                                 .alongWith(
                                         new SequentialCommandGroup(
                                                 new IntakeRetractSPECIMENAutoCommand(),
-                                                new SetExtendoStateCommand(Extendo.ExtendoState.EXTEND_SPECIMEN_EXIT),
-                                                new WaitCommand(50),
-                                                new OuttakeGoHighRungCommand()
+                                                new ConditionalCommand(
+                                                        new SequentialCommandGroup(
+                                                                new SetClawStateCommand(Arm.ClawState.OPEN),
+                                                                new InstantCommand(specimenPaths::setScore2SmallCompleted),
+                                                                new SetIntakeStateCommand(Intake.IntakeState.SPITTING_HUMAN_PLAYER),
+                                                                new WaitCommand(500),
+                                                                new SetIntakeStateCommand(Intake.IntakeState.IDLE)
+                                                        ),
+                                                        new SequentialCommandGroup(
+                                                                new SetExtendoStateCommand(Extendo.ExtendoState.EXTEND_SPECIMEN_EXIT),
+                                                                new WaitCommand(50),
+                                                                new OuttakeGoHighRungCommand()
+                                                        ),
+                                                        () -> robot.intake.isSpecimenBlockedInRollers()
+                                                )
+
                                         )
                                 ),
 //                        new WaitCommand(250),
-                        new FollowPath(follower, score2SMALL, true, 1)
-                                .alongWith(
-                                        new SetIntakeStateCommand(Intake.IntakeState.SPITTING_HUMAN_PLAYER)
+                        new ConditionalCommand(
+                                new SequentialCommandGroup(
+                                        new FollowPath(follower, score2SMALL, true, 1)
+                                                .alongWith(
+                                                        new SetIntakeStateCommand(Intake.IntakeState.SPITTING_HUMAN_PLAYER)
+                                                ),
+                                        new SetIntakeStateCommand(Intake.IntakeState.IDLE)
                                 ),
-                        new SetIntakeStateCommand(Intake.IntakeState.IDLE),
+                                new DoesNothingCommand(),
+                                () -> !specimenPaths.getScore2SmallCompleted()
+                        ),
 
 
 
@@ -946,17 +986,36 @@ public class NEWTeleOpBlue extends CommandOpMode {
                                 .alongWith(
                                         new SequentialCommandGroup(
                                                 new IntakeRetractSPECIMENAutoCommand(),
-                                                new SetExtendoStateCommand(Extendo.ExtendoState.EXTEND_SPECIMEN_EXIT),
-                                                new WaitCommand(50),
-                                                new OuttakeGoHighRungCommand()
+                                                new ConditionalCommand(
+                                                        new SequentialCommandGroup(
+                                                                new SetClawStateCommand(Arm.ClawState.OPEN),
+                                                                new InstantCommand(specimenPaths::setScore3SmallCompleted),
+                                                                new SetIntakeStateCommand(Intake.IntakeState.SPITTING_HUMAN_PLAYER),
+                                                                new WaitCommand(500),
+                                                                new SetIntakeStateCommand(Intake.IntakeState.IDLE)
+                                                        ),
+                                                        new SequentialCommandGroup(
+                                                                new SetExtendoStateCommand(Extendo.ExtendoState.EXTEND_SPECIMEN_EXIT),
+                                                                new WaitCommand(50),
+                                                                new OuttakeGoHighRungCommand()
+                                                        ),
+                                                        () -> robot.intake.isSpecimenBlockedInRollers()
+                                                )
+
                                         )
                                 ),
 //                        new WaitCommand(250),
-                        new FollowPath(follower, score3SMALL, true, 1)
-                                .alongWith(
-                                        new SetIntakeStateCommand(Intake.IntakeState.SPITTING_HUMAN_PLAYER)
+                        new ConditionalCommand(
+                                new SequentialCommandGroup(
+                                        new FollowPath(follower, score3SMALL, true, 1)
+                                                .alongWith(
+                                                        new SetIntakeStateCommand(Intake.IntakeState.SPITTING_HUMAN_PLAYER)
+                                                ),
+                                        new SetIntakeStateCommand(Intake.IntakeState.IDLE)
                                 ),
-                        new SetIntakeStateCommand(Intake.IntakeState.IDLE),
+                                new DoesNothingCommand(),
+                                () -> !specimenPaths.getScore3SmallCompleted()
+                        ),
 
 
 
@@ -1044,17 +1103,36 @@ public class NEWTeleOpBlue extends CommandOpMode {
                                 .alongWith(
                                         new SequentialCommandGroup(
                                                 new IntakeRetractSPECIMENAutoCommand(),
-                                                new SetExtendoStateCommand(Extendo.ExtendoState.EXTEND_SPECIMEN_EXIT),
-                                                new WaitCommand(50),
-                                                new OuttakeGoHighRungCommand()
+                                                new ConditionalCommand(
+                                                        new SequentialCommandGroup(
+                                                                new SetClawStateCommand(Arm.ClawState.OPEN),
+                                                                new InstantCommand(specimenPaths::setScore4SmallCompleted),
+                                                                new SetIntakeStateCommand(Intake.IntakeState.SPITTING_HUMAN_PLAYER),
+                                                                new WaitCommand(500),
+                                                                new SetIntakeStateCommand(Intake.IntakeState.IDLE)
+                                                        ),
+                                                        new SequentialCommandGroup(
+                                                                new SetExtendoStateCommand(Extendo.ExtendoState.EXTEND_SPECIMEN_EXIT),
+                                                                new WaitCommand(50),
+                                                                new OuttakeGoHighRungCommand()
+                                                        ),
+                                                        () -> robot.intake.isSpecimenBlockedInRollers()
+                                                )
+
                                         )
                                 ),
 //                        new WaitCommand(250),
-                        new FollowPath(follower, score4SMALL, true, 1)
-                                .alongWith(
-                                        new SetIntakeStateCommand(Intake.IntakeState.SPITTING_HUMAN_PLAYER)
+                        new ConditionalCommand(
+                                new SequentialCommandGroup(
+                                        new FollowPath(follower, score4SMALL, true, 1)
+                                                .alongWith(
+                                                        new SetIntakeStateCommand(Intake.IntakeState.SPITTING_HUMAN_PLAYER)
+                                                ),
+                                        new SetIntakeStateCommand(Intake.IntakeState.IDLE)
                                 ),
-                        new SetIntakeStateCommand(Intake.IntakeState.IDLE),
+                                new DoesNothingCommand(),
+                                () -> !specimenPaths.getScore4SmallCompleted()
+                        ),
 
 
 
@@ -1144,17 +1222,36 @@ public class NEWTeleOpBlue extends CommandOpMode {
                                 .alongWith(
                                         new SequentialCommandGroup(
                                                 new IntakeRetractSPECIMENAutoCommand(),
-                                                new SetExtendoStateCommand(Extendo.ExtendoState.EXTEND_SPECIMEN_EXIT),
-                                                new WaitCommand(50),
-                                                new OuttakeGoHighRungCommand()
+                                                new ConditionalCommand(
+                                                        new SequentialCommandGroup(
+                                                                new SetClawStateCommand(Arm.ClawState.OPEN),
+                                                                new InstantCommand(specimenPaths::setScore5SmallCompleted),
+                                                                new SetIntakeStateCommand(Intake.IntakeState.SPITTING_HUMAN_PLAYER),
+                                                                new WaitCommand(500),
+                                                                new SetIntakeStateCommand(Intake.IntakeState.IDLE)
+                                                        ),
+                                                        new SequentialCommandGroup(
+                                                                new SetExtendoStateCommand(Extendo.ExtendoState.EXTEND_SPECIMEN_EXIT),
+                                                                new WaitCommand(50),
+                                                                new OuttakeGoHighRungCommand()
+                                                        ),
+                                                        () -> robot.intake.isSpecimenBlockedInRollers()
+                                                )
+
                                         )
                                 ),
 //                        new WaitCommand(250),
-                        new FollowPath(follower, score5SMALL, true, 1)
-                                .alongWith(
-                                        new SetIntakeStateCommand(Intake.IntakeState.SPITTING_HUMAN_PLAYER)
+                        new ConditionalCommand(
+                                new SequentialCommandGroup(
+                                        new FollowPath(follower, score5SMALL, true, 1)
+                                                .alongWith(
+                                                        new SetIntakeStateCommand(Intake.IntakeState.SPITTING_HUMAN_PLAYER)
+                                                ),
+                                        new SetIntakeStateCommand(Intake.IntakeState.IDLE)
                                 ),
-                        new SetIntakeStateCommand(Intake.IntakeState.IDLE),
+                                new DoesNothingCommand(),
+                                () -> !specimenPaths.getScore5SmallCompleted()
+                        ),
 
 
 
@@ -1241,17 +1338,36 @@ public class NEWTeleOpBlue extends CommandOpMode {
                                 .alongWith(
                                         new SequentialCommandGroup(
                                                 new IntakeRetractSPECIMENAutoCommand(),
-                                                new SetExtendoStateCommand(Extendo.ExtendoState.EXTEND_SPECIMEN_EXIT),
-                                                new WaitCommand(50),
-                                                new OuttakeGoHighRungCommand()
+                                                new ConditionalCommand(
+                                                        new SequentialCommandGroup(
+                                                                new SetClawStateCommand(Arm.ClawState.OPEN),
+                                                                new InstantCommand(specimenPaths::setScore6SmallCompleted),
+                                                                new SetIntakeStateCommand(Intake.IntakeState.SPITTING_HUMAN_PLAYER),
+                                                                new WaitCommand(500),
+                                                                new SetIntakeStateCommand(Intake.IntakeState.IDLE)
+                                                        ),
+                                                        new SequentialCommandGroup(
+                                                                new SetExtendoStateCommand(Extendo.ExtendoState.EXTEND_SPECIMEN_EXIT),
+                                                                new WaitCommand(50),
+                                                                new OuttakeGoHighRungCommand()
+                                                        ),
+                                                        () -> robot.intake.isSpecimenBlockedInRollers()
+                                                )
+
                                         )
                                 ),
 //                        new WaitCommand(250),
-                        new FollowPath(follower, score6SMALL, true, 1)
-                                .alongWith(
-                                        new SetIntakeStateCommand(Intake.IntakeState.SPITTING_HUMAN_PLAYER)
+                        new ConditionalCommand(
+                                new SequentialCommandGroup(
+                                        new FollowPath(follower, score6SMALL, true, 1)
+                                                .alongWith(
+                                                        new SetIntakeStateCommand(Intake.IntakeState.SPITTING_HUMAN_PLAYER)
+                                                ),
+                                        new SetIntakeStateCommand(Intake.IntakeState.IDLE)
                                 ),
-                        new SetIntakeStateCommand(Intake.IntakeState.IDLE),
+                                new DoesNothingCommand(),
+                                () -> !specimenPaths.getScore6SmallCompleted()
+                        ),
 
 
 
@@ -1339,17 +1455,36 @@ public class NEWTeleOpBlue extends CommandOpMode {
                                 .alongWith(
                                         new SequentialCommandGroup(
                                                 new IntakeRetractSPECIMENAutoCommand(),
-                                                new SetExtendoStateCommand(Extendo.ExtendoState.EXTEND_SPECIMEN_EXIT),
-                                                new WaitCommand(50),
-                                                new OuttakeGoHighRungCommand()
+                                                new ConditionalCommand(
+                                                        new SequentialCommandGroup(
+                                                                new SetClawStateCommand(Arm.ClawState.OPEN),
+                                                                new InstantCommand(specimenPaths::setScore7SmallCompleted),
+                                                                new SetIntakeStateCommand(Intake.IntakeState.SPITTING_HUMAN_PLAYER),
+                                                                new WaitCommand(500),
+                                                                new SetIntakeStateCommand(Intake.IntakeState.IDLE)
+                                                        ),
+                                                        new SequentialCommandGroup(
+                                                                new SetExtendoStateCommand(Extendo.ExtendoState.EXTEND_SPECIMEN_EXIT),
+                                                                new WaitCommand(50),
+                                                                new OuttakeGoHighRungCommand()
+                                                        ),
+                                                        () -> robot.intake.isSpecimenBlockedInRollers()
+                                                )
+
                                         )
                                 ),
 //                        new WaitCommand(250),
-                        new FollowPath(follower, score7SMALL, true, 1)
-                                .alongWith(
-                                        new SetIntakeStateCommand(Intake.IntakeState.SPITTING_HUMAN_PLAYER)
+                        new ConditionalCommand(
+                                new SequentialCommandGroup(
+                                        new FollowPath(follower, score7SMALL, true, 1)
+                                                .alongWith(
+                                                        new SetIntakeStateCommand(Intake.IntakeState.SPITTING_HUMAN_PLAYER)
+                                                ),
+                                        new SetIntakeStateCommand(Intake.IntakeState.IDLE)
                                 ),
-                        new SetIntakeStateCommand(Intake.IntakeState.IDLE),
+                                new DoesNothingCommand(),
+                                () -> !specimenPaths.getScore7SmallCompleted()
+                        ),
 
 
 
@@ -1436,17 +1571,36 @@ public class NEWTeleOpBlue extends CommandOpMode {
                                 .alongWith(
                                         new SequentialCommandGroup(
                                                 new IntakeRetractSPECIMENAutoCommand(),
-                                                new SetExtendoStateCommand(Extendo.ExtendoState.EXTEND_SPECIMEN_EXIT),
-                                                new WaitCommand(50),
-                                                new OuttakeGoHighRungCommand()
+                                                new ConditionalCommand(
+                                                        new SequentialCommandGroup(
+                                                                new SetClawStateCommand(Arm.ClawState.OPEN),
+                                                                new InstantCommand(specimenPaths::setScore8SmallCompleted),
+                                                                new SetIntakeStateCommand(Intake.IntakeState.SPITTING_HUMAN_PLAYER),
+                                                                new WaitCommand(500),
+                                                                new SetIntakeStateCommand(Intake.IntakeState.IDLE)
+                                                        ),
+                                                        new SequentialCommandGroup(
+                                                                new SetExtendoStateCommand(Extendo.ExtendoState.EXTEND_SPECIMEN_EXIT),
+                                                                new WaitCommand(50),
+                                                                new OuttakeGoHighRungCommand()
+                                                        ),
+                                                        () -> robot.intake.isSpecimenBlockedInRollers()
+                                                )
+
                                         )
                                 ),
 //                        new WaitCommand(250),
-                        new FollowPath(follower, score8SMALL, true, 1)
-                                .alongWith(
-                                        new SetIntakeStateCommand(Intake.IntakeState.SPITTING_HUMAN_PLAYER)
+                        new ConditionalCommand(
+                                new SequentialCommandGroup(
+                                        new FollowPath(follower, score8SMALL, true, 1)
+                                                .alongWith(
+                                                        new SetIntakeStateCommand(Intake.IntakeState.SPITTING_HUMAN_PLAYER)
+                                                ),
+                                        new SetIntakeStateCommand(Intake.IntakeState.IDLE)
                                 ),
-                        new SetIntakeStateCommand(Intake.IntakeState.IDLE),
+                                new DoesNothingCommand(),
+                                () -> !specimenPaths.getScore8SmallCompleted()
+                        ),
 
 
 
@@ -1531,13 +1685,36 @@ public class NEWTeleOpBlue extends CommandOpMode {
                                 .alongWith(
                                         new SequentialCommandGroup(
                                                 new IntakeRetractSPECIMENAutoCommand(),
-                                                new SetExtendoStateCommand(Extendo.ExtendoState.EXTEND_SPECIMEN_EXIT),
-                                                new WaitCommand(50),
-                                                new OuttakeGoHighRungCommand()
+                                                new ConditionalCommand(
+                                                        new SequentialCommandGroup(
+                                                                new SetClawStateCommand(Arm.ClawState.OPEN),
+                                                                new InstantCommand(specimenPaths::setScore9SmallCompleted),
+                                                                new SetIntakeStateCommand(Intake.IntakeState.SPITTING_HUMAN_PLAYER),
+                                                                new WaitCommand(500),
+                                                                new SetIntakeStateCommand(Intake.IntakeState.IDLE)
+                                                        ),
+                                                        new SequentialCommandGroup(
+                                                                new SetExtendoStateCommand(Extendo.ExtendoState.EXTEND_SPECIMEN_EXIT),
+                                                                new WaitCommand(50),
+                                                                new OuttakeGoHighRungCommand()
+                                                        ),
+                                                        () -> robot.intake.isSpecimenBlockedInRollers()
+                                                )
+
                                         )
                                 ),
 //                        new WaitCommand(250),
-                        new FollowPath(follower, score9SMALL, true, 1),
+                        new ConditionalCommand(
+                                new SequentialCommandGroup(
+                                        new FollowPath(follower, score9SMALL, true, 1)
+                                                .alongWith(
+                                                        new SetIntakeStateCommand(Intake.IntakeState.SPITTING_HUMAN_PLAYER)
+                                                ),
+                                        new SetIntakeStateCommand(Intake.IntakeState.IDLE)
+                                ),
+                                new DoesNothingCommand(),
+                                () -> !specimenPaths.getScore9SmallCompleted()
+                        ),
 
                         new WaitCommand(200),
                         new PutSpecimenCommand(),

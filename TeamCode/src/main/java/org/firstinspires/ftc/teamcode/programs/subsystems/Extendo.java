@@ -44,9 +44,15 @@ public class Extendo extends SubsystemBase {
         TAKE_SAMPLE_SPECIMEN_AUTO_GRAB_1,
         TAKE_SAMPLE_SPECIMEN_AUTO_GRAB_2,
         TAKE_SAMPLE_SPECIMEN_AUTO_GRAB_3,
+        RETRACT_TAKE_SAMPLE_SPECIMEN_AUTO_GRAB_1,
+        RETRACT_TAKE_SAMPLE_SPECIMEN_AUTO_GRAB_2,
+        RETRACT_TAKE_SAMPLE_SPECIMEN_AUTO_GRAB_3,
+        GO_AGAIN_SAMPLE_SPECIMEN_AUTO_GRAB_1,
+        GO_AGAIN_SAMPLE_SPECIMEN_AUTO_GRAB_2,
+        GO_AGAIN_SAMPLE_SPECIMEN_AUTO_GRAB_3,
+
         TAKE_SPECIMEN_AUTO,
         RETRACT_AUTO_FAIL_SAFE,
-
         EXTEND_HUMAN_PLAYER,
         EXTEND_SPECIMEN_EXIT
 
@@ -67,6 +73,15 @@ public class Extendo extends SubsystemBase {
     public int TAKE_SAMPLE_SPECIMEN_AUTO_GRAB_1 = 350;
     public int TAKE_SAMPLE_SPECIMEN_AUTO_GRAB_2 = 570;
     public int TAKE_SAMPLE_SPECIMEN_AUTO_GRAB_3 = 550;
+    public int RETRACT_TAKE_SAMPLE_SPECIMEN_AUTO_GRAB_1 = 250;
+    public int RETRACT_TAKE_SAMPLE_SPECIMEN_AUTO_GRAB_2 = 470;
+    public int RETRACT_TAKE_SAMPLE_SPECIMEN_AUTO_GRAB_3 = 450;
+    public int GO_AGAIN_SAMPLE_SPECIMEN_AUTO_GRAB_1 = 550;
+    public int GO_AGAIN_TAKE_SAMPLE_SPECIMEN_AUTO_GRAB_2 = 770;
+    public int GO_AGAIN_TAKE_SAMPLE_SPECIMEN_AUTO_GRAB_3 = 650;
+
+
+
     public int TAKE_SPECIMEN_AUTO = 730;
     public int RETRACT_AUTO_FAIL_SAFE = 500;
 
@@ -227,6 +242,24 @@ public class Extendo extends SubsystemBase {
                 break;
             case TAKE_SAMPLE_SPECIMEN_AUTO_GRAB_3:
                 targetPosition = TAKE_SAMPLE_SPECIMEN_AUTO_GRAB_3;
+                break;
+            case RETRACT_TAKE_SAMPLE_SPECIMEN_AUTO_GRAB_1:
+                targetPosition = RETRACT_TAKE_SAMPLE_SPECIMEN_AUTO_GRAB_1;
+                break;
+            case RETRACT_TAKE_SAMPLE_SPECIMEN_AUTO_GRAB_2:
+                targetPosition = RETRACT_TAKE_SAMPLE_SPECIMEN_AUTO_GRAB_2;
+                break;
+            case RETRACT_TAKE_SAMPLE_SPECIMEN_AUTO_GRAB_3:
+                targetPosition = RETRACT_TAKE_SAMPLE_SPECIMEN_AUTO_GRAB_3;
+                break;
+            case GO_AGAIN_SAMPLE_SPECIMEN_AUTO_GRAB_1:
+                targetPosition = GO_AGAIN_SAMPLE_SPECIMEN_AUTO_GRAB_1;
+                break;
+            case GO_AGAIN_SAMPLE_SPECIMEN_AUTO_GRAB_2:
+                targetPosition = GO_AGAIN_TAKE_SAMPLE_SPECIMEN_AUTO_GRAB_2;
+                break;
+            case GO_AGAIN_SAMPLE_SPECIMEN_AUTO_GRAB_3:
+                targetPosition = GO_AGAIN_TAKE_SAMPLE_SPECIMEN_AUTO_GRAB_3;
                 break;
             case EXTEND_HUMAN_PLAYER:
                 targetPosition = EXTEND_HUMAN_PLAYER;

@@ -313,8 +313,24 @@ public class SpecimenAuto extends LinearOpMode {
                         new WaitCommand(150).interruptOn(robot.intake::isSampleDigital), //stabilize pedro
                         new SetExtendoStateCommand(Extendo.ExtendoState.TAKE_SAMPLE_SPECIMEN_AUTO_GRAB_1).interruptOn(robot.intake::isSampleDigital),
                         new WaitUntilCommand(robot.intake::isSampleDigital).withTimeout(sensorTimeOut),
-                        new SetIntakeStateCommand(Intake.IntakeState.IDLE),
-                        new SetIntakeAngleCommand(Intake.IntakeAngle.UP),
+
+
+                        new ConditionalCommand(
+                                new SequentialCommandGroup(
+                                        new SetExtendoStateCommand(Extendo.ExtendoState.RETRACT_TAKE_SAMPLE_SPECIMEN_AUTO_GRAB_1).interruptOn(robot.intake::isSampleDigital),
+                                        new WaitCommand(300).interruptOn(robot.intake::isSampleDigital),
+                                        new SetExtendoStateCommand(Extendo.ExtendoState.GO_AGAIN_SAMPLE_SPECIMEN_AUTO_GRAB_1).interruptOn(robot.intake::isSampleDigital),
+                                        new WaitUntilCommand(robot.intake::isSampleDigital).withTimeout(sensorTimeOut),
+                                        new SetIntakeStateCommand(Intake.IntakeState.IDLE),
+                                        new SetIntakeAngleCommand(Intake.IntakeAngle.UP)
+
+                                ),
+                                new SequentialCommandGroup(
+                                        new SetIntakeStateCommand(Intake.IntakeState.IDLE),
+                                        new SetIntakeAngleCommand(Intake.IntakeAngle.UP)
+                                ),
+                                () -> robot.intake.isNOTSampleDigital()
+                        ),
 
 
 
@@ -330,19 +346,42 @@ public class SpecimenAuto extends LinearOpMode {
                                 ),
                         new WaitCommand(200),
                         new SetIntakeStateCommand(Intake.IntakeState.IDLE),
-
                         new SetExtendoStateCommand(Extendo.ExtendoState.EXTENDING_MINIMUM),
+
+
+
                         new FollowPath(follower, grab2, true, 1),
                         new WaitCommand(150),  //stabilize pedro
                         new SetIntakeAngleCommand(Intake.IntakeAngle.DOWN),
                         new SetIntakeStateCommand(Intake.IntakeState.INTAKING),
                         new SetExtendoStateCommand(Extendo.ExtendoState.TAKE_SAMPLE_SPECIMEN_AUTO_GRAB_2),
                         new WaitUntilCommand(robot.intake::isSampleDigital).withTimeout(sensorTimeOut),
-                        new SetIntakeStateCommand(Intake.IntakeState.IDLE),
-                        new SetIntakeAngleCommand(Intake.IntakeAngle.UP)
-                                .alongWith(
-                                        new SetExtendoStateCommand(Extendo.ExtendoState.EXTENDING_MINIMUM)//RETRACTING
+
+
+
+
+                        new ConditionalCommand(
+                                new SequentialCommandGroup(
+                                        new SetExtendoStateCommand(Extendo.ExtendoState.RETRACT_TAKE_SAMPLE_SPECIMEN_AUTO_GRAB_2).interruptOn(robot.intake::isSampleDigital),
+                                        new WaitCommand(300).interruptOn(robot.intake::isSampleDigital),
+                                        new SetExtendoStateCommand(Extendo.ExtendoState.GO_AGAIN_SAMPLE_SPECIMEN_AUTO_GRAB_2).interruptOn(robot.intake::isSampleDigital),
+                                        new WaitUntilCommand(robot.intake::isSampleDigital).withTimeout(sensorTimeOut),
+                                        new SetIntakeStateCommand(Intake.IntakeState.IDLE),
+                                        new SetIntakeAngleCommand(Intake.IntakeAngle.UP)
+                                                .alongWith(
+                                                        new SetExtendoStateCommand(Extendo.ExtendoState.EXTENDING_MINIMUM)
+                                                )
+
                                 ),
+                                new SequentialCommandGroup(
+                                        new SetIntakeStateCommand(Intake.IntakeState.IDLE),
+                                        new SetIntakeAngleCommand(Intake.IntakeAngle.UP)
+                                                .alongWith(
+                                                        new SetExtendoStateCommand(Extendo.ExtendoState.EXTENDING_MINIMUM)
+                                                )
+                                ),
+                                () -> robot.intake.isNOTSampleDigital()
+                        ),
 
 
 
@@ -369,8 +408,24 @@ public class SpecimenAuto extends LinearOpMode {
                         new SetIntakeStateCommand(Intake.IntakeState.INTAKING),
                         new SetExtendoStateCommand(Extendo.ExtendoState.TAKE_SAMPLE_SPECIMEN_AUTO_GRAB_3),
                         new WaitUntilCommand(robot.intake::isSampleDigital).withTimeout(sensorTimeOut),
-                        new SetIntakeStateCommand(Intake.IntakeState.IDLE),
-                        new SetIntakeAngleCommand(Intake.IntakeAngle.UP),
+
+
+                        new ConditionalCommand(
+                                new SequentialCommandGroup(
+                                        new SetExtendoStateCommand(Extendo.ExtendoState.RETRACT_TAKE_SAMPLE_SPECIMEN_AUTO_GRAB_3).interruptOn(robot.intake::isSampleDigital),
+                                        new WaitCommand(300).interruptOn(robot.intake::isSampleDigital),
+                                        new SetExtendoStateCommand(Extendo.ExtendoState.GO_AGAIN_SAMPLE_SPECIMEN_AUTO_GRAB_3).interruptOn(robot.intake::isSampleDigital),
+                                        new WaitUntilCommand(robot.intake::isSampleDigital).withTimeout(sensorTimeOut),
+                                        new SetIntakeStateCommand(Intake.IntakeState.IDLE),
+                                        new SetIntakeAngleCommand(Intake.IntakeAngle.UP)
+
+                                ),
+                                new SequentialCommandGroup(
+                                        new SetIntakeStateCommand(Intake.IntakeState.IDLE),
+                                        new SetIntakeAngleCommand(Intake.IntakeAngle.UP)
+                                ),
+                                () -> robot.intake.isNOTSampleDigital()
+                        ),
 
 
                         new FollowPath(follower, bring3, true, 1)
@@ -607,7 +662,7 @@ public class SpecimenAuto extends LinearOpMode {
                                         new SetIntakeStateCommand(Intake.IntakeState.IDLE)
                                 ),
                                 new DoesNothingCommand(),
-                                () -> !specimenPaths.getScore1SmallCompleted()
+                                () -> !specimenPaths.getScore2SmallCompleted()
                         ),
 
 
@@ -717,7 +772,7 @@ public class SpecimenAuto extends LinearOpMode {
                                         new SetIntakeStateCommand(Intake.IntakeState.IDLE)
                                 ),
                                 new DoesNothingCommand(),
-                                () -> !specimenPaths.getScore1SmallCompleted()
+                                () -> !specimenPaths.getScore3SmallCompleted()
                         ),
 
 
@@ -830,7 +885,7 @@ public class SpecimenAuto extends LinearOpMode {
                                         new SetIntakeStateCommand(Intake.IntakeState.IDLE)
                                 ),
                                 new DoesNothingCommand(),
-                                () -> !specimenPaths.getScore1SmallCompleted()
+                                () -> !specimenPaths.getScore4SmallCompleted()
                         ),
 
 
