@@ -2,6 +2,7 @@ package org.firstinspires.ftc.teamcode.programs.opmodes.auto;
 
 import com.arcrobotics.ftclib.command.CommandScheduler;
 import com.arcrobotics.ftclib.command.ConditionalCommand;
+import com.arcrobotics.ftclib.command.InstantCommand;
 import com.arcrobotics.ftclib.command.SequentialCommandGroup;
 import com.arcrobotics.ftclib.command.WaitCommand;
 import com.arcrobotics.ftclib.command.WaitUntilCommand;
@@ -292,7 +293,7 @@ public class SpecimenAuto extends LinearOpMode {
                                 ),
 
                         new FollowPath(follower, scorePreloadSMALL, true, 1),
-//
+
                         new PutSpecimenCommand(),
                         new SetExtendoStateCommand(Extendo.ExtendoState.RETRACTING),//HERE
 
@@ -399,9 +400,6 @@ public class SpecimenAuto extends LinearOpMode {
 
 
 
-
-
-
                         new ConditionalCommand(
                                 new ConditionalCommand(
                                         new SequentialCommandGroup(
@@ -415,10 +413,9 @@ public class SpecimenAuto extends LinearOpMode {
                                                 new SetIntakeStateCommand(Intake.IntakeState.IDLE)
                                         ),
                                         new SequentialCommandGroup(
-                                                new IntakeRetractFailSafeCommand()
-                                                        .alongWith(
-                                                                new SetIntakeStateCommand(Intake.IntakeState.SPITTING_HUMAN_PLAYER)
-                                                        ),
+                                                new IntakeRetractFailSafeCommand(),
+                                                new SetIntakeStateCommand(Intake.IntakeState.SPITTING_HUMAN_PLAYER),
+                                                new WaitCommand(300),
                                                 new SetIntakeStateCommand(Intake.IntakeState.IDLE),
                                                 new WaitCommand(2000),
                                                 new SetIntakeStateCommand(Intake.IntakeState.INTAKING),
@@ -444,10 +441,9 @@ public class SpecimenAuto extends LinearOpMode {
                                                 new SetIntakeStateCommand(Intake.IntakeState.IDLE)
                                         ),
                                         new SequentialCommandGroup(
-                                                new IntakeRetractFailSafeCommand()
-                                                        .alongWith(
-                                                                new SetIntakeStateCommand(Intake.IntakeState.SPITTING_HUMAN_PLAYER)
-                                                        ),
+                                                new IntakeRetractFailSafeCommand(),
+                                                new SetIntakeStateCommand(Intake.IntakeState.SPITTING_HUMAN_PLAYER),
+                                                new WaitCommand(300),
                                                 new SetIntakeStateCommand(Intake.IntakeState.IDLE),
                                                 new WaitCommand(2000),
                                                 new SetIntakeStateCommand(Intake.IntakeState.INTAKING),
@@ -467,17 +463,39 @@ public class SpecimenAuto extends LinearOpMode {
                                 .alongWith(
                                         new SequentialCommandGroup(
                                                 new IntakeRetractSPECIMENAutoCommand(),
-                                                new SetExtendoStateCommand(Extendo.ExtendoState.EXTEND_SPECIMEN_EXIT),
-                                                new WaitCommand(50),
-                                                new OuttakeGoHighRungCommand()
+                                                new ConditionalCommand(
+                                                        new SequentialCommandGroup(
+                                                                new SetClawStateCommand(Arm.ClawState.OPEN),
+                                                                new InstantCommand(specimenPaths::setScore1SmallCompleted),
+                                                                new SetIntakeStateCommand(Intake.IntakeState.SPITTING_HUMAN_PLAYER),
+                                                                new WaitCommand(500),
+                                                                new SetIntakeStateCommand(Intake.IntakeState.IDLE)
+                                                        ),
+                                                        new SequentialCommandGroup(
+                                                                new SetExtendoStateCommand(Extendo.ExtendoState.EXTEND_SPECIMEN_EXIT),
+                                                                new WaitCommand(50),
+                                                                new OuttakeGoHighRungCommand()
+                                                        ),
+                                                        () -> robot.intake.isSpecimenBlockedInRollers()
+                                                )
+
                                         )
                                 ),
+
+
 //                        new WaitCommand(250),
-                        new FollowPath(follower, score1SMALL, true, 1)
-                                .alongWith(
-                                        new SetIntakeStateCommand(Intake.IntakeState.SPITTING_HUMAN_PLAYER)
+                        new ConditionalCommand(
+                                new SequentialCommandGroup(
+                                        new FollowPath(follower, score1SMALL, true, 1)
+                                                .alongWith(
+                                                        new SetIntakeStateCommand(Intake.IntakeState.SPITTING_HUMAN_PLAYER)
+                                                ),
+                                        new SetIntakeStateCommand(Intake.IntakeState.IDLE)
                                 ),
-                        new SetIntakeStateCommand(Intake.IntakeState.IDLE),
+                                new DoesNothingCommand(),
+                                () -> !specimenPaths.getScore1SmallCompleted()
+                        ),
+
 
 
 
@@ -509,10 +527,9 @@ public class SpecimenAuto extends LinearOpMode {
                                                 new SetIntakeStateCommand(Intake.IntakeState.IDLE)
                                         ),
                                         new SequentialCommandGroup(
-                                                new IntakeRetractFailSafeCommand()
-                                                        .alongWith(
-                                                                new SetIntakeStateCommand(Intake.IntakeState.SPITTING_HUMAN_PLAYER)
-                                                        ),
+                                                new IntakeRetractFailSafeCommand(),
+                                                new SetIntakeStateCommand(Intake.IntakeState.SPITTING_HUMAN_PLAYER),
+                                                new WaitCommand(300),
                                                 new SetIntakeStateCommand(Intake.IntakeState.IDLE),
                                                 new WaitCommand(2000),
                                                 new SetIntakeStateCommand(Intake.IntakeState.INTAKING),
@@ -538,10 +555,9 @@ public class SpecimenAuto extends LinearOpMode {
                                                 new SetIntakeStateCommand(Intake.IntakeState.IDLE)
                                         ),
                                         new SequentialCommandGroup(
-                                                new IntakeRetractFailSafeCommand()
-                                                        .alongWith(
-                                                                new SetIntakeStateCommand(Intake.IntakeState.SPITTING_HUMAN_PLAYER)
-                                                        ),
+                                                new IntakeRetractFailSafeCommand(),
+                                                new SetIntakeStateCommand(Intake.IntakeState.SPITTING_HUMAN_PLAYER),
+                                                new WaitCommand(300),
                                                 new SetIntakeStateCommand(Intake.IntakeState.IDLE),
                                                 new WaitCommand(2000),
                                                 new SetIntakeStateCommand(Intake.IntakeState.INTAKING),
@@ -563,17 +579,36 @@ public class SpecimenAuto extends LinearOpMode {
                                 .alongWith(
                                         new SequentialCommandGroup(
                                                 new IntakeRetractSPECIMENAutoCommand(),
-                                                new SetExtendoStateCommand(Extendo.ExtendoState.EXTEND_SPECIMEN_EXIT),
-                                                new WaitCommand(50),
-                                                new OuttakeGoHighRungCommand()
+                                                new ConditionalCommand(
+                                                        new SequentialCommandGroup(
+                                                                new SetClawStateCommand(Arm.ClawState.OPEN),
+                                                                new InstantCommand(specimenPaths::setScore2SmallCompleted),
+                                                                new SetIntakeStateCommand(Intake.IntakeState.SPITTING_HUMAN_PLAYER),
+                                                                new WaitCommand(500),
+                                                                new SetIntakeStateCommand(Intake.IntakeState.IDLE)
+                                                        ),
+                                                        new SequentialCommandGroup(
+                                                                new SetExtendoStateCommand(Extendo.ExtendoState.EXTEND_SPECIMEN_EXIT),
+                                                                new WaitCommand(50),
+                                                                new OuttakeGoHighRungCommand()
+                                                        ),
+                                                        () -> robot.intake.isSpecimenBlockedInRollers()
+                                                )
+
                                         )
                                 ),
 //                        new WaitCommand(250),
-                        new FollowPath(follower, score2SMALL, true, 1)
-                                .alongWith(
-                                        new SetIntakeStateCommand(Intake.IntakeState.SPITTING_HUMAN_PLAYER)
+                        new ConditionalCommand(
+                                new SequentialCommandGroup(
+                                        new FollowPath(follower, score2SMALL, true, 1)
+                                                .alongWith(
+                                                        new SetIntakeStateCommand(Intake.IntakeState.SPITTING_HUMAN_PLAYER)
+                                                ),
+                                        new SetIntakeStateCommand(Intake.IntakeState.IDLE)
                                 ),
-                        new SetIntakeStateCommand(Intake.IntakeState.IDLE),
+                                new DoesNothingCommand(),
+                                () -> !specimenPaths.getScore1SmallCompleted()
+                        ),
 
 
 
@@ -605,10 +640,9 @@ public class SpecimenAuto extends LinearOpMode {
                                                 new SetIntakeStateCommand(Intake.IntakeState.IDLE)
                                         ),
                                         new SequentialCommandGroup(
-                                                new IntakeRetractFailSafeCommand()
-                                                        .alongWith(
-                                                                new SetIntakeStateCommand(Intake.IntakeState.SPITTING_HUMAN_PLAYER)
-                                                        ),
+                                                new IntakeRetractFailSafeCommand(),
+                                                new SetIntakeStateCommand(Intake.IntakeState.SPITTING_HUMAN_PLAYER),
+                                                new WaitCommand(300),
                                                 new SetIntakeStateCommand(Intake.IntakeState.IDLE),
                                                 new WaitCommand(2000),
                                                 new SetIntakeStateCommand(Intake.IntakeState.INTAKING),
@@ -634,10 +668,9 @@ public class SpecimenAuto extends LinearOpMode {
                                                 new SetIntakeStateCommand(Intake.IntakeState.IDLE)
                                         ),
                                         new SequentialCommandGroup(
-                                                new IntakeRetractFailSafeCommand()
-                                                        .alongWith(
-                                                                new SetIntakeStateCommand(Intake.IntakeState.SPITTING_HUMAN_PLAYER)
-                                                        ),
+                                                new IntakeRetractFailSafeCommand(),
+                                                new SetIntakeStateCommand(Intake.IntakeState.SPITTING_HUMAN_PLAYER),
+                                                new WaitCommand(300),
                                                 new SetIntakeStateCommand(Intake.IntakeState.IDLE),
                                                 new WaitCommand(2000),
                                                 new SetIntakeStateCommand(Intake.IntakeState.INTAKING),
@@ -656,17 +689,36 @@ public class SpecimenAuto extends LinearOpMode {
                                 .alongWith(
                                         new SequentialCommandGroup(
                                                 new IntakeRetractSPECIMENAutoCommand(),
-                                                new SetExtendoStateCommand(Extendo.ExtendoState.EXTEND_SPECIMEN_EXIT),
-                                                new WaitCommand(50),
-                                                new OuttakeGoHighRungCommand()
+                                                new ConditionalCommand(
+                                                        new SequentialCommandGroup(
+                                                                new SetClawStateCommand(Arm.ClawState.OPEN),
+                                                                new InstantCommand(specimenPaths::setScore3SmallCompleted),
+                                                                new SetIntakeStateCommand(Intake.IntakeState.SPITTING_HUMAN_PLAYER),
+                                                                new WaitCommand(500),
+                                                                new SetIntakeStateCommand(Intake.IntakeState.IDLE)
+                                                        ),
+                                                        new SequentialCommandGroup(
+                                                                new SetExtendoStateCommand(Extendo.ExtendoState.EXTEND_SPECIMEN_EXIT),
+                                                                new WaitCommand(50),
+                                                                new OuttakeGoHighRungCommand()
+                                                        ),
+                                                        () -> robot.intake.isSpecimenBlockedInRollers()
+                                                )
+
                                         )
                                 ),
 //                        new WaitCommand(250),
-                        new FollowPath(follower, score3SMALL, true, 1)
-                                .alongWith(
-                                        new SetIntakeStateCommand(Intake.IntakeState.SPITTING_HUMAN_PLAYER)
+                        new ConditionalCommand(
+                                new SequentialCommandGroup(
+                                        new FollowPath(follower, score3SMALL, true, 1)
+                                                .alongWith(
+                                                        new SetIntakeStateCommand(Intake.IntakeState.SPITTING_HUMAN_PLAYER)
+                                                ),
+                                        new SetIntakeStateCommand(Intake.IntakeState.IDLE)
                                 ),
-                        new SetIntakeStateCommand(Intake.IntakeState.IDLE),
+                                new DoesNothingCommand(),
+                                () -> !specimenPaths.getScore1SmallCompleted()
+                        ),
 
 
 
@@ -699,10 +751,9 @@ public class SpecimenAuto extends LinearOpMode {
                                                 new SetIntakeStateCommand(Intake.IntakeState.IDLE)
                                         ),
                                         new SequentialCommandGroup(
-                                                new IntakeRetractFailSafeCommand()
-                                                        .alongWith(
-                                                                new SetIntakeStateCommand(Intake.IntakeState.SPITTING_HUMAN_PLAYER)
-                                                        ),
+                                                new IntakeRetractFailSafeCommand(),
+                                                new SetIntakeStateCommand(Intake.IntakeState.SPITTING_HUMAN_PLAYER),
+                                                new WaitCommand(300),
                                                 new SetIntakeStateCommand(Intake.IntakeState.IDLE),
                                                 new WaitCommand(2000),
                                                 new SetIntakeStateCommand(Intake.IntakeState.INTAKING),
@@ -728,10 +779,9 @@ public class SpecimenAuto extends LinearOpMode {
                                                 new SetIntakeStateCommand(Intake.IntakeState.IDLE)
                                         ),
                                         new SequentialCommandGroup(
-                                                new IntakeRetractFailSafeCommand()
-                                                        .alongWith(
-                                                                new SetIntakeStateCommand(Intake.IntakeState.SPITTING_HUMAN_PLAYER)
-                                                        ),
+                                                new IntakeRetractFailSafeCommand(),
+                                                new SetIntakeStateCommand(Intake.IntakeState.SPITTING_HUMAN_PLAYER),
+                                                new WaitCommand(300),
                                                 new SetIntakeStateCommand(Intake.IntakeState.IDLE),
                                                 new WaitCommand(2000),
                                                 new SetIntakeStateCommand(Intake.IntakeState.INTAKING),
@@ -753,13 +803,35 @@ public class SpecimenAuto extends LinearOpMode {
                                 .alongWith(
                                         new SequentialCommandGroup(
                                                 new IntakeRetractSPECIMENAutoCommand(),
-                                                new SetExtendoStateCommand(Extendo.ExtendoState.EXTEND_SPECIMEN_EXIT),
-                                                new WaitCommand(50),
-                                                new OuttakeGoHighRungCommand()
+                                                new ConditionalCommand(
+                                                        new SequentialCommandGroup(
+                                                                new SetClawStateCommand(Arm.ClawState.OPEN),
+                                                                new InstantCommand(specimenPaths::setScore4SmallCompleted),
+                                                                new SetIntakeStateCommand(Intake.IntakeState.SPITTING_HUMAN_PLAYER),
+                                                                new WaitCommand(500),
+                                                                new SetIntakeStateCommand(Intake.IntakeState.IDLE)
+                                                        ),
+                                                        new SequentialCommandGroup(
+                                                                new SetExtendoStateCommand(Extendo.ExtendoState.EXTEND_SPECIMEN_EXIT),
+                                                                new WaitCommand(50),
+                                                                new OuttakeGoHighRungCommand()
+                                                        ),
+                                                        () -> robot.intake.isSpecimenBlockedInRollers()
+                                                )
                                         )
                                 ),
 //                        new WaitCommand(250),
-                        new FollowPath(follower, score4SMALL, true, 1),
+                        new ConditionalCommand(
+                                new SequentialCommandGroup(
+                                        new FollowPath(follower, score4SMALL, true, 1)
+                                                .alongWith(
+                                                        new SetIntakeStateCommand(Intake.IntakeState.SPITTING_HUMAN_PLAYER)
+                                                ),
+                                        new SetIntakeStateCommand(Intake.IntakeState.IDLE)
+                                ),
+                                new DoesNothingCommand(),
+                                () -> !specimenPaths.getScore1SmallCompleted()
+                        ),
 
 
                         new FollowPath(follower, park, true, 1)

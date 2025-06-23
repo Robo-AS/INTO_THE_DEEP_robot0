@@ -1,5 +1,6 @@
 package org.firstinspires.ftc.teamcode.programs.commandbase.AutoCommands.SpecimenAuto;
 
+import com.arcrobotics.ftclib.command.ConditionalCommand;
 import com.arcrobotics.ftclib.command.InstantCommand;
 import com.arcrobotics.ftclib.command.SequentialCommandGroup;
 import com.arcrobotics.ftclib.command.WaitUntilCommand;
@@ -25,7 +26,7 @@ public class IntakeRetractSPECIMENAutoCommand extends SequentialCommandGroup {
                 new WaitUntilCommand(Extendo.getInstance()::canOuttakeSpecimen_AUTO),
                 new InstantCommand(() -> Intake.getInstance().setInitialAxonAngle()),
                 new SetIntakeStateCommand(Intake.IntakeState.OUTTAKING_SPECIMEN),
-                new WaitUntilCommand(Intake.getInstance()::canStopOuttakingSPECIMEN_2_AUTO),
+                new WaitUntilCommand(Intake.getInstance()::canStopOuttakingSPECIMEN_2_AUTO).withTimeout(1000),
 //                new WaitUntilCommand(Intake.getInstance()::canCloseClaw_AUTO),
                 new SetClawStateCommand(Arm.ClawState.CLOSED),
 //                new WaitUntilCommand(Intake.getInstance()::canStopOuttakingSPECIMEN_2_AUTO),

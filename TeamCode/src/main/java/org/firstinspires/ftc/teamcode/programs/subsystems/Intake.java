@@ -526,15 +526,6 @@ public class Intake extends SubsystemBase {
     }
 
 
-
-//    public void isSpecimenBlocked(){
-//        CurrentUnit currentUnit = CurrentUnit.AMPS;
-//        if (brushMotor.getCurrent(currentUnit) > 1.5) {
-//            specimenBlocked = SpecimenBlocked.BLOCKED;
-//        }
-//        else specimenBlocked = SpecimenBlocked.NOT_BLOCKED;
-//    }
-
     public boolean isSpecimenBlocked(){
         if (brushMotor.getCurrent(CurrentUnit.AMPS) > 1.5) {
             specimenBlocked = SpecimenBlocked.BLOCKED;
@@ -571,6 +562,11 @@ public class Intake extends SubsystemBase {
 
     public void resetTime(){
         currentSpikeTimer.reset();
+    }
+
+
+    public boolean isSpecimenBlockedInRollers(){
+        return (totalAxonAngle - initialAxonAngle) <= 60;
     }
 
 
