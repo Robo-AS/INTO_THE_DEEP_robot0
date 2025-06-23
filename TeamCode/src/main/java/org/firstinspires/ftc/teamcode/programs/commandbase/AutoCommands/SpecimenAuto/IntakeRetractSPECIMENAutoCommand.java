@@ -7,6 +7,7 @@ import com.arcrobotics.ftclib.command.WaitUntilCommand;
 import org.firstinspires.ftc.teamcode.programs.commandbase.ArmCommands.SetClawStateCommand;
 import org.firstinspires.ftc.teamcode.programs.commandbase.ExtendoCommands.SetExtendoStateCommand;
 import org.firstinspires.ftc.teamcode.programs.commandbase.IntakeCommand.SetIntakeAngleCommand;
+import org.firstinspires.ftc.teamcode.programs.commandbase.IntakeCommand.SetIntakeStateCommand;
 import org.firstinspires.ftc.teamcode.programs.commandbase.IntakeCommand.SetRollersStateCommand;
 import org.firstinspires.ftc.teamcode.programs.subsystems.Arm;
 import org.firstinspires.ftc.teamcode.programs.subsystems.Extendo;
@@ -18,17 +19,17 @@ public class IntakeRetractSPECIMENAutoCommand extends SequentialCommandGroup {
                 new InstantCommand(() -> Intake.getInstance().setInitialAxonAngle()),
                 new SetIntakeAngleCommand(Intake.IntakeAngle.UP),
                 new SetExtendoStateCommand(Extendo.ExtendoState.RETRACTING),
-                new SetRollersStateCommand(Intake.RollersState.OUTTAKING),
+                new SetIntakeStateCommand(Intake.IntakeState.OUTTAKING_SPECIMEN),
                 new WaitUntilCommand(Intake.getInstance()::canStopOuttakingSPECIMEN_1_AUTO),
-                new SetRollersStateCommand(Intake.RollersState.IDLE),
+                new SetIntakeStateCommand(Intake.IntakeState.IDLE),
                 new WaitUntilCommand(Extendo.getInstance()::canOuttakeSpecimen_AUTO),
                 new InstantCommand(() -> Intake.getInstance().setInitialAxonAngle()),
-                new SetRollersStateCommand(Intake.RollersState.OUTTAKING),
+                new SetIntakeStateCommand(Intake.IntakeState.OUTTAKING_SPECIMEN),
                 new WaitUntilCommand(Intake.getInstance()::canStopOuttakingSPECIMEN_2_AUTO),
 //                new WaitUntilCommand(Intake.getInstance()::canCloseClaw_AUTO),
                 new SetClawStateCommand(Arm.ClawState.CLOSED),
 //                new WaitUntilCommand(Intake.getInstance()::canStopOuttakingSPECIMEN_2_AUTO),
-                new SetRollersStateCommand(Intake.RollersState.IDLE)
+                new SetIntakeStateCommand(Intake.IntakeState.IDLE)
 
         );
     }

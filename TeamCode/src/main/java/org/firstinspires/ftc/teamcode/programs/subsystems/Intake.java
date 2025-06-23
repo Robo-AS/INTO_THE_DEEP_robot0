@@ -52,6 +52,7 @@ public class Intake extends SubsystemBase {
         INTAKING, //IN + IN
         SPITTING_HUMAN_PLAYER, //OUT + OUT
         THROWING, //OUT + OUT
+        OUTTAKING_SPECIMEN
     }
 
     public enum BrushState{
@@ -249,6 +250,11 @@ public class Intake extends SubsystemBase {
                 brushMotor.setPower(-1);
                 rollersServo.setPosition(0);
                 break;
+            case OUTTAKING_SPECIMEN:
+                rollersServo.setPosition(1);
+                brushMotor.setPower(0.5);
+                break;
+
         }
     }
 
@@ -505,7 +511,7 @@ public class Intake extends SubsystemBase {
     }
 
     public boolean canStopOuttakingSPECIMEN_2_AUTO(){
-        return (totalAxonAngle - initialAxonAngle) >= 100;
+        return (totalAxonAngle - initialAxonAngle) >= 110;
     }
 
 
@@ -521,16 +527,34 @@ public class Intake extends SubsystemBase {
 
 
 
-    public void isSpecimenBlocked(){
-        CurrentUnit currentUnit = CurrentUnit.AMPS;
-        if (brushMotor.getCurrent(currentUnit) > 1.5)
+//    public void isSpecimenBlocked(){
+//        CurrentUnit currentUnit = CurrentUnit.AMPS;
+//        if (brushMotor.getCurrent(currentUnit) > 1.5) {
+//            specimenBlocked = SpecimenBlocked.BLOCKED;
+//        }
+//        else specimenBlocked = SpecimenBlocked.NOT_BLOCKED;
+//    }
+
+    public boolean isSpecimenBlocked(){
+        if (brushMotor.getCurrent(CurrentUnit.AMPS) > 1.5) {
             specimenBlocked = SpecimenBlocked.BLOCKED;
-        else specimenBlocked = SpecimenBlocked.NOT_BLOCKED;
+            return true;
+
+        }
+        else {
+            specimenBlocked = SpecimenBlocked.NOT_BLOCKED;
+            return false;
+        }
     }
 
     public boolean isSampleDigital(){
         updateSampleStateDigital();
         return !proximitySensor.getState();
+    }
+
+    public boolean isNOTSampleDigital(){
+        updateSampleStateDigital();
+        return proximitySensor.getState();
     }
 
     public void setSampleState(SampleState state){

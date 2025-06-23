@@ -1,4 +1,4 @@
-package org.firstinspires.ftc.teamcode.programs.commandbase.AutoCommands;
+package org.firstinspires.ftc.teamcode.programs.commandbase.AutoCommands.SpecimenAuto;
 
 import com.arcrobotics.ftclib.command.SequentialCommandGroup;
 import org.firstinspires.ftc.teamcode.programs.commandbase.ExtendoCommands.SetExtendoStateCommand;

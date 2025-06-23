@@ -24,6 +24,7 @@ import com.qualcomm.robotcore.hardware.Gamepad;
 import org.firstinspires.ftc.teamcode.pedroPathing.constants.FConstants;
 import org.firstinspires.ftc.teamcode.pedroPathing.constants.LConstants;
 import org.firstinspires.ftc.teamcode.programs.commandbase.ArmCommands.SetClawStateCommand;
+import org.firstinspires.ftc.teamcode.programs.commandbase.AutoCommands.SpecimenAuto.IntakeRetractFailSafeCommand;
 import org.firstinspires.ftc.teamcode.programs.commandbase.AutoCommands.SpecimenAuto.IntakeRetractSPECIMENAutoCommand;
 import org.firstinspires.ftc.teamcode.programs.commandbase.DoesNothingCommand;
 import org.firstinspires.ftc.teamcode.programs.commandbase.ExtendoCommands.SetExtendoStateCommand;
@@ -67,6 +68,7 @@ public class NEWTeleOpBlue extends CommandOpMode {
     public boolean AUTO_IN_TELEOP = false;
     private final int sensorTimeOut = 1500;
     private final int waitAfterPutSpecimen = 300;
+    private final int spacimentIntakingTimeOut = 1500;
 
     private final Pose startPose = new Pose(42.077922077922075, 65.6883116883117, Math.toRadians(180));
 
@@ -80,25 +82,25 @@ public class NEWTeleOpBlue extends CommandOpMode {
     public static Pose score2SMALLPose = new Pose(39.80909090909091, 72.83246753246754, Math.toRadians(180));
 
     public static Pose score3Pose = new Pose(37.40909090909091, 74.83246753246754, Math.toRadians(180));
-    public static Pose score3SMALLPose = new Pose(40.00909090909091, 74.83246753246754, Math.toRadians(180)); //+0.2
+    public static Pose score3SMALLPose = new Pose(40.10909090909091, 74.83246753246754, Math.toRadians(180)); //+0.3
 
     public static Pose score4Pose = new Pose(37.40909090909091, 76.83246753246754, Math.toRadians(180));
-    public static Pose score4SMALLPose = new Pose(40.00909090909091, 76.83246753246754, Math.toRadians(180));  //+0.2
+    public static Pose score4SMALLPose = new Pose(40.10909090909091, 76.83246753246754, Math.toRadians(180));  //+0.3
 
     public static Pose score5Pose = new Pose(37.40909090909091, 78.83246753246754, Math.toRadians(180));
-    public static Pose score5SMALLPose = new Pose(40.10909090909091, 78.83246753246754, Math.toRadians(180)); //+0.3
+    public static Pose score5SMALLPose = new Pose(40.60909090909091, 78.83246753246754, Math.toRadians(180)); //+0.8
 
     public static Pose score6Pose = new Pose(37.40909090909091, 80.83246753246754, Math.toRadians(180));
-    public static Pose score6SMALLPose = new Pose(40.10909090909091, 80.83246753246754, Math.toRadians(180)); //+0.3
+    public static Pose score6SMALLPose = new Pose(40.60909090909091, 80.83246753246754, Math.toRadians(180)); //+0.8
 
     public static Pose score7Pose = new Pose(37.40909090909091, 82.83246753246754, Math.toRadians(180));
-    public static Pose score7SMALLPose = new Pose(40.20909090909091, 82.83246753246754, Math.toRadians(180)); //+0.4
+    public static Pose score7SMALLPose = new Pose(41.60909090909091, 82.83246753246754, Math.toRadians(180)); //+1.8
 
     public static Pose score8Pose = new Pose(37.40909090909091, 84.33246753246754, Math.toRadians(180));
-    public static Pose score8SMALLPose = new Pose(40.20909090909091, 84.33246753246754, Math.toRadians(180)); //+0.4
+    public static Pose score8SMALLPose = new Pose(41.80909090909091, 84.33246753246754, Math.toRadians(180)); //+2.0
 
     public static Pose score9Pose = new Pose(37.40909090909091, 84.83246753246754, Math.toRadians(180));
-    public static Pose score9SMALLPose = new Pose(40.20909090909091, 84.83246753246754, Math.toRadians(180)); //+0.4
+    public static Pose score9SMALLPose = new Pose(41.60909090909091, 84.83246753246754, Math.toRadians(180)); //+1.8
 
 
 
@@ -686,6 +688,67 @@ public class NEWTeleOpBlue extends CommandOpMode {
 
 
 
+                        new ConditionalCommand(
+                                new ConditionalCommand(
+                                        new SequentialCommandGroup(
+                                                new SetIntakeStateCommand(Intake.IntakeState.SPITTING_HUMAN_PLAYER),
+                                                new WaitCommand(300),
+                                                new IntakeRetractFailSafeCommand(),
+                                                new WaitCommand(2000),
+                                                new SetIntakeStateCommand(Intake.IntakeState.INTAKING),
+                                                new SetExtendoStateCommand(Extendo.ExtendoState.TAKE_SPECIMEN_AUTO),
+                                                new WaitUntilCommand(robot.intake::isSampleDigital).withTimeout(spacimentIntakingTimeOut),
+                                                new SetIntakeStateCommand(Intake.IntakeState.IDLE)
+                                        ),
+                                        new SequentialCommandGroup(
+                                                new IntakeRetractFailSafeCommand()
+                                                        .alongWith(
+                                                                new SetIntakeStateCommand(Intake.IntakeState.SPITTING_HUMAN_PLAYER)
+                                                        ),
+                                                new SetIntakeStateCommand(Intake.IntakeState.IDLE),
+                                                new WaitCommand(2000),
+                                                new SetIntakeStateCommand(Intake.IntakeState.INTAKING),
+                                                new SetExtendoStateCommand(Extendo.ExtendoState.TAKE_SPECIMEN_AUTO),
+                                                new WaitUntilCommand(robot.intake::isSampleDigital).withTimeout(spacimentIntakingTimeOut),
+                                                new SetIntakeStateCommand(Intake.IntakeState.IDLE)
+                                        ),
+                                        robot.intake::isSpecimenBlocked
+                                ),
+                                new DoesNothingCommand(),
+                                robot.intake::isNOTSampleDigital
+                        ),
+                        new ConditionalCommand(
+                                new ConditionalCommand(
+                                        new SequentialCommandGroup(
+                                                new SetIntakeStateCommand(Intake.IntakeState.SPITTING_HUMAN_PLAYER),
+                                                new WaitCommand(300),
+                                                new IntakeRetractFailSafeCommand(),
+                                                new WaitCommand(2000),
+                                                new SetIntakeStateCommand(Intake.IntakeState.INTAKING),
+                                                new SetExtendoStateCommand(Extendo.ExtendoState.TAKE_SPECIMEN_AUTO),
+                                                new WaitUntilCommand(robot.intake::isSampleDigital).withTimeout(spacimentIntakingTimeOut),
+                                                new SetIntakeStateCommand(Intake.IntakeState.IDLE)
+                                        ),
+                                        new SequentialCommandGroup(
+                                                new IntakeRetractFailSafeCommand()
+                                                        .alongWith(
+                                                                new SetIntakeStateCommand(Intake.IntakeState.SPITTING_HUMAN_PLAYER)
+                                                        ),
+                                                new SetIntakeStateCommand(Intake.IntakeState.IDLE),
+                                                new WaitCommand(2000),
+                                                new SetIntakeStateCommand(Intake.IntakeState.INTAKING),
+                                                new SetExtendoStateCommand(Extendo.ExtendoState.TAKE_SPECIMEN_AUTO),
+                                                new WaitUntilCommand(robot.intake::isSampleDigital).withTimeout(spacimentIntakingTimeOut),
+                                                new SetIntakeStateCommand(Intake.IntakeState.IDLE)
+                                        ),
+                                        robot.intake::isSpecimenBlocked
+                                ),
+                                new DoesNothingCommand(),
+                                robot.intake::isNOTSampleDigital
+                        ),
+
+
+////////////////////////////////////////////////////////SCORE1////////////////////////////////////////////////////////////////////
                         new FollowPath(follower, score1, true, 1)
                                 .alongWith(
                                         new SequentialCommandGroup(
@@ -696,7 +759,12 @@ public class NEWTeleOpBlue extends CommandOpMode {
                                         )
                                 ),
 //                        new WaitCommand(250),
-                        new FollowPath(follower, score1SMALL, true, 1),
+                        new FollowPath(follower, score1SMALL, true, 1)
+                                .alongWith(
+                                        new SetIntakeStateCommand(Intake.IntakeState.SPITTING_HUMAN_PLAYER)
+                                ),
+                        new SetIntakeStateCommand(Intake.IntakeState.IDLE),
+
 
                         new FollowPath(follower, take2, true, 1)
                                 .alongWith(
@@ -714,7 +782,68 @@ public class NEWTeleOpBlue extends CommandOpMode {
                         new WaitUntilCommand(robot.intake::isSampleDigital).withTimeout(sensorTimeOut),
                         new SetIntakeStateCommand(Intake.IntakeState.IDLE),
 
+                        new ConditionalCommand(
+                                new ConditionalCommand(
+                                        new SequentialCommandGroup(
+                                                new SetIntakeStateCommand(Intake.IntakeState.SPITTING_HUMAN_PLAYER),
+                                                new WaitCommand(300),
+                                                new IntakeRetractFailSafeCommand(),
+                                                new WaitCommand(2000),
+                                                new SetIntakeStateCommand(Intake.IntakeState.INTAKING),
+                                                new SetExtendoStateCommand(Extendo.ExtendoState.TAKE_SPECIMEN_AUTO),
+                                                new WaitUntilCommand(robot.intake::isSampleDigital).withTimeout(spacimentIntakingTimeOut),
+                                                new SetIntakeStateCommand(Intake.IntakeState.IDLE)
+                                        ),
+                                        new SequentialCommandGroup(
+                                                new IntakeRetractFailSafeCommand()
+                                                        .alongWith(
+                                                                new SetIntakeStateCommand(Intake.IntakeState.SPITTING_HUMAN_PLAYER)
+                                                        ),
+                                                new SetIntakeStateCommand(Intake.IntakeState.IDLE),
+                                                new WaitCommand(2000),
+                                                new SetIntakeStateCommand(Intake.IntakeState.INTAKING),
+                                                new SetExtendoStateCommand(Extendo.ExtendoState.TAKE_SPECIMEN_AUTO),
+                                                new WaitUntilCommand(robot.intake::isSampleDigital).withTimeout(spacimentIntakingTimeOut),
+                                                new SetIntakeStateCommand(Intake.IntakeState.IDLE)
+                                        ),
+                                        robot.intake::isSpecimenBlocked
+                                ),
+                                new DoesNothingCommand(),
+                                robot.intake::isNOTSampleDigital
+                        ),
+                        new ConditionalCommand(
+                                new ConditionalCommand(
+                                        new SequentialCommandGroup(
+                                                new SetIntakeStateCommand(Intake.IntakeState.SPITTING_HUMAN_PLAYER),
+                                                new WaitCommand(300),
+                                                new IntakeRetractFailSafeCommand(),
+                                                new WaitCommand(2000),
+                                                new SetIntakeStateCommand(Intake.IntakeState.INTAKING),
+                                                new SetExtendoStateCommand(Extendo.ExtendoState.TAKE_SPECIMEN_AUTO),
+                                                new WaitUntilCommand(robot.intake::isSampleDigital).withTimeout(spacimentIntakingTimeOut),
+                                                new SetIntakeStateCommand(Intake.IntakeState.IDLE)
+                                        ),
+                                        new SequentialCommandGroup(
+                                                new IntakeRetractFailSafeCommand()
+                                                        .alongWith(
+                                                                new SetIntakeStateCommand(Intake.IntakeState.SPITTING_HUMAN_PLAYER)
+                                                        ),
+                                                new SetIntakeStateCommand(Intake.IntakeState.IDLE),
+                                                new WaitCommand(2000),
+                                                new SetIntakeStateCommand(Intake.IntakeState.INTAKING),
+                                                new SetExtendoStateCommand(Extendo.ExtendoState.TAKE_SPECIMEN_AUTO),
+                                                new WaitUntilCommand(robot.intake::isSampleDigital).withTimeout(spacimentIntakingTimeOut),
+                                                new SetIntakeStateCommand(Intake.IntakeState.IDLE)
+                                        ),
+                                        robot.intake::isSpecimenBlocked
+                                ),
+                                new DoesNothingCommand(),
+                                robot.intake::isNOTSampleDigital
+                        ),
 
+
+
+////////////////////////////////////////////////////////SCORE2////////////////////////////////////////////////////////////////////
                         new FollowPath(follower, score2, true, 1)
                                 .alongWith(
                                         new SequentialCommandGroup(
@@ -725,7 +854,11 @@ public class NEWTeleOpBlue extends CommandOpMode {
                                         )
                                 ),
 //                        new WaitCommand(250),
-                        new FollowPath(follower, score2SMALL, true, 1),
+                        new FollowPath(follower, score2SMALL, true, 1)
+                                .alongWith(
+                                        new SetIntakeStateCommand(Intake.IntakeState.SPITTING_HUMAN_PLAYER)
+                                ),
+                        new SetIntakeStateCommand(Intake.IntakeState.IDLE),
 
 
 
@@ -746,7 +879,69 @@ public class NEWTeleOpBlue extends CommandOpMode {
                         new WaitUntilCommand(robot.intake::isSampleDigital).withTimeout(sensorTimeOut),
                         new SetIntakeStateCommand(Intake.IntakeState.IDLE),
 
+                        new ConditionalCommand(
+                                new ConditionalCommand(
+                                        new SequentialCommandGroup(
+                                                new SetIntakeStateCommand(Intake.IntakeState.SPITTING_HUMAN_PLAYER),
+                                                new WaitCommand(300),
+                                                new IntakeRetractFailSafeCommand(),
+                                                new WaitCommand(2000),
+                                                new SetIntakeStateCommand(Intake.IntakeState.INTAKING),
+                                                new SetExtendoStateCommand(Extendo.ExtendoState.TAKE_SPECIMEN_AUTO),
+                                                new WaitUntilCommand(robot.intake::isSampleDigital).withTimeout(spacimentIntakingTimeOut),
+                                                new SetIntakeStateCommand(Intake.IntakeState.IDLE)
+                                        ),
+                                        new SequentialCommandGroup(
+                                                new IntakeRetractFailSafeCommand()
+                                                        .alongWith(
+                                                                new SetIntakeStateCommand(Intake.IntakeState.SPITTING_HUMAN_PLAYER)
+                                                        ),
+                                                new SetIntakeStateCommand(Intake.IntakeState.IDLE),
+                                                new WaitCommand(2000),
+                                                new SetIntakeStateCommand(Intake.IntakeState.INTAKING),
+                                                new SetExtendoStateCommand(Extendo.ExtendoState.TAKE_SPECIMEN_AUTO),
+                                                new WaitUntilCommand(robot.intake::isSampleDigital).withTimeout(spacimentIntakingTimeOut),
+                                                new SetIntakeStateCommand(Intake.IntakeState.IDLE)
+                                        ),
+                                        robot.intake::isSpecimenBlocked
+                                ),
+                                new DoesNothingCommand(),
+                                robot.intake::isNOTSampleDigital
+                        ),
+                        new ConditionalCommand(
+                                new ConditionalCommand(
+                                        new SequentialCommandGroup(
+                                                new SetIntakeStateCommand(Intake.IntakeState.SPITTING_HUMAN_PLAYER),
+                                                new WaitCommand(300),
+                                                new IntakeRetractFailSafeCommand(),
+                                                new WaitCommand(2000),
+                                                new SetIntakeStateCommand(Intake.IntakeState.INTAKING),
+                                                new SetExtendoStateCommand(Extendo.ExtendoState.TAKE_SPECIMEN_AUTO),
+                                                new WaitUntilCommand(robot.intake::isSampleDigital).withTimeout(spacimentIntakingTimeOut),
+                                                new SetIntakeStateCommand(Intake.IntakeState.IDLE)
+                                        ),
+                                        new SequentialCommandGroup(
+                                                new IntakeRetractFailSafeCommand()
+                                                        .alongWith(
+                                                                new SetIntakeStateCommand(Intake.IntakeState.SPITTING_HUMAN_PLAYER)
+                                                        ),
+                                                new SetIntakeStateCommand(Intake.IntakeState.IDLE),
+                                                new WaitCommand(2000),
+                                                new SetIntakeStateCommand(Intake.IntakeState.INTAKING),
+                                                new SetExtendoStateCommand(Extendo.ExtendoState.TAKE_SPECIMEN_AUTO),
+                                                new WaitUntilCommand(robot.intake::isSampleDigital).withTimeout(spacimentIntakingTimeOut),
+                                                new SetIntakeStateCommand(Intake.IntakeState.IDLE)
+                                        ),
+                                        robot.intake::isSpecimenBlocked
+                                ),
+                                new DoesNothingCommand(),
+                                robot.intake::isNOTSampleDigital
+                        ),
 
+
+
+
+////////////////////////////////////////////////////////SCORE3////////////////////////////////////////////////////////////////////
                         new FollowPath(follower, score3, true, 1)
                                 .alongWith(
                                         new SequentialCommandGroup(
@@ -757,7 +952,11 @@ public class NEWTeleOpBlue extends CommandOpMode {
                                         )
                                 ),
 //                        new WaitCommand(250),
-                        new FollowPath(follower, score3SMALL, true, 1),
+                        new FollowPath(follower, score3SMALL, true, 1)
+                                .alongWith(
+                                        new SetIntakeStateCommand(Intake.IntakeState.SPITTING_HUMAN_PLAYER)
+                                ),
+                        new SetIntakeStateCommand(Intake.IntakeState.IDLE),
 
 
 
@@ -778,7 +977,69 @@ public class NEWTeleOpBlue extends CommandOpMode {
                         new WaitUntilCommand(robot.intake::isSampleDigital).withTimeout(sensorTimeOut),
                         new SetIntakeStateCommand(Intake.IntakeState.IDLE),
 
+                        new ConditionalCommand(
+                                new ConditionalCommand(
+                                        new SequentialCommandGroup(
+                                                new SetIntakeStateCommand(Intake.IntakeState.SPITTING_HUMAN_PLAYER),
+                                                new WaitCommand(300),
+                                                new IntakeRetractFailSafeCommand(),
+                                                new WaitCommand(2000),
+                                                new SetIntakeStateCommand(Intake.IntakeState.INTAKING),
+                                                new SetExtendoStateCommand(Extendo.ExtendoState.TAKE_SPECIMEN_AUTO),
+                                                new WaitUntilCommand(robot.intake::isSampleDigital).withTimeout(spacimentIntakingTimeOut),
+                                                new SetIntakeStateCommand(Intake.IntakeState.IDLE)
+                                        ),
+                                        new SequentialCommandGroup(
+                                                new IntakeRetractFailSafeCommand()
+                                                        .alongWith(
+                                                                new SetIntakeStateCommand(Intake.IntakeState.SPITTING_HUMAN_PLAYER)
+                                                        ),
+                                                new SetIntakeStateCommand(Intake.IntakeState.IDLE),
+                                                new WaitCommand(2000),
+                                                new SetIntakeStateCommand(Intake.IntakeState.INTAKING),
+                                                new SetExtendoStateCommand(Extendo.ExtendoState.TAKE_SPECIMEN_AUTO),
+                                                new WaitUntilCommand(robot.intake::isSampleDigital).withTimeout(spacimentIntakingTimeOut),
+                                                new SetIntakeStateCommand(Intake.IntakeState.IDLE)
+                                        ),
+                                        robot.intake::isSpecimenBlocked
+                                ),
+                                new DoesNothingCommand(),
+                                robot.intake::isNOTSampleDigital
+                        ),
+                        new ConditionalCommand(
+                                new ConditionalCommand(
+                                        new SequentialCommandGroup(
+                                                new SetIntakeStateCommand(Intake.IntakeState.SPITTING_HUMAN_PLAYER),
+                                                new WaitCommand(300),
+                                                new IntakeRetractFailSafeCommand(),
+                                                new WaitCommand(2000),
+                                                new SetIntakeStateCommand(Intake.IntakeState.INTAKING),
+                                                new SetExtendoStateCommand(Extendo.ExtendoState.TAKE_SPECIMEN_AUTO),
+                                                new WaitUntilCommand(robot.intake::isSampleDigital).withTimeout(spacimentIntakingTimeOut),
+                                                new SetIntakeStateCommand(Intake.IntakeState.IDLE)
+                                        ),
+                                        new SequentialCommandGroup(
+                                                new IntakeRetractFailSafeCommand()
+                                                        .alongWith(
+                                                                new SetIntakeStateCommand(Intake.IntakeState.SPITTING_HUMAN_PLAYER)
+                                                        ),
+                                                new SetIntakeStateCommand(Intake.IntakeState.IDLE),
+                                                new WaitCommand(2000),
+                                                new SetIntakeStateCommand(Intake.IntakeState.INTAKING),
+                                                new SetExtendoStateCommand(Extendo.ExtendoState.TAKE_SPECIMEN_AUTO),
+                                                new WaitUntilCommand(robot.intake::isSampleDigital).withTimeout(spacimentIntakingTimeOut),
+                                                new SetIntakeStateCommand(Intake.IntakeState.IDLE)
+                                        ),
+                                        robot.intake::isSpecimenBlocked
+                                ),
+                                new DoesNothingCommand(),
+                                robot.intake::isNOTSampleDigital
+                        ),
 
+
+
+
+////////////////////////////////////////////////////////SCORE4////////////////////////////////////////////////////////////////////
                         new FollowPath(follower, score4, true, 1)
                                 .alongWith(
                                         new SequentialCommandGroup(
@@ -789,7 +1050,11 @@ public class NEWTeleOpBlue extends CommandOpMode {
                                         )
                                 ),
 //                        new WaitCommand(250),
-                        new FollowPath(follower, score4SMALL, true, 1),
+                        new FollowPath(follower, score4SMALL, true, 1)
+                                .alongWith(
+                                        new SetIntakeStateCommand(Intake.IntakeState.SPITTING_HUMAN_PLAYER)
+                                ),
+                        new SetIntakeStateCommand(Intake.IntakeState.IDLE),
 
 
 
@@ -813,7 +1078,68 @@ public class NEWTeleOpBlue extends CommandOpMode {
                         new WaitUntilCommand(robot.intake::isSampleDigital).withTimeout(sensorTimeOut),
                         new SetIntakeStateCommand(Intake.IntakeState.IDLE),
 
+                        new ConditionalCommand(
+                                new ConditionalCommand(
+                                        new SequentialCommandGroup(
+                                                new SetIntakeStateCommand(Intake.IntakeState.SPITTING_HUMAN_PLAYER),
+                                                new WaitCommand(300),
+                                                new IntakeRetractFailSafeCommand(),
+                                                new WaitCommand(2000),
+                                                new SetIntakeStateCommand(Intake.IntakeState.INTAKING),
+                                                new SetExtendoStateCommand(Extendo.ExtendoState.TAKE_SPECIMEN_AUTO),
+                                                new WaitUntilCommand(robot.intake::isSampleDigital).withTimeout(spacimentIntakingTimeOut),
+                                                new SetIntakeStateCommand(Intake.IntakeState.IDLE)
+                                        ),
+                                        new SequentialCommandGroup(
+                                                new IntakeRetractFailSafeCommand()
+                                                        .alongWith(
+                                                                new SetIntakeStateCommand(Intake.IntakeState.SPITTING_HUMAN_PLAYER)
+                                                        ),
+                                                new SetIntakeStateCommand(Intake.IntakeState.IDLE),
+                                                new WaitCommand(2000),
+                                                new SetIntakeStateCommand(Intake.IntakeState.INTAKING),
+                                                new SetExtendoStateCommand(Extendo.ExtendoState.TAKE_SPECIMEN_AUTO),
+                                                new WaitUntilCommand(robot.intake::isSampleDigital).withTimeout(spacimentIntakingTimeOut),
+                                                new SetIntakeStateCommand(Intake.IntakeState.IDLE)
+                                        ),
+                                        robot.intake::isSpecimenBlocked
+                                ),
+                                new DoesNothingCommand(),
+                                robot.intake::isNOTSampleDigital
+                        ),
+                        new ConditionalCommand(
+                                new ConditionalCommand(
+                                        new SequentialCommandGroup(
+                                                new SetIntakeStateCommand(Intake.IntakeState.SPITTING_HUMAN_PLAYER),
+                                                new WaitCommand(300),
+                                                new IntakeRetractFailSafeCommand(),
+                                                new WaitCommand(2000),
+                                                new SetIntakeStateCommand(Intake.IntakeState.INTAKING),
+                                                new SetExtendoStateCommand(Extendo.ExtendoState.TAKE_SPECIMEN_AUTO),
+                                                new WaitUntilCommand(robot.intake::isSampleDigital).withTimeout(spacimentIntakingTimeOut),
+                                                new SetIntakeStateCommand(Intake.IntakeState.IDLE)
+                                        ),
+                                        new SequentialCommandGroup(
+                                                new IntakeRetractFailSafeCommand()
+                                                        .alongWith(
+                                                                new SetIntakeStateCommand(Intake.IntakeState.SPITTING_HUMAN_PLAYER)
+                                                        ),
+                                                new SetIntakeStateCommand(Intake.IntakeState.IDLE),
+                                                new WaitCommand(2000),
+                                                new SetIntakeStateCommand(Intake.IntakeState.INTAKING),
+                                                new SetExtendoStateCommand(Extendo.ExtendoState.TAKE_SPECIMEN_AUTO),
+                                                new WaitUntilCommand(robot.intake::isSampleDigital).withTimeout(spacimentIntakingTimeOut),
+                                                new SetIntakeStateCommand(Intake.IntakeState.IDLE)
+                                        ),
+                                        robot.intake::isSpecimenBlocked
+                                ),
+                                new DoesNothingCommand(),
+                                robot.intake::isNOTSampleDigital
+                        ),
 
+
+
+////////////////////////////////////////////////////////SCORE5////////////////////////////////////////////////////////////////////
                         new FollowPath(follower, score5, true, 1)
                                 .alongWith(
                                         new SequentialCommandGroup(
@@ -824,7 +1150,13 @@ public class NEWTeleOpBlue extends CommandOpMode {
                                         )
                                 ),
 //                        new WaitCommand(250),
-                        new FollowPath(follower, score5SMALL, true, 1),
+                        new FollowPath(follower, score5SMALL, true, 1)
+                                .alongWith(
+                                        new SetIntakeStateCommand(Intake.IntakeState.SPITTING_HUMAN_PLAYER)
+                                ),
+                        new SetIntakeStateCommand(Intake.IntakeState.IDLE),
+
+
 
 
                         new FollowPath(follower, take6, true, 1)
@@ -844,7 +1176,67 @@ public class NEWTeleOpBlue extends CommandOpMode {
                         new WaitUntilCommand(robot.intake::isSampleDigital).withTimeout(sensorTimeOut),
                         new SetIntakeStateCommand(Intake.IntakeState.IDLE),
 
+                        new ConditionalCommand(
+                                new ConditionalCommand(
+                                        new SequentialCommandGroup(
+                                                new SetIntakeStateCommand(Intake.IntakeState.SPITTING_HUMAN_PLAYER),
+                                                new WaitCommand(300),
+                                                new IntakeRetractFailSafeCommand(),
+                                                new WaitCommand(2000),
+                                                new SetIntakeStateCommand(Intake.IntakeState.INTAKING),
+                                                new SetExtendoStateCommand(Extendo.ExtendoState.TAKE_SPECIMEN_AUTO),
+                                                new WaitUntilCommand(robot.intake::isSampleDigital).withTimeout(spacimentIntakingTimeOut),
+                                                new SetIntakeStateCommand(Intake.IntakeState.IDLE)
+                                        ),
+                                        new SequentialCommandGroup(
+                                                new IntakeRetractFailSafeCommand()
+                                                        .alongWith(
+                                                                new SetIntakeStateCommand(Intake.IntakeState.SPITTING_HUMAN_PLAYER)
+                                                        ),
+                                                new SetIntakeStateCommand(Intake.IntakeState.IDLE),
+                                                new WaitCommand(2000),
+                                                new SetIntakeStateCommand(Intake.IntakeState.INTAKING),
+                                                new SetExtendoStateCommand(Extendo.ExtendoState.TAKE_SPECIMEN_AUTO),
+                                                new WaitUntilCommand(robot.intake::isSampleDigital).withTimeout(spacimentIntakingTimeOut),
+                                                new SetIntakeStateCommand(Intake.IntakeState.IDLE)
+                                        ),
+                                        robot.intake::isSpecimenBlocked
+                                ),
+                                new DoesNothingCommand(),
+                                robot.intake::isNOTSampleDigital
+                        ),
+                        new ConditionalCommand(
+                                new ConditionalCommand(
+                                        new SequentialCommandGroup(
+                                                new SetIntakeStateCommand(Intake.IntakeState.SPITTING_HUMAN_PLAYER),
+                                                new WaitCommand(300),
+                                                new IntakeRetractFailSafeCommand(),
+                                                new WaitCommand(2000),
+                                                new SetIntakeStateCommand(Intake.IntakeState.INTAKING),
+                                                new SetExtendoStateCommand(Extendo.ExtendoState.TAKE_SPECIMEN_AUTO),
+                                                new WaitUntilCommand(robot.intake::isSampleDigital).withTimeout(spacimentIntakingTimeOut),
+                                                new SetIntakeStateCommand(Intake.IntakeState.IDLE)
+                                        ),
+                                        new SequentialCommandGroup(
+                                                new IntakeRetractFailSafeCommand()
+                                                        .alongWith(
+                                                                new SetIntakeStateCommand(Intake.IntakeState.SPITTING_HUMAN_PLAYER)
+                                                        ),
+                                                new SetIntakeStateCommand(Intake.IntakeState.IDLE),
+                                                new WaitCommand(2000),
+                                                new SetIntakeStateCommand(Intake.IntakeState.INTAKING),
+                                                new SetExtendoStateCommand(Extendo.ExtendoState.TAKE_SPECIMEN_AUTO),
+                                                new WaitUntilCommand(robot.intake::isSampleDigital).withTimeout(spacimentIntakingTimeOut),
+                                                new SetIntakeStateCommand(Intake.IntakeState.IDLE)
+                                        ),
+                                        robot.intake::isSpecimenBlocked
+                                ),
+                                new DoesNothingCommand(),
+                                robot.intake::isNOTSampleDigital
+                        ),
 
+
+////////////////////////////////////////////////////////SCORE6////////////////////////////////////////////////////////////////////
                         new FollowPath(follower, score6, true, 1)
                                 .alongWith(
                                         new SequentialCommandGroup(
@@ -855,7 +1247,12 @@ public class NEWTeleOpBlue extends CommandOpMode {
                                         )
                                 ),
 //                        new WaitCommand(250),
-                        new FollowPath(follower, score6SMALL, true, 1),
+                        new FollowPath(follower, score6SMALL, true, 1)
+                                .alongWith(
+                                        new SetIntakeStateCommand(Intake.IntakeState.SPITTING_HUMAN_PLAYER)
+                                ),
+                        new SetIntakeStateCommand(Intake.IntakeState.IDLE),
+
 
 
                         new FollowPath(follower, take7, true, 1)
@@ -875,7 +1272,69 @@ public class NEWTeleOpBlue extends CommandOpMode {
                         new WaitUntilCommand(robot.intake::isSampleDigital).withTimeout(sensorTimeOut),
                         new SetIntakeStateCommand(Intake.IntakeState.IDLE),
 
+                        new ConditionalCommand(
+                                new ConditionalCommand(
+                                        new SequentialCommandGroup(
+                                                new SetIntakeStateCommand(Intake.IntakeState.SPITTING_HUMAN_PLAYER),
+                                                new WaitCommand(300),
+                                                new IntakeRetractFailSafeCommand(),
+                                                new WaitCommand(2000),
+                                                new SetIntakeStateCommand(Intake.IntakeState.INTAKING),
+                                                new SetExtendoStateCommand(Extendo.ExtendoState.TAKE_SPECIMEN_AUTO),
+                                                new WaitUntilCommand(robot.intake::isSampleDigital).withTimeout(spacimentIntakingTimeOut),
+                                                new SetIntakeStateCommand(Intake.IntakeState.IDLE)
+                                        ),
+                                        new SequentialCommandGroup(
+                                                new IntakeRetractFailSafeCommand()
+                                                        .alongWith(
+                                                                new SetIntakeStateCommand(Intake.IntakeState.SPITTING_HUMAN_PLAYER)
+                                                        ),
+                                                new SetIntakeStateCommand(Intake.IntakeState.IDLE),
+                                                new WaitCommand(2000),
+                                                new SetIntakeStateCommand(Intake.IntakeState.INTAKING),
+                                                new SetExtendoStateCommand(Extendo.ExtendoState.TAKE_SPECIMEN_AUTO),
+                                                new WaitUntilCommand(robot.intake::isSampleDigital).withTimeout(spacimentIntakingTimeOut),
+                                                new SetIntakeStateCommand(Intake.IntakeState.IDLE)
+                                        ),
+                                        robot.intake::isSpecimenBlocked
+                                ),
+                                new DoesNothingCommand(),
+                                robot.intake::isNOTSampleDigital
+                        ),
+                        new ConditionalCommand(
+                                new ConditionalCommand(
+                                        new SequentialCommandGroup(
+                                                new SetIntakeStateCommand(Intake.IntakeState.SPITTING_HUMAN_PLAYER),
+                                                new WaitCommand(300),
+                                                new IntakeRetractFailSafeCommand(),
+                                                new WaitCommand(2000),
+                                                new SetIntakeStateCommand(Intake.IntakeState.INTAKING),
+                                                new SetExtendoStateCommand(Extendo.ExtendoState.TAKE_SPECIMEN_AUTO),
+                                                new WaitUntilCommand(robot.intake::isSampleDigital).withTimeout(spacimentIntakingTimeOut),
+                                                new SetIntakeStateCommand(Intake.IntakeState.IDLE)
+                                        ),
+                                        new SequentialCommandGroup(
+                                                new IntakeRetractFailSafeCommand()
+                                                        .alongWith(
+                                                                new SetIntakeStateCommand(Intake.IntakeState.SPITTING_HUMAN_PLAYER)
+                                                        ),
+                                                new SetIntakeStateCommand(Intake.IntakeState.IDLE),
+                                                new WaitCommand(2000),
+                                                new SetIntakeStateCommand(Intake.IntakeState.INTAKING),
+                                                new SetExtendoStateCommand(Extendo.ExtendoState.TAKE_SPECIMEN_AUTO),
+                                                new WaitUntilCommand(robot.intake::isSampleDigital).withTimeout(spacimentIntakingTimeOut),
+                                                new SetIntakeStateCommand(Intake.IntakeState.IDLE)
+                                        ),
+                                        robot.intake::isSpecimenBlocked
+                                ),
+                                new DoesNothingCommand(),
+                                robot.intake::isNOTSampleDigital
+                        ),
 
+
+
+
+////////////////////////////////////////////////////////SCORE7////////////////////////////////////////////////////////////////////
                         new FollowPath(follower, score7, true, 1)
                                 .alongWith(
                                         new SequentialCommandGroup(
@@ -886,7 +1345,11 @@ public class NEWTeleOpBlue extends CommandOpMode {
                                         )
                                 ),
 //                        new WaitCommand(250),
-                        new FollowPath(follower, score7SMALL, true, 1),
+                        new FollowPath(follower, score7SMALL, true, 1)
+                                .alongWith(
+                                        new SetIntakeStateCommand(Intake.IntakeState.SPITTING_HUMAN_PLAYER)
+                                ),
+                        new SetIntakeStateCommand(Intake.IntakeState.IDLE),
 
 
 
@@ -906,7 +1369,69 @@ public class NEWTeleOpBlue extends CommandOpMode {
                         new WaitUntilCommand(robot.intake::isSampleDigital).withTimeout(sensorTimeOut),
                         new SetIntakeStateCommand(Intake.IntakeState.IDLE),
 
+                        new ConditionalCommand(
+                                new ConditionalCommand(
+                                        new SequentialCommandGroup(
+                                                new SetIntakeStateCommand(Intake.IntakeState.SPITTING_HUMAN_PLAYER),
+                                                new WaitCommand(300),
+                                                new IntakeRetractFailSafeCommand(),
+                                                new WaitCommand(2000),
+                                                new SetIntakeStateCommand(Intake.IntakeState.INTAKING),
+                                                new SetExtendoStateCommand(Extendo.ExtendoState.TAKE_SPECIMEN_AUTO),
+                                                new WaitUntilCommand(robot.intake::isSampleDigital).withTimeout(spacimentIntakingTimeOut),
+                                                new SetIntakeStateCommand(Intake.IntakeState.IDLE)
+                                        ),
+                                        new SequentialCommandGroup(
+                                                new IntakeRetractFailSafeCommand()
+                                                        .alongWith(
+                                                                new SetIntakeStateCommand(Intake.IntakeState.SPITTING_HUMAN_PLAYER)
+                                                        ),
+                                                new SetIntakeStateCommand(Intake.IntakeState.IDLE),
+                                                new WaitCommand(2000),
+                                                new SetIntakeStateCommand(Intake.IntakeState.INTAKING),
+                                                new SetExtendoStateCommand(Extendo.ExtendoState.TAKE_SPECIMEN_AUTO),
+                                                new WaitUntilCommand(robot.intake::isSampleDigital).withTimeout(spacimentIntakingTimeOut),
+                                                new SetIntakeStateCommand(Intake.IntakeState.IDLE)
+                                        ),
+                                        robot.intake::isSpecimenBlocked
+                                ),
+                                new DoesNothingCommand(),
+                                robot.intake::isNOTSampleDigital
+                        ),
+                        new ConditionalCommand(
+                                new ConditionalCommand(
+                                        new SequentialCommandGroup(
+                                                new SetIntakeStateCommand(Intake.IntakeState.SPITTING_HUMAN_PLAYER),
+                                                new WaitCommand(300),
+                                                new IntakeRetractFailSafeCommand(),
+                                                new WaitCommand(2000),
+                                                new SetIntakeStateCommand(Intake.IntakeState.INTAKING),
+                                                new SetExtendoStateCommand(Extendo.ExtendoState.TAKE_SPECIMEN_AUTO),
+                                                new WaitUntilCommand(robot.intake::isSampleDigital).withTimeout(spacimentIntakingTimeOut),
+                                                new SetIntakeStateCommand(Intake.IntakeState.IDLE)
+                                        ),
+                                        new SequentialCommandGroup(
+                                                new IntakeRetractFailSafeCommand()
+                                                        .alongWith(
+                                                                new SetIntakeStateCommand(Intake.IntakeState.SPITTING_HUMAN_PLAYER)
+                                                        ),
+                                                new SetIntakeStateCommand(Intake.IntakeState.IDLE),
+                                                new WaitCommand(2000),
+                                                new SetIntakeStateCommand(Intake.IntakeState.INTAKING),
+                                                new SetExtendoStateCommand(Extendo.ExtendoState.TAKE_SPECIMEN_AUTO),
+                                                new WaitUntilCommand(robot.intake::isSampleDigital).withTimeout(spacimentIntakingTimeOut),
+                                                new SetIntakeStateCommand(Intake.IntakeState.IDLE)
+                                        ),
+                                        robot.intake::isSpecimenBlocked
+                                ),
+                                new DoesNothingCommand(),
+                                robot.intake::isNOTSampleDigital
+                        ),
 
+
+
+
+////////////////////////////////////////////////////////SCORE8////////////////////////////////////////////////////////////////////
                         new FollowPath(follower, score8, true, 1)
                                 .alongWith(
                                         new SequentialCommandGroup(
@@ -917,7 +1442,11 @@ public class NEWTeleOpBlue extends CommandOpMode {
                                         )
                                 ),
 //                        new WaitCommand(250),
-                        new FollowPath(follower, score8SMALL, true, 1),
+                        new FollowPath(follower, score8SMALL, true, 1)
+                                .alongWith(
+                                        new SetIntakeStateCommand(Intake.IntakeState.SPITTING_HUMAN_PLAYER)
+                                ),
+                        new SetIntakeStateCommand(Intake.IntakeState.IDLE),
 
 
 
@@ -937,7 +1466,67 @@ public class NEWTeleOpBlue extends CommandOpMode {
                         new WaitUntilCommand(robot.intake::isSampleDigital).withTimeout(sensorTimeOut),
                         new SetIntakeStateCommand(Intake.IntakeState.IDLE),
 
+                        new ConditionalCommand(
+                                new ConditionalCommand(
+                                        new SequentialCommandGroup(
+                                                new SetIntakeStateCommand(Intake.IntakeState.SPITTING_HUMAN_PLAYER),
+                                                new WaitCommand(300),
+                                                new IntakeRetractFailSafeCommand(),
+                                                new WaitCommand(2000),
+                                                new SetIntakeStateCommand(Intake.IntakeState.INTAKING),
+                                                new SetExtendoStateCommand(Extendo.ExtendoState.TAKE_SPECIMEN_AUTO),
+                                                new WaitUntilCommand(robot.intake::isSampleDigital).withTimeout(spacimentIntakingTimeOut),
+                                                new SetIntakeStateCommand(Intake.IntakeState.IDLE)
+                                        ),
+                                        new SequentialCommandGroup(
+                                                new IntakeRetractFailSafeCommand()
+                                                        .alongWith(
+                                                                new SetIntakeStateCommand(Intake.IntakeState.SPITTING_HUMAN_PLAYER)
+                                                        ),
+                                                new SetIntakeStateCommand(Intake.IntakeState.IDLE),
+                                                new WaitCommand(2000),
+                                                new SetIntakeStateCommand(Intake.IntakeState.INTAKING),
+                                                new SetExtendoStateCommand(Extendo.ExtendoState.TAKE_SPECIMEN_AUTO),
+                                                new WaitUntilCommand(robot.intake::isSampleDigital).withTimeout(spacimentIntakingTimeOut),
+                                                new SetIntakeStateCommand(Intake.IntakeState.IDLE)
+                                        ),
+                                        robot.intake::isSpecimenBlocked
+                                ),
+                                new DoesNothingCommand(),
+                                robot.intake::isNOTSampleDigital
+                        ),
+                        new ConditionalCommand(
+                                new ConditionalCommand(
+                                        new SequentialCommandGroup(
+                                                new SetIntakeStateCommand(Intake.IntakeState.SPITTING_HUMAN_PLAYER),
+                                                new WaitCommand(300),
+                                                new IntakeRetractFailSafeCommand(),
+                                                new WaitCommand(2000),
+                                                new SetIntakeStateCommand(Intake.IntakeState.INTAKING),
+                                                new SetExtendoStateCommand(Extendo.ExtendoState.TAKE_SPECIMEN_AUTO),
+                                                new WaitUntilCommand(robot.intake::isSampleDigital).withTimeout(spacimentIntakingTimeOut),
+                                                new SetIntakeStateCommand(Intake.IntakeState.IDLE)
+                                        ),
+                                        new SequentialCommandGroup(
+                                                new IntakeRetractFailSafeCommand()
+                                                        .alongWith(
+                                                                new SetIntakeStateCommand(Intake.IntakeState.SPITTING_HUMAN_PLAYER)
+                                                        ),
+                                                new SetIntakeStateCommand(Intake.IntakeState.IDLE),
+                                                new WaitCommand(2000),
+                                                new SetIntakeStateCommand(Intake.IntakeState.INTAKING),
+                                                new SetExtendoStateCommand(Extendo.ExtendoState.TAKE_SPECIMEN_AUTO),
+                                                new WaitUntilCommand(robot.intake::isSampleDigital).withTimeout(spacimentIntakingTimeOut),
+                                                new SetIntakeStateCommand(Intake.IntakeState.IDLE)
+                                        ),
+                                        robot.intake::isSpecimenBlocked
+                                ),
+                                new DoesNothingCommand(),
+                                robot.intake::isNOTSampleDigital
+                        ),
 
+
+////////////////////////////////////////////////////////SCORE9////////////////////////////////////////////////////////////////////
                         new FollowPath(follower, score9, true, 1)
                                 .alongWith(
                                         new SequentialCommandGroup(
