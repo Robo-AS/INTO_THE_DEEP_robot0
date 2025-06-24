@@ -35,6 +35,11 @@ public class Extendo extends SubsystemBase {
         TAKE_SAMPLE_AUTO_BASKET_GRAB_2,
         TAKE_SAMPLE_AUTO_BASKET_GRAB_3,
         STABILIZER_AUTO_BASKET,
+        RETRACT_TAKE_SAMPLE_BASKET_AUTO_GRAB_1,
+        RETRACT_TAKE_SAMPLE_BASKET_AUTO_GRAB_2,
+        RETRACT_TAKE_SAMPLE_BASKET_AUTO_GRAB_3,
+        GO_AGAIN_SAMPLE_BASKET_AUTO_GRAB,
+
 
         LIMELIGHT_POSE,
         LIMELIGHT_RETRACT_POSE,
@@ -69,6 +74,11 @@ public class Extendo extends SubsystemBase {
     public int TAKE_SAMPLE_AUTO_BASKET_GRAB_2 = 860;
     public int TAKE_SAMPLE_AUTO_BASKET_GRAB_3 = 870;
     public int STABILIZER_AUTO_BASKET = 500;
+    public int RETRACT_TAKE_SAMPLE_BASKET_AUTO_GRAB_1 = 800;
+    public int RETRACT_TAKE_SAMPLE_BASKET_AUTO_GRAB_2 = 760;
+    public int RETRACT_TAKE_SAMPLE_BASKET_AUTO_GRAB_3 = 770;
+    public int GO_AGAIN_SAMPLE_BASKET_AUTO_GRAB = 1000;
+
 
     public int TAKE_SAMPLE_SPECIMEN_AUTO_GRAB_1 = 350;
     public int TAKE_SAMPLE_SPECIMEN_AUTO_GRAB_2 = 570;
@@ -207,6 +217,23 @@ public class Extendo extends SubsystemBase {
             case TAKE_SAMPLE_AUTO_BASKET_GRAB_3:
                 targetPosition = TAKE_SAMPLE_AUTO_BASKET_GRAB_3;
                 break;
+
+            case RETRACT_TAKE_SAMPLE_BASKET_AUTO_GRAB_1:
+                targetPosition = RETRACT_TAKE_SAMPLE_BASKET_AUTO_GRAB_1;
+                break;
+            case RETRACT_TAKE_SAMPLE_BASKET_AUTO_GRAB_2:
+                targetPosition = RETRACT_TAKE_SAMPLE_BASKET_AUTO_GRAB_2;
+                break;
+            case RETRACT_TAKE_SAMPLE_BASKET_AUTO_GRAB_3:
+                targetPosition = RETRACT_TAKE_SAMPLE_BASKET_AUTO_GRAB_3;
+                break;
+            case GO_AGAIN_SAMPLE_BASKET_AUTO_GRAB:
+                targetPosition = GO_AGAIN_SAMPLE_BASKET_AUTO_GRAB;
+                break;
+
+
+
+
             case TAKE_SPECIMEN_AUTO:
                 targetPosition = TAKE_SPECIMEN_AUTO;
                 break;
@@ -234,6 +261,8 @@ public class Extendo extends SubsystemBase {
             case STABILIZER_AUTO_BASKET:
                 targetPosition = STABILIZER_AUTO_BASKET;
                 break;
+
+
             case TAKE_SAMPLE_SPECIMEN_AUTO_GRAB_1:
                 targetPosition = TAKE_SAMPLE_SPECIMEN_AUTO_GRAB_1;
                 break;

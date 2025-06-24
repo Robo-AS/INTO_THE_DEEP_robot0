@@ -254,18 +254,32 @@ public class NEW_BasketAutoSubmersibleBLUE_CU_UNGHI_BRAT_FAILSAFES extends Linea
                                                 new SetIntakeStateCommand(Intake.IntakeState.INTAKING)
                                         )
                                 ),
-                        //new SetExtendoStateCommand(Extendo.ExtendoState.TAKE_SAMPLE_AUTO),
                         new WaitUntilCommand(robot.intake::isSampleDigital).withTimeout(sensorTimeOut),
                         new SetIntakeStateCommand(Intake.IntakeState.IDLE),
+
+
+                        new ConditionalCommand(
+                                new SequentialCommandGroup(
+                                        new SetIntakeStateCommand(Intake.IntakeState.INTAKING),
+                                        new SetExtendoStateCommand(Extendo.ExtendoState.RETRACT_TAKE_SAMPLE_BASKET_AUTO_GRAB_1).interruptOn(robot.intake::isSampleDigital),
+                                        new WaitCommand(100).interruptOn(robot.intake::isSampleDigital),
+                                        new SetExtendoStateCommand(Extendo.ExtendoState.GO_AGAIN_SAMPLE_BASKET_AUTO_GRAB).interruptOn(robot.intake::isSampleDigital),
+                                        new WaitUntilCommand(robot.intake::isSampleDigital).withTimeout(sensorTimeOut),
+                                        new SetIntakeStateCommand(Intake.IntakeState.IDLE),
+                                        new SetIntakeAngleCommand(Intake.IntakeAngle.UP)
+
+                                ),
+                                new DoesNothingCommand(),
+                                () -> robot.intake.isNOTSampleDigital()
+                        ),
 
                         new ConditionalCommand(
                                 new DoesNothingCommand(),
                                 new InstantCommand(basketPaths::setScore1Completed),
-                                () -> robot.intake.sampleState == Intake.SampleState.IS
+                                () -> robot.intake.isSampleDigital()
                         ),
 
                         new ConditionalCommand(
-                                //do this:
                                 new SequentialCommandGroup(
                                         new FollowPath(follower, score1, true, 1)
                                                 .alongWith(
@@ -276,12 +290,10 @@ public class NEW_BasketAutoSubmersibleBLUE_CU_UNGHI_BRAT_FAILSAFES extends Linea
                                                 ),
                                         new ScoreSampleAutoCommand()
                                 ),
-                                //else:
                                 new SequentialCommandGroup(
                                         new SetExtendoStateCommand(Extendo.ExtendoState.EXTENDING_MINIMUM_AUTO),
                                         new WaitCommand(100)
                                 ),
-                                //if:
                                 () -> !basketPaths.getscore1()
                         ),
 
@@ -297,18 +309,32 @@ public class NEW_BasketAutoSubmersibleBLUE_CU_UNGHI_BRAT_FAILSAFES extends Linea
                                                 new SetIntakeStateCommand(Intake.IntakeState.INTAKING)
                                         )
                                 ),
-                        //new SetExtendoStateCommand(Extendo.ExtendoState.TAKE_SAMPLE_AUTO),
                         new WaitUntilCommand(robot.intake::isSampleDigital).withTimeout(sensorTimeOut),
                         new SetIntakeStateCommand(Intake.IntakeState.IDLE),
+
+
+                        new ConditionalCommand(
+                                new SequentialCommandGroup(
+                                        new SetIntakeStateCommand(Intake.IntakeState.INTAKING),
+                                        new SetExtendoStateCommand(Extendo.ExtendoState.RETRACT_TAKE_SAMPLE_BASKET_AUTO_GRAB_2).interruptOn(robot.intake::isSampleDigital),
+                                        new WaitCommand(100).interruptOn(robot.intake::isSampleDigital),
+                                        new SetExtendoStateCommand(Extendo.ExtendoState.GO_AGAIN_SAMPLE_BASKET_AUTO_GRAB).interruptOn(robot.intake::isSampleDigital),
+                                        new WaitUntilCommand(robot.intake::isSampleDigital).withTimeout(sensorTimeOut),
+                                        new SetIntakeStateCommand(Intake.IntakeState.IDLE),
+                                        new SetIntakeAngleCommand(Intake.IntakeAngle.UP)
+
+                                ),
+                                new DoesNothingCommand(),
+                                () -> robot.intake.isNOTSampleDigital()
+                        ),
 
                         new ConditionalCommand(
                                 new DoesNothingCommand(),
                                 new InstantCommand(basketPaths::setScore2Completed),
-                                () -> robot.intake.sampleState == Intake.SampleState.IS
+                                () -> robot.intake.isSampleDigital()
                         ),
 
                         new ConditionalCommand(
-                                //do this:
                                 new SequentialCommandGroup(
                                         new FollowPath(follower, score2, true, 1)
                                                 .alongWith(
@@ -319,12 +345,10 @@ public class NEW_BasketAutoSubmersibleBLUE_CU_UNGHI_BRAT_FAILSAFES extends Linea
                                                 ),
                                         new ScoreSampleAutoCommand()
                                 ),
-                                //else:
                                 new SequentialCommandGroup(
                                         new SetExtendoStateCommand(Extendo.ExtendoState.EXTENDING_MINIMUM_AUTO),
                                         new WaitCommand(100)
                                 ),
-                                //if:
                                 () -> !basketPaths.getscore2()
                         ),
 
@@ -340,15 +364,30 @@ public class NEW_BasketAutoSubmersibleBLUE_CU_UNGHI_BRAT_FAILSAFES extends Linea
                                                 new SetIntakeStateCommand(Intake.IntakeState.INTAKING)
                                         )
                                 ),
-                        //new SetExtendoStateCommand(Extendo.ExtendoState.TAKE_SAMPLE_AUTO),
                         new WaitUntilCommand(robot.intake::isSampleDigital).withTimeout(sensorTimeOut),
                         new SetIntakeStateCommand(Intake.IntakeState.IDLE),
 
                         new ConditionalCommand(
+                                new SequentialCommandGroup(
+                                        new SetIntakeStateCommand(Intake.IntakeState.INTAKING),
+                                        new SetExtendoStateCommand(Extendo.ExtendoState.RETRACT_TAKE_SAMPLE_BASKET_AUTO_GRAB_3).interruptOn(robot.intake::isSampleDigital),
+                                        new WaitCommand(100).interruptOn(robot.intake::isSampleDigital),
+                                        new SetExtendoStateCommand(Extendo.ExtendoState.GO_AGAIN_SAMPLE_BASKET_AUTO_GRAB).interruptOn(robot.intake::isSampleDigital),
+                                        new WaitUntilCommand(robot.intake::isSampleDigital).withTimeout(sensorTimeOut),
+                                        new SetIntakeStateCommand(Intake.IntakeState.IDLE),
+                                        new SetIntakeAngleCommand(Intake.IntakeAngle.UP)
+
+                                ),
                                 new DoesNothingCommand(),
-                                new InstantCommand(basketPaths::setScore3Completed),
-                                () -> robot.intake.sampleState == Intake.SampleState.IS
+                                () -> robot.intake.isNOTSampleDigital()
                         ),
+
+//                        new ConditionalCommand(
+//                                new DoesNothingCommand(),
+//                                new InstantCommand(basketPaths::setScore3Completed),
+//                                () -> robot.intake.isSampleDigital()
+//                        ),
+
                         new ConditionalCommand(
                                 new SequentialCommandGroup(
                                         new FollowPath(follower, score3, true, 1)

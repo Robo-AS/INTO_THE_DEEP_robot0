@@ -24,6 +24,7 @@ import com.qualcomm.robotcore.util.ElapsedTime;
 import org.firstinspires.ftc.teamcode.pedroPathing.constants.FConstants;
 import org.firstinspires.ftc.teamcode.pedroPathing.constants.LConstants;
 import org.firstinspires.ftc.teamcode.programs.commandbase.ArmCommands.SetClawStateCommand;
+import org.firstinspires.ftc.teamcode.programs.commandbase.AutoCommands.BasketAuto.IntakeRetractBASKETAutoCommand;
 import org.firstinspires.ftc.teamcode.programs.commandbase.AutoCommands.BasketAuto.IntakeRetractBASKETAutoSUBMERSIBLECommand;
 import org.firstinspires.ftc.teamcode.programs.commandbase.AutoCommands.IntakeThrowingCommandAuto;
 import org.firstinspires.ftc.teamcode.programs.commandbase.AutoCommands.LimelightCommand;
@@ -229,157 +230,196 @@ public class NEW_BasketAutoSubmersibleRED_CU_UNGHI_BRAT_FAILSAFES extends Linear
 
         CommandScheduler.getInstance().schedule(
                 new SequentialCommandGroup(
-//                        new SetClawStateCommand(Arm.ClawState.OPEN), //don't ask
-//                        new FollowPath(follower, scorePreload, true, 1)
-//                                .alongWith(
-//                                        new SequentialCommandGroup(
-//                                                new SetClawStateCommand(Arm.ClawState.CLOSED),
-//                                                new WaitCommand(100),
-//                                                new OuttakeGoHighBasketAutoCommand(),
-//                                                new ScoreSampleAutoCommand()
-//                                        )
-//
-//                                ),
-//                        new InstantCommand(basketPaths::setScorePreloadCompleted),
-//
-//                        new FollowPath(follower, grab1, true, 1)
-//                                .alongWith(
-//                                        new OuttakeGoBackToIdleFromHighBasketCommand(),
-//                                        new SequentialCommandGroup(
-//                                                new WaitCommand(300),
-//                                                new SetExtendoStateCommand(Extendo.ExtendoState.TAKE_SAMPLE_AUTO_GRAB_1),
-//                                                new WaitUntilCommand(robot.extendo::canPutIntakeDown),
-//                                                new SetIntakeAngleCommand(Intake.IntakeAngle.DOWN),
-//                                                new SetIntakeStateCommand(Intake.IntakeState.INTAKING)
-//                                        )
-//                                ),
-//                        //new SetExtendoStateCommand(Extendo.ExtendoState.TAKE_SAMPLE_AUTO),
-//                        new WaitUntilCommand(robot.intake::isSampleDigital).withTimeout(sensorTimeOut),
-//                        new SetIntakeStateCommand(Intake.IntakeState.IDLE),
-//
-//                        new ConditionalCommand(
-//                                new DoesNothingCommand(),
-//                                new InstantCommand(basketPaths::setScore1Completed),
-//                                () -> robot.intake.sampleState == Intake.SampleState.IS
-//                        ),
-//
-//                        new ConditionalCommand(
-//                                //do this:
-//                                new SequentialCommandGroup(
-//                                        new FollowPath(follower, score1, true, 1)
-//                                                .alongWith(
-//                                                        new SequentialCommandGroup(
-//                                                                new IntakeRetractAutoCommand(),
-//                                                                new OuttakeGoHighBasketAutoCommand()
-//                                                        )
-//                                                ),
-//                                        new ScoreSampleAutoCommand()
-//                                ),
-//                                //else:
-//                                new SequentialCommandGroup(
-//                                        new SetExtendoStateCommand(Extendo.ExtendoState.EXTENDING_MINIMUM_AUTO),
-//                                        new WaitCommand(100)
-//                                ),
-//                                //if:
-//                                () -> !basketPaths.getscore1()
-//                        ),
-//
-//
-//                        new FollowPath(follower, grab2, true, 1)
-//                                .alongWith(
-//                                        new OuttakeGoBackToIdleFromHighBasketCommand(),
-//                                        new SequentialCommandGroup(
-//                                                new WaitCommand(200),
-//                                                new SetExtendoStateCommand(Extendo.ExtendoState.TAKE_SAMPLE_AUTO_GRAB_2),
-//                                                new WaitUntilCommand(robot.extendo::canPutIntakeDown),
-//                                                new SetIntakeAngleCommand(Intake.IntakeAngle.DOWN),
-//                                                new SetIntakeStateCommand(Intake.IntakeState.INTAKING)
-//                                        )
-//                                ),
-//                        //new SetExtendoStateCommand(Extendo.ExtendoState.TAKE_SAMPLE_AUTO),
-//                        new WaitUntilCommand(robot.intake::isSampleDigital).withTimeout(sensorTimeOut),
-//                        new SetIntakeStateCommand(Intake.IntakeState.IDLE),
-//
-//                        new ConditionalCommand(
-//                                new DoesNothingCommand(),
-//                                new InstantCommand(basketPaths::setScore2Completed),
-//                                () -> robot.intake.sampleState == Intake.SampleState.IS
-//                        ),
-//
-//                        new ConditionalCommand(
-//                                //do this:
-//                                new SequentialCommandGroup(
-//                                        new FollowPath(follower, score2, true, 1)
-//                                                .alongWith(
-//                                                        new SequentialCommandGroup(
-//                                                                new IntakeRetractAutoCommand(),
-//                                                                new OuttakeGoHighBasketAutoCommand()
-//                                                        )
-//                                                ),
-//                                        new ScoreSampleAutoCommand()
-//                                ),
-//                                //else:
-//                                new SequentialCommandGroup(
-//                                        new SetExtendoStateCommand(Extendo.ExtendoState.EXTENDING_MINIMUM_AUTO),
-//                                        new WaitCommand(100)
-//                                ),
-//                                //if:
-//                                () -> !basketPaths.getscore2()
-//                        ),
-//
-//
-//                        new FollowPath(follower, grab3, true, 1)
-//                                .alongWith(
-//                                        new OuttakeGoBackToIdleFromHighBasketCommand(),
-//                                        new SequentialCommandGroup(
-//                                                new WaitCommand(300),
-//                                                new SetExtendoStateCommand(Extendo.ExtendoState.TAKE_SAMPLE_AUTO_GRAB_3),
-//                                                new WaitUntilCommand(robot.extendo::canPutIntakeDown),
-//                                                new SetIntakeAngleCommand(Intake.IntakeAngle.DOWN),
-//                                                new SetIntakeStateCommand(Intake.IntakeState.INTAKING)
-//                                        )
-//                                ),
-//                        //new SetExtendoStateCommand(Extendo.ExtendoState.TAKE_SAMPLE_AUTO),
-//                        new WaitUntilCommand(robot.intake::isSampleDigital).withTimeout(sensorTimeOut),
-//                        new SetIntakeStateCommand(Intake.IntakeState.IDLE),
-//
+                        new SetClawStateCommand(Arm.ClawState.OPEN), //don't ask
+                        new FollowPath(follower, scorePreload, true, 1)
+                                .alongWith(
+                                        new SequentialCommandGroup(
+                                                new SetClawStateCommand(Arm.ClawState.CLOSED),
+                                                new WaitCommand(100),
+                                                new OuttakeGoHighBasketAutoCommand(),
+                                                new ScoreSampleAutoCommand()
+                                        )
+
+                                ),
+                        new InstantCommand(basketPaths::setScorePreloadCompleted),
+
+                        new FollowPath(follower, grab1, true, 1)
+                                .alongWith(
+                                        new OuttakeGoBackToIdleFromHighBasketCommand(),
+                                        new SequentialCommandGroup(
+                                                new WaitCommand(300),
+                                                new SetExtendoStateCommand(Extendo.ExtendoState.TAKE_SAMPLE_AUTO_BASKET_GRAB_1),
+                                                new WaitUntilCommand(robot.extendo::canPutIntakeDown),
+                                                new SetIntakeAngleCommand(Intake.IntakeAngle.DOWN),
+                                                new SetIntakeStateCommand(Intake.IntakeState.INTAKING)
+                                        )
+                                ),
+                        new WaitUntilCommand(robot.intake::isSampleDigital).withTimeout(sensorTimeOut),
+                        new SetIntakeStateCommand(Intake.IntakeState.IDLE),
+
+
+                        new ConditionalCommand(
+                                new SequentialCommandGroup(
+                                        new SetIntakeStateCommand(Intake.IntakeState.INTAKING),
+                                        new SetExtendoStateCommand(Extendo.ExtendoState.RETRACT_TAKE_SAMPLE_BASKET_AUTO_GRAB_1).interruptOn(robot.intake::isSampleDigital),
+                                        new WaitCommand(100).interruptOn(robot.intake::isSampleDigital),
+                                        new SetExtendoStateCommand(Extendo.ExtendoState.GO_AGAIN_SAMPLE_BASKET_AUTO_GRAB).interruptOn(robot.intake::isSampleDigital),
+                                        new WaitUntilCommand(robot.intake::isSampleDigital).withTimeout(sensorTimeOut),
+                                        new SetIntakeStateCommand(Intake.IntakeState.IDLE),
+                                        new SetIntakeAngleCommand(Intake.IntakeAngle.UP)
+
+                                ),
+                                new DoesNothingCommand(),
+                                () -> robot.intake.isNOTSampleDigital()
+                        ),
+
+                        new ConditionalCommand(
+                                new DoesNothingCommand(),
+                                new InstantCommand(basketPaths::setScore1Completed),
+                                () -> robot.intake.isSampleDigital()
+                        ),
+
+                        new ConditionalCommand(
+                                new SequentialCommandGroup(
+                                        new FollowPath(follower, score1, true, 1)
+                                                .alongWith(
+                                                        new SequentialCommandGroup(
+                                                                new IntakeRetractBASKETAutoCommand(),
+                                                                new OuttakeGoHighBasketAutoCommand()
+                                                        )
+                                                ),
+                                        new ScoreSampleAutoCommand()
+                                ),
+                                new SequentialCommandGroup(
+                                        new SetExtendoStateCommand(Extendo.ExtendoState.EXTENDING_MINIMUM_AUTO),
+                                        new WaitCommand(100)
+                                ),
+                                () -> !basketPaths.getscore1()
+                        ),
+
+
+                        new FollowPath(follower, grab2, true, 1)
+                                .alongWith(
+                                        new OuttakeGoBackToIdleFromHighBasketCommand(),
+                                        new SequentialCommandGroup(
+                                                new WaitCommand(200),
+                                                new SetExtendoStateCommand(Extendo.ExtendoState.TAKE_SAMPLE_AUTO_BASKET_GRAB_2),
+                                                new WaitUntilCommand(robot.extendo::canPutIntakeDown),
+                                                new SetIntakeAngleCommand(Intake.IntakeAngle.DOWN),
+                                                new SetIntakeStateCommand(Intake.IntakeState.INTAKING)
+                                        )
+                                ),
+                        new WaitUntilCommand(robot.intake::isSampleDigital).withTimeout(sensorTimeOut),
+                        new SetIntakeStateCommand(Intake.IntakeState.IDLE),
+
+
+                        new ConditionalCommand(
+                                new SequentialCommandGroup(
+                                        new SetIntakeStateCommand(Intake.IntakeState.INTAKING),
+                                        new SetExtendoStateCommand(Extendo.ExtendoState.RETRACT_TAKE_SAMPLE_BASKET_AUTO_GRAB_2).interruptOn(robot.intake::isSampleDigital),
+                                        new WaitCommand(100).interruptOn(robot.intake::isSampleDigital),
+                                        new SetExtendoStateCommand(Extendo.ExtendoState.GO_AGAIN_SAMPLE_BASKET_AUTO_GRAB).interruptOn(robot.intake::isSampleDigital),
+                                        new WaitUntilCommand(robot.intake::isSampleDigital).withTimeout(sensorTimeOut),
+                                        new SetIntakeStateCommand(Intake.IntakeState.IDLE),
+                                        new SetIntakeAngleCommand(Intake.IntakeAngle.UP)
+
+                                ),
+                                new DoesNothingCommand(),
+                                () -> robot.intake.isNOTSampleDigital()
+                        ),
+
+                        new ConditionalCommand(
+                                new DoesNothingCommand(),
+                                new InstantCommand(basketPaths::setScore2Completed),
+                                () -> robot.intake.isSampleDigital()
+                        ),
+
+                        new ConditionalCommand(
+                                new SequentialCommandGroup(
+                                        new FollowPath(follower, score2, true, 1)
+                                                .alongWith(
+                                                        new SequentialCommandGroup(
+                                                                new IntakeRetractBASKETAutoCommand(),
+                                                                new OuttakeGoHighBasketAutoCommand()
+                                                        )
+                                                ),
+                                        new ScoreSampleAutoCommand()
+                                ),
+                                new SequentialCommandGroup(
+                                        new SetExtendoStateCommand(Extendo.ExtendoState.EXTENDING_MINIMUM_AUTO),
+                                        new WaitCommand(100)
+                                ),
+                                () -> !basketPaths.getscore2()
+                        ),
+
+
+                        new FollowPath(follower, grab3, true, 1)
+                                .alongWith(
+                                        new OuttakeGoBackToIdleFromHighBasketCommand(),
+                                        new SequentialCommandGroup(
+                                                new WaitCommand(300),
+                                                new SetExtendoStateCommand(Extendo.ExtendoState.TAKE_SAMPLE_AUTO_BASKET_GRAB_3),
+                                                new WaitUntilCommand(robot.extendo::canPutIntakeDown),
+                                                new SetIntakeAngleCommand(Intake.IntakeAngle.DOWN),
+                                                new SetIntakeStateCommand(Intake.IntakeState.INTAKING)
+                                        )
+                                ),
+                        new WaitUntilCommand(robot.intake::isSampleDigital).withTimeout(sensorTimeOut),
+                        new SetIntakeStateCommand(Intake.IntakeState.IDLE),
+
+                        new ConditionalCommand(
+                                new SequentialCommandGroup(
+                                        new SetIntakeStateCommand(Intake.IntakeState.INTAKING),
+                                        new SetExtendoStateCommand(Extendo.ExtendoState.RETRACT_TAKE_SAMPLE_BASKET_AUTO_GRAB_3).interruptOn(robot.intake::isSampleDigital),
+                                        new WaitCommand(100).interruptOn(robot.intake::isSampleDigital),
+                                        new SetExtendoStateCommand(Extendo.ExtendoState.GO_AGAIN_SAMPLE_BASKET_AUTO_GRAB).interruptOn(robot.intake::isSampleDigital),
+                                        new WaitUntilCommand(robot.intake::isSampleDigital).withTimeout(sensorTimeOut),
+                                        new SetIntakeStateCommand(Intake.IntakeState.IDLE),
+                                        new SetIntakeAngleCommand(Intake.IntakeAngle.UP)
+
+                                ),
+                                new DoesNothingCommand(),
+                                () -> robot.intake.isNOTSampleDigital()
+                        ),
+
 //                        new ConditionalCommand(
 //                                new DoesNothingCommand(),
 //                                new InstantCommand(basketPaths::setScore3Completed),
-//                                () -> robot.intake.sampleState == Intake.SampleState.IS
+//                                () -> robot.intake.isSampleDigital()
 //                        ),
-//                        new ConditionalCommand(
-//                                new SequentialCommandGroup(
-//                                        new FollowPath(follower, score3, true, 1)
-//                                                .alongWith(
-//                                                        new SequentialCommandGroup(
-//                                                                new IntakeRetractAutoCommand(),
-//                                                                new OuttakeGoHighBasketAutoCommand()
-//                                                        )
-//                                                ),
-//
-//                                        new ScoreSampleAutoCommand(),
-//                                        new OuttakeGoBackToIdleFromHighBasketCommand()
-//                                ),
-//                                new SequentialCommandGroup(
-//                                        new SetIntakeAngleCommand(Intake.IntakeAngle.UP),
-//                                        new SetExtendoStateCommand(Extendo.ExtendoState.RETRACTING)
-//                                ),
-//                                () -> !basketPaths.getscore3()
-//                        ),
-//                        new InstantCommand(basketPaths::setScore3Completed),
 
+                        new ConditionalCommand(
+                                new SequentialCommandGroup(
+                                        new FollowPath(follower, score3, true, 1)
+                                                .alongWith(
+                                                        new SequentialCommandGroup(
+                                                                new IntakeRetractBASKETAutoCommand(),
+                                                                new OuttakeGoHighBasketAutoCommand()
+                                                        )
+                                                ),
 
-                        new SetClawStateCommand(Arm.ClawState.OPEN), //don't ask
-                        new FollowPath(follower, scorePreload, true, 1),
-                        new InstantCommand(basketPaths::setScorePreloadCompleted),
-                        new FollowPath(follower, grab1, true, 1),
-                        new FollowPath(follower, score1, true, 1),
-                        new FollowPath(follower, grab2, true, 1),
-                        new FollowPath(follower, score2, true, 1),
-                        new FollowPath(follower, grab3, true, 1),
-                        new FollowPath(follower, score3, true, 1),
+                                        new ScoreSampleAutoCommand(),
+                                        new OuttakeGoBackToIdleFromHighBasketCommand()
+                                ),
+                                new SequentialCommandGroup(
+                                        new SetIntakeAngleCommand(Intake.IntakeAngle.UP),
+                                        new SetExtendoStateCommand(Extendo.ExtendoState.RETRACTING)
+                                ),
+                                () -> !basketPaths.getscore3()
+                        ),
                         new InstantCommand(basketPaths::setScore3Completed),
+
+
+//                        new SetClawStateCommand(Arm.ClawState.OPEN), //don't ask
+//                        new FollowPath(follower, scorePreload, true, 1),
+//                        new InstantCommand(basketPaths::setScorePreloadCompleted),
+//                        new FollowPath(follower, grab1, true, 1),
+//                        new FollowPath(follower, score1, true, 1),
+//                        new FollowPath(follower, grab2, true, 1),
+//                        new FollowPath(follower, score2, true, 1),
+//                        new FollowPath(follower, grab3, true, 1),
+//                        new FollowPath(follower, score3, true, 1),
+//                        new InstantCommand(basketPaths::setScore3Completed),
 
                         /////////////////////////////////SUBMERSIBLE 1/////////////////////////////////////////
 
