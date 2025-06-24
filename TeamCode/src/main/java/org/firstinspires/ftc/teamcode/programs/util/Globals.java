@@ -11,6 +11,7 @@ public class Globals {
     public static double DECREASE_TURN_SPEED_CONSTANT = 2;
 
     //Extendo
+    public static double EXTENDO_JOYSTICK_CONSTANT_HANG = 20;
     public static double EXTENDO_JOYSTICK_CONSTANT_UP = 35;
     public static double EXTENDO_JOYSTICK_CONSTANT_DOWN = 50;
 

@@ -280,7 +280,7 @@ public class Extendo extends SubsystemBase {
 
     public void updateTargetPositionHang(double joystickYCoord){
         exponentialJoystickCoef = (Math.pow(joystickYCoord, 3) + liniarCoefTerm * joystickYCoord) * contantTerm;
-        targetPosition += (int)(exponentialJoystickCoef * joystickConstant);
+        targetPosition += (int)(exponentialJoystickCoef * Globals.EXTENDO_JOYSTICK_CONSTANT_HANG);
         targetPosition = Math.max(RETRACTING, Math.min(HANG, targetPosition));
     }
 

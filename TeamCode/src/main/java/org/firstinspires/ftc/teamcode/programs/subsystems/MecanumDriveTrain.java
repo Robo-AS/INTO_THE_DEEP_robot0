@@ -8,6 +8,7 @@ import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.util.Range;
 
+import org.firstinspires.ftc.robotcore.external.navigation.CurrentUnit;
 import org.firstinspires.ftc.teamcode.programs.util.Globals;
 import org.firstinspires.ftc.teamcode.utils.Drivetrain;
 import org.firstinspires.ftc.teamcode.utils.WSubsystem;
@@ -34,8 +35,8 @@ public class MecanumDriveTrain extends WSubsystem implements Drivetrain {
     public double targetPositionLeft = 0, targetPositionRight = 0;
     public double currentPositionLeft = 0, currentPositionRight = 0;
     public static double joystickConstantLeft = 10, joystickConstantRight = 10;
-    public static double minPositionLeft = 0, maxPositionLeft = 2850;
-    public static double minPositionRight = 0, maxPositionRight = 2850;
+    public static double minPositionLeft = 0, maxPositionLeft = 3000;
+    public static double minPositionRight = 0, maxPositionRight = 3000;
 
     public MecanumDriveTrain(){
         left_pid = new PIDController(p, i, d);
@@ -134,20 +135,20 @@ public class MecanumDriveTrain extends WSubsystem implements Drivetrain {
             double powerLeft = left_pid.calculate(currentPositionLeft, targetPositionLeft);
             double powerRight = right_pid.calculate(currentPositionRight, -targetPositionRight);
 
-            if(currentPositionLeft < 2500){
+            if(currentPositionLeft < 3300){
                 powerLeft = Math.min(powerLeft, 0.85);
                 powerRight = Math.max(powerRight, -0.85);
             }
-            else if(currentPositionLeft > 2500){
-                powerLeft = Math.min(powerLeft, 0.75);
-                powerRight = Math.max(powerRight, -0.75);
+            else if(currentPositionLeft > 3300){
+                powerLeft = Math.min(powerLeft, 0.6);
+                powerRight = Math.max(powerRight, -0.6);
             }
 
             dtFrontLeftMotor.setPower(powerLeft);
             dtFrontRightMotor.setPower(powerRight);
 
-            dtBackLeftMotor.setPower(-(double) 80/100*powerLeft);
-            dtBackRightMotor.setPower(-(double) 80/100*powerRight);
+            dtBackLeftMotor.setPower(-(double) 90/100*powerLeft);
+            dtBackRightMotor.setPower(-(double) 90/100*powerRight);
         }
 
 
@@ -217,12 +218,9 @@ public class MecanumDriveTrain extends WSubsystem implements Drivetrain {
     public double getCurrentPotionLeft(){
         return currentPositionLeft;
     }
-
     public double getCurrentPositionRight(){
         return currentPositionRight;
     }
-
-
     public double getTargetPositionLeft(){
         return targetPositionLeft;
     }
@@ -241,30 +239,33 @@ public class MecanumDriveTrain extends WSubsystem implements Drivetrain {
         targetPositionLeft = 0;
     }
 
+//
+//    public double getPosetFronRight(){
+//        return dtFrontRightMotor.getPower();
+//    }
+//    public double getPosetFronLeft(){
+//        return dtFrontLeftMotor.getPower();
+//    }
+//    public double getPosetBackRight(){
+//        return dtBackRightMotor.getPower();
+//    }
+//    public double getPosetBackLeft(){
+//        return dtBackLeftMotor.getPower();
+//    }
 
-    public double getPosetFronRight(){
-        return dtFrontRightMotor.getPower();
+
+
+    public double getCurrenttFronRight(){
+        return dtFrontRightMotor.getCurrent(CurrentUnit.AMPS);
     }
-
-    public double getPosetFronLeft(){
-        return dtFrontLeftMotor.getPower();
+    public double getCurrentFrontLeft(){
+        return dtFrontLeftMotor.getCurrent(CurrentUnit.AMPS);
     }
-
-    public double getPosetBackRight(){
-        return dtBackRightMotor.getPower();
+    public double getCurrenttBackRight(){
+        return dtBackRightMotor.getCurrent(CurrentUnit.AMPS);
     }
-
-    public double getPosetBackLeft(){
-        return dtBackLeftMotor.getPower();
+    public double getCurrenttBackLeft(){
+        return dtBackLeftMotor.getCurrent(CurrentUnit.AMPS);
     }
-
-
-    public void setZeroPower(){
-        dtBackLeftMotor.setPower(0);
-        dtFrontLeftMotor.setPower(0);
-        dtFrontRightMotor.setPower(0);
-        dtBackRightMotor.setPower(0);
-    }
-
 
 }
