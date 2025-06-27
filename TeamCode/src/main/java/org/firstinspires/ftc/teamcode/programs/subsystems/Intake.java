@@ -579,6 +579,17 @@ public class Intake extends SubsystemBase {
     }
 
 
+    public boolean isColorWrongBasketAutoRED(){
+        updateSampleColor();
+        return intakedSampleColor == IntakedSampleColor.BLUE;
+    }
+
+
+
+    public boolean isColorWrongBasketAutoBLUE(){
+        updateSampleColor();
+        return intakedSampleColor == IntakedSampleColor.RED;
+    }
 
 
 

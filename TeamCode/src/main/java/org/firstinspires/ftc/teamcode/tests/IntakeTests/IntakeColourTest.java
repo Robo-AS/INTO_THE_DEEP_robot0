@@ -2,11 +2,13 @@ package org.firstinspires.ftc.teamcode.tests.IntakeTests;
 
 import com.arcrobotics.ftclib.command.CommandOpMode;
 import com.arcrobotics.ftclib.gamepad.GamepadEx;
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
 import org.firstinspires.ftc.teamcode.programs.subsystems.Intake;
 
 
+@Disabled
 @TeleOp(name="IntakeColourTest", group = "Tests")
 public class IntakeColourTest extends CommandOpMode {
     private GamepadEx gamepadEx;

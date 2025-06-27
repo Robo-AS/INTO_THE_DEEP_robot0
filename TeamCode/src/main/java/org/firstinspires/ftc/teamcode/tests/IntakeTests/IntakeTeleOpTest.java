@@ -6,13 +6,14 @@ import com.arcrobotics.ftclib.command.CommandOpMode;
 import com.arcrobotics.ftclib.command.CommandScheduler;
 import com.arcrobotics.ftclib.gamepad.GamepadEx;
 import com.arcrobotics.ftclib.gamepad.GamepadKeys;
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
 import org.firstinspires.ftc.teamcode.programs.commandbase.IntakeCommand.SetIntakeStateCommand;
 import org.firstinspires.ftc.teamcode.programs.subsystems.Intake;
 
 
-
+@Disabled
 @TeleOp(name = "IntakeTeleOpTest", group = "Tests")
 public class IntakeTeleOpTest extends CommandOpMode {
     private final Intake intake = Intake.getInstance();

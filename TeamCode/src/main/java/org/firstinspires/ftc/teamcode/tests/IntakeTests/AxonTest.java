@@ -3,10 +3,12 @@ package org.firstinspires.ftc.teamcode.tests.IntakeTests;
 
 import com.arcrobotics.ftclib.command.CommandOpMode;
 import com.arcrobotics.ftclib.gamepad.GamepadEx;
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
 import org.firstinspires.ftc.teamcode.programs.subsystems.Intake;
 
+@Disabled
 @TeleOp(name = "AxonTest", group = "Tests")
 public class AxonTest extends CommandOpMode {
     private final Intake intake = Intake.getInstance();

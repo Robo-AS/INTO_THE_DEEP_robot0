@@ -61,7 +61,7 @@ import org.firstinspires.ftc.teamcode.programs.util.NEWRobot;
 import org.firstinspires.ftc.teamcode.utils.geometry.PoseRR;
 
 
-@com.qualcomm.robotcore.eventloop.opmode.TeleOp(name = "🟦NEWTeleOpBlue🟦", group = "OpModes")
+@com.qualcomm.robotcore.eventloop.opmode.TeleOp(name = "🟦NEWTeleOpBlue🟦")
 public class NEWTeleOpBlue extends CommandOpMode {
     private final NEWRobot robot = NEWRobot.getInstance();
     public GamepadEx gamepadEx;
@@ -426,8 +426,8 @@ public class NEWTeleOpBlue extends CommandOpMode {
         }
 
 //        telemetry.addData("AUTO_IN_TELEOP", AUTO_IN_TELEOP);
-//        telemetry.addData("SampleColor", robot.intake.intakedSampleColor);
-//        telemetry.addData("e?", robot.intake.sampleState);
+        telemetry.addData("SampleColor", robot.intake.intakedSampleColor);
+        telemetry.addData("e?", robot.intake.sampleState);
 
 
 
@@ -493,6 +493,21 @@ public class NEWTeleOpBlue extends CommandOpMode {
 //        telemetry.addData("Current Position", robot.extendo.extendoMotor.getCurrentPosition());
 //        telemetry.addData("Target Position", robot.extendo.getTargetPosition());
 //        telemetry.update();
+
+
+
+
+
+
+
+//        telemetry.addData("Current Position Left", robot.mecanumDriveTrain.getCurrentPotionLeft());
+//        telemetry.addData("Current Position Right", robot.mecanumDriveTrain.getCurrentPositionRight());
+//        telemetry.addData("Target Positon", robot.mecanumDriveTrain.getTargetPositionLeft());
+//
+//        telemetry.addData("current FRONT RIGHT", robot.mecanumDriveTrain.getCurrenttFronRight());
+//        telemetry.addData("current FRONT LEFT", robot.mecanumDriveTrain.getCurrentFrontLeft());
+//        telemetry.addData("current BACK RIGHT", robot.mecanumDriveTrain.getCurrenttBackRight());
+//        telemetry.addData("current BACK LEFT", robot.mecanumDriveTrain.getCurrenttBackLeft());
 
 
         telemetry.addData("DISABLED_COLOR_SENSOR", robot.intake.isDisabledColorSensor());

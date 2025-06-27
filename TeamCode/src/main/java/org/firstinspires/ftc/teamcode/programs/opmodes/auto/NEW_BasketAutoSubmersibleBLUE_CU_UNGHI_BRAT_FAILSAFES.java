@@ -455,7 +455,7 @@ public class NEW_BasketAutoSubmersibleBLUE_CU_UNGHI_BRAT_FAILSAFES extends Linea
 
                                                 ),
                                                 new DoesNothingCommand(),
-                                                () -> robot.intake.intakedSampleColor == Intake.IntakedSampleColor.RED
+                                                robot.intake::isColorWrongBasketAutoBLUE
                                         )
                                 ),
                                 new SequentialCommandGroup(
@@ -487,7 +487,7 @@ public class NEW_BasketAutoSubmersibleBLUE_CU_UNGHI_BRAT_FAILSAFES extends Linea
                                                         new SetIntakeStateCommand(Intake.IntakeState.IDLE)
                                                 ),
                                                 new DoesNothingCommand(),
-                                                () -> robot.intake.intakedSampleColor == Intake.IntakedSampleColor.RED
+                                                robot.intake::isColorWrongBasketAutoBLUE
                                         )
                                 ),
                                 new SequentialCommandGroup(
@@ -528,7 +528,7 @@ public class NEW_BasketAutoSubmersibleBLUE_CU_UNGHI_BRAT_FAILSAFES extends Linea
                                                         new SetIntakeStateCommand(Intake.IntakeState.IDLE)
                                                 ),
                                                 new DoesNothingCommand(),
-                                                () -> robot.intake.intakedSampleColor == Intake.IntakedSampleColor.RED
+                                                robot.intake::isColorWrongBasketAutoBLUE
                                         )
                                 ),
                                 new SequentialCommandGroup(
@@ -600,7 +600,7 @@ public class NEW_BasketAutoSubmersibleBLUE_CU_UNGHI_BRAT_FAILSAFES extends Linea
                                                         new SetIntakeStateCommand(Intake.IntakeState.IDLE)
                                                 ),
                                                 new DoesNothingCommand(),
-                                                () -> robot.intake.intakedSampleColor == Intake.IntakedSampleColor.RED
+                                                robot.intake::isColorWrongBasketAutoBLUE
                                         )
                                 ),
 
@@ -645,7 +645,7 @@ public class NEW_BasketAutoSubmersibleBLUE_CU_UNGHI_BRAT_FAILSAFES extends Linea
                                                         new SetIntakeStateCommand(Intake.IntakeState.IDLE)
                                                 ),
                                                 new DoesNothingCommand(),
-                                                () -> robot.intake.intakedSampleColor == Intake.IntakedSampleColor.RED
+                                                robot.intake::isColorWrongBasketAutoBLUE
                                         )
                                 ),
                                 new SequentialCommandGroup(
@@ -686,7 +686,7 @@ public class NEW_BasketAutoSubmersibleBLUE_CU_UNGHI_BRAT_FAILSAFES extends Linea
                                                         new SetIntakeStateCommand(Intake.IntakeState.IDLE)
                                                 ),
                                                 new DoesNothingCommand(),
-                                                () -> robot.intake.intakedSampleColor == Intake.IntakedSampleColor.RED
+                                                robot.intake::isColorWrongBasketAutoBLUE
                                         )
                                 ),
 
@@ -759,7 +759,7 @@ public class NEW_BasketAutoSubmersibleBLUE_CU_UNGHI_BRAT_FAILSAFES extends Linea
                                                         new SetIntakeStateCommand(Intake.IntakeState.IDLE)
                                                 ),
                                                 new DoesNothingCommand(),
-                                                () -> robot.intake.intakedSampleColor == Intake.IntakedSampleColor.RED
+                                                robot.intake::isColorWrongBasketAutoBLUE
                                         )
                                 ),
 
@@ -802,7 +802,7 @@ public class NEW_BasketAutoSubmersibleBLUE_CU_UNGHI_BRAT_FAILSAFES extends Linea
                                                         new SetIntakeStateCommand(Intake.IntakeState.IDLE)
                                                 ),
                                                 new DoesNothingCommand(),
-                                                () -> robot.intake.intakedSampleColor == Intake.IntakedSampleColor.RED
+                                                robot.intake::isColorWrongBasketAutoBLUE
                                         )
                                 ),
                                 new SequentialCommandGroup(
@@ -844,7 +844,7 @@ public class NEW_BasketAutoSubmersibleBLUE_CU_UNGHI_BRAT_FAILSAFES extends Linea
                                                         new SetIntakeStateCommand(Intake.IntakeState.IDLE)
                                                 ),
                                                 new DoesNothingCommand(),
-                                                () -> robot.intake.intakedSampleColor == Intake.IntakedSampleColor.RED
+                                                robot.intake::isColorWrongBasketAutoBLUE
                                         )
                                 ),
 

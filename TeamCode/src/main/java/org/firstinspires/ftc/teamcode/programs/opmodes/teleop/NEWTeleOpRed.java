@@ -61,7 +61,7 @@ import org.firstinspires.ftc.teamcode.programs.util.NEWRobot;
 import org.firstinspires.ftc.teamcode.utils.geometry.PoseRR;
 
 
-@com.qualcomm.robotcore.eventloop.opmode.TeleOp(name = "🔴NEWTeleOpRed🔴", group = "OpModes")
+@com.qualcomm.robotcore.eventloop.opmode.TeleOp(name = "🔴NEWTeleOpRed🔴")
 public class NEWTeleOpRed extends CommandOpMode {
     private final NEWRobot robot = NEWRobot.getInstance();
     public GamepadEx gamepadEx;
@@ -72,7 +72,7 @@ public class NEWTeleOpRed extends CommandOpMode {
     private final int spacimentIntakingTimeOut = 1500;
     private final SpecimenPaths specimenPaths = new SpecimenPaths();
 
-                private final Pose startPose = new Pose(42.077922077922075, 65.6883116883117, Math.toRadians(180));
+    private final Pose startPose = new Pose(42.077922077922075, 65.6883116883117, Math.toRadians(180));
 
     public static Pose takeSpecimenPose = new Pose(27.584415584415584, 40.90909090909091, Math.toRadians(-130));
     public static Pose takeSpecimenPoseControlPoint = new Pose(28.753246753246753, 72.46753246753246, Math.toRadians(-130));
@@ -441,7 +441,6 @@ public class NEWTeleOpRed extends CommandOpMode {
 
 //        telemetry.addData("TIME PASSED", robot.intake.getTimePassed());
 
-//        telemetry.addData("SENSOR DISABLED?:", robot.brush.getREVState());
 
 //        telemetry.addData("AngleServoPosition", robot.brush.brushAngleServo.getPosition());
 //        telemetry.addData("Brush Angle", robot.brush.brushAngle);
@@ -470,7 +469,14 @@ public class NEWTeleOpRed extends CommandOpMode {
 
 //        telemetry.addData("HANG_2", Globals.HANGING_LEVEL_2);
 //        telemetry.addData("HANG_3", Globals.HANGING_LEVEL_3);
+//        telemetry.addData("Current Position Left", robot.mecanumDriveTrain.getCurrentPotionLeft());
+//        telemetry.addData("Current Position Right", robot.mecanumDriveTrain.getCurrentPositionRight());
+//        telemetry.addData("Target Positon", robot.mecanumDriveTrain.getTargetPositionLeft());
 //
+//        telemetry.addData("current FRONT RIGHT", robot.mecanumDriveTrain.getCurrenttFronRight());
+//        telemetry.addData("current FRONT LEFT", robot.mecanumDriveTrain.getCurrentFrontLeft());
+//        telemetry.addData("current BACK RIGHT", robot.mecanumDriveTrain.getCurrenttBackRight());
+//        telemetry.addData("current BACK LEFT", robot.mecanumDriveTrain.getCurrenttBackLeft());
 
 
 //        telemetry.addData("Hang State", robot.hang.hangState);
