@@ -426,8 +426,8 @@ public class NEWTeleOpRed extends CommandOpMode {
         }
 
 //        telemetry.addData("AUTO_IN_TELEOP", AUTO_IN_TELEOP);
-//        telemetry.addData("SampleColor", robot.intake.intakedSampleColor);
-//        telemetry.addData("e?", robot.intake.sampleState);
+        telemetry.addData("SampleColor", robot.intake.intakedSampleColor);
+        telemetry.addData("e?", robot.intake.sampleState);
 
 
 
@@ -470,14 +470,7 @@ public class NEWTeleOpRed extends CommandOpMode {
 
 //        telemetry.addData("HANG_2", Globals.HANGING_LEVEL_2);
 //        telemetry.addData("HANG_3", Globals.HANGING_LEVEL_3);
-        telemetry.addData("Current Position Left", robot.mecanumDriveTrain.getCurrentPotionLeft());
-        telemetry.addData("Current Position Right", robot.mecanumDriveTrain.getCurrentPositionRight());
-        telemetry.addData("Target Positon", robot.mecanumDriveTrain.getTargetPositionLeft());
-
-        telemetry.addData("current FRONT RIGHT", robot.mecanumDriveTrain.getCurrenttFronRight());
-        telemetry.addData("current FRONT LEFT", robot.mecanumDriveTrain.getCurrentFrontLeft());
-        telemetry.addData("current BACK RIGHT", robot.mecanumDriveTrain.getCurrenttBackRight());
-        telemetry.addData("current BACK LEFT", robot.mecanumDriveTrain.getCurrenttBackLeft());
+//
 
 
 //        telemetry.addData("Hang State", robot.hang.hangState);
@@ -495,6 +488,23 @@ public class NEWTeleOpRed extends CommandOpMode {
 //        telemetry.addData("Target Position", robot.extendo.getTargetPosition());
 //        telemetry.update();
 
+
+
+
+
+
+
+//        telemetry.addData("Current Position Left", robot.mecanumDriveTrain.getCurrentPotionLeft());
+//        telemetry.addData("Current Position Right", robot.mecanumDriveTrain.getCurrentPositionRight());
+//        telemetry.addData("Target Positon", robot.mecanumDriveTrain.getTargetPositionLeft());
+//
+//        telemetry.addData("current FRONT RIGHT", robot.mecanumDriveTrain.getCurrenttFronRight());
+//        telemetry.addData("current FRONT LEFT", robot.mecanumDriveTrain.getCurrentFrontLeft());
+//        telemetry.addData("current BACK RIGHT", robot.mecanumDriveTrain.getCurrenttBackRight());
+//        telemetry.addData("current BACK LEFT", robot.mecanumDriveTrain.getCurrenttBackLeft());
+
+
+        telemetry.addData("DISABLED_COLOR_SENSOR", robot.intake.isDisabledColorSensor());
         double loop = System.nanoTime();
         telemetry.addData("Hz", 1000000000 / (loop - loopTime));
         loopTime = loop;

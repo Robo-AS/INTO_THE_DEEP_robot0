@@ -35,8 +35,8 @@ public class MecanumDriveTrain extends WSubsystem implements Drivetrain {
     public double targetPositionLeft = 0, targetPositionRight = 0;
     public double currentPositionLeft = 0, currentPositionRight = 0;
     public static double joystickConstantLeft = 10, joystickConstantRight = 10;
-    public static double minPositionLeft = 0, maxPositionLeft = 3000;
-    public static double minPositionRight = 0, maxPositionRight = 3000;
+    public static double minPositionLeft = 0, maxPositionLeft = 3600;
+    public static double minPositionRight = 0, maxPositionRight = 3600;
 
     public MecanumDriveTrain(){
         left_pid = new PIDController(p, i, d);
@@ -135,11 +135,11 @@ public class MecanumDriveTrain extends WSubsystem implements Drivetrain {
             double powerLeft = left_pid.calculate(currentPositionLeft, targetPositionLeft);
             double powerRight = right_pid.calculate(currentPositionRight, -targetPositionRight);
 
-            if(currentPositionLeft < 3300){
+            if(currentPositionLeft < 3000){
                 powerLeft = Math.min(powerLeft, 0.85);
                 powerRight = Math.max(powerRight, -0.85);
             }
-            else if(currentPositionLeft > 3300){
+            else if(currentPositionLeft > 3000){
                 powerLeft = Math.min(powerLeft, 0.6);
                 powerRight = Math.max(powerRight, -0.6);
             }

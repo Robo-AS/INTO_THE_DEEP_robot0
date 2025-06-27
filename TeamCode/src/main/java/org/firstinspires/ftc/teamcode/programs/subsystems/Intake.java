@@ -44,7 +44,8 @@ public class Intake extends SubsystemBase {
     public AnalogInput analogInput;
 
     private final ElapsedTime currentSpikeTimer = new ElapsedTime();
-//    private final ElapsedTime colorCheckTimer = new ElapsedTime();
+    private final ElapsedTime disableColorSensorTimer = new ElapsedTime();
+    public boolean disabledColorSensor = false;
 
 
     public enum IntakeState{
@@ -115,10 +116,6 @@ public class Intake extends SubsystemBase {
     public SampleState sampleState = SampleState.ISNOT;
     public static IntakedSampleColor intakedSampleColor = IntakedSampleColor.NOTHING;
     public SpecimenBlocked specimenBlocked = SpecimenBlocked.NOT_BLOCKED;
-//
-//
-//    public boolean colorChecked = false;
-//
 
 
 
@@ -148,9 +145,8 @@ public class Intake extends SubsystemBase {
         intakedSampleColor = IntakedSampleColor.NOTHING;
         angleServo.setPosition(UP_ANGLE);
         currentSpikeTimer.reset();
-//        colorCheckTimer.reset();
-//        colorChecked = false;
-//
+        disableColorSensorTimer.reset();
+        disabledColorSensor = false;
 
         totalAxonAngle = 0;
         rotations = 0;
@@ -309,8 +305,6 @@ public class Intake extends SubsystemBase {
 
         previousAxonAngle = currentAxonAngle;
         totalAxonAngle = (rotations * 360) + (currentAxonAngle);
-
-
     }
 
 
@@ -334,68 +328,68 @@ public class Intake extends SubsystemBase {
         totalAxonAngle = (rotations * 360) + (currentAxonAngle);
 
 
-
-        if(intakeState == IntakeState.INTAKING){
+        if(intakeAngle == IntakeAngle.DOWN){
             updateSampleStateDigital();
             updateSampleColor();
+        }
 
-            if(brushMotor.getCurrent(CurrentUnit.AMPS) > 2.75 && currentSpikeTimer.seconds() > 1){
+        if(intakeState == IntakeState.INTAKING) {
+            if (brushMotor.getCurrent(CurrentUnit.AMPS) > 2.75 && currentSpikeTimer.seconds() > 1) {
                 CommandScheduler.getInstance().schedule(new IntakeBlockedSamplesCommand());
                 currentSpikeTimer.reset();
             }
 
-            if(sampleState == SampleState.IS){
-                updateSampleColor();
+
+            if (sampleState == SampleState.IS) {
                 rollersServo.setPosition(0.5);
                 brushMotor.setPower(0);
 
-
-//                if (sampleState == SampleState.IS && !colorChecked) {
-//                    colorCheckTimer.reset();
-//                    colorChecked = true;
-//                }
-//
-//                if (colorChecked && colorCheckTimer.milliseconds() >= 10) {
-//                    updateSampleColor();
-//                    colorChecked = false;
-//                }
-
-
-
-                if(sampleThrowed){
+                if (!disabledColorSensor) {
                     updateSampleColor();
-                }
-
-                if (intakedSampleColor == IntakedSampleColor.NOTHING) {
-                    updateSampleColor();
-                    return;
-                }
-
-                if (isRightSampleColorTeleOpBlue()) {
-                    //setInitialAxonAngle();
-                    if(sampleThrowed){
-                        if (intakedSampleColor == IntakedSampleColor.YELLOW)
-                            CommandScheduler.getInstance().schedule(new IntakeRetractYELLOWAfterEJECTCommand());
-                        else CommandScheduler.getInstance().schedule(new IntakeRetractSPECIFICAfterEJECTCommand());
-                        sampleThrowed = false;
+                    if (sampleThrowed) {
+                        updateSampleColor();
                     }
-                    else{
-                        if (intakedSampleColor == IntakedSampleColor.YELLOW)
-                            CommandScheduler.getInstance().schedule(new NEWIntakeRetractYELLOWSampleCommand());
-                        else CommandScheduler.getInstance().schedule(new NEWIntakeRetractSPECIFICSampleCommand());
+
+                    if (intakedSampleColor == IntakedSampleColor.NOTHING) {
+                        if (disableColorSensorTimer.seconds() > 3) {
+                            disabledColorSensor = true;
+                            return;
+                        }
+                        updateSampleColor();
+                        return;
+                    }
+
+                    if (isRightSampleColorTeleOpBlue()) {
+                        //setInitialAxonAngle();
+                        if (sampleThrowed) {
+                            if (intakedSampleColor == IntakedSampleColor.YELLOW)
+                                CommandScheduler.getInstance().schedule(new IntakeRetractYELLOWAfterEJECTCommand());
+                            else
+                                CommandScheduler.getInstance().schedule(new IntakeRetractSPECIFICAfterEJECTCommand());
+                            sampleThrowed = false;
+                        } else {
+                            if (intakedSampleColor == IntakedSampleColor.YELLOW)
+                                CommandScheduler.getInstance().schedule(new NEWIntakeRetractYELLOWSampleCommand());
+                            else
+                                CommandScheduler.getInstance().schedule(new NEWIntakeRetractSPECIFICSampleCommand());
+                        }
+                    } else {
+                        CommandScheduler.getInstance().schedule(new IntakeThrowingCommand());
+                        sampleThrowed = true;
                     }
                 }
-                else {
-                    CommandScheduler.getInstance().schedule(new IntakeThrowingCommand());
-                    sampleThrowed = true;
+                else{//SENSOR DISABLED
+                    CommandScheduler.getInstance().schedule(new NEWIntakeRetractSPECIFICSampleCommand());
                 }
 
             }
-            else sampleThrowed = false;
+            else { //ISNOT
+                sampleThrowed = false;
+                disableColorSensorTimer.reset();
+            }
         }
-
-
     }
+
 
 
     public void loopRed(){
@@ -407,7 +401,6 @@ public class Intake extends SubsystemBase {
         }
 
         int delta = currentAxonAngle - previousAxonAngle;
-
         if(delta > 180)
             rotations --;
         else if (delta < -180)
@@ -422,50 +415,62 @@ public class Intake extends SubsystemBase {
             updateSampleColor();
         }
 
-        if(intakeState == IntakeState.INTAKING){
-            if(brushMotor.getCurrent(CurrentUnit.AMPS) > 2.75 && currentSpikeTimer.seconds() > 1){
+        if(intakeState == IntakeState.INTAKING) {
+            if (brushMotor.getCurrent(CurrentUnit.AMPS) > 2.75 && currentSpikeTimer.seconds() > 1) {
                 CommandScheduler.getInstance().schedule(new IntakeBlockedSamplesCommand());
                 currentSpikeTimer.reset();
             }
 
-            if(sampleState == SampleState.IS){
-                updateSampleColor();
+
+            if (sampleState == SampleState.IS) {
                 rollersServo.setPosition(0.5);
                 brushMotor.setPower(0);
 
-                if(sampleThrowed){
+                if (!disabledColorSensor) {
                     updateSampleColor();
-                }
-
-                if (intakedSampleColor == IntakedSampleColor.NOTHING) {
-                    updateSampleColor();
-                    return;
-                }
-
-                if (isRightSampleColorTeleOpRed()) {
-                    //setInitialAxonAngle();
-                    if(sampleThrowed){
-                        if (intakedSampleColor == IntakedSampleColor.YELLOW)
-                            CommandScheduler.getInstance().schedule(new IntakeRetractYELLOWAfterEJECTCommand());
-                        else CommandScheduler.getInstance().schedule(new IntakeRetractSPECIFICAfterEJECTCommand());
-                        sampleThrowed = false;
+                    if (sampleThrowed) {
+                        updateSampleColor();
                     }
-                    else{
-                        if (intakedSampleColor == IntakedSampleColor.YELLOW)
-                            CommandScheduler.getInstance().schedule(new NEWIntakeRetractYELLOWSampleCommand());
-                        else CommandScheduler.getInstance().schedule(new NEWIntakeRetractSPECIFICSampleCommand());
+
+                    if (intakedSampleColor == IntakedSampleColor.NOTHING) {
+                        if (disableColorSensorTimer.seconds() > 3) {
+                            disabledColorSensor = true;
+                            return;
+                        }
+                        updateSampleColor();
+                        return;
+                    }
+
+                    if (isRightSampleColorTeleOpRed()) {
+                        //setInitialAxonAngle();
+                        if (sampleThrowed) {
+                            if (intakedSampleColor == IntakedSampleColor.YELLOW)
+                                CommandScheduler.getInstance().schedule(new IntakeRetractYELLOWAfterEJECTCommand());
+                            else
+                                CommandScheduler.getInstance().schedule(new IntakeRetractSPECIFICAfterEJECTCommand());
+                            sampleThrowed = false;
+                        } else {
+                            if (intakedSampleColor == IntakedSampleColor.YELLOW)
+                                CommandScheduler.getInstance().schedule(new NEWIntakeRetractYELLOWSampleCommand());
+                            else
+                                CommandScheduler.getInstance().schedule(new NEWIntakeRetractSPECIFICSampleCommand());
+                        }
+                    } else {
+                        CommandScheduler.getInstance().schedule(new IntakeThrowingCommand());
+                        sampleThrowed = true;
                     }
                 }
-                else {
-                    CommandScheduler.getInstance().schedule(new IntakeThrowingCommand());
-                    sampleThrowed = true;
+                else{//SENSOR DISABLED
+                    CommandScheduler.getInstance().schedule(new NEWIntakeRetractSPECIFICSampleCommand());
                 }
 
             }
-            else sampleThrowed = false;
+            else { //ISNOT
+                sampleThrowed = false;
+                disableColorSensorTimer.reset();
+            }
+
         }
-
-
     }
 
     public boolean canStopOuttakingYELLOW_1_AUTO(){
@@ -567,6 +572,10 @@ public class Intake extends SubsystemBase {
 
     public boolean isSpecimenBlockedInRollers(){
         return (totalAxonAngle - initialAxonAngle) <= 60;
+    }
+
+    public boolean isDisabledColorSensor(){
+        return disabledColorSensor;
     }
 
 
