@@ -66,20 +66,20 @@ public class NEW_BasketAutoSubmersibleBLUE_CU_UNGHI_BRAT_FAILSAFES extends Linea
     public static Pose grab3Pose = new Pose(21.038961038961038, 133.71428571428572, Math.toRadians(15));//6
     public static Pose score3Pose = new Pose(15.792207792207792, 130.9090909090909, Math.toRadians(-15));//7
 
-    public static Pose submersible1Pose = new Pose(60.311688311688314, 93.27922077922078, Math.toRadians(-90));//8
+    public static Pose submersible1Pose = new Pose(60.311688311688314, 95.27922077922078, Math.toRadians(-90));//8
     public static Pose submersible1ControlPoint = new Pose(60.54545454545455, 119.92207792207793, Math.toRadians(-90));
 
     public static Pose scoreSubmersible1Pose = new Pose(15.896103896103895, 130.67532467532467, Math.toRadians(-15));       //9
     public static Pose scoreSubmersible1ControlPoint = new Pose(60.54545454545455, 119.92207792207793, Math.toRadians(-15));
 
 
-    public static Pose submersible2Pose = new Pose(60.311688311688314, 93.27922077922078, Math.toRadians(-90));             //10
+    public static Pose submersible2Pose = new Pose(60.311688311688314, 95.27922077922078, Math.toRadians(-90));             //10
     public static Pose submersible2ControlPoint = new Pose(62.649350649350644, 121.79220779220779, Math.toRadians(-90));
 
     public static Pose scoreSubmbersible2Pose = new Pose(15.896103896103895, 130.67532467532467, Math.toRadians(-15));      //11
     public static Pose scoreSubmersible2ControlPoint = new Pose(62.649350649350644, 121.79220779220779, Math.toRadians(-15));
 
-    public static Pose submersible3Pose = new Pose(63.350649350649356, 92.77922077922078, Math.toRadians(-90));     //12
+    public static Pose submersible3Pose = new Pose(63.350649350649356, 94.77922077922078, Math.toRadians(-90));     //12
     public static Pose submersible3ControlPoint = new Pose(62.649350649350644, 121.79220779220779, Math.toRadians(-90));
 
     public static Pose scoreSubmbersible3Pose = new Pose(15.896103896103895, 130.67532467532467, Math.toRadians(-15));      //13
