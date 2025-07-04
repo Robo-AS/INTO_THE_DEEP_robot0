@@ -95,7 +95,7 @@ public class Extendo extends SubsystemBase {
     public int TAKE_SPECIMEN_AUTO = 730;
     public int RETRACT_AUTO_FAIL_SAFE = 500;
 
-    public int EXTEND_HUMAN_PLAYER = 580;
+    public int EXTEND_HUMAN_PLAYER = 630;
     public int EXTEND_SPECIMEN_EXIT = 150;
 
 

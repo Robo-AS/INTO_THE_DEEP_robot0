@@ -338,7 +338,7 @@ public class SpecimenAuto extends LinearOpMode {
                         new FollowPath(follower, bring1, true, 1)
                                 .alongWith(
                                         new SequentialCommandGroup(
-                                                new WaitCommand(350),
+                                                new WaitCommand(400),
                                                 new SetIntakeStateCommand(Intake.IntakeState.SPITTING_HUMAN_PLAYER),
                                                 new SetExtendoStateCommand(Extendo.ExtendoState.EXTEND_HUMAN_PLAYER)
                                         )
@@ -389,9 +389,8 @@ public class SpecimenAuto extends LinearOpMode {
                         new FollowPath(follower, bring2, true, 1)
                                 .alongWith(
                                         new SequentialCommandGroup(
-                                                new WaitCommand(400),
+                                                new WaitCommand(450),
                                                 new SetExtendoStateCommand(Extendo.ExtendoState.EXTEND_HUMAN_PLAYER),
-                                                //new WaitCommand(100),
                                                 new SetIntakeStateCommand(Intake.IntakeState.SPITTING_HUMAN_PLAYER)
 
 
