@@ -116,7 +116,7 @@ public class Extendo extends SubsystemBase {
 
     MotionProfile profile;
     public int previousTarget = 0;
-    public static double maxVelocity = 1000000, maxAcceleration = 30000;
+    public static double maxVelocity = 1000000, maxAcceleration = 35000;
     public double maxVelocitySubmersible = 1000, maxAccelerationSubmersible = 10000;
 
     public Extendo(){

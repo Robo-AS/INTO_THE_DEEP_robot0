@@ -63,7 +63,7 @@ public class NEW_BasketAutoSubmersibleBLUE_CU_UNGHI_BRAT_FAILSAFES extends Linea
     public static Pose grab2Pose = new Pose(21.506493506493506, 131.37662337662337, Math.toRadians(-3));//4
     public static Pose score2Pose = new Pose(15.792207792207792, 130.9090909090909, Math.toRadians(-15));//5
 
-    public static Pose grab3Pose = new Pose(21.038961038961038, 133.71428571428572, Math.toRadians(15));//6
+    public static Pose grab3Pose = new Pose(21.038961038961038, 133.71428571428572, Math.toRadians(17));//6
     public static Pose score3Pose = new Pose(15.792207792207792, 130.9090909090909, Math.toRadians(-15));//7
 
     public static Pose submersible1Pose = new Pose(60.311688311688314, 95.27922077922078, Math.toRadians(-90));//8
