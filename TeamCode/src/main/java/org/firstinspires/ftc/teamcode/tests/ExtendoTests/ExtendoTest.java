@@ -2,29 +2,20 @@ package org.firstinspires.ftc.teamcode.tests.ExtendoTests;
 
 import com.acmerobotics.dashboard.FtcDashboard;
 import com.acmerobotics.dashboard.telemetry.MultipleTelemetry;
-import com.acmerobotics.dashboard.telemetry.TelemetryPacket;
 import com.arcrobotics.ftclib.command.CommandOpMode;
 import com.arcrobotics.ftclib.command.CommandScheduler;
-import com.arcrobotics.ftclib.command.ConditionalCommand;
 import com.arcrobotics.ftclib.gamepad.GamepadEx;
-import com.arcrobotics.ftclib.gamepad.GamepadKeys;
-import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
-
-import org.firstinspires.ftc.robotcontroller.external.samples.RobotHardware;
-import org.firstinspires.ftc.teamcode.programs.commandbase.BrushCommands.SetBrushStateCommand;
-import org.firstinspires.ftc.teamcode.programs.commandbase.SetDesiredColorCommand;
-import org.firstinspires.ftc.teamcode.programs.subsystems.Brush;
 import org.firstinspires.ftc.teamcode.programs.subsystems.Extendo;
-import org.firstinspires.ftc.teamcode.programs.subsystems.Lift;
-import org.firstinspires.ftc.teamcode.programs.util.Globals;
-import org.firstinspires.ftc.teamcode.programs.util.Robot;
+import org.firstinspires.ftc.teamcode.programs.subsystems.Intake;
 
-//@TeleOp(name = "ExtendoTest", group = "Tests")
+
+@TeleOp(name = "ExtendoTest", group = "Tests")
 public class ExtendoTest extends CommandOpMode {
     private final Extendo extendo = Extendo.getInstance();
-    private final Brush brush = Brush.getInstance();
+    private final Intake intake = Intake.getInstance();
     private GamepadEx gamepadEx;
+    public double currentPosition = 0;
 
 
     @Override
@@ -36,6 +27,9 @@ public class ExtendoTest extends CommandOpMode {
         extendo.initializeHardware(hardwareMap);
         extendo.initialize();
 
+        intake.initializeHardware(hardwareMap);
+        intake.initialize();
+
     }
 
     @Override
@@ -44,6 +38,8 @@ public class ExtendoTest extends CommandOpMode {
 
 
         //extendo.loopAuto(gamepadEx.gamepad.left_stick_y);
+        extendo.testPID();
+//        extendo.loop(gamepadEx.getLeftY());
 
 
 

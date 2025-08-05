@@ -29,40 +29,41 @@ public class Lift extends SubsystemBase{
     public enum LiftState{
         LOW_BASKET,
         HIGH_BASKET,
-        LOW_RUNG,
         HIGH_RUNG,
         PUT_SPECIMEN,
         UP_FOR_IDLE,
         HIGH_BASKET_AUTO,
+        HANG,
         IDLE
     }
 
     public LiftState liftState = LiftState.IDLE;
 
-    public static int HIGH_BASKET = 900;
-    public static int HIGH_RUNG = 520;
-    public static int LOW_BASKET = 400;
-    public static int LOW_RUNG = 0;
-    public static int PUT_SPECIMEN = 160;//150
-    public static int UP_FOR_IDLE = 300;//300
-    public static int HIGH_BASKET_AUTO = 840 ;
-    public static int IDLE = 0;
+    public int HIGH_BASKET = 880;
+    public int HIGH_RUNG = 480;//520
+    public int LOW_BASKET = 400;
+    public int PUT_SPECIMEN = 200;//160
+    public int UP_FOR_IDLE = 300;
+    public int HIGH_BASKET_AUTO = 840;
+    public int HANG = 930;
+    public int IDLE = 0;
+
 
 
 
     private PIDController lift_pid;
-    public int targetPosition;
+    public static int targetPosition;
     public int currentPosition;
 
-    public static double p_lift = 0.0056, d_lift = 0.00009, i_lift = 0.15;
-    public static double p_hang = 0.04, d_hang = 0, i_hang = 0;
+    public static double p_lift = 0.0055, d_lift = 0.00016, i_lift = 0.15;
+    public double p_hang = 0.04, d_hang = 0, i_hang = 0;
 
     MotionProfile profile;
     public int previousTarget = 0;
-    public static double maxVelocityUP = 10000000, maxAccelerationUP = 200000;
+    public static double maxVelocityUP = 10000000, maxAccelerationUP = 25000;
     public static double maxVelocityDOWN = 1000000, maxAccelerationDOWN = 4000;
-    public static double maxVelocityPUT_SPECIMEN = 10000000, maxAccelerationPUT_SPECIMEN = 60000;
-    public static double maxVelocityHANG = 800, maxAccelerationHANG = 3000000;
+    public double maxVelocityPUT_SPECIMEN = 10000000, maxAccelerationPUT_SPECIMEN = 60000;
+    public double maxVelocityHANG = 800, maxAccelerationHANG = 3000000;
 
 
     public Lift(){
@@ -82,13 +83,13 @@ public class Lift extends SubsystemBase{
         liftMotor = new CachingDcMotorEx(hardwareMap.get(DcMotorEx.class, "liftMotor"));
         liftMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         liftMotor.setDirection(DcMotorSimple.Direction.FORWARD);
-        //liftMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+//        liftMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         liftMotor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
 
         followerMotor = new CachingDcMotorEx(hardwareMap.get(DcMotorEx.class, "followerMotor"));
         followerMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         followerMotor.setDirection(DcMotorSimple.Direction.FORWARD);
-        //followerMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+//        followerMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         followerMotor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
     }
 
@@ -108,15 +109,12 @@ public class Lift extends SubsystemBase{
         targetPosition = currentPosition;
         previousTarget = currentPosition;
 
-
-
         profile = MotionProfileGenerator.generateSimpleMotionProfile(
                 new MotionState(currentPosition, 0),
                 new MotionState(targetPosition, 0),
                 maxVelocityDOWN,
                 maxAccelerationDOWN
         );
-
         time.reset();
     }
 
@@ -127,11 +125,6 @@ public class Lift extends SubsystemBase{
             p_lift = p_hang;
             d_lift = d_hang;
             i_lift = i_hang;
-        }
-        else{
-            p_lift = 0.0056;
-            d_lift = 0.00009;
-            i_lift = 0.15;
         }
 
         if(targetPosition != previousTarget) {
@@ -145,7 +138,6 @@ public class Lift extends SubsystemBase{
             }
 
             if(targetPosition < previousTarget){//profile pentru retragere
-
                 if(liftState == LiftState.PUT_SPECIMEN){
                     profile = MotionProfileGenerator.generateSimpleMotionProfile(
                             new MotionState(previousTarget, 0),
@@ -171,14 +163,10 @@ public class Lift extends SubsystemBase{
                             maxAccelerationDOWN
                     );
                 }
-
             }
-
             time.reset();
             previousTarget = targetPosition;
         }
-
-
 
         MotionState targetState = profile == null ? new MotionState(0, 0) : profile.get(time.seconds());
         double targetMotionProfile = targetState.getX();
@@ -199,28 +187,23 @@ public class Lift extends SubsystemBase{
             case LOW_BASKET:
                 targetPosition = LOW_BASKET;
                 break;
-
             case HIGH_BASKET:
                 targetPosition = HIGH_BASKET;
                 break;
-
-            case LOW_RUNG:
-                targetPosition = LOW_RUNG;
-                break;
-
             case HIGH_RUNG:
                 targetPosition = HIGH_RUNG;
                 break;
-
             case PUT_SPECIMEN:
                 targetPosition = PUT_SPECIMEN;
                 break;
             case UP_FOR_IDLE:
                 targetPosition = UP_FOR_IDLE;
                 break;
-
             case HIGH_BASKET_AUTO:
                 targetPosition = HIGH_BASKET_AUTO;
+                break;
+            case HANG:
+                targetPosition = HANG;
                 break;
             case IDLE:
                 targetPosition = IDLE;
@@ -242,25 +225,13 @@ public class Lift extends SubsystemBase{
     }
 
     public boolean canRotateArmHighBasket(){
-        return currentPosition >= 150;
+        return currentPosition >= 75;//75
     }
 
 
-//        public void testLoop(){
-//        currentPosition = liftMotor.getCurrentPosition();
-//
-//        lift_pid.setPID(p_lift, i_lift, d_lift);
-//        double pid = lift_pid.calculate(currentPosition, targetPosition);
-//        double power = pid;
-//        liftMotor.setPower(power);
-//        followerMotor.setPower(power);
-//    }
 
 
-    public void hangTestLoop(double gamepadY){
-        liftMotor.setPower(gamepadY);
-        followerMotor.setPower(gamepadY);
-    }
+
 
     public double getCurrentLiftMotor(){
         CurrentUnit currentUnit = CurrentUnit.AMPS;
@@ -276,5 +247,22 @@ public class Lift extends SubsystemBase{
 
     public boolean canOpenClaw(){
         return currentPosition > 800;
+    }
+
+
+    public void testPID(){
+        currentPosition = liftMotor.getCurrentPosition();
+
+        lift_pid.setPID(p_lift, i_lift, d_lift);
+        double pid = lift_pid.calculate(currentPosition, targetPosition);
+        double power = pid;
+        liftMotor.setPower(power);
+        followerMotor.setPower(power);
+    }
+
+
+    public void hangTestLoop(double gamepadY){
+        liftMotor.setPower(gamepadY);
+        followerMotor.setPower(gamepadY);
     }
 }

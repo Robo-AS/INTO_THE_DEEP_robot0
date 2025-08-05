@@ -2,24 +2,14 @@ package org.firstinspires.ftc.teamcode.tests.LiftTests;
 
 import com.acmerobotics.dashboard.FtcDashboard;
 import com.acmerobotics.dashboard.telemetry.MultipleTelemetry;
-import com.acmerobotics.dashboard.telemetry.TelemetryPacket;
 import com.arcrobotics.ftclib.command.CommandOpMode;
 import com.arcrobotics.ftclib.command.CommandScheduler;
-import com.arcrobotics.ftclib.command.ConditionalCommand;
 import com.arcrobotics.ftclib.gamepad.GamepadEx;
-import com.arcrobotics.ftclib.gamepad.GamepadKeys;
-import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
-import org.firstinspires.ftc.robotcontroller.external.samples.RobotHardware;
-import org.firstinspires.ftc.teamcode.programs.commandbase.BrushCommands.SetBrushStateCommand;
-import org.firstinspires.ftc.teamcode.programs.commandbase.LiftCommands.SetLiftStateCommand;
-import org.firstinspires.ftc.teamcode.programs.commandbase.SetDesiredColorCommand;
-import org.firstinspires.ftc.teamcode.programs.subsystems.Brush;
 import org.firstinspires.ftc.teamcode.programs.subsystems.Lift;
-import org.firstinspires.ftc.teamcode.programs.util.Robot;
 
-//@TeleOp(name = "LiftTest", group = "Tests")
+@TeleOp(name = "LiftTest", group = "Tests")
 public class LiftTest extends CommandOpMode {
     private final Lift lift = Lift.getInstance();
     private GamepadEx gamepadEx;
@@ -34,17 +24,17 @@ public class LiftTest extends CommandOpMode {
         lift.initializeHardware(hardwareMap);
         lift.initialize();
 
-        gamepadEx.getGamepadButton(GamepadKeys.Button.RIGHT_BUMPER)
-                .whenPressed(
-                        () -> CommandScheduler.getInstance().schedule(
-                                new ConditionalCommand(
-                                        new SetLiftStateCommand(Lift.LiftState.HIGH_RUNG),
-                                        new SetLiftStateCommand(Lift.LiftState.IDLE),
-                                        () -> lift.liftState == Lift.LiftState.IDLE
-                                )
-                        )
-
-                );
+//        gamepadEx.getGamepadButton(GamepadKeys.Button.RIGHT_BUMPER)
+//                .whenPressed(
+//                        () -> CommandScheduler.getInstance().schedule(
+//                                new ConditionalCommand(
+//                                        new SetLiftStateCommand(Lift.LiftState.HIGH_RUNG),
+//                                        new SetLiftStateCommand(Lift.LiftState.IDLE),
+//                                        () -> lift.liftState == Lift.LiftState.IDLE
+//                                )
+//                        )
+//
+//                );
 
 
 
@@ -56,19 +46,9 @@ public class LiftTest extends CommandOpMode {
 
 
 //        lift.loopAuto();
-//        lift.testLoop();
-
-        // Create a telemetry packet for FTCDashboard
-//        TelemetryPacket packet = new TelemetryPacket();
-//        packet.put("Current Position", lift.liftMotor.getCurrentPosition());
-//        packet.put("Target Position", lift.getTargetPosition());
-
-        // Send the packet to the dashboard
-//        dashboard.sendTelemetryPacket(packet);
-//        telemetry.updateHang();
+//        lift.loop();
 
 
-        // Add to on-screen telemetry (optional)
         telemetry.addData("Current Position", lift.liftMotor.getCurrentPosition());
         telemetry.addData("Target Position", lift.getTargetPosition());
         telemetry.update();

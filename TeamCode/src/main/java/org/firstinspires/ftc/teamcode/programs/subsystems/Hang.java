@@ -27,10 +27,11 @@ public class Hang extends SubsystemBase {
     public HangState hangState = HangState.IDLE;
     public SafetyState safetyState = SafetyState.IDLE;
 
-    public static double IDLE = 0.55;
-    public static double TRIGGERED = 0.4;
-    public static double IDLE_SAFETY = 0.54;//0.54
-    public static double TRIGGERED_SAFETY = 0.3;//0.4
+    public static double IDLE_LEFT = 0.5, IDLE_RIGHT = 0.86;
+    public static double TRIGGERED_LEFT = 0.35, TRIGGERED_RIGHT = 0.7;
+
+    public static double IDLE_SAFETY = 0.54;
+    public static double TRIGGERED_SAFETY = 0.3;
 
 
     public static Hang getInstance(){
@@ -59,8 +60,8 @@ public class Hang extends SubsystemBase {
     public void initialize(){
         hangState = HangState.IDLE;
         safetyState = SafetyState.IDLE;
-        hangServoLeft.setPosition(IDLE);
-        hangServoRight.setPosition(IDLE);
+        hangServoLeft.setPosition(IDLE_LEFT);
+        hangServoRight.setPosition(IDLE_RIGHT);
 
         servoSafetyLeft.setPosition(IDLE_SAFETY);
         servoSafetyRight.setPosition(IDLE_SAFETY);
@@ -70,12 +71,12 @@ public class Hang extends SubsystemBase {
         hangState = state;
         switch (state){
             case IDLE:
-                hangServoLeft.setPosition(IDLE);
-                hangServoRight.setPosition(IDLE);
+                hangServoLeft.setPosition(IDLE_LEFT);
+                hangServoRight.setPosition(IDLE_RIGHT);
                 break;
             case TRIGGERED:
-                hangServoLeft.setPosition(TRIGGERED);
-                hangServoRight.setPosition(TRIGGERED);
+                hangServoLeft.setPosition(TRIGGERED_LEFT);
+                hangServoRight.setPosition(TRIGGERED_RIGHT);
                 break;
         }
     }
@@ -94,15 +95,4 @@ public class Hang extends SubsystemBase {
         }
     }
 
-
-
-    public void testServosLopp(){
-        hangServoLeft.setPosition(TRIGGERED);
-        hangServoRight.setPosition(TRIGGERED);
-    }
-
-    public void testSafetyLopp(){
-        servoSafetyLeft.setPosition(TRIGGERED_SAFETY);
-        servoSafetyRight.setPosition(TRIGGERED_SAFETY);
-    }
 }

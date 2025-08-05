@@ -28,7 +28,8 @@ public class ArmTest extends CommandOpMode {
 
         gamepadEx = new GamepadEx(gamepad1);
         arm.initializeHardware(hardwareMap);
-        //arm.testInit();
+        arm.initialize();
+
 
     }
 
@@ -36,8 +37,9 @@ public class ArmTest extends CommandOpMode {
     public void run(){
         CommandScheduler.getInstance().run();
 
-
-        arm.testLOOP();
+        arm.loopTeleOp();
+//        arm.testLOOP();
+//        arm.testInit();
 
 
         telemetry.addData("PROFILE", arm.getProfile());

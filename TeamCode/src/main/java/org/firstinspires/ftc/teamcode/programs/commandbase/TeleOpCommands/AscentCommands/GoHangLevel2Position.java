@@ -12,7 +12,7 @@ import org.firstinspires.ftc.teamcode.programs.util.Globals;
 public class GoHangLevel2Position extends SequentialCommandGroup {
     public GoHangLevel2Position(){
         super(
-                new SetLiftStateCommand(Lift.LiftState.HIGH_BASKET),
+                new SetLiftStateCommand(Lift.LiftState.HANG),
                 new SetExtendoStateCommand(Extendo.ExtendoState.HANG),
                 new InstantCommand(Globals::isHangingLevel2)
         );

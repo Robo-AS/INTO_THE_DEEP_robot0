@@ -15,10 +15,11 @@ public class OuttakeGoHighRungCommand extends SequentialCommandGroup {
         super(
                 new SetLiftStateCommand(Lift.LiftState.HIGH_RUNG),
                 new WaitCommand(100),
-                //new WaitUntilCommand(Lift::canRotateWrist),
-                new SetWristStateCommand(Arm.WristState.TRANSITION),
+                new SetWristStateCommand(Arm.WristState.HIGH_RUNG),
                 new SetArmStateCommand(Arm.ArmState.HIGH_RUNG),
-                new SetWristStateCommand(Arm.WristState.HIGH_RUNG)
+                new WaitCommand(500),
+                new SetArmStateCommand(Arm.ArmState.HIGH_RUNG_SECURE_POSITION)
+//                new WaitCommand(100)//ASTA NU ERA SI IN TELEOP, SA FACI COMANDA SEPARATA PT AUTO IN CAZ CA ITI TREBUIE
         );
     }
 }

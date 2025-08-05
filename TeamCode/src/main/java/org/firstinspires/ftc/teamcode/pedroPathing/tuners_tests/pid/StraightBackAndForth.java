@@ -35,7 +35,6 @@ import org.firstinspires.ftc.teamcode.pedroPathing.constants.LConstants;
 @Config
 @Autonomous (name = "Straight Back And Forth", group = "PIDF Tuning")
 public class StraightBackAndForth extends OpMode {
-
     private PoseUpdater poseUpdater;
     private DashboardPoseTracker dashboardPoseTracker;
     private Telemetry telemetryA;
@@ -56,11 +55,11 @@ public class StraightBackAndForth extends OpMode {
     @Override
     public void init() {
         Constants.setConstants(FConstants.class, LConstants.class);
-        follower = new Follower(hardwareMap);
+        poseUpdater = new PoseUpdater(hardwareMap, FConstants.class, LConstants.class);
 
-        poseUpdater = new PoseUpdater(hardwareMap);
         dashboardPoseTracker = new DashboardPoseTracker(poseUpdater);
 
+        follower = new Follower(hardwareMap, FConstants.class, LConstants.class);
 
         forwards = new Path(new BezierLine(new Point(0,0, Point.CARTESIAN), new Point(DISTANCE,0, Point.CARTESIAN)));
         forwards.setConstantHeadingInterpolation(0);
@@ -85,8 +84,10 @@ public class StraightBackAndForth extends OpMode {
      */
     @Override
     public void loop() {
+
         poseUpdater.update();
         dashboardPoseTracker.update();
+
         follower.update();
         if (!follower.isBusy()) {
             if (forward) {
@@ -102,15 +103,16 @@ public class StraightBackAndForth extends OpMode {
         follower.telemetryDebug(telemetryA);
 
 
-
-        telemetryA.addData("x", poseUpdater.getPose().getX());
-        telemetryA.addData("y", poseUpdater.getPose().getY());
-        telemetryA.addData("heading", poseUpdater.getPose().getHeading());
-        telemetryA.addData("total heading", poseUpdater.getTotalHeading());
-        telemetryA.update();
+//        telemetryA.addData("x", poseUpdater.getPose().getX());
+//        telemetryA.addData("y", poseUpdater.getPose().getY());
+//        telemetryA.addData("heading", poseUpdater.getPose().getHeading());
+//        telemetryA.addData("total heading", poseUpdater.getTotalHeading());
+//        telemetryA.update();
+//
 
         Drawing.drawPoseHistory(dashboardPoseTracker, "#4CAF50");
         Drawing.drawRobot(poseUpdater.getPose(), "#4CAF50");
         Drawing.sendPacket();
+
     }
 }

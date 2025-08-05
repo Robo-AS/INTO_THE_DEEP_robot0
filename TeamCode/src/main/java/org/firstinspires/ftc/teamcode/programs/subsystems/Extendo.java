@@ -26,52 +26,98 @@ public class Extendo extends SubsystemBase {
     public enum ExtendoState{
         EXTENDING_MINIMUM,
         RETRACTING,
+        MAXIMUM,
+        HANG,
+
         EXTENDING_MINIMUM_AUTO,
-        TAKE_SAMPLE_AUTO,
-        TAKE_SAMPLE_AUTO_NEAR_WALL,
-        TAKE_SAMPLE_SPECIMEN,
+
+        TAKE_SAMPLE_AUTO_BASKET_GRAB_1,
+        TAKE_SAMPLE_AUTO_BASKET_GRAB_2,
+        TAKE_SAMPLE_AUTO_BASKET_GRAB_3,
+        STABILIZER_AUTO_BASKET,
+        RETRACT_TAKE_SAMPLE_BASKET_AUTO_GRAB_1,
+        RETRACT_TAKE_SAMPLE_BASKET_AUTO_GRAB_2,
+        RETRACT_TAKE_SAMPLE_BASKET_AUTO_GRAB_3,
+        GO_AGAIN_SAMPLE_BASKET_AUTO_GRAB,
+
+
+        LIMELIGHT_POSE,
+        LIMELIGHT_RETRACT_POSE,
+        LIMELIGHT_TAKE_POSE,
+        LIMELIGHT_TAKE_POSE_AFTER_THROWING,
+
+        TAKE_SAMPLE_SPECIMEN_AUTO_GRAB_1,
+        TAKE_SAMPLE_SPECIMEN_AUTO_GRAB_2,
+        TAKE_SAMPLE_SPECIMEN_AUTO_GRAB_3,
+        RETRACT_TAKE_SAMPLE_SPECIMEN_AUTO_GRAB_1,
+        RETRACT_TAKE_SAMPLE_SPECIMEN_AUTO_GRAB_2,
+        RETRACT_TAKE_SAMPLE_SPECIMEN_AUTO_GRAB_3,
+        GO_AGAIN_SAMPLE_SPECIMEN_AUTO_GRAB_1,
+        GO_AGAIN_SAMPLE_SPECIMEN_AUTO_GRAB_2,
+        GO_AGAIN_SAMPLE_SPECIMEN_AUTO_GRAB_3,
+
         TAKE_SPECIMEN_AUTO,
         RETRACT_AUTO_FAIL_SAFE,
-        HANG,
-        TAKE_SAMPLE_SUBMERSIBLE_1,
-        TAKE_SAMPLE_SUBMERSIBLE_2,
-        MAXIMUM,
-        NOTHING
+        EXTEND_HUMAN_PLAYER,
+        EXTEND_SPECIMEN_EXIT
+
     }
 
-    public ExtendoState extendoState = ExtendoState.NOTHING;
-    public int EXTENDING_MINIMUM = 400;
-    public int RETRACTING = -5;
-    public int EXTENDING_MINIMUM_AUTO = 400;
-    public int TAKE_SAMPLE_AUTO = 730;
-    public int TAKE_SAMPLE_AUTO_NEAR_WALL = 1160;
+    public ExtendoState extendoState = ExtendoState.RETRACTING;
+    public static int EXTENDING_MINIMUM = 330;
+    public static int RETRACTING = -15;
+    public static int HANG = 800;
+    public int MAXIMUM = 1150;
 
-    public int TAKE_SAMPLE_SPECIMEN = 1160;
+    public int EXTENDING_MINIMUM_AUTO = 500;
+    public int TAKE_SAMPLE_AUTO_BASKET_GRAB_1 = 900;
+    public int TAKE_SAMPLE_AUTO_BASKET_GRAB_2 = 860;
+    public int TAKE_SAMPLE_AUTO_BASKET_GRAB_3 = 870;
+    public int STABILIZER_AUTO_BASKET = 500;
+    public int RETRACT_TAKE_SAMPLE_BASKET_AUTO_GRAB_1 = 800;
+    public int RETRACT_TAKE_SAMPLE_BASKET_AUTO_GRAB_2 = 760;
+    public int RETRACT_TAKE_SAMPLE_BASKET_AUTO_GRAB_3 = 770;
+    public int GO_AGAIN_SAMPLE_BASKET_AUTO_GRAB = 1000;
+
+
+    public int TAKE_SAMPLE_SPECIMEN_AUTO_GRAB_1 = 350;
+    public int TAKE_SAMPLE_SPECIMEN_AUTO_GRAB_2 = 570;
+    public int TAKE_SAMPLE_SPECIMEN_AUTO_GRAB_3 = 550;
+    public int RETRACT_TAKE_SAMPLE_SPECIMEN_AUTO_GRAB_1 = 250;
+    public int RETRACT_TAKE_SAMPLE_SPECIMEN_AUTO_GRAB_2 = 470;
+    public int RETRACT_TAKE_SAMPLE_SPECIMEN_AUTO_GRAB_3 = 450;
+    public int GO_AGAIN_SAMPLE_SPECIMEN_AUTO_GRAB_1 = 550;
+    public int GO_AGAIN_TAKE_SAMPLE_SPECIMEN_AUTO_GRAB_2 = 770;
+    public int GO_AGAIN_TAKE_SAMPLE_SPECIMEN_AUTO_GRAB_3 = 650;
+
+
+
     public int TAKE_SPECIMEN_AUTO = 730;
     public int RETRACT_AUTO_FAIL_SAFE = 500;
-    public int HANG = 950;
-    public int TAKE_SAMPLE_SUBMERSIBLE_1 = 900;
-    public int TAKE_SAMPLE_SUBMERSIBLE_2 = 900;
-    public int MAXIMUM = 1160;
+
+    public int EXTEND_HUMAN_PLAYER = 630;
+    public int EXTEND_SPECIMEN_EXIT = 150;
+
+
+
 
 
     private PIDController extendo_pid;
-    public static double p_extendo = 0.007, i_extendo = 0.11, d_extendo = 0.00006;
+    public static double p_extendo = 0.01, i_extendo = 0.009, d_extendo = 0.00033;
 
-    public static int lastEncoderPos;
-    public int targetPosition = 0;
+    public static int targetPosition = 0;
     public int currentPosition;
-    public static int minPosition = 400, maxPosition = 1160;//550, 1600
+    public int minPosition = 330, maxPosition = 1150;
 
 //    public static double joystickConstant = 30; //15, 50
-    public static double exponentialJoystickCoef;
-    public static double contantTerm = 0.6, liniarCoefTerm = 0.7;
+    public double exponentialJoystickCoef;
+    public double contantTerm = 0.6, liniarCoefTerm = 0.7;
     private double joystickConstant;
 
     MotionProfile profile;
-    public static int previousTarget = 0;
-    public static double maxVelocity = 1000000, maxAcceleration = 10000;
-    public static double maxVelocitySubmersible = 1000, maxAccelerationSubmersible = 10000;
+    public int previousTarget = 0;
+    public static double maxVelocity = 1000000, maxAcceleration = 35000;
+    public double maxVelocitySubmersible = 1000, maxAccelerationSubmersible = 10000;
 
     public Extendo(){
         extendo_pid = new PIDController(p_extendo, i_extendo, d_extendo);
@@ -82,14 +128,15 @@ public class Extendo extends SubsystemBase {
         if (instance == null) {
             instance = new Extendo();
         }
+
         return instance;
     }
 
     public void initializeHardware(final HardwareMap hardwareMap){
         extendoMotor = new CachingDcMotorEx(hardwareMap.get(DcMotorEx.class, "extendoMotor"));
         extendoMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
-        extendoMotor.setDirection(DcMotorSimple.Direction.REVERSE);
-        //extendoMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        extendoMotor.setDirection(DcMotorSimple.Direction.FORWARD);
+//        extendoMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         extendoMotor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
     }
 
@@ -116,14 +163,11 @@ public class Extendo extends SubsystemBase {
         );
 
         time.reset();
-
-
     }
 
 
     public void loop(double joystickYCoord){
         currentPosition = extendoMotor.getCurrentPosition();
-        lastEncoderPos = currentPosition;
         if(targetPosition != previousTarget){
             profile = MotionProfileGenerator.generateSimpleMotionProfile(
                     new MotionState(previousTarget, 0),
@@ -140,8 +184,8 @@ public class Extendo extends SubsystemBase {
         MotionState targetState = profile == null ? new MotionState(0, 0) : profile.get(time.seconds());
         double targetMotionProfile = targetState.getX();
 
-        double power = extendo_pid.calculate(currentPosition, targetMotionProfile);
         extendo_pid.setPID(p_extendo, i_extendo, d_extendo);
+        double power = extendo_pid.calculate(currentPosition, targetMotionProfile);
         extendoMotor.setPower(power);
 
         if(extendoState == ExtendoState.EXTENDING_MINIMUM)
@@ -164,15 +208,32 @@ public class Extendo extends SubsystemBase {
             case EXTENDING_MINIMUM_AUTO:
                 targetPosition = EXTENDING_MINIMUM_AUTO;
                 break;
-            case TAKE_SAMPLE_AUTO:
-                targetPosition = TAKE_SAMPLE_AUTO;
+            case TAKE_SAMPLE_AUTO_BASKET_GRAB_1:
+                targetPosition = TAKE_SAMPLE_AUTO_BASKET_GRAB_1;
                 break;
-            case TAKE_SAMPLE_AUTO_NEAR_WALL:
-                targetPosition = TAKE_SAMPLE_AUTO_NEAR_WALL;
+            case TAKE_SAMPLE_AUTO_BASKET_GRAB_2:
+                targetPosition = TAKE_SAMPLE_AUTO_BASKET_GRAB_2;
                 break;
-            case TAKE_SAMPLE_SPECIMEN:
-                targetPosition = TAKE_SAMPLE_SPECIMEN;
+            case TAKE_SAMPLE_AUTO_BASKET_GRAB_3:
+                targetPosition = TAKE_SAMPLE_AUTO_BASKET_GRAB_3;
                 break;
+
+            case RETRACT_TAKE_SAMPLE_BASKET_AUTO_GRAB_1:
+                targetPosition = RETRACT_TAKE_SAMPLE_BASKET_AUTO_GRAB_1;
+                break;
+            case RETRACT_TAKE_SAMPLE_BASKET_AUTO_GRAB_2:
+                targetPosition = RETRACT_TAKE_SAMPLE_BASKET_AUTO_GRAB_2;
+                break;
+            case RETRACT_TAKE_SAMPLE_BASKET_AUTO_GRAB_3:
+                targetPosition = RETRACT_TAKE_SAMPLE_BASKET_AUTO_GRAB_3;
+                break;
+            case GO_AGAIN_SAMPLE_BASKET_AUTO_GRAB:
+                targetPosition = GO_AGAIN_SAMPLE_BASKET_AUTO_GRAB;
+                break;
+
+
+
+
             case TAKE_SPECIMEN_AUTO:
                 targetPosition = TAKE_SPECIMEN_AUTO;
                 break;
@@ -182,14 +243,58 @@ public class Extendo extends SubsystemBase {
             case HANG:
                 targetPosition = HANG;
                 break;
-            case TAKE_SAMPLE_SUBMERSIBLE_1:
-                targetPosition = TAKE_SAMPLE_SUBMERSIBLE_1;
+//            case MAXIMUM:
+//                targetPosition = MAXIMUM;
+//                break;
+            case LIMELIGHT_POSE:
+                targetPosition = Math.min(Globals.extendoDistance, MAXIMUM);
                 break;
-            case TAKE_SAMPLE_SUBMERSIBLE_2:
-                targetPosition = TAKE_SAMPLE_SUBMERSIBLE_2;
+            case LIMELIGHT_RETRACT_POSE:
+                targetPosition = Globals.extendoDistance - 200;
                 break;
-            case MAXIMUM:
-                targetPosition = MAXIMUM;
+            case LIMELIGHT_TAKE_POSE:
+                targetPosition = Math.min(Globals.extendoDistance + 200, MAXIMUM);
+                break;
+            case LIMELIGHT_TAKE_POSE_AFTER_THROWING:
+                targetPosition = Math.min(currentPosition + 200, MAXIMUM);
+                break;
+            case STABILIZER_AUTO_BASKET:
+                targetPosition = STABILIZER_AUTO_BASKET;
+                break;
+
+
+            case TAKE_SAMPLE_SPECIMEN_AUTO_GRAB_1:
+                targetPosition = TAKE_SAMPLE_SPECIMEN_AUTO_GRAB_1;
+                break;
+            case TAKE_SAMPLE_SPECIMEN_AUTO_GRAB_2:
+                targetPosition = TAKE_SAMPLE_SPECIMEN_AUTO_GRAB_2;
+                break;
+            case TAKE_SAMPLE_SPECIMEN_AUTO_GRAB_3:
+                targetPosition = TAKE_SAMPLE_SPECIMEN_AUTO_GRAB_3;
+                break;
+            case RETRACT_TAKE_SAMPLE_SPECIMEN_AUTO_GRAB_1:
+                targetPosition = RETRACT_TAKE_SAMPLE_SPECIMEN_AUTO_GRAB_1;
+                break;
+            case RETRACT_TAKE_SAMPLE_SPECIMEN_AUTO_GRAB_2:
+                targetPosition = RETRACT_TAKE_SAMPLE_SPECIMEN_AUTO_GRAB_2;
+                break;
+            case RETRACT_TAKE_SAMPLE_SPECIMEN_AUTO_GRAB_3:
+                targetPosition = RETRACT_TAKE_SAMPLE_SPECIMEN_AUTO_GRAB_3;
+                break;
+            case GO_AGAIN_SAMPLE_SPECIMEN_AUTO_GRAB_1:
+                targetPosition = GO_AGAIN_SAMPLE_SPECIMEN_AUTO_GRAB_1;
+                break;
+            case GO_AGAIN_SAMPLE_SPECIMEN_AUTO_GRAB_2:
+                targetPosition = GO_AGAIN_TAKE_SAMPLE_SPECIMEN_AUTO_GRAB_2;
+                break;
+            case GO_AGAIN_SAMPLE_SPECIMEN_AUTO_GRAB_3:
+                targetPosition = GO_AGAIN_TAKE_SAMPLE_SPECIMEN_AUTO_GRAB_3;
+                break;
+            case EXTEND_HUMAN_PLAYER:
+                targetPosition = EXTEND_HUMAN_PLAYER;
+                break;
+            case EXTEND_SPECIMEN_EXIT:
+                targetPosition = EXTEND_SPECIMEN_EXIT;
                 break;
 
         }
@@ -204,8 +309,7 @@ public class Extendo extends SubsystemBase {
 
     public void updateTargetPositionHang(double joystickYCoord){
         exponentialJoystickCoef = (Math.pow(joystickYCoord, 3) + liniarCoefTerm * joystickYCoord) * contantTerm;
-
-        targetPosition += (int)(exponentialJoystickCoef * joystickConstant);
+        targetPosition += (int)(exponentialJoystickCoef * Globals.EXTENDO_JOYSTICK_CONSTANT_HANG);
         targetPosition = Math.max(RETRACTING, Math.min(HANG, targetPosition));
     }
 
@@ -221,31 +325,61 @@ public class Extendo extends SubsystemBase {
 
 
     public boolean canOuttakeSample(){
+        return currentPosition <= 200;
+    }
+
+
+    public boolean canOuttakeSpecimen_AUTO(){
         return currentPosition <= 300;
+    }
+
+    public boolean canPutIntakeDown(){
+        return currentPosition >= 100;
+    }
+
+    public boolean canPutIntakeDown_AUTO_SPECIMENS(){
+        return currentPosition >= 250;
+    }
+
+    public boolean limelightPoseFinished(){
+        if(targetPosition == MAXIMUM){
+            return currentPosition >= MAXIMUM - 20;
+        }
+        return currentPosition >= (Globals.extendoDistance - 20);
+    }
+
+    public boolean limelightRetractPoseFinished(){
+        return  currentPosition <= (Globals.extendoDistance - 200 + 20);
+    }
+
+    public boolean limelightTakePoseFinished(){
+        if(targetPosition == MAXIMUM){
+            return  currentPosition >= MAXIMUM - 20;
+        }
+        return currentPosition >= (Globals.extendoDistance + 200 - 20);
+    }
+
+    public boolean limelightTakePoseAfterThrowingFinished(){
+        if(targetPosition == MAXIMUM){
+            return  currentPosition >= MAXIMUM - 20;
+        }
+        return currentPosition >= targetPosition - 20;
+    }
+
+    public boolean retractFinished(){
+        return currentPosition <= 20;
     }
 
 
     public void loopAuto(){
         currentPosition = extendoMotor.getCurrentPosition();
-
-
         if(targetPosition != previousTarget){
-            if(extendoState == ExtendoState.TAKE_SAMPLE_SUBMERSIBLE_1 || extendoState == ExtendoState.TAKE_SAMPLE_SUBMERSIBLE_2){
-                profile = MotionProfileGenerator.generateSimpleMotionProfile(
-                        new MotionState(previousTarget, 0),
-                        new MotionState(targetPosition, 0),
-                        maxVelocitySubmersible,
-                        maxAccelerationSubmersible
-                );
-            }
-            else{
                 profile = MotionProfileGenerator.generateSimpleMotionProfile(
                         new MotionState(previousTarget, 0),
                         new MotionState(targetPosition, 0),
                         maxVelocity,
                         maxAcceleration
                 );
-            }
 
 
             time.reset();
@@ -256,14 +390,21 @@ public class Extendo extends SubsystemBase {
         MotionState targetState = profile == null ? new MotionState(0, 0) : profile.get(time.seconds());
         double targetMotionProfile = targetState.getX();
 
-        double power = extendo_pid.calculate(currentPosition, targetMotionProfile);
         extendo_pid.setPID(p_extendo, i_extendo, d_extendo);
+        double power = extendo_pid.calculate(currentPosition, targetMotionProfile);
         extendoMotor.setPower(power);
     }
 
-    public static int getLastEncoderPos(){
-        return lastEncoderPos;
+
+
+    public void testPID(){
+        currentPosition = extendoMotor.getCurrentPosition();
+        extendo_pid.setPID(p_extendo, i_extendo, d_extendo);
+        double power = extendo_pid.calculate(currentPosition, targetPosition);
+        extendoMotor.setPower(power);
     }
+
+
 
 
 }
