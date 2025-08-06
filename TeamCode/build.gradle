@@ -45,7 +45,7 @@ repositories {
 
 dependencies {
     implementation project(':FtcRobotController')
-    implementation 'org.ftclib.ftclib:core:2.1.1' // core
+//    implementation 'org.ftclib.ftclib:core:2.1.1' // core
     implementation 'dev.frozenmilk.dairy:CachingHardware:1.0.0'
 //    implementation "com.bylazar:ftcontrol:0.6.5"
 //    implementation 'com.squareup.okhttp3:okhttp:4.10.0'
@@ -58,6 +58,8 @@ dependencies {
 //    implementation "page.j5155.roadrunner:ftc-otos:0.1.2+0.1.14"
 
 
+    implementation "org.solverslib:core:0.3.1" // add SolversLib core
+    implementation "org.solverslib:pedroPathing:0.3.1" // pedroPathing
 }
 
 //INSTALLED FTCLIB WITHOUT VISION, IF YOU'LL NEED VISION GO BACK THE THE INSTALLATION AND ADD THE SPECIFICATIONS FOR VISION

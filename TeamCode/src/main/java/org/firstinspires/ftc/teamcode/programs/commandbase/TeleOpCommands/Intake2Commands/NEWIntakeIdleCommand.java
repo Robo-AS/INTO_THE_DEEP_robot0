@@ -1,6 +1,6 @@
 package org.firstinspires.ftc.teamcode.programs.commandbase.TeleOpCommands.Intake2Commands;
 
-import com.arcrobotics.ftclib.command.ParallelCommandGroup;
+import com.seattlesolvers.solverslib.command.ParallelCommandGroup;
 
 import org.firstinspires.ftc.teamcode.programs.commandbase.ExtendoCommands.SetJoystickConstantCommand;
 import org.firstinspires.ftc.teamcode.programs.commandbase.IntakeCommand.SetIntakeAngleCommand;

@@ -1,7 +1,7 @@
 package org.firstinspires.ftc.teamcode.tests.IntakeTests;
 
 import com.acmerobotics.dashboard.config.Config;
-import com.arcrobotics.ftclib.command.CommandOpMode;
+import com.seattlesolvers.solverslib.command.CommandOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
