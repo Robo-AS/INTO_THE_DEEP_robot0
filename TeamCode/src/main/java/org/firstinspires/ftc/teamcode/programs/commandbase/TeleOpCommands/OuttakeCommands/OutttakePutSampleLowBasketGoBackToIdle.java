@@ -1,5 +1,6 @@
 package org.firstinspires.ftc.teamcode.programs.commandbase.TeleOpCommands.OuttakeCommands;
 
+import com.arcrobotics.ftclib.command.InstantCommand;
 import com.arcrobotics.ftclib.command.SequentialCommandGroup;
 import com.arcrobotics.ftclib.command.WaitCommand;
 
@@ -16,8 +17,8 @@ public class OutttakePutSampleLowBasketGoBackToIdle extends SequentialCommandGro
                 new SetClawStateCommand(Arm.ClawState.OPEN),
                 new WaitCommand(200),
                 new SetArmStateCommand(Arm.ArmState.INIT),
-                new WaitCommand(200),
-                new SetClawStateCommand(Arm.ClawState.OPEN),
+                new WaitCommand(100),
+                new InstantCommand(() -> Arm.getInstance().stopPinpoint()),
                 new SetWristStateCommand(Arm.WristState.INIT),
                 new SetLiftStateCommand(Lift.LiftState.IDLE)
 

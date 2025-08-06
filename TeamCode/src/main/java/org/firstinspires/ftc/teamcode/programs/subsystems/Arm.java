@@ -73,6 +73,7 @@ public class Arm extends SubsystemBase {
     public double minAngleSPECIMEN = -10, maxAngleSPECIMEN = 10;
     public boolean pinpointDisabled = false;
 
+    public boolean pinpointOn = false;
 
 
 
@@ -110,6 +111,7 @@ public class Arm extends SubsystemBase {
         wristServo.setPosition(INIT_wristServo);
         //pinpoint.resetPosAndIMU();
         sideAngle = 0;
+        pinpointOn = false;
     }
 
 
@@ -147,13 +149,14 @@ public class Arm extends SubsystemBase {
 
 
     public void loopTeleOp(){
-        if((armState == ArmState.HIGH_RUNG || armState == ArmState.HIGH_BASKET) && !pinpointDisabled) {
+        if(pinpointOn && !pinpointDisabled) {
             double currentHeading = getPinpointHeading();
             double referenceHeading = (armState == ArmState.HIGH_RUNG) ? 0 : 135;
             sideAngle = currentHeading - referenceHeading + 180;
             sideAngle = ((sideAngle + 180) % 360 + 360) % 360 - 180;
         }
-        else sideAngle = 0;
+        else if(!pinpointOn && !pinpointDisabled)
+            sideAngle = 0;
 
 
         if(armState == ArmState.HIGH_RUNG)
@@ -296,6 +299,9 @@ public class Arm extends SubsystemBase {
     public void disablePinpoint(){
         pinpointDisabled = true;
     }
+
+    public void startPinpoint(){pinpointOn = true;}
+    public void stopPinpoint(){pinpointOn = false;}
 
 
 }

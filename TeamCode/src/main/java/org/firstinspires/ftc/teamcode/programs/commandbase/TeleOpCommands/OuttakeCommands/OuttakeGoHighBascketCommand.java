@@ -1,5 +1,6 @@
 package org.firstinspires.ftc.teamcode.programs.commandbase.TeleOpCommands.OuttakeCommands;
 
+import com.arcrobotics.ftclib.command.InstantCommand;
 import com.arcrobotics.ftclib.command.SequentialCommandGroup;
 import com.arcrobotics.ftclib.command.WaitUntilCommand;
 
@@ -14,6 +15,7 @@ public class OuttakeGoHighBascketCommand extends SequentialCommandGroup {
         super(
             new SetLiftStateCommand(Lift.LiftState.HIGH_BASKET),
             new WaitUntilCommand(Lift.getInstance()::canRotateArmHighBasket),
+            new InstantCommand(() -> Arm.getInstance().startPinpoint()),
             new SetWristStateCommand(Arm.WristState.HIGH_BASKET),
             new SetArmStateCommand(Arm.ArmState.HIGH_BASKET)
         );
