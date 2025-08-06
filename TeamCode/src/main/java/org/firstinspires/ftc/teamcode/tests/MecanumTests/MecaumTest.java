@@ -1,7 +1,7 @@
 package org.firstinspires.ftc.teamcode.tests.MecanumTests;
 
-import com.arcrobotics.ftclib.command.CommandOpMode;
-import com.arcrobotics.ftclib.gamepad.GamepadEx;
+import com.seattlesolvers.solverslib.command.CommandOpMode;
+import com.seattlesolvers.solverslib.gamepad.GamepadEx;
 
 import org.firstinspires.ftc.teamcode.programs.subsystems.MecanumDriveTrain;
 import org.firstinspires.ftc.teamcode.utils.geometry.PoseRR;
