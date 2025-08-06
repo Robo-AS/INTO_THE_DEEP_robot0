@@ -1,6 +1,6 @@
 package org.firstinspires.ftc.teamcode.programs.commandbase;
 
-import com.seattlesolvers.solverslib.command.InstantCommand;
+import com.arcrobotics.ftclib.command.InstantCommand;
 
 public class DoesNothingCommand extends InstantCommand {
     public DoesNothingCommand() {

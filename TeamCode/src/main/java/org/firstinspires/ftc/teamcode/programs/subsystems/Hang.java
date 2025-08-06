@@ -1,7 +1,7 @@
 package org.firstinspires.ftc.teamcode.programs.subsystems;
 
 import com.acmerobotics.dashboard.config.Config;
-import com.seattlesolvers.solverslib.command.SubsystemBase;
+import com.arcrobotics.ftclib.command.SubsystemBase;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.Servo;
 import dev.frozenmilk.dairy.cachinghardware.CachingServo;

@@ -1,7 +1,7 @@
 package org.firstinspires.ftc.teamcode.programs.commandbase.AutoCommands.BasketAuto;
 
-import com.seattlesolvers.solverslib.command.SequentialCommandGroup;
-import com.seattlesolvers.solverslib.command.WaitUntilCommand;
+import com.arcrobotics.ftclib.command.SequentialCommandGroup;
+import com.arcrobotics.ftclib.command.WaitUntilCommand;
 
 import org.firstinspires.ftc.teamcode.programs.commandbase.ArmCommands.SetArmStateCommand;
 import org.firstinspires.ftc.teamcode.programs.commandbase.ArmCommands.SetWristStateCommand;

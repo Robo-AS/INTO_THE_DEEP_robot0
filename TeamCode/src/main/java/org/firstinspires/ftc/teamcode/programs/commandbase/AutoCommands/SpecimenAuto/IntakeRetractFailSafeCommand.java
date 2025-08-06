@@ -1,6 +1,6 @@
 package org.firstinspires.ftc.teamcode.programs.commandbase.AutoCommands.SpecimenAuto;
 
-import com.seattlesolvers.solverslib.command.SequentialCommandGroup;
+import com.arcrobotics.ftclib.command.SequentialCommandGroup;
 import org.firstinspires.ftc.teamcode.programs.commandbase.ExtendoCommands.SetExtendoStateCommand;
 import org.firstinspires.ftc.teamcode.programs.commandbase.IntakeCommand.SetIntakeStateCommand;
 import org.firstinspires.ftc.teamcode.programs.subsystems.Extendo;

@@ -1,7 +1,7 @@
 //package org.firstinspires.ftc.teamcode.programs.opmodes.auto;
 //
-//import com.seattlesolvers.solverslib.command.CommandScheduler;
-//import com.seattlesolvers.solverslib.command.SequentialCommandGroup;
+//import com.arcrobotics.ftclib.command.CommandScheduler;
+//import com.arcrobotics.ftclib.command.SequentialCommandGroup;
 //import com.pedropathing.commands.FollowPath;
 //import com.pedropathing.follower.Follower;
 //import com.pedropathing.localization.Pose;

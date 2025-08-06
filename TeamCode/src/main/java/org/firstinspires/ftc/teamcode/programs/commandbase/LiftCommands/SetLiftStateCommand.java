@@ -1,6 +1,6 @@
 package org.firstinspires.ftc.teamcode.programs.commandbase.LiftCommands;
 
-import com.seattlesolvers.solverslib.command.InstantCommand;
+import com.arcrobotics.ftclib.command.InstantCommand;
 
 import org.firstinspires.ftc.teamcode.programs.subsystems.Lift;
 

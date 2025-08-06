@@ -1,7 +1,7 @@
 package org.firstinspires.ftc.teamcode.programs.commandbase.TeleOpCommands.OuttakeCommands;
 
-import com.seattlesolvers.solverslib.command.SequentialCommandGroup;
-import com.seattlesolvers.solverslib.command.WaitCommand;
+import com.arcrobotics.ftclib.command.SequentialCommandGroup;
+import com.arcrobotics.ftclib.command.WaitCommand;
 
 import org.firstinspires.ftc.teamcode.programs.commandbase.ArmCommands.SetArmStateCommand;
 import org.firstinspires.ftc.teamcode.programs.commandbase.ArmCommands.SetClawStateCommand;
