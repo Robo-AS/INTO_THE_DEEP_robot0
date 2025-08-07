@@ -69,7 +69,7 @@ public class Arm extends SubsystemBase {
     public static double maxVelocity = 100000, maxAcceleration = 4000;
 
     double sideAngle = 0;
-    public double minAngleBASKET = -30, maxAngleBASKET = 30;
+    public double minAngleBASKET = -40, maxAngleBASKET = 40;
     public double minAngleSPECIMEN = -10, maxAngleSPECIMEN = 10;
     public boolean pinpointDisabled = false;
 
@@ -151,18 +151,28 @@ public class Arm extends SubsystemBase {
     public void loopTeleOp(){
         if(pinpointOn && !pinpointDisabled) {
             double currentHeading = getPinpointHeading();
-            double referenceHeading = (armState == ArmState.HIGH_RUNG) ? 0 : 135;
+            double referenceHeading = (Lift.getInstance().liftState == Lift.LiftState.HIGH_RUNG) ? 0 : 135;
+
+
             sideAngle = currentHeading - referenceHeading + 180;
             sideAngle = ((sideAngle + 180) % 360 + 360) % 360 - 180;
+
+
+            if(Lift.getInstance().liftState == Lift.LiftState.HIGH_RUNG){
+                sideAngle = Math.max(minAngleSPECIMEN, Math.min(maxAngleSPECIMEN, sideAngle));
+            }
+            else if(Lift.getInstance().liftState == Lift.LiftState.HIGH_BASKET)
+                sideAngle = Math.max(minAngleBASKET, Math.min(maxAngleBASKET, sideAngle));
+
         }
         else if(!pinpointOn && !pinpointDisabled)
             sideAngle = 0;
 
 
-        if(armState == ArmState.HIGH_RUNG)
-            sideAngle = Math.max(minAngleSPECIMEN, Math.min(maxAngleSPECIMEN, sideAngle));
-        else if(armState == ArmState.HIGH_BASKET)
-            sideAngle = Math.max(minAngleBASKET, Math.min(maxAngleBASKET, sideAngle));
+//        if(Lift.getInstance().liftState == Lift.LiftState.HIGH_RUNG)
+//            sideAngle = Math.max(minAngleSPECIMEN, Math.min(maxAngleSPECIMEN, sideAngle));
+//        else if(Lift.getInstance().liftState == Lift.LiftState.HIGH_BASKET)
+//            sideAngle = Math.max(minAngleBASKET, Math.min(maxAngleBASKET, sideAngle));
 
         if(targetPosition != previousTarget){
             profile = MotionProfileGenerator.generateSimpleMotionProfile(
@@ -215,7 +225,6 @@ public class Arm extends SubsystemBase {
             case OPEN:
                 clawServo.setPosition(OPEN_clawServo);
                 break;
-
             case CLOSED:
                 clawServo.setPosition(CLOSED_clawServo);
                 break;

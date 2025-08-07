@@ -17,7 +17,6 @@ import com.pedropathing.pathgen.Point;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.util.ElapsedTime;
-import com.arcrobotics.ftclib.pedroCommand.FollowPathCommand;
 
 import org.firstinspires.ftc.teamcode.pedroPathing.constants.FConstants;
 import org.firstinspires.ftc.teamcode.pedroPathing.constants.LConstants;
@@ -285,7 +284,7 @@ public class SpecimenAuto extends LinearOpMode {
         CommandScheduler.getInstance().schedule(
                 new SequentialCommandGroup(
                         new SetClawStateCommand(Arm.ClawState.OPEN),//don't ask
-                        new FollowPathCommand(follower, scorePreload, true, 1)
+                        new FollowPath(follower, scorePreload, true, 1)
                                 .alongWith(
                                         new SequentialCommandGroup(
                                                 new SetClawStateCommand(Arm.ClawState.CLOSED),
@@ -295,13 +294,13 @@ public class SpecimenAuto extends LinearOpMode {
                                         )
                                 ),
 
-                        new FollowPathCommand(follower, scorePreloadSMALL, true, 1),
+                        new FollowPath(follower, scorePreloadSMALL, true, 1),
 
                         new PutSpecimenCommand(),
                         new SetExtendoStateCommand(Extendo.ExtendoState.RETRACTING),//HERE
 
 
-                        new FollowPathCommand(follower, grab1, true, 1)
+                        new FollowPath(follower, grab1, true, 1)
                                 .alongWith(
                                         new SequentialCommandGroup(
                                                 new WaitCommand(200),
@@ -338,7 +337,7 @@ public class SpecimenAuto extends LinearOpMode {
 
 
 
-                        new FollowPathCommand(follower, bring1, true, 1)
+                        new FollowPath(follower, bring1, true, 1)
                                 .alongWith(
                                         new SequentialCommandGroup(
                                                 new WaitCommand(400),
@@ -353,7 +352,7 @@ public class SpecimenAuto extends LinearOpMode {
 
 
 
-                        new FollowPathCommand(follower, grab2, true, 1),
+                        new FollowPath(follower, grab2, true, 1),
                         new WaitCommand(150),  //stabilize pedro
                         new SetIntakeAngleCommand(Intake.IntakeAngle.DOWN),
                         new SetIntakeStateCommand(Intake.IntakeState.INTAKING),
@@ -389,7 +388,7 @@ public class SpecimenAuto extends LinearOpMode {
 
 
 
-                        new FollowPathCommand(follower, bring2, true, 1)
+                        new FollowPath(follower, bring2, true, 1)
                                 .alongWith(
                                         new SequentialCommandGroup(
                                                 new WaitCommand(450),
@@ -404,7 +403,7 @@ public class SpecimenAuto extends LinearOpMode {
                         new SetIntakeStateCommand(Intake.IntakeState.IDLE),
                         new SetExtendoStateCommand(Extendo.ExtendoState.EXTENDING_MINIMUM),
 
-                        new FollowPathCommand(follower, grab3, true, 1),
+                        new FollowPath(follower, grab3, true, 1),
                         new WaitCommand(150),   //stabilize pedro
                         new SetIntakeAngleCommand(Intake.IntakeAngle.DOWN),
                         new SetIntakeStateCommand(Intake.IntakeState.INTAKING),
@@ -430,7 +429,7 @@ public class SpecimenAuto extends LinearOpMode {
                         ),
 
 
-                        new FollowPathCommand(follower, bring3, true, 1)
+                        new FollowPath(follower, bring3, true, 1)
                                 .alongWith(
                                         new SequentialCommandGroup(
                                                 new SetExtendoStateCommand(Extendo.ExtendoState.TAKE_SAMPLE_SPECIMEN_AUTO_GRAB_2),
@@ -442,7 +441,7 @@ public class SpecimenAuto extends LinearOpMode {
                         new SetIntakeStateCommand(Intake.IntakeState.IDLE),
 
 
-                        new FollowPathCommand(follower, take1, true, 1)
+                        new FollowPath(follower, take1, true, 1)
                                 .alongWith(
                                         new SetExtendoStateCommand(Extendo.ExtendoState.EXTENDING_MINIMUM_AUTO)
                                 ),
@@ -516,7 +515,7 @@ public class SpecimenAuto extends LinearOpMode {
 
 ////////////////////////////////////////////////////////SCORE1////////////////////////////////////////////////////////////////////
 
-                        new FollowPathCommand(follower, score1, true, 1)
+                        new FollowPath(follower, score1, true, 1)
                                 .alongWith(
                                         new SequentialCommandGroup(
                                                 new IntakeRetractSPECIMENAutoCommand(),
@@ -543,7 +542,7 @@ public class SpecimenAuto extends LinearOpMode {
 //                        new WaitCommand(250),
                         new ConditionalCommand(
                                 new SequentialCommandGroup(
-                                        new FollowPathCommand(follower, score1SMALL, true, 1)
+                                        new FollowPath(follower, score1SMALL, true, 1)
                                                 .alongWith(
                                                         new SetIntakeStateCommand(Intake.IntakeState.SPITTING_HUMAN_PLAYER)
                                                 ),
@@ -556,7 +555,7 @@ public class SpecimenAuto extends LinearOpMode {
 
 
 
-                        new FollowPathCommand(follower, take2, true, 1)
+                        new FollowPath(follower, take2, true, 1)
                                 .alongWith(
                                         new SequentialCommandGroup(
                                                 new PutSpecimenCommand(),
@@ -632,7 +631,7 @@ public class SpecimenAuto extends LinearOpMode {
 
 ////////////////////////////////////////////////////////SCORE2////////////////////////////////////////////////////////////////////
 
-                        new FollowPathCommand(follower, score2, true, 1)
+                        new FollowPath(follower, score2, true, 1)
                                 .alongWith(
                                         new SequentialCommandGroup(
                                                 new IntakeRetractSPECIMENAutoCommand(),
@@ -657,7 +656,7 @@ public class SpecimenAuto extends LinearOpMode {
 //                        new WaitCommand(250),
                         new ConditionalCommand(
                                 new SequentialCommandGroup(
-                                        new FollowPathCommand(follower, score2SMALL, true, 1)
+                                        new FollowPath(follower, score2SMALL, true, 1)
                                                 .alongWith(
                                                         new SetIntakeStateCommand(Intake.IntakeState.SPITTING_HUMAN_PLAYER)
                                                 ),
@@ -669,7 +668,7 @@ public class SpecimenAuto extends LinearOpMode {
 
 
 
-                        new FollowPathCommand(follower, take3, true, 1)
+                        new FollowPath(follower, take3, true, 1)
                                 .alongWith(
                                         new SequentialCommandGroup(
                                                 new PutSpecimenCommand(),
@@ -742,7 +741,7 @@ public class SpecimenAuto extends LinearOpMode {
                         ),
 
 ////////////////////////////////////////////////////////SCORE3////////////////////////////////////////////////////////////////////
-                        new FollowPathCommand(follower, score3, true, 1)
+                        new FollowPath(follower, score3, true, 1)
                                 .alongWith(
                                         new SequentialCommandGroup(
                                                 new IntakeRetractSPECIMENAutoCommand(),
@@ -767,7 +766,7 @@ public class SpecimenAuto extends LinearOpMode {
 //                        new WaitCommand(250),
                         new ConditionalCommand(
                                 new SequentialCommandGroup(
-                                        new FollowPathCommand(follower, score3SMALL, true, 1)
+                                        new FollowPath(follower, score3SMALL, true, 1)
                                                 .alongWith(
                                                         new SetIntakeStateCommand(Intake.IntakeState.SPITTING_HUMAN_PLAYER)
                                                 ),
@@ -780,7 +779,7 @@ public class SpecimenAuto extends LinearOpMode {
 
 
 
-                        new FollowPathCommand(follower, take4, true, 1)
+                        new FollowPath(follower, take4, true, 1)
                                 .alongWith(
                                         new SequentialCommandGroup(
                                                 new PutSpecimenCommand(),
@@ -856,7 +855,7 @@ public class SpecimenAuto extends LinearOpMode {
 
 ////////////////////////////////////////////////////////SCORE4////////////////////////////////////////////////////////////////////
 
-                        new FollowPathCommand(follower, score4, true, 1)
+                        new FollowPath(follower, score4, true, 1)
                                 .alongWith(
                                         new SequentialCommandGroup(
                                                 new IntakeRetractSPECIMENAutoCommand(),
@@ -880,7 +879,7 @@ public class SpecimenAuto extends LinearOpMode {
 //                        new WaitCommand(250),
                         new ConditionalCommand(
                                 new SequentialCommandGroup(
-                                        new FollowPathCommand(follower, score4SMALL, true, 1)
+                                        new FollowPath(follower, score4SMALL, true, 1)
                                                 .alongWith(
                                                         new SetIntakeStateCommand(Intake.IntakeState.SPITTING_HUMAN_PLAYER)
                                                 ),
@@ -891,7 +890,7 @@ public class SpecimenAuto extends LinearOpMode {
                         ),
 
 
-                        new FollowPathCommand(follower, park, true, 1)
+                        new FollowPath(follower, park, true, 1)
                                 .alongWith(
                                         new SequentialCommandGroup(
                                                 new PutSpecimenCommand(),

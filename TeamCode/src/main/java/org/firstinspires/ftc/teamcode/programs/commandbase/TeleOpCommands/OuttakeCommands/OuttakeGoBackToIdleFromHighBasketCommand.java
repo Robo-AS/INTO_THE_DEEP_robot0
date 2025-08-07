@@ -14,11 +14,8 @@ import org.firstinspires.ftc.teamcode.programs.subsystems.Lift;
 public class OuttakeGoBackToIdleFromHighBasketCommand extends SequentialCommandGroup {
     public OuttakeGoBackToIdleFromHighBasketCommand(){
         super(
-
-                new SetClawStateCommand(Arm.ClawState.OPEN),
                 new SetArmStateCommand(Arm.ArmState.INIT),
-                new WaitCommand(100),
-                new InstantCommand(() -> Arm.getInstance().stopPinpoint()),
+                new SetClawStateCommand(Arm.ClawState.OPEN),
                 new SetWristStateCommand(Arm.WristState.INIT),
                 new WaitCommand(50),
                 new SetLiftStateCommand(Lift.LiftState.IDLE)

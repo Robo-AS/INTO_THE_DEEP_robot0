@@ -20,7 +20,7 @@ import com.pedropathing.pathgen.Point;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.util.ElapsedTime;
-import com.arcrobotics.ftclib.pedroCommand.FollowPathCommand;
+
 
 import org.firstinspires.ftc.teamcode.pedroPathing.constants.FConstants;
 import org.firstinspires.ftc.teamcode.pedroPathing.constants.LConstants;
@@ -232,7 +232,7 @@ public class NEW_BasketAutoSubmersibleBLUE_CU_UNGHI_BRAT_FAILSAFES extends Linea
         CommandScheduler.getInstance().schedule(
                 new SequentialCommandGroup(
                         new SetClawStateCommand(Arm.ClawState.OPEN), //don't ask
-                        new FollowPathCommand(follower, scorePreload, true, 1)
+                        new FollowPath(follower, scorePreload, true, 1)
                                 .alongWith(
                                         new SequentialCommandGroup(
                                                 new SetClawStateCommand(Arm.ClawState.CLOSED),
@@ -244,7 +244,7 @@ public class NEW_BasketAutoSubmersibleBLUE_CU_UNGHI_BRAT_FAILSAFES extends Linea
                                 ),
                         new InstantCommand(basketPaths::setScorePreloadCompleted),
 
-                        new FollowPathCommand(follower, grab1, true, 1)
+                        new FollowPath(follower, grab1, true, 1)
                                 .alongWith(
                                         new OuttakeGoBackToIdleFromHighBasketCommand(),
                                         new SequentialCommandGroup(
@@ -282,7 +282,7 @@ public class NEW_BasketAutoSubmersibleBLUE_CU_UNGHI_BRAT_FAILSAFES extends Linea
 
                         new ConditionalCommand(
                                 new SequentialCommandGroup(
-                                        new FollowPathCommand(follower, score1, true, 1)
+                                        new FollowPath(follower, score1, true, 1)
                                                 .alongWith(
                                                         new SequentialCommandGroup(
                                                                 new IntakeRetractBASKETAutoCommand(),
@@ -299,7 +299,7 @@ public class NEW_BasketAutoSubmersibleBLUE_CU_UNGHI_BRAT_FAILSAFES extends Linea
                         ),
 
 
-                        new FollowPathCommand(follower, grab2, true, 1)
+                        new FollowPath(follower, grab2, true, 1)
                                 .alongWith(
                                         new OuttakeGoBackToIdleFromHighBasketCommand(),
                                         new SequentialCommandGroup(
@@ -337,7 +337,7 @@ public class NEW_BasketAutoSubmersibleBLUE_CU_UNGHI_BRAT_FAILSAFES extends Linea
 
                         new ConditionalCommand(
                                 new SequentialCommandGroup(
-                                        new FollowPathCommand(follower, score2, true, 1)
+                                        new FollowPath(follower, score2, true, 1)
                                                 .alongWith(
                                                         new SequentialCommandGroup(
                                                                 new IntakeRetractBASKETAutoCommand(),
@@ -354,7 +354,7 @@ public class NEW_BasketAutoSubmersibleBLUE_CU_UNGHI_BRAT_FAILSAFES extends Linea
                         ),
 
 
-                        new FollowPathCommand(follower, grab3, true, 1)
+                        new FollowPath(follower, grab3, true, 1)
                                 .alongWith(
                                         new OuttakeGoBackToIdleFromHighBasketCommand(),
                                         new SequentialCommandGroup(
@@ -391,7 +391,7 @@ public class NEW_BasketAutoSubmersibleBLUE_CU_UNGHI_BRAT_FAILSAFES extends Linea
 
                         new ConditionalCommand(
                                 new SequentialCommandGroup(
-                                        new FollowPathCommand(follower, score3, true, 1)
+                                        new FollowPath(follower, score3, true, 1)
                                                 .alongWith(
                                                         new SequentialCommandGroup(
                                                                 new IntakeRetractBASKETAutoCommand(),
@@ -424,7 +424,7 @@ public class NEW_BasketAutoSubmersibleBLUE_CU_UNGHI_BRAT_FAILSAFES extends Linea
 
                         /////////////////////////////////SUBMERSIBLE 1/////////////////////////////////////////
 
-                        new FollowPathCommand(follower, submersible1, true, 1)
+                        new FollowPath(follower, submersible1, true, 1)
                                 .alongWith(
                                         new OuttakeGoBackToIdleFromHighBasketCommand()
                                 ),
@@ -550,7 +550,7 @@ public class NEW_BasketAutoSubmersibleBLUE_CU_UNGHI_BRAT_FAILSAFES extends Linea
                         ),
 
 
-                        new FollowPathCommand(follower, scoreSubmersible1, true, 1)
+                        new FollowPath(follower, scoreSubmersible1, true, 1)
                                 .alongWith(
                                         new SequentialCommandGroup(
                                                 new IntakeRetractBASKETAutoSUBMERSIBLECommand(),
@@ -563,7 +563,7 @@ public class NEW_BasketAutoSubmersibleBLUE_CU_UNGHI_BRAT_FAILSAFES extends Linea
 
 
                         /////////////////////////////////SUBMERSIBLE 2/////////////////////////////////////////
-                        new FollowPathCommand(follower, submersible2, true,  1)
+                        new FollowPath(follower, submersible2, true,  1)
                                 .alongWith(
                                         new SequentialCommandGroup(
                                                 new OuttakeGoBackToIdleFromHighBasketCommand(),
@@ -710,7 +710,7 @@ public class NEW_BasketAutoSubmersibleBLUE_CU_UNGHI_BRAT_FAILSAFES extends Linea
                         ),
 
 
-                        new FollowPathCommand(follower, scoreSubmersible2, true, 1)
+                        new FollowPath(follower, scoreSubmersible2, true, 1)
                                 .alongWith(
                                         new SequentialCommandGroup(
                                                 new IntakeRetractBASKETAutoSUBMERSIBLECommand(),
@@ -723,7 +723,7 @@ public class NEW_BasketAutoSubmersibleBLUE_CU_UNGHI_BRAT_FAILSAFES extends Linea
 
 
                         ///////////////////////////////////SUBMERSIBLE 3/////////////////////////////////////////
-                        new FollowPathCommand(follower, submersible3, true,  1)
+                        new FollowPath(follower, submersible3, true,  1)
                                 .alongWith(
                                         new SequentialCommandGroup(
                                                 new OuttakeGoBackToIdleFromHighBasketCommand(),
@@ -867,7 +867,7 @@ public class NEW_BasketAutoSubmersibleBLUE_CU_UNGHI_BRAT_FAILSAFES extends Linea
                         ),
 
 
-                        new FollowPathCommand(follower, scoreSubmersible3, true, 1)
+                        new FollowPath(follower, scoreSubmersible3, true, 1)
                                 .alongWith(
                                         new SequentialCommandGroup(
                                                 new IntakeRetractBASKETAutoSUBMERSIBLECommand(),
@@ -932,7 +932,7 @@ public class NEW_BasketAutoSubmersibleBLUE_CU_UNGHI_BRAT_FAILSAFES extends Linea
                 .build();
 
         CommandScheduler.getInstance().schedule(
-                new FollowPathCommand(follower, changeHeadingSubmersible1, true, 1)
+                new FollowPath(follower, changeHeadingSubmersible1, true, 1)
         );
     }
 
@@ -944,7 +944,7 @@ public class NEW_BasketAutoSubmersibleBLUE_CU_UNGHI_BRAT_FAILSAFES extends Linea
                 .build();
 
         CommandScheduler.getInstance().schedule(
-                new FollowPathCommand(follower, changeHeadingSubmersible2, true, 1)
+                new FollowPath(follower, changeHeadingSubmersible2, true, 1)
         );
     }
 
@@ -956,7 +956,7 @@ public class NEW_BasketAutoSubmersibleBLUE_CU_UNGHI_BRAT_FAILSAFES extends Linea
                 .build();
 
         CommandScheduler.getInstance().schedule(
-                new FollowPathCommand(follower, changeHeadingSubmersible3, true, 1)
+                new FollowPath(follower, changeHeadingSubmersible3, true, 1)
         );
     }
 
@@ -968,7 +968,7 @@ public class NEW_BasketAutoSubmersibleBLUE_CU_UNGHI_BRAT_FAILSAFES extends Linea
                 .build();
 
         CommandScheduler.getInstance().schedule(
-                new FollowPathCommand(follower, initial, true, 1)
+                new FollowPath(follower, initial, true, 1)
         );
     }
 
@@ -980,7 +980,7 @@ public class NEW_BasketAutoSubmersibleBLUE_CU_UNGHI_BRAT_FAILSAFES extends Linea
                 .build();
 
         CommandScheduler.getInstance().schedule(
-                new FollowPathCommand(follower, initial, true, 1)
+                new FollowPath(follower, initial, true, 1)
         );
     }
 
@@ -991,7 +991,7 @@ public class NEW_BasketAutoSubmersibleBLUE_CU_UNGHI_BRAT_FAILSAFES extends Linea
                 .build();
 
         CommandScheduler.getInstance().schedule(
-                new FollowPathCommand(follower, initial, true, 1)
+                new FollowPath(follower, initial, true, 1)
         );
     }
 }
