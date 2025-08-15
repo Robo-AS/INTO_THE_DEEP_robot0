@@ -11,9 +11,10 @@ import org.firstinspires.ftc.teamcode.programs.commandbase.LiftCommands.SetLiftS
 import org.firstinspires.ftc.teamcode.programs.subsystems.Arm;
 import org.firstinspires.ftc.teamcode.programs.subsystems.Lift;
 
-public class OuttakeGoBackToIdleFromHighBasketCommand extends SequentialCommandGroup {
-    public OuttakeGoBackToIdleFromHighBasketCommand(){
+public class OuttakeGoBackToIdleFromHighBasketCommand_TELEOP extends SequentialCommandGroup {
+    public OuttakeGoBackToIdleFromHighBasketCommand_TELEOP(){
         super(
+                new InstantCommand(() -> Arm.getInstance().stopPinpoint()),
                 new SetArmStateCommand(Arm.ArmState.INIT),
                 new SetClawStateCommand(Arm.ClawState.OPEN),
                 new SetWristStateCommand(Arm.WristState.INIT),

@@ -12,6 +12,7 @@ import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.HardwareMap;
+import com.qualcomm.robotcore.hardware.configuration.typecontainers.MotorConfigurationType;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.robotcore.external.navigation.CurrentUnit;
@@ -85,12 +86,18 @@ public class Lift extends SubsystemBase{
         liftMotor.setDirection(DcMotorSimple.Direction.FORWARD);
 //        liftMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         liftMotor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        unlockMaxRPM(liftMotor);
 
         followerMotor = new CachingDcMotorEx(hardwareMap.get(DcMotorEx.class, "followerMotor"));
         followerMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         followerMotor.setDirection(DcMotorSimple.Direction.FORWARD);
 //        followerMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         followerMotor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        unlockMaxRPM(followerMotor);
+
+
+
+
     }
 
     public void resetEncoders(){
@@ -264,5 +271,12 @@ public class Lift extends SubsystemBase{
     public void hangTestLoop(double gamepadY){
         liftMotor.setPower(gamepadY);
         followerMotor.setPower(gamepadY);
+    }
+
+
+    public static void unlockMaxRPM(CachingDcMotorEx motor){
+        MotorConfigurationType motorConfigurationType = motor.getMotorType();
+        motorConfigurationType.setAchieveableMaxRPMFraction(1.0);
+        motor.setMotorType(motorConfigurationType);
     }
 }

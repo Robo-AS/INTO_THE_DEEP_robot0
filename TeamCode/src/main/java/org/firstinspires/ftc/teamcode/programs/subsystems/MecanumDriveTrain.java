@@ -6,6 +6,7 @@ import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.HardwareMap;
+import com.qualcomm.robotcore.hardware.configuration.typecontainers.MotorConfigurationType;
 import com.qualcomm.robotcore.util.Range;
 
 import org.firstinspires.ftc.robotcore.external.navigation.CurrentUnit;
@@ -55,18 +56,28 @@ public class MecanumDriveTrain extends WSubsystem implements Drivetrain {
         dtBackLeftMotor = new CachingDcMotorEx(hardwareMap.get(DcMotorEx.class, "backLeftMotor"));
         dtBackLeftMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         dtBackLeftMotor.setDirection(DcMotorSimple.Direction.REVERSE);
+        unlockMaxRPM(dtBackLeftMotor);
 
         dtFrontLeftMotor = new CachingDcMotorEx(hardwareMap.get(DcMotorEx.class, "frontLeftMotor"));
         dtFrontLeftMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         dtFrontLeftMotor.setDirection(DcMotorSimple.Direction.REVERSE);
+        unlockMaxRPM(dtFrontLeftMotor);
 
         dtBackRightMotor = new CachingDcMotorEx(hardwareMap.get(DcMotorEx.class, "backRightMotor"));
         dtBackRightMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         dtBackRightMotor.setDirection(DcMotorSimple.Direction.FORWARD);
+        unlockMaxRPM(dtBackRightMotor);
+
 
         dtFrontRightMotor = new CachingDcMotorEx(hardwareMap.get(DcMotorEx.class, "frontRightMotor"));
         dtFrontRightMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         dtFrontRightMotor.setDirection(DcMotorSimple.Direction.FORWARD);
+        unlockMaxRPM(dtFrontRightMotor);
+
+
+
+
+
 
 //        sensor = hardwareMap.voltageSensor.iterator().next().getVoltage();
 
@@ -266,6 +277,14 @@ public class MecanumDriveTrain extends WSubsystem implements Drivetrain {
     }
     public double getCurrenttBackLeft(){
         return dtBackLeftMotor.getCurrent(CurrentUnit.AMPS);
+    }
+
+
+
+    public static void unlockMaxRPM(CachingDcMotorEx motor){
+        MotorConfigurationType motorConfigurationType = motor.getMotorType();
+        motorConfigurationType.setAchieveableMaxRPMFraction(1.0);
+        motor.setMotorType(motorConfigurationType);
     }
 
 }

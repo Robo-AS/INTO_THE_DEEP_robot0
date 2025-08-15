@@ -73,7 +73,7 @@ public class Arm extends SubsystemBase {
     public double minAngleSPECIMEN = -10, maxAngleSPECIMEN = 10;
     public boolean pinpointDisabled = false;
 
-    public boolean pinpointOn = false;
+    public static boolean pinpointOn = false;
 
 
 
@@ -119,9 +119,22 @@ public class Arm extends SubsystemBase {
 
 
     public void loopAuto(){
-        if(armState == ArmState.HIGH_BASKET && BasketPaths.getInstance().SCORE_PRELOAD_COMPLETED)
-            sideAngle = 30;
-        else sideAngle = 0;//0
+        if (pinpointOn) {
+            if (!BasketPaths.getInstance().SCORE_PRELOAD_COMPLETED) {
+                // Preload not done yet
+                sideAngle = 30;
+            }
+            else if (!BasketPaths.getInstance().SCORE_1_COMPLETED || !BasketPaths.getInstance().SCORE_2_COMPLETED) {
+                // After preload, but score1 or score2 not done yet
+                sideAngle = 40;
+            }
+            else if (!BasketPaths.getInstance().SCORE_3_COMPLETED) {
+                // After score1 and score2, but score3 not done yet
+                sideAngle = 0;
+            }
+        }
+        else sideAngle = 0;
+
 
 
         if(targetPosition != previousTarget){

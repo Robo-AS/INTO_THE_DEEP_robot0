@@ -10,6 +10,7 @@ import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.HardwareMap;
+import com.qualcomm.robotcore.hardware.configuration.typecontainers.MotorConfigurationType;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.teamcode.programs.util.Globals;
@@ -32,8 +33,10 @@ public class Extendo extends SubsystemBase {
         EXTENDING_MINIMUM_AUTO,
 
         TAKE_SAMPLE_AUTO_BASKET_GRAB_1,
-        TAKE_SAMPLE_AUTO_BASKET_GRAB_2,
-        TAKE_SAMPLE_AUTO_BASKET_GRAB_3,
+        TAKE_SAMPLE_AUTO_BASKET_GRAB_2_FIRST_MOVE,
+        TAKE_SAMPLE_AUTO_BASKET_GRAB_2_SECOND_MOVE,
+        TAKE_SAMPLE_AUTO_BASKET_GRAB_3_FIRST_MOVE,
+        TAKE_SAMPLE_AUTO_BASKET_GRAB_3_SECOND_MOVE,
         STABILIZER_AUTO_BASKET,
         RETRACT_TAKE_SAMPLE_BASKET_AUTO_GRAB_1,
         RETRACT_TAKE_SAMPLE_BASKET_AUTO_GRAB_2,
@@ -70,9 +73,11 @@ public class Extendo extends SubsystemBase {
     public int MAXIMUM = 1150;
 
     public int EXTENDING_MINIMUM_AUTO = 500;
-    public int TAKE_SAMPLE_AUTO_BASKET_GRAB_1 = 900;
-    public int TAKE_SAMPLE_AUTO_BASKET_GRAB_2 = 860;
-    public int TAKE_SAMPLE_AUTO_BASKET_GRAB_3 = 870;
+    public int TAKE_SAMPLE_AUTO_BASKET_GRAB_1 = 1000;//900
+    public int TAKE_SAMPLE_AUTO_BASKET_GRAB_2_FIRST_MOVE = 950; //860
+    public int TAKE_SAMPLE_AUTO_BASKET_GRAB_2_SECOND_MOVE = 1100; //860
+    public int TAKE_SAMPLE_AUTO_BASKET_GRAB_3_FIRST_MOVE = 700;
+    public int TAKE_SAMPLE_AUTO_BASKET_GRAB_3_SECOND_MOVE = 870;
     public int STABILIZER_AUTO_BASKET = 500;
     public int RETRACT_TAKE_SAMPLE_BASKET_AUTO_GRAB_1 = 800;
     public int RETRACT_TAKE_SAMPLE_BASKET_AUTO_GRAB_2 = 760;
@@ -138,6 +143,8 @@ public class Extendo extends SubsystemBase {
         extendoMotor.setDirection(DcMotorSimple.Direction.FORWARD);
 //        extendoMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         extendoMotor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        unlockMaxRPM(extendoMotor);
+
     }
 
     public void resetEncoders(){
@@ -211,11 +218,17 @@ public class Extendo extends SubsystemBase {
             case TAKE_SAMPLE_AUTO_BASKET_GRAB_1:
                 targetPosition = TAKE_SAMPLE_AUTO_BASKET_GRAB_1;
                 break;
-            case TAKE_SAMPLE_AUTO_BASKET_GRAB_2:
-                targetPosition = TAKE_SAMPLE_AUTO_BASKET_GRAB_2;
+            case TAKE_SAMPLE_AUTO_BASKET_GRAB_2_FIRST_MOVE:
+                targetPosition = TAKE_SAMPLE_AUTO_BASKET_GRAB_2_FIRST_MOVE;
                 break;
-            case TAKE_SAMPLE_AUTO_BASKET_GRAB_3:
-                targetPosition = TAKE_SAMPLE_AUTO_BASKET_GRAB_3;
+            case TAKE_SAMPLE_AUTO_BASKET_GRAB_2_SECOND_MOVE:
+                targetPosition = TAKE_SAMPLE_AUTO_BASKET_GRAB_2_SECOND_MOVE;
+                break;
+            case TAKE_SAMPLE_AUTO_BASKET_GRAB_3_FIRST_MOVE:
+                targetPosition = TAKE_SAMPLE_AUTO_BASKET_GRAB_3_FIRST_MOVE;
+                break;
+            case TAKE_SAMPLE_AUTO_BASKET_GRAB_3_SECOND_MOVE:
+                targetPosition = TAKE_SAMPLE_AUTO_BASKET_GRAB_3_SECOND_MOVE;
                 break;
 
             case RETRACT_TAKE_SAMPLE_BASKET_AUTO_GRAB_1:
@@ -402,6 +415,12 @@ public class Extendo extends SubsystemBase {
         extendo_pid.setPID(p_extendo, i_extendo, d_extendo);
         double power = extendo_pid.calculate(currentPosition, targetPosition);
         extendoMotor.setPower(power);
+    }
+
+    public static void unlockMaxRPM(CachingDcMotorEx motor){
+        MotorConfigurationType motorConfigurationType = motor.getMotorType();
+        motorConfigurationType.setAchieveableMaxRPMFraction(1.0);
+        motor.setMotorType(motorConfigurationType);
     }
 
 

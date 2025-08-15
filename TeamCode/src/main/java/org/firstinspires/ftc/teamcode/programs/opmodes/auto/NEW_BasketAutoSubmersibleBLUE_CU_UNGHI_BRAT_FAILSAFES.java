@@ -35,7 +35,7 @@ import org.firstinspires.ftc.teamcode.programs.commandbase.DoesNothingCommand;
 import org.firstinspires.ftc.teamcode.programs.commandbase.ExtendoCommands.SetExtendoStateCommand;
 import org.firstinspires.ftc.teamcode.programs.commandbase.IntakeCommand.SetIntakeAngleCommand;
 import org.firstinspires.ftc.teamcode.programs.commandbase.IntakeCommand.SetIntakeStateCommand;
-import org.firstinspires.ftc.teamcode.programs.commandbase.TeleOpCommands.OuttakeCommands.OuttakeGoBackToIdleFromHighBasketCommand;
+import org.firstinspires.ftc.teamcode.programs.commandbase.TeleOpCommands.OuttakeCommands.OuttakeGoBackToIdleFromHighBasketCommand_AUTO;
 import org.firstinspires.ftc.teamcode.programs.subsystems.Arm;
 import org.firstinspires.ftc.teamcode.programs.subsystems.Extendo;
 import org.firstinspires.ftc.teamcode.programs.subsystems.Intake;
@@ -246,7 +246,7 @@ public class NEW_BasketAutoSubmersibleBLUE_CU_UNGHI_BRAT_FAILSAFES extends Linea
 
                         new FollowPath(follower, grab1, true, 1)
                                 .alongWith(
-                                        new OuttakeGoBackToIdleFromHighBasketCommand(),
+                                        new OuttakeGoBackToIdleFromHighBasketCommand_AUTO(),
                                         new SequentialCommandGroup(
                                                 new WaitCommand(300),
                                                 new SetExtendoStateCommand(Extendo.ExtendoState.TAKE_SAMPLE_AUTO_BASKET_GRAB_1),
@@ -301,10 +301,10 @@ public class NEW_BasketAutoSubmersibleBLUE_CU_UNGHI_BRAT_FAILSAFES extends Linea
 
                         new FollowPath(follower, grab2, true, 1)
                                 .alongWith(
-                                        new OuttakeGoBackToIdleFromHighBasketCommand(),
+                                        new OuttakeGoBackToIdleFromHighBasketCommand_AUTO(),
                                         new SequentialCommandGroup(
                                                 new WaitCommand(200),
-                                                new SetExtendoStateCommand(Extendo.ExtendoState.TAKE_SAMPLE_AUTO_BASKET_GRAB_2),
+                                                new SetExtendoStateCommand(Extendo.ExtendoState.TAKE_SAMPLE_AUTO_BASKET_GRAB_2_FIRST_MOVE),
                                                 new WaitUntilCommand(robot.extendo::canPutIntakeDown),
                                                 new SetIntakeAngleCommand(Intake.IntakeAngle.DOWN),
                                                 new SetIntakeStateCommand(Intake.IntakeState.INTAKING)
@@ -356,10 +356,10 @@ public class NEW_BasketAutoSubmersibleBLUE_CU_UNGHI_BRAT_FAILSAFES extends Linea
 
                         new FollowPath(follower, grab3, true, 1)
                                 .alongWith(
-                                        new OuttakeGoBackToIdleFromHighBasketCommand(),
+                                        new OuttakeGoBackToIdleFromHighBasketCommand_AUTO(),
                                         new SequentialCommandGroup(
                                                 new WaitCommand(300),
-                                                new SetExtendoStateCommand(Extendo.ExtendoState.TAKE_SAMPLE_AUTO_BASKET_GRAB_3),
+                                                new SetExtendoStateCommand(Extendo.ExtendoState.TAKE_SAMPLE_AUTO_BASKET_GRAB_3_FIRST_MOVE),
                                                 new WaitUntilCommand(robot.extendo::canPutIntakeDown),
                                                 new SetIntakeAngleCommand(Intake.IntakeAngle.DOWN),
                                                 new SetIntakeStateCommand(Intake.IntakeState.INTAKING)
@@ -400,7 +400,7 @@ public class NEW_BasketAutoSubmersibleBLUE_CU_UNGHI_BRAT_FAILSAFES extends Linea
                                                 ),
 
                                         new ScoreSampleAutoCommand(),
-                                        new OuttakeGoBackToIdleFromHighBasketCommand()
+                                        new OuttakeGoBackToIdleFromHighBasketCommand_AUTO()
                                 ),
                                 new SequentialCommandGroup(
                                         new SetIntakeAngleCommand(Intake.IntakeAngle.UP),
@@ -426,7 +426,7 @@ public class NEW_BasketAutoSubmersibleBLUE_CU_UNGHI_BRAT_FAILSAFES extends Linea
 
                         new FollowPath(follower, submersible1, true, 1)
                                 .alongWith(
-                                        new OuttakeGoBackToIdleFromHighBasketCommand()
+                                        new OuttakeGoBackToIdleFromHighBasketCommand_AUTO()
                                 ),
                         new WaitCommand(300),
                         new InstantCommand(()->robot.limelightCamera.upadateLimelightPythonSnap()),
@@ -566,7 +566,7 @@ public class NEW_BasketAutoSubmersibleBLUE_CU_UNGHI_BRAT_FAILSAFES extends Linea
                         new FollowPath(follower, submersible2, true,  1)
                                 .alongWith(
                                         new SequentialCommandGroup(
-                                                new OuttakeGoBackToIdleFromHighBasketCommand(),
+                                                new OuttakeGoBackToIdleFromHighBasketCommand_AUTO(),
                                                 new WaitCommand(300),
                                                 new SetExtendoStateCommand(Extendo.ExtendoState.RETRACTING)
 
@@ -726,7 +726,7 @@ public class NEW_BasketAutoSubmersibleBLUE_CU_UNGHI_BRAT_FAILSAFES extends Linea
                         new FollowPath(follower, submersible3, true,  1)
                                 .alongWith(
                                         new SequentialCommandGroup(
-                                                new OuttakeGoBackToIdleFromHighBasketCommand(),
+                                                new OuttakeGoBackToIdleFromHighBasketCommand_AUTO(),
                                                 new WaitCommand(300),
                                                 new SetExtendoStateCommand(Extendo.ExtendoState.RETRACTING)
 
@@ -877,7 +877,7 @@ public class NEW_BasketAutoSubmersibleBLUE_CU_UNGHI_BRAT_FAILSAFES extends Linea
                                         )
                                 ),
                         new ScoreSampleAutoCommand(),
-                        new OuttakeGoBackToIdleFromHighBasketCommand(),
+                        new OuttakeGoBackToIdleFromHighBasketCommand_AUTO(),
                         new SetExtendoStateCommand(Extendo.ExtendoState.RETRACTING)
                 )
         );

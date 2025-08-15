@@ -1,5 +1,6 @@
 package org.firstinspires.ftc.teamcode.programs.commandbase.AutoCommands.BasketAuto;
 
+import com.arcrobotics.ftclib.command.InstantCommand;
 import com.arcrobotics.ftclib.command.SequentialCommandGroup;
 import com.arcrobotics.ftclib.command.WaitUntilCommand;
 
@@ -15,7 +16,8 @@ public class OuttakeGoHighBasketAutoCommand extends SequentialCommandGroup {
                 new SetLiftStateCommand(Lift.LiftState.HIGH_BASKET),
                 new WaitUntilCommand(Lift.getInstance()::canRotateArmHighBasket),
                 new SetWristStateCommand(Arm.WristState.HIGH_BASKET),//HIGH_BASKET
-                new SetArmStateCommand(Arm.ArmState.HIGH_BASKET)
+                new SetArmStateCommand(Arm.ArmState.HIGH_BASKET),
+                new InstantCommand(() -> Arm.getInstance().startPinpoint())
         );
     }
 }
