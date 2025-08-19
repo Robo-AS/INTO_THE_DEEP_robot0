@@ -44,8 +44,8 @@ import org.firstinspires.ftc.teamcode.programs.util.NEWRobot;
 import org.firstinspires.ftc.teamcode.utils.geometry.PoseRR;
 
 
-@com.qualcomm.robotcore.eventloop.opmode.TeleOp(name = "🟦TeleOpBlue_BTC🟦")
-public class TeleOpBlue_BTC extends CommandOpMode {
+@com.qualcomm.robotcore.eventloop.opmode.TeleOp(name = "🔴TeleOpRed_BTC🔴")
+public class TeleOpRed_BTC extends CommandOpMode {
     private final NEWRobot robot = NEWRobot.getInstance();
     public GamepadEx gamepadEx;
 
@@ -76,7 +76,7 @@ public class TeleOpBlue_BTC extends CommandOpMode {
 
 
         gamepadEx.getGamepadButton(GamepadKeys.Button.DPAD_RIGHT)
-                .whenPressed(new NEWSetDesiredColorCommand(Intake.DesiredSampleColor.BLUE));
+                .whenPressed(new NEWSetDesiredColorCommand(Intake.DesiredSampleColor.RED));
 
         gamepadEx.getGamepadButton(GamepadKeys.Button.DPAD_LEFT)
                 .whenPressed(new NEWSetDesiredColorCommand(Intake.DesiredSampleColor.BOTH));
@@ -286,7 +286,7 @@ public class TeleOpBlue_BTC extends CommandOpMode {
         CommandScheduler.getInstance().run();
 
         robot.arm.loopTeleOp();
-        robot.intake.loopBlue_BTC();
+        robot.intake.loopRed_BTC();
         robot.loop();
         robot.extendo.loop(gamepadEx.getLeftY());
         robot.lift.loop();
@@ -307,8 +307,8 @@ public class TeleOpBlue_BTC extends CommandOpMode {
         robot.mecanumDriveTrain.set(drive, 0);
 
 
-        if(robot.intake.desiredSampleColor == Intake.DesiredSampleColor.BLUE){
-            gamepad1.setLedColor(0, 0, 255, Gamepad.LED_DURATION_CONTINUOUS);
+        if(robot.intake.desiredSampleColor == Intake.DesiredSampleColor.RED){
+            gamepad1.setLedColor(255, 0, 0, Gamepad.LED_DURATION_CONTINUOUS);
         }
         else if(robot.intake.desiredSampleColor == Intake.DesiredSampleColor.YELLOW){
             gamepad1.setLedColor(255, 200, 0, Gamepad.LED_DURATION_CONTINUOUS);

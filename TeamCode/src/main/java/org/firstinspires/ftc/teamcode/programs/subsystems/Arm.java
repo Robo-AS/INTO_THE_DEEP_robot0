@@ -40,6 +40,7 @@ public class Arm extends SubsystemBase {
     public enum WristState{
         INIT,
         HIGH_BASKET,
+        HIGH_BASKET_AUTO,
         HIGH_RUNG,
         TRANSITION
     }
@@ -51,7 +52,7 @@ public class Arm extends SubsystemBase {
     public WristState wristState = WristState.INIT;
 
     public static double OPEN_clawServo = 0.1, CLOSED_clawServo = 0.75;
-    public static double INIT_wristServo = 0, HIGH_BASKET_wristServo = 0.36, HIGH_RUNG_wristServo = 0.9, TRANSITION_wristServo = 0.15;
+    public static double INIT_wristServo = 0, HIGH_BASKET_wristServo = 0.36, HIGH_RUNG_wristServo = 0.9, TRANSITION_wristServo = 0.15, HIGH_BASKET_AUTO_wristServo = 0.4;
     public static double INIT_rightServo = 0.075, INIT_leftServo = 0.035;
     public int RANGE_ANGLE = 200;
 
@@ -250,15 +251,15 @@ public class Arm extends SubsystemBase {
             case INIT:
                 wristServo.setPosition(INIT_wristServo);
                 break;
-
             case HIGH_BASKET:
                 wristServo.setPosition(HIGH_BASKET_wristServo);
                 break;
-
+            case HIGH_BASKET_AUTO:
+                wristServo.setPosition(HIGH_BASKET_AUTO_wristServo);
+                break;
             case HIGH_RUNG:
                 wristServo.setPosition(HIGH_RUNG_wristServo);
                 break;
-
             case TRANSITION:
                 wristServo.setPosition(TRANSITION_wristServo);
                 break;

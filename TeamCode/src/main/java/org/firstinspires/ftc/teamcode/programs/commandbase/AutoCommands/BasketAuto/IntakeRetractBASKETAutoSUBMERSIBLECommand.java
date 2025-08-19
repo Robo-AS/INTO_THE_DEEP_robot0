@@ -9,6 +9,7 @@ import org.firstinspires.ftc.teamcode.programs.commandbase.ArmCommands.SetClawSt
 import org.firstinspires.ftc.teamcode.programs.commandbase.ExtendoCommands.SetExtendoStateCommand;
 import org.firstinspires.ftc.teamcode.programs.commandbase.IntakeCommand.SetBrushStateCommand;
 import org.firstinspires.ftc.teamcode.programs.commandbase.IntakeCommand.SetIntakeAngleCommand;
+import org.firstinspires.ftc.teamcode.programs.commandbase.IntakeCommand.SetIntakeStateCommand;
 import org.firstinspires.ftc.teamcode.programs.commandbase.IntakeCommand.SetRollersStateCommand;
 import org.firstinspires.ftc.teamcode.programs.subsystems.Arm;
 import org.firstinspires.ftc.teamcode.programs.subsystems.Extendo;
@@ -17,6 +18,7 @@ import org.firstinspires.ftc.teamcode.programs.subsystems.Intake;
 public class IntakeRetractBASKETAutoSUBMERSIBLECommand extends SequentialCommandGroup {
     public IntakeRetractBASKETAutoSUBMERSIBLECommand() {
         super(
+                new SetIntakeStateCommand(Intake.IntakeState.IDLE),//
                 new InstantCommand(() -> Intake.getInstance().setInitialAxonAngle()),
                 new SetIntakeAngleCommand(Intake.IntakeAngle.UP),
                 new SetBrushStateCommand(Intake.BrushState.SPITTING),

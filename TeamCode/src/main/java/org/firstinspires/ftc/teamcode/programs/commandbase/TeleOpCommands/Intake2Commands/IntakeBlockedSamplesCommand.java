@@ -12,7 +12,7 @@ public class IntakeBlockedSamplesCommand extends SequentialCommandGroup {
     public IntakeBlockedSamplesCommand(){
         super(
                 new SetBrushStateCommand(Intake.BrushState.SPITTING),
-                new WaitCommand(50),
+                new WaitCommand(80),
                 new SetIntakeStateCommand(Intake.IntakeState.INTAKING)
         );
     }

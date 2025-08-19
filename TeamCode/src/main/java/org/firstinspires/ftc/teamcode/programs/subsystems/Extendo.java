@@ -39,7 +39,7 @@ public class Extendo extends SubsystemBase {
         TAKE_SAMPLE_AUTO_BASKET_GRAB_3_SECOND_MOVE,
         STABILIZER_AUTO_BASKET,
         RETRACT_TAKE_SAMPLE_BASKET_AUTO_GRAB_1,
-        RETRACT_TAKE_SAMPLE_BASKET_AUTO_GRAB_2,
+//        RETRACT_TAKE_SAMPLE_BASKET_AUTO_GRAB_2,
         RETRACT_TAKE_SAMPLE_BASKET_AUTO_GRAB_3,
         GO_AGAIN_SAMPLE_BASKET_AUTO_GRAB,
 
@@ -79,10 +79,10 @@ public class Extendo extends SubsystemBase {
     public int TAKE_SAMPLE_AUTO_BASKET_GRAB_3_FIRST_MOVE = 700;
     public int TAKE_SAMPLE_AUTO_BASKET_GRAB_3_SECOND_MOVE = 870;
     public int STABILIZER_AUTO_BASKET = 500;
-    public int RETRACT_TAKE_SAMPLE_BASKET_AUTO_GRAB_1 = 800;
-    public int RETRACT_TAKE_SAMPLE_BASKET_AUTO_GRAB_2 = 760;
+    public int RETRACT_TAKE_SAMPLE_BASKET_AUTO_GRAB_1 = 900;
+//    public int RETRACT_TAKE_SAMPLE_BASKET_AUTO_GRAB_2 = 760;
     public int RETRACT_TAKE_SAMPLE_BASKET_AUTO_GRAB_3 = 770;
-    public int GO_AGAIN_SAMPLE_BASKET_AUTO_GRAB = 1000;
+    public int GO_AGAIN_SAMPLE_BASKET_AUTO_GRAB = 1150;
 
 
     public int TAKE_SAMPLE_SPECIMEN_AUTO_GRAB_1 = 350;
@@ -234,9 +234,9 @@ public class Extendo extends SubsystemBase {
             case RETRACT_TAKE_SAMPLE_BASKET_AUTO_GRAB_1:
                 targetPosition = RETRACT_TAKE_SAMPLE_BASKET_AUTO_GRAB_1;
                 break;
-            case RETRACT_TAKE_SAMPLE_BASKET_AUTO_GRAB_2:
-                targetPosition = RETRACT_TAKE_SAMPLE_BASKET_AUTO_GRAB_2;
-                break;
+//            case RETRACT_TAKE_SAMPLE_BASKET_AUTO_GRAB_2:
+//                targetPosition = RETRACT_TAKE_SAMPLE_BASKET_AUTO_GRAB_2;
+//                break;
             case RETRACT_TAKE_SAMPLE_BASKET_AUTO_GRAB_3:
                 targetPosition = RETRACT_TAKE_SAMPLE_BASKET_AUTO_GRAB_3;
                 break;
@@ -338,7 +338,7 @@ public class Extendo extends SubsystemBase {
 
 
     public boolean canOuttakeSample(){
-        return currentPosition <= 200;
+        return currentPosition <= 175;
     }
 
 

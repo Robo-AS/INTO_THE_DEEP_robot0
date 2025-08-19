@@ -37,9 +37,9 @@ public class ArmTest extends CommandOpMode {
     public void run(){
         CommandScheduler.getInstance().run();
 
-        arm.loopTeleOp();
+//        arm.loopTeleOp();
 //        arm.testLOOP();
-//        arm.testInit();
+        arm.testInit();
 
 
         telemetry.addData("PROFILE", arm.getProfile());
