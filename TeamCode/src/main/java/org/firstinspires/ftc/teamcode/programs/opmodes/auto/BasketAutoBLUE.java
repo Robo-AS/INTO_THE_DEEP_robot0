@@ -58,7 +58,7 @@ public class BasketAutoBLUE extends LinearOpMode {
     public static Pose startPose = new Pose(7, 112, Math.toRadians(0));
     public static Pose preloadPose = new Pose(13.324675324675326, 129.97402597402598, Math.toRadians(-17));//1
 
-    public static Pose grab1Pose = new Pose(19.16883116883117, 128.57142857142858, Math.toRadians(-17));//2
+    public static Pose grab1Pose = new Pose(19.16883116883117, 128.57142857142858, Math.toRadians(-18));//2
     public static Pose score1Pose = new Pose(14.961038961038962, 132.54545454545453, Math.toRadians(-7));//3
 
     public static Pose grab3Pose = new Pose(21.038961038961038, 133.71428571428572, Math.toRadians(17));//6
@@ -253,7 +253,7 @@ public class BasketAutoBLUE extends LinearOpMode {
                                         new SequentialCommandGroup(
                                                 new OuttakeGoBackToIdleFromHighBasketCommand_AUTO(),
                                                 new SetIntakeStateCommand(Intake.IntakeState.INTAKING),
-                                                new WaitUntilCommand(robot.intake::isSampleDigital).withTimeout(sensorTimeOut),
+                                                new WaitUntilCommand(robot.intake::isSampleDigital).withTimeout(1000),
                                                 new SetIntakeStateCommand(Intake.IntakeState.IDLE)
                                         )
 
@@ -284,7 +284,7 @@ public class BasketAutoBLUE extends LinearOpMode {
 
 
 
-                        new WaitUntilCommand(robot.intake::isSampleDigital).withTimeout(sensorTimeOut),
+                        new WaitUntilCommand(robot.intake::isSampleDigital).withTimeout(1000),
                         new SetIntakeStateCommand(Intake.IntakeState.IDLE),
                         new IntakeRetractBASKETAutoCommand(),
                         new OuttakeGoHighBasketAutoCommand(),
@@ -307,7 +307,7 @@ public class BasketAutoBLUE extends LinearOpMode {
                                 ),
                         new SetExtendoStateCommand(Extendo.ExtendoState.TAKE_SAMPLE_AUTO_BASKET_GRAB_3_SECOND_MOVE),
                         new SetIntakeStateCommand(Intake.IntakeState.INTAKING),
-                        new WaitUntilCommand(robot.intake::isSampleDigital).withTimeout(sensorTimeOut),
+                        new WaitUntilCommand(robot.intake::isSampleDigital).withTimeout(1000),
                         new SetIntakeStateCommand(Intake.IntakeState.IDLE),
 
 
@@ -458,7 +458,7 @@ public class BasketAutoBLUE extends LinearOpMode {
                                         new SequentialCommandGroup(
                                                 new IntakeRetractBASKETAutoSUBMERSIBLECommand(),
                                                 new SetExtendoStateCommand(Extendo.ExtendoState.STABILIZER_AUTO_BASKET),
-                                                new WaitCommand(400),
+//                                                new WaitCommand(400),
                                                 new OuttakeGoHighBasketAutoCommand()
                                         )
                                 ),
@@ -608,7 +608,7 @@ public class BasketAutoBLUE extends LinearOpMode {
                                         new SequentialCommandGroup(
                                                 new IntakeRetractBASKETAutoSUBMERSIBLECommand(),
                                                 new SetExtendoStateCommand(Extendo.ExtendoState.STABILIZER_AUTO_BASKET),
-                                                new WaitCommand(400),
+//                                                new WaitCommand(400),
                                                 new OuttakeGoHighBasketAutoCommand()
                                         )
                                 ),
@@ -756,7 +756,7 @@ public class BasketAutoBLUE extends LinearOpMode {
                                         new SequentialCommandGroup(
                                                 new IntakeRetractBASKETAutoSUBMERSIBLECommand(),
                                                 new SetExtendoStateCommand(Extendo.ExtendoState.STABILIZER_AUTO_BASKET),
-                                                new WaitCommand(400),
+//                                                new WaitCommand(400),
                                                 new OuttakeGoHighBasketAutoCommand()
                                         )
                                 ),

@@ -13,10 +13,11 @@ import org.firstinspires.ftc.teamcode.programs.subsystems.Intake;
 public class LimelightCommand extends SequentialCommandGroup {
     public LimelightCommand(){
         super(
-                new SetExtendoStateCommand(Extendo.ExtendoState.LIMELIGHT_POSE).interruptOn(Intake.getInstance()::isSampleDigital),
-                new WaitUntilCommand(Extendo.getInstance()::limelightPoseFinished).interruptOn(Intake.getInstance()::isSampleDigital),
+                new SetExtendoStateCommand(Extendo.ExtendoState.LIMELIGHT_POSE),
+                new WaitUntilCommand(Extendo.getInstance()::limelightPoseFinished),
 //                new WaitCommand(2000),
-                new SetIntakeAngleCommand(Intake.IntakeAngle.DOWN).interruptOn(Intake.getInstance()::isSampleDigital),
+
+                new SetIntakeAngleCommand(Intake.IntakeAngle.DOWN),
                 new SetIntakeStateCommand(Intake.IntakeState.INTAKING).interruptOn(Intake.getInstance()::isSampleDigital),
                 new WaitCommand(100).interruptOn(Intake.getInstance()::isSampleDigital),
                 new SetExtendoStateCommand(Extendo.ExtendoState.LIMELIGHT_RETRACT_POSE).interruptOn(Intake.getInstance()::isSampleDigital),

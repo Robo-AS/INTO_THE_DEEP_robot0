@@ -636,9 +636,21 @@ public class Intake extends SubsystemBase {
         }
     }
 
+    public boolean canStopOuttakingYELLOW_1_AUTO_SUBMERSIBLE(){
+        return (totalAxonAngle - initialAxonAngle) >= 30;//50
+    }
+    public boolean canCloseClaw_AUTO_SUBMERSIBLE(){
+        return (totalAxonAngle - initialAxonAngle) >= 60;
+    }
+    public boolean canStopOuttakingYELLOW_2_AUTO_SUBMERSIBLE(){
+        return (totalAxonAngle - initialAxonAngle) >= 80;
+    }
+
+
     public boolean canStopOuttakingYELLOW_1_AUTO(){
         return (totalAxonAngle - initialAxonAngle) >= 50;//50
     }
+
     public boolean canStopOuttakingYELLOW_2_AUTO(){
         return (totalAxonAngle - initialAxonAngle) >= 90;
     }
@@ -685,7 +697,7 @@ public class Intake extends SubsystemBase {
 
 
     public boolean canCloseClaw_AUTO(){
-        return (totalAxonAngle - initialAxonAngle) >= 20;
+        return (totalAxonAngle - initialAxonAngle) >= 30;
     }
 
 

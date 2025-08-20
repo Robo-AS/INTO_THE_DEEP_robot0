@@ -588,7 +588,7 @@ public class BasketAutoBLUE_special extends LinearOpMode {
                                         new SequentialCommandGroup(
                                                 new IntakeRetractBASKETAutoSUBMERSIBLECommand(),
                                                 new SetExtendoStateCommand(Extendo.ExtendoState.STABILIZER_AUTO_BASKET),
-                                                new WaitCommand(400),
+                                                //new WaitCommand(400),
                                                 new OuttakeGoHighBasketAutoCommand()
                                         )
                                 ),
@@ -738,7 +738,7 @@ public class BasketAutoBLUE_special extends LinearOpMode {
                                         new SequentialCommandGroup(
                                                 new IntakeRetractBASKETAutoSUBMERSIBLECommand(),
                                                 new SetExtendoStateCommand(Extendo.ExtendoState.STABILIZER_AUTO_BASKET),
-                                                new WaitCommand(400),
+                                                //new WaitCommand(400),
                                                 new OuttakeGoHighBasketAutoCommand()
                                         )
                                 ),
@@ -886,7 +886,7 @@ public class BasketAutoBLUE_special extends LinearOpMode {
                                         new SequentialCommandGroup(
                                                 new IntakeRetractBASKETAutoSUBMERSIBLECommand(),
                                                 new SetExtendoStateCommand(Extendo.ExtendoState.STABILIZER_AUTO_BASKET),
-                                                new WaitCommand(400),
+                                                //new WaitCommand(400),
                                                 new OuttakeGoHighBasketAutoCommand()
                                         )
                                 ),

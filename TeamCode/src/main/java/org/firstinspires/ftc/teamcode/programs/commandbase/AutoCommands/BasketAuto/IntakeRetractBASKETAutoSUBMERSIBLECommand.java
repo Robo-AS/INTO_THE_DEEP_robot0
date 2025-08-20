@@ -18,7 +18,6 @@ import org.firstinspires.ftc.teamcode.programs.subsystems.Intake;
 public class IntakeRetractBASKETAutoSUBMERSIBLECommand extends SequentialCommandGroup {
     public IntakeRetractBASKETAutoSUBMERSIBLECommand() {
         super(
-                new SetIntakeStateCommand(Intake.IntakeState.IDLE),//
                 new InstantCommand(() -> Intake.getInstance().setInitialAxonAngle()),
                 new SetIntakeAngleCommand(Intake.IntakeAngle.UP),
                 new SetBrushStateCommand(Intake.BrushState.SPITTING),
@@ -26,18 +25,15 @@ public class IntakeRetractBASKETAutoSUBMERSIBLECommand extends SequentialCommand
                 new SetBrushStateCommand(Intake.BrushState.IDLE),
                 new SetExtendoStateCommand(Extendo.ExtendoState.RETRACTING),
                 new SetRollersStateCommand(Intake.RollersState.OUTTAKING),
-                new WaitUntilCommand(Intake.getInstance()::canStopOuttakingYELLOW_1_AUTO),
+                new WaitUntilCommand(Intake.getInstance()::canStopOuttakingYELLOW_1_AUTO_SUBMERSIBLE),
                 new SetRollersStateCommand(Intake.RollersState.IDLE),
                 new WaitUntilCommand(Extendo.getInstance()::canOuttakeSample),
                 new InstantCommand(() -> Intake.getInstance().setInitialAxonAngle()),
                 new SetRollersStateCommand(Intake.RollersState.OUTTAKING),
-                new WaitUntilCommand(Intake.getInstance()::canCloseClaw_AUTO),
+                new WaitUntilCommand(Intake.getInstance()::canCloseClaw_AUTO_SUBMERSIBLE),
                 new SetClawStateCommand(Arm.ClawState.CLOSED),
-                new WaitUntilCommand(Intake.getInstance()::canStopOuttakingYELLOW_2_AUTO),
+                new WaitUntilCommand(Intake.getInstance()::canStopOuttakingYELLOW_2_AUTO_SUBMERSIBLE),
                 new SetRollersStateCommand(Intake.RollersState.IDLE)
-
-
-
         );
     }
 }
