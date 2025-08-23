@@ -8,7 +8,7 @@ import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import org.firstinspires.ftc.teamcode.programs.subsystems.Intake;
 
 
-@Disabled
+//@Disabled
 @Config
 @TeleOp(name = "IntakeAngleTest", group = "Tests")
 public class IntakeAngleTest extends CommandOpMode {

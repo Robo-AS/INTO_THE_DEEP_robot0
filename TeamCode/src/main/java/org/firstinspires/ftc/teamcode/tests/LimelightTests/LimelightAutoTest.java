@@ -28,7 +28,7 @@ import org.firstinspires.ftc.teamcode.programs.util.NEWRobot;
 
 //@Disabled
 @Config
-@TeleOp(name = "LimelightAutoTest")
+@TeleOp(name = "LimelightAutoTest", group = "Tests")
 public class LimelightAutoTest extends CommandOpMode {
     private final NEWRobot robot = NEWRobot.getInstance();
     public GamepadEx gamepadEx;

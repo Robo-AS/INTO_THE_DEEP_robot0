@@ -59,36 +59,36 @@ public class BasketAutoBLUE extends LinearOpMode {
     public static Pose preloadPose = new Pose(13.324675324675326, 129.97402597402598, Math.toRadians(-17));//1
 
     public static Pose grab1Pose = new Pose(19.16883116883117, 128.57142857142858, Math.toRadians(-18));//2
-    public static Pose score1Pose = new Pose(14.961038961038962, 132.54545454545453, Math.toRadians(-7));//3
+    public static Pose score1Pose = new Pose(15.461038961, 132.045454545, Math.toRadians(-7));//3 //HERE
 
     public static Pose grab3Pose = new Pose(21.038961038961038, 133.71428571428572, Math.toRadians(17));//6
-    public static Pose score3Pose = new Pose(14.025974025974026, 131.14285714285714, Math.toRadians(-35));//7
+    public static Pose score3Pose = new Pose(14.525974026, 130.642857143, Math.toRadians(-35));//7   //HERE
 
     public static Pose submersible1Pose_FIRST = new Pose(46.28571428571429, 111.97402597402598, Math.toRadians(-35));//6
-    public static Pose submersible1Pose_SECOND = new Pose(60.77922077922078, 94.14285714285712, Math.toRadians(-90));//7
+    public static Pose submersible1Pose_SECOND = new Pose(60.77922077922078, 95.14285714285712, Math.toRadians(-90));//7
     public static Pose submersible1Pose_SECONDControlPoint = new Pose(62.18181818181818, 102.85714285714286, Math.toRadians(-90));
 
     public static Pose scoreSubmersible1Pose_FIRST = new Pose(46.28571428571429, 111.97402597402598, Math.toRadians(-35));       //8
     public static Pose scoreSubmersible1Pose_FIRSTControlPoint = new Pose(62.18181818181818, 102.85714285714286, Math.toRadians(-35));
-    public static Pose scoreSubmersible1Pose_SECOND = new Pose(14.25974025974026, 131.14285714285714, Math.toRadians(-35));    //9
+    public static Pose scoreSubmersible1Pose_SECOND = new Pose(14.7597402597, 130.642857143, Math.toRadians(-35));  //HERE   //9
 
 
     public static Pose submersible2Pose_FIRST = new Pose(46.28571428571429, 111.97402597402598, Math.toRadians(-35));
-    public static Pose submersible2Pose_SECOND = new Pose(60.77922077922078, 94.27922077922078, Math.toRadians(-90));
+    public static Pose submersible2Pose_SECOND = new Pose(60.77922077922078, 95.27922077922078, Math.toRadians(-90));
     public static Pose submersible2Pose_SECONDControlPoint = new Pose(62.18181818181818, 102.85714285714286, Math.toRadians(-90));
 
     public static Pose scoreSubmersible2Pose_FIRST = new Pose(46.28571428571429, 111.97402597402598, Math.toRadians(-35));
     public static Pose scoreSubmersible2Pose_FIRSTControlPoint = new Pose(62.18181818181818, 102.85714285714286, Math.toRadians(-35));
-    public static Pose scoreSubmersible2Pose_SECOND = new Pose(14.25974025974026, 131.14285714285714, Math.toRadians(-35));
+    public static Pose scoreSubmersible2Pose_SECOND = new Pose(14.7597402597, 130.642857143, Math.toRadians(-35)); //HERE
 
 
     public static Pose submersible3Pose_FIRST = new Pose(47.922077922077925, 113.61038961038962, Math.toRadians(-35));
-    public static Pose submersible3Pose_SECOND = new Pose(63.81818181818182, 94.14285714285712, Math.toRadians(-90));
+    public static Pose submersible3Pose_SECOND = new Pose(63.81818181818182, 95.14285714285712, Math.toRadians(-90));
     public static Pose submersible3Pose_SECONDControlPoint = new Pose(65.92207792207792, 104.02597402597402, Math.toRadians(-90));
 
     public static Pose scoreSubmersible3Pose_FIRST = new Pose(47.922077922077925, 113.61038961038962, Math.toRadians(-35));
     public static Pose scoreSubmersible3Pose_FIRSTControlPoint = new Pose(65.92207792207792, 104.02597402597402, Math.toRadians(-35));
-    public static Pose scoreSubmersible3Pose_SECOND = new Pose(14.25974025974026, 131.14285714285714, Math.toRadians(-35));
+    public static Pose scoreSubmersible3Pose_SECOND = new Pose(14.7597402597, 130.642857143, Math.toRadians(-35)); //HERE
 
 
 
