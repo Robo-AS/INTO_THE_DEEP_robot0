@@ -311,6 +311,20 @@ public class BasketAutoRED extends LinearOpMode {
                         new SetIntakeStateCommand(Intake.IntakeState.IDLE),
 
 
+                        new ConditionalCommand(
+                                new SequentialCommandGroup(
+                                        new SetIntakeStateCommand(Intake.IntakeState.INTAKING),
+                                        new SetExtendoStateCommand(Extendo.ExtendoState.RETRACT_TAKE_SAMPLE_BASKET_AUTO_GRAB_3).interruptOn(robot.intake::isSampleDigital),
+                                        new WaitCommand(100).interruptOn(robot.intake::isSampleDigital),
+                                        new SetExtendoStateCommand(Extendo.ExtendoState.GO_AGAIN_SAMPLE_BASKET_AUTO_GRAB).interruptOn(robot.intake::isSampleDigital),
+                                        new WaitUntilCommand(robot.intake::isSampleDigital).withTimeout(1500),
+                                        new SetIntakeStateCommand(Intake.IntakeState.IDLE)
+                                ),
+                                new DoesNothingCommand(),
+                                () -> robot.intake.isNOTSampleDigital()
+                        ),
+
+
                         new FollowPath(follower, score3, true, 1)
                                 .alongWith(
                                         new SequentialCommandGroup(
