@@ -29,6 +29,7 @@ public class Lift extends SubsystemBase{
 
     public enum LiftState{
         LOW_BASKET,
+
         HIGH_BASKET,
         HIGH_RUNG,
         PUT_SPECIMEN,

@@ -206,9 +206,6 @@ public class Extendo extends SubsystemBase {
 
     }
 
-
-
-
     public void loop_Demo_profi(double joystickYCoord){
         currentPosition = extendoMotor.getCurrentPosition();
         if(targetPosition != previousTarget){

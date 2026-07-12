@@ -5,10 +5,13 @@ import com.acmerobotics.dashboard.telemetry.MultipleTelemetry;
 import com.arcrobotics.ftclib.command.CommandOpMode;
 import com.arcrobotics.ftclib.command.CommandScheduler;
 import com.arcrobotics.ftclib.gamepad.GamepadEx;
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
 import org.firstinspires.ftc.teamcode.programs.subsystems.Lift;
 
+
+@Disabled
 @TeleOp(name = "LiftTest", group = "Tests")
 public class LiftTest extends CommandOpMode {
     private final Lift lift = Lift.getInstance();

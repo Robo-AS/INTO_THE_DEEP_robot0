@@ -26,7 +26,7 @@ import org.firstinspires.ftc.teamcode.programs.subsystems.Extendo;
 import org.firstinspires.ftc.teamcode.programs.util.NEWRobot;
 
 
-//@Disabled
+@Disabled
 @Config
 @TeleOp(name = "LimelightAutoTest", group = "Tests")
 public class LimelightAutoTest extends CommandOpMode {

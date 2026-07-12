@@ -1,11 +1,14 @@
 package org.firstinspires.ftc.teamcode.tests.Brushland;
 
 import com.qualcomm.hardware.rev.RevColorSensorV3;
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.I2cDeviceSynchSimple;
 
 
+
+@Disabled
 @TeleOp(name = "ConfigureColorRangefinder", group = "Tests")
 public class ConfigureColorRangefinder extends LinearOpMode {
     @Override

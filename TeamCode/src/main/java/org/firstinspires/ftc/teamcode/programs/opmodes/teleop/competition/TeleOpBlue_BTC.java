@@ -121,7 +121,6 @@ public class TeleOpBlue_BTC extends CommandOpMode {
 
 
 
-
         //Lift commands
         gamepadEx.getGamepadButton(GamepadKeys.Button.RIGHT_BUMPER)
                 .whenPressed(

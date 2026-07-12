@@ -19,7 +19,7 @@ apply plugin: 'kotlin-android'
 
 //chestia asta e sketchy rau(but for some fucking reason it works)
 kotlin {
-    jvmToolchain(8)
+    jvmToolchain(17)
 }
 
 

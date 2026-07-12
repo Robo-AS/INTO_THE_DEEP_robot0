@@ -256,29 +256,29 @@ public class TeleOpBlue_DEMO_profi extends CommandOpMode {
                 );
 
 
-        gamepadEx.getGamepadButton(GamepadKeys.Button.RIGHT_STICK_BUTTON)
-                .whenPressed(
-                        () -> CommandScheduler.getInstance().schedule(
-                                new ConditionalCommand(
-                                        new SequentialCommandGroup(
-                                                new SetSweeperStateCommand(Sweeper.SweeperState.OPEN),
-                                                new WaitCommand(500),
-                                                new SetSweeperStateCommand(Sweeper.SweeperState.CLOSED)
-                                        ),
-
-                                        new DoesNothingCommand(),
-                                        () -> robot.sweeper.sweeperState == Sweeper.SweeperState.CLOSED
-                                )
-                        )
-                );
-
-
-        gamepadEx.getGamepadButton(GamepadKeys.Button.BACK)
-                .whenPressed(
-                        () -> CommandScheduler.getInstance().schedule(
-                                new InstantCommand(robot.arm::disablePinpoint)
-                        )
-                );
+//        gamepadEx.getGamepadButton(GamepadKeys.Button.RIGHT_STICK_BUTTON)
+//                .whenPressed(
+//                        () -> CommandScheduler.getInstance().schedule(
+//                                new ConditionalCommand(
+//                                        new SequentialCommandGroup(
+//                                                new SetSweeperStateCommand(Sweeper.SweeperState.OPEN),
+//                                                new WaitCommand(500),
+//                                                new SetSweeperStateCommand(Sweeper.SweeperState.CLOSED)
+//                                        ),
+//
+//                                        new DoesNothingCommand(),
+//                                        () -> robot.sweeper.sweeperState == Sweeper.SweeperState.CLOSED
+//                                )
+//                        )
+//                );
+//
+//
+//        gamepadEx.getGamepadButton(GamepadKeys.Button.BACK)
+//                .whenPressed(
+//                        () -> CommandScheduler.getInstance().schedule(
+//                                new InstantCommand(robot.arm::disablePinpoint)
+//                        )
+//                );
 
 
 
@@ -288,22 +288,12 @@ public class TeleOpBlue_DEMO_profi extends CommandOpMode {
     public void run(){
         CommandScheduler.getInstance().run();
 
-        robot.arm.loopTeleOp_Demo_profi();
         robot.intake.loopBlue_BTC();
         robot.loop();
-        robot.extendo.loop_Demo_profi(gamepadEx.getLeftY());
-        robot.lift.loop_Demo_profi();
 
 
-//        PENTRU LEVEL 3 HANG
-//        if(Globals.HANGING_LEVEL_3) {
-//            robot.mecanumDriveTrain.updateTargetPositionHang(-gamepadEx.getRightY());
-//        }
 
         //applying expo function for mecanum
-        exponentialJoystickCoord_X_TURN = (Math.pow(gamepad1.left_stick_x, 3) + liniarCoefTerm * gamepad1.left_stick_x) * contantTerm;
-        exponentialJoystickCoord_X_FORWARD = (Math.pow(gamepad1.right_stick_x, 3) + liniarCoefTerm * gamepad1.right_stick_x) * contantTerm;
-        exponentialJoystickCoord_Y = (Math.pow(gamepad1.right_stick_y, 3) + liniarCoefTerm * gamepad1.right_stick_y) * contantTerm;
 
         double turnSpeed = robot.extendo.extendoState == Extendo.ExtendoState.EXTENDING_MINIMUM ? -exponentialJoystickCoord_X_TURN/Globals.DECREASE_TURN_SPEED_CONSTANT :-exponentialJoystickCoord_X_TURN;
         PoseRR drive = new PoseRR(exponentialJoystickCoord_X_FORWARD, -exponentialJoystickCoord_Y, -turnSpeed);
@@ -345,17 +335,14 @@ public class TeleOpBlue_DEMO_profi extends CommandOpMode {
 //        telemetry.addData("AngleServoPosition", robot.brush.brushAngleServo.getPosition());
 //        telemetry.addData("Brush Angle", robot.brush.brushAngle);
 
-//        telemetry.addData("Current Position EXTENDO", robot.extendo.extendoMotor.getCurrentPosition());
 //        telemetry.addData("LAST EXTENDO POS", Globals.lastExtendoPos);
 
-//        telemetry.addData("Target Position", robot.extendo.getTargetPosition());
 //        telemetry.addData("Extendo State", robot.extendo.extendoState);
 //        telemetry.addData("Joystick Y", gamepadEx.gamepad.left_stick_y);
 //        telemetry.addData("Joystick Y MODIFIED", robot.extendo.getExponentialJoystickCoef());
 //        telemetry.addData("JoystickConstant", robot.extendo.getJoystickConstant());
 //        telemetry.addData("SHOULD VIBRATE", Globals.shouldVibrate);
 
-//        telemetry.addData("Current Position LIFT", robot.lift.liftMotor.getCurrentPosition());
 //        telemetry.addData("LAST LIFT POS", Globals.lastLiftPos);
 
 //        telemetry.addData("Reset Lift?", robot.lift.gerResetLift());

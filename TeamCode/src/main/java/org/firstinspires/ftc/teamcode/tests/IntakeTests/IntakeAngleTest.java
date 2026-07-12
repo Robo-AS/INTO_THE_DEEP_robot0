@@ -9,7 +9,7 @@ import org.firstinspires.ftc.teamcode.programs.subsystems.Intake;
 
 
 //@Disabled
-@Config
+//@Config
 @TeleOp(name = "IntakeAngleTest", group = "Tests")
 public class IntakeAngleTest extends CommandOpMode {
     private final Intake intake = Intake.getInstance();
