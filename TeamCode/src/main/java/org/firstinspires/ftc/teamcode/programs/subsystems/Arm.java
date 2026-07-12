@@ -68,6 +68,8 @@ public class Arm extends SubsystemBase {
     MotionProfile profile;
     public static double targetPosition = 0, previousTarget = 0;
     public static double maxVelocity = 100000, maxAcceleration = 4000;
+    public static double maxVelocity_Demo_profi = 100000, maxAcceleration_Demo_profi = 3000;
+    public static double maxVelocity_Demo_kiddos = 100000, maxAcceleration_Demo_kiddos = 3000;
 
     double sideAngle = 0;
     public double minAngleBASKET = -40, maxAngleBASKET = 40;
@@ -183,11 +185,6 @@ public class Arm extends SubsystemBase {
             sideAngle = 0;
 
 
-//        if(Lift.getInstance().liftState == Lift.LiftState.HIGH_RUNG)
-//            sideAngle = Math.max(minAngleSPECIMEN, Math.min(maxAngleSPECIMEN, sideAngle));
-//        else if(Lift.getInstance().liftState == Lift.LiftState.HIGH_BASKET)
-//            sideAngle = Math.max(minAngleBASKET, Math.min(maxAngleBASKET, sideAngle));
-
         if(targetPosition != previousTarget){
             profile = MotionProfileGenerator.generateSimpleMotionProfile(
                     new MotionState(previousTarget, 0),
@@ -211,6 +208,101 @@ public class Arm extends SubsystemBase {
 
     }
 
+
+
+
+    public void loopTeleOp_Demo_profi(){
+        if(pinpointOn && !pinpointDisabled) {
+            double currentHeading = getPinpointHeading();
+            double referenceHeading = (Lift.getInstance().liftState == Lift.LiftState.HIGH_RUNG) ? 0 : 135;
+
+
+            sideAngle = currentHeading - referenceHeading + 180;
+            sideAngle = ((sideAngle + 180) % 360 + 360) % 360 - 180;
+
+
+            if(Lift.getInstance().liftState == Lift.LiftState.HIGH_RUNG){
+                sideAngle = Math.max(minAngleSPECIMEN, Math.min(maxAngleSPECIMEN, sideAngle));
+            }
+            else if(Lift.getInstance().liftState == Lift.LiftState.HIGH_BASKET)
+                sideAngle = Math.max(minAngleBASKET, Math.min(maxAngleBASKET, sideAngle));
+
+        }
+        else if(!pinpointOn && !pinpointDisabled)
+            sideAngle = 0;
+
+
+        if(targetPosition != previousTarget){
+            profile = MotionProfileGenerator.generateSimpleMotionProfile(
+                    new MotionState(previousTarget, 0),
+                    new MotionState(targetPosition, 0),
+                    maxVelocity_Demo_profi,
+                    maxAcceleration_Demo_profi
+            );
+
+            time.reset();
+            previousTarget = targetPosition;
+        }
+
+        //MotionState targetState = profile == null ? new MotionState(0, 0) : profile.get(time.seconds());
+//        double targetMotionProfile = targetState.getX();
+        if(profile!= null){
+            MotionState targetState = profile.get(time.seconds());
+            double targetMotionProfile = targetState.getX();
+            rightServo.setPosition(positionToAngleRight(targetMotionProfile));
+            leftServo.setPosition(positionToAngleLeft(targetMotionProfile));
+        }
+
+    }
+
+
+
+    public void loopTeleOp_Demo_kiddos(){
+//        if(pinpointOn && !pinpointDisabled) {
+//            double currentHeading = getPinpointHeading();
+//            double referenceHeading = (Lift.getInstance().liftState == Lift.LiftState.HIGH_RUNG) ? 0 : 135;
+//
+//
+//            sideAngle = currentHeading - referenceHeading + 180;
+//            sideAngle = ((sideAngle + 180) % 360 + 360) % 360 - 180;
+//
+//
+//            if(Lift.getInstance().liftState == Lift.LiftState.HIGH_RUNG){
+//                sideAngle = Math.max(minAngleSPECIMEN, Math.min(maxAngleSPECIMEN, sideAngle));
+//            }
+//            else if(Lift.getInstance().liftState == Lift.LiftState.HIGH_BASKET)
+//                sideAngle = Math.max(minAngleBASKET, Math.min(maxAngleBASKET, sideAngle));
+//
+//        }
+//        else if(!pinpointOn && !pinpointDisabled)
+//            sideAngle = 0;
+
+
+        sideAngle = 0;
+
+
+        if(targetPosition != previousTarget){
+            profile = MotionProfileGenerator.generateSimpleMotionProfile(
+                    new MotionState(previousTarget, 0),
+                    new MotionState(targetPosition, 0),
+                    maxVelocity_Demo_kiddos,
+                    maxAcceleration_Demo_kiddos
+            );
+
+            time.reset();
+            previousTarget = targetPosition;
+        }
+
+        //MotionState targetState = profile == null ? new MotionState(0, 0) : profile.get(time.seconds());
+//        double targetMotionProfile = targetState.getX();
+        if(profile!= null){
+            MotionState targetState = profile.get(time.seconds());
+            double targetMotionProfile = targetState.getX();
+            rightServo.setPosition(positionToAngleRight(targetMotionProfile));
+            leftServo.setPosition(positionToAngleLeft(targetMotionProfile));
+        }
+
+    }
 
 
 

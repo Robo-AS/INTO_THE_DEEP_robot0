@@ -1,4 +1,4 @@
-package org.firstinspires.ftc.teamcode.programs.opmodes.teleop;
+package org.firstinspires.ftc.teamcode.programs.opmodes.teleop.competition;
 
 import com.acmerobotics.dashboard.FtcDashboard;
 import com.acmerobotics.dashboard.telemetry.MultipleTelemetry;
@@ -17,6 +17,7 @@ import com.pedropathing.pathgen.BezierCurve;
 import com.pedropathing.pathgen.BezierLine;
 import com.pedropathing.pathgen.PathChain;
 import com.pedropathing.pathgen.Point;
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.hardware.Gamepad;
 
 import org.firstinspires.ftc.teamcode.pedroPathing.constants.FConstants;
@@ -55,7 +56,7 @@ import org.firstinspires.ftc.teamcode.programs.util.Globals;
 import org.firstinspires.ftc.teamcode.programs.util.NEWRobot;
 import org.firstinspires.ftc.teamcode.utils.geometry.PoseRR;
 
-
+@Disabled
 @com.qualcomm.robotcore.eventloop.opmode.TeleOp(name = "NEWTeleOpRed")
 public class NEWTeleOpRed extends CommandOpMode {
     private final NEWRobot robot = NEWRobot.getInstance();

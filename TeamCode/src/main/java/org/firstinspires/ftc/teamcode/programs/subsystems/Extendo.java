@@ -124,6 +124,9 @@ public class Extendo extends SubsystemBase {
     public static double maxVelocity = 1000000, maxAcceleration = 35000;
     public double maxVelocitySubmersible = 1000, maxAccelerationSubmersible = 10000;
 
+    public static double maxVelocity_Demo_profi = 1000000, maxAcceleration_Demo_profi = 20000;
+    public static double maxVelocity_Demo_kiddos = 2000, maxAcceleration_Demo_kiddos = 10000;
+
     public Extendo(){
         extendo_pid = new PIDController(p_extendo, i_extendo, d_extendo);
     }
@@ -202,6 +205,76 @@ public class Extendo extends SubsystemBase {
             updateTargetPositionHang(joystickYCoord);
 
     }
+
+
+
+
+    public void loop_Demo_profi(double joystickYCoord){
+        currentPosition = extendoMotor.getCurrentPosition();
+        if(targetPosition != previousTarget){
+            profile = MotionProfileGenerator.generateSimpleMotionProfile(
+                    new MotionState(previousTarget, 0),
+                    new MotionState(targetPosition, 0),
+                    maxVelocity_Demo_profi,
+                    maxAcceleration_Demo_profi
+            );
+
+            time.reset();
+            previousTarget = targetPosition;
+        }
+
+
+        MotionState targetState = profile == null ? new MotionState(0, 0) : profile.get(time.seconds());
+        double targetMotionProfile = targetState.getX();
+
+        extendo_pid.setPID(p_extendo, i_extendo, d_extendo);
+        double power = extendo_pid.calculate(currentPosition, targetMotionProfile);
+        extendoMotor.setPower(power);
+
+        if(extendoState == ExtendoState.EXTENDING_MINIMUM)
+            updateTargetPosition(joystickYCoord);
+
+        if(extendoState == ExtendoState.HANG)
+            updateTargetPositionHang(joystickYCoord);
+
+    }
+
+
+    public void loop_Demo_kiddos(double joystickYCoord){
+
+        if(extendoState == ExtendoState.EXTENDING_MINIMUM)
+            updateTargetPosition(joystickYCoord/2);
+
+        if(extendoState == ExtendoState.HANG)
+            updateTargetPositionHang(joystickYCoord);
+
+
+        currentPosition = extendoMotor.getCurrentPosition();
+        if(targetPosition != previousTarget){
+            profile = MotionProfileGenerator.generateSimpleMotionProfile(
+                    new MotionState(previousTarget, 0),
+                    new MotionState(targetPosition, 0),
+                    maxVelocity_Demo_kiddos,
+                    maxAcceleration_Demo_kiddos
+            );
+
+            time.reset();
+            previousTarget = targetPosition;
+        }
+
+
+        MotionState targetState = profile == null ? new MotionState(0, 0) : profile.get(time.seconds());
+        double targetMotionProfile = targetState.getX();
+
+        extendo_pid.setPID(p_extendo, i_extendo, d_extendo);
+        double power = extendo_pid.calculate(currentPosition, targetMotionProfile);
+        extendoMotor.setPower(power);
+
+
+    }
+
+
+
 
     public void update(ExtendoState state){
         extendoState = state;

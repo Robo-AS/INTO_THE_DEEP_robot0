@@ -67,6 +67,18 @@ public class Lift extends SubsystemBase{
     public double maxVelocityHANG = 800, maxAccelerationHANG = 3000000;
 
 
+
+    public static double maxVelocityUP_Demo_profi = 10000000, maxAccelerationUP_Demo_profi = 10000;
+    public static double maxVelocityDOWN_Demo_profi = 1000000, maxAccelerationDOWN_Demo_profi = 3000;
+    public double maxVelocityPUT_SPECIMEN_Demo_profi = 10000000, maxAccelerationPUT_SPECIMEN_Demo_profi = 60000;
+
+
+
+    public static double maxVelocityUP_Demo_kiddos = 1500, maxAccelerationUP_Demo_kiddos = 10000;
+    public static double maxVelocityDOWN_Demo_kiddos = 2000, maxAccelerationDOWN_Demo_kiddos = 3000;
+    public double maxVelocityPUT_SPECIMEN_Demo_kiddos = 10000000, maxAccelerationPUT_SPECIMEN_Demo_kiddos = 60000;
+
+
     public Lift(){
         lift_pid = new PIDController(p_lift, i_lift, d_lift);
     }
@@ -184,6 +196,101 @@ public class Lift extends SubsystemBase{
         followerMotor.setPower(power);
 
     }
+
+
+
+    public void loop_Demo_profi(){
+        currentPosition = liftMotor.getCurrentPosition();
+
+        if(targetPosition != previousTarget) {
+            if(targetPosition > previousTarget) { //profile pentru extindere
+                profile = MotionProfileGenerator.generateSimpleMotionProfile(
+                        new MotionState(previousTarget, 0),
+                        new MotionState(targetPosition, 0),
+                        maxVelocityUP_Demo_profi,
+                        maxAccelerationUP_Demo_profi
+                );
+            }
+
+            if(targetPosition < previousTarget){//profile pentru retragere
+                if(liftState == LiftState.PUT_SPECIMEN){
+                    profile = MotionProfileGenerator.generateSimpleMotionProfile(
+                            new MotionState(previousTarget, 0),
+                            new MotionState(targetPosition, 0),
+                            maxVelocityPUT_SPECIMEN_Demo_profi,
+                            maxAccelerationPUT_SPECIMEN_Demo_profi
+                    );
+                }
+
+                else{
+                    profile = MotionProfileGenerator.generateSimpleMotionProfile(
+                            new MotionState(previousTarget, 0),
+                            new MotionState(targetPosition, 0),
+                            maxVelocityDOWN_Demo_profi,
+                            maxAccelerationDOWN_Demo_profi
+                    );
+                }
+            }
+            time.reset();
+            previousTarget = targetPosition;
+        }
+
+        MotionState targetState = profile == null ? new MotionState(0, 0) : profile.get(time.seconds());
+        double targetMotionProfile = targetState.getX();
+
+        lift_pid.setPID(p_lift, i_lift, d_lift);
+        double power = lift_pid.calculate(currentPosition, targetMotionProfile);
+        liftMotor.setPower(power);
+        followerMotor.setPower(power);
+    }
+
+
+    public void loop_Demo_kiddos(){
+        currentPosition = liftMotor.getCurrentPosition();
+
+        if(targetPosition != previousTarget) {
+            if(targetPosition > previousTarget) { //profile pentru extindere
+                profile = MotionProfileGenerator.generateSimpleMotionProfile(
+                        new MotionState(previousTarget, 0),
+                        new MotionState(targetPosition, 0),
+                        maxVelocityUP_Demo_kiddos,
+                        maxAccelerationUP_Demo_kiddos
+                );
+            }
+
+            if(targetPosition < previousTarget){//profile pentru retragere
+                if(liftState == LiftState.PUT_SPECIMEN){
+                    profile = MotionProfileGenerator.generateSimpleMotionProfile(
+                            new MotionState(previousTarget, 0),
+                            new MotionState(targetPosition, 0),
+                            maxVelocityPUT_SPECIMEN_Demo_kiddos,
+                            maxAccelerationPUT_SPECIMEN_Demo_kiddos
+                    );
+                }
+
+                else{
+                    profile = MotionProfileGenerator.generateSimpleMotionProfile(
+                            new MotionState(previousTarget, 0),
+                            new MotionState(targetPosition, 0),
+                            maxVelocityDOWN_Demo_kiddos,
+                            maxAccelerationDOWN_Demo_kiddos
+                    );
+                }
+            }
+            time.reset();
+            previousTarget = targetPosition;
+        }
+
+        MotionState targetState = profile == null ? new MotionState(0, 0) : profile.get(time.seconds());
+        double targetMotionProfile = targetState.getX();
+
+        lift_pid.setPID(p_lift, i_lift, d_lift);
+        double power = lift_pid.calculate(currentPosition, targetMotionProfile);
+        liftMotor.setPower(power);
+        followerMotor.setPower(power);
+
+    }
+
 
 
 

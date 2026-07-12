@@ -96,8 +96,8 @@ public class Intake extends SubsystemBase {
         NOT_BLOCKED
     }
 
-    public static double UP_ANGLE = 0.3;
-    public static double DOWN_ANGLE = 0.95;
+    public static double UP_ANGLE = 0.27;
+    public static double DOWN_ANGLE = 0.85;
     public static double DOWN_AUTO_SPECIMEN_ANGLE = 0.2;
     public int rotations = 0;
 

@@ -1,6 +1,7 @@
-package org.firstinspires.ftc.teamcode.programs.opmodes.teleop;
+package org.firstinspires.ftc.teamcode.programs.opmodes.teleop.demo;
 
 import com.acmerobotics.dashboard.FtcDashboard;
+import com.acmerobotics.dashboard.config.Config;
 import com.acmerobotics.dashboard.telemetry.MultipleTelemetry;
 import com.arcrobotics.ftclib.command.CommandOpMode;
 import com.arcrobotics.ftclib.command.CommandScheduler;
@@ -11,6 +12,7 @@ import com.arcrobotics.ftclib.command.WaitCommand;
 import com.arcrobotics.ftclib.command.button.Trigger;
 import com.arcrobotics.ftclib.gamepad.GamepadEx;
 import com.arcrobotics.ftclib.gamepad.GamepadKeys;
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.hardware.Gamepad;
 
 import org.firstinspires.ftc.teamcode.programs.commandbase.ArmCommands.SetClawStateCommand;
@@ -44,8 +46,9 @@ import org.firstinspires.ftc.teamcode.programs.util.NEWRobot;
 import org.firstinspires.ftc.teamcode.utils.geometry.PoseRR;
 
 
-@com.qualcomm.robotcore.eventloop.opmode.TeleOp(name = "🟦TeleOpBlue_BTC🟦")
-public class TeleOpBlue_BTC extends CommandOpMode {
+@Config
+@com.qualcomm.robotcore.eventloop.opmode.TeleOp(name = "🟦TeleOpBlue_Demo_profi🟦")
+public class TeleOpBlue_DEMO_profi extends CommandOpMode {
     private final NEWRobot robot = NEWRobot.getInstance();
     public GamepadEx gamepadEx;
 
@@ -189,36 +192,36 @@ public class TeleOpBlue_BTC extends CommandOpMode {
 
 
         //HANG
-        gamepadEx.getGamepadButton(GamepadKeys.Button.Y)//triunghi
-                .whenPressed(
-                        () -> CommandScheduler.getInstance().schedule(
-                                new ConditionalCommand(
-                                        new GoHangLevel2Position(),
-                                        new ConditionalCommand(
-                                                new SetLiftStateCommand(Lift.LiftState.IDLE),
-                                                new DoesNothingCommand(),
-                                                () -> robot.lift.liftState == Lift.LiftState.HANG && robot.extendo.extendoState == Extendo.ExtendoState.HANG
-                                        ),
-                                        () -> robot.lift.liftState != Lift.LiftState.HANG && robot.extendo.extendoState != Extendo.ExtendoState.HANG
-                                )
-                        )
-                );
-
-
-        gamepadEx.getGamepadButton(GamepadKeys.Button.X)//patrat
-                .whenPressed(
-                        () -> CommandScheduler.getInstance().schedule(
-                                new ConditionalCommand(
-                                        new TriggerHangCommand(),
-                                        new ConditionalCommand(
-                                                new SetSafetyStateCommand(Hang.SafetyState.TRIGGERED),
-                                                new DoesNothingCommand(),
-                                                () -> robot.hang.safetyState == Hang.SafetyState.IDLE && Globals.HANGING_LEVEL_2
-                                        ),
-                                        () -> robot.hang.hangState == Hang.HangState.IDLE && Globals.HANGING_LEVEL_2
-                                )
-                        )
-                );
+//        gamepadEx.getGamepadButton(GamepadKeys.Button.Y)//triunghi
+//                .whenPressed(
+//                        () -> CommandScheduler.getInstance().schedule(
+//                                new ConditionalCommand(
+//                                        new GoHangLevel2Position(),
+//                                        new ConditionalCommand(
+//                                                new SetLiftStateCommand(Lift.LiftState.IDLE),
+//                                                new DoesNothingCommand(),
+//                                                () -> robot.lift.liftState == Lift.LiftState.HANG && robot.extendo.extendoState == Extendo.ExtendoState.HANG
+//                                        ),
+//                                        () -> robot.lift.liftState != Lift.LiftState.HANG && robot.extendo.extendoState != Extendo.ExtendoState.HANG
+//                                )
+//                        )
+//                );
+//
+//
+//        gamepadEx.getGamepadButton(GamepadKeys.Button.X)//patrat
+//                .whenPressed(
+//                        () -> CommandScheduler.getInstance().schedule(
+//                                new ConditionalCommand(
+//                                        new TriggerHangCommand(),
+//                                        new ConditionalCommand(
+//                                                new SetSafetyStateCommand(Hang.SafetyState.TRIGGERED),
+//                                                new DoesNothingCommand(),
+//                                                () -> robot.hang.safetyState == Hang.SafetyState.IDLE && Globals.HANGING_LEVEL_2
+//                                        ),
+//                                        () -> robot.hang.hangState == Hang.HangState.IDLE && Globals.HANGING_LEVEL_2
+//                                )
+//                        )
+//                );
 
 
 
@@ -285,17 +288,17 @@ public class TeleOpBlue_BTC extends CommandOpMode {
     public void run(){
         CommandScheduler.getInstance().run();
 
-        robot.arm.loopTeleOp();
+        robot.arm.loopTeleOp_Demo_profi();
         robot.intake.loopBlue_BTC();
         robot.loop();
-        robot.extendo.loop(gamepadEx.getLeftY());
-        robot.lift.loop();
+        robot.extendo.loop_Demo_profi(gamepadEx.getLeftY());
+        robot.lift.loop_Demo_profi();
 
 
 //        PENTRU LEVEL 3 HANG
-        if(Globals.HANGING_LEVEL_3) {
-            robot.mecanumDriveTrain.updateTargetPositionHang(-gamepadEx.getRightY());
-        }
+//        if(Globals.HANGING_LEVEL_3) {
+//            robot.mecanumDriveTrain.updateTargetPositionHang(-gamepadEx.getRightY());
+//        }
 
         //applying expo function for mecanum
         exponentialJoystickCoord_X_TURN = (Math.pow(gamepad1.left_stick_x, 3) + liniarCoefTerm * gamepad1.left_stick_x) * contantTerm;
