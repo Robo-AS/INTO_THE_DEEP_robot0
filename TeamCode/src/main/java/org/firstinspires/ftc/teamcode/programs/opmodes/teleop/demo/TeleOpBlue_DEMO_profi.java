@@ -6,41 +6,27 @@ import com.acmerobotics.dashboard.telemetry.MultipleTelemetry;
 import com.arcrobotics.ftclib.command.CommandOpMode;
 import com.arcrobotics.ftclib.command.CommandScheduler;
 import com.arcrobotics.ftclib.command.ConditionalCommand;
-import com.arcrobotics.ftclib.command.InstantCommand;
-import com.arcrobotics.ftclib.command.SequentialCommandGroup;
-import com.arcrobotics.ftclib.command.WaitCommand;
 import com.arcrobotics.ftclib.command.button.Trigger;
 import com.arcrobotics.ftclib.gamepad.GamepadEx;
 import com.arcrobotics.ftclib.gamepad.GamepadKeys;
-import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.hardware.Gamepad;
 
 import org.firstinspires.ftc.teamcode.programs.commandbase.ArmCommands.SetClawStateCommand;
 import org.firstinspires.ftc.teamcode.programs.commandbase.DoesNothingCommand;
 import org.firstinspires.ftc.teamcode.programs.commandbase.ExtendoCommands.SetExtendoStateCommand;
-import org.firstinspires.ftc.teamcode.programs.commandbase.HangCommands.SetSafetyStateCommand;
 import org.firstinspires.ftc.teamcode.programs.commandbase.IntakeCommand.SetIntakeStateCommand;
-import org.firstinspires.ftc.teamcode.programs.commandbase.LiftCommands.SetLiftStateCommand;
 import org.firstinspires.ftc.teamcode.programs.commandbase.NEWSetDesiredColorCommand;
-import org.firstinspires.ftc.teamcode.programs.commandbase.SetSweeperStateCommand;
-import org.firstinspires.ftc.teamcode.programs.commandbase.TeleOpCommands.AscentCommands.GoHangLevel2Position;
-import org.firstinspires.ftc.teamcode.programs.commandbase.TeleOpCommands.AscentCommands.TriggerHangCommand;
 import org.firstinspires.ftc.teamcode.programs.commandbase.TeleOpCommands.Intake2Commands.NEWIntakeIdleCommand;
 import org.firstinspires.ftc.teamcode.programs.commandbase.TeleOpCommands.Intake2Commands.NEWIntakeIntakingCommand;
 import org.firstinspires.ftc.teamcode.programs.commandbase.TeleOpCommands.Intake2Commands.NEWIntakeRetractCommand;
 import org.firstinspires.ftc.teamcode.programs.commandbase.TeleOpCommands.Intake2Commands.NEWOuttakeCommand;
 import org.firstinspires.ftc.teamcode.programs.commandbase.TeleOpCommands.OuttakeCommands.OuttakeGoBackToIdleFromHighBasketCommand_TELEOP;
 import org.firstinspires.ftc.teamcode.programs.commandbase.TeleOpCommands.OuttakeCommands.OuttakeGoHighBascketCommand;
-import org.firstinspires.ftc.teamcode.programs.commandbase.TeleOpCommands.OuttakeCommands.OuttakeGoLowBasketCommand;
-import org.firstinspires.ftc.teamcode.programs.commandbase.TeleOpCommands.OuttakeCommands.OutttakeGoBackToIdleFromLowBasketCommand;
 import org.firstinspires.ftc.teamcode.programs.commandbase.TeleOpCommands.OuttakeCommands.OutttakePutSampleHighBasketGoBackToIdle;
-import org.firstinspires.ftc.teamcode.programs.commandbase.TeleOpCommands.OuttakeCommands.OutttakePutSampleLowBasketGoBackToIdle;
 import org.firstinspires.ftc.teamcode.programs.subsystems.Arm;
 import org.firstinspires.ftc.teamcode.programs.subsystems.Extendo;
-import org.firstinspires.ftc.teamcode.programs.subsystems.Hang;
 import org.firstinspires.ftc.teamcode.programs.subsystems.Intake;
 import org.firstinspires.ftc.teamcode.programs.subsystems.Lift;
-import org.firstinspires.ftc.teamcode.programs.subsystems.Sweeper;
 import org.firstinspires.ftc.teamcode.programs.util.Globals;
 import org.firstinspires.ftc.teamcode.programs.util.NEWRobot;
 import org.firstinspires.ftc.teamcode.utils.geometry.PoseRR;
@@ -123,27 +109,16 @@ public class TeleOpBlue_DEMO_profi extends CommandOpMode {
 
 
 
-
-        //Lift commands
+        //Lift commands (it was)
         gamepadEx.getGamepadButton(GamepadKeys.Button.RIGHT_BUMPER)
                 .whenPressed(
                         () -> CommandScheduler.getInstance().schedule(
                                 new ConditionalCommand(
-                                        new OuttakeGoLowBasketCommand(),
-                                        new ConditionalCommand(
-                                                new OutttakePutSampleLowBasketGoBackToIdle(),
-                                                new ConditionalCommand(
-                                                        new SetIntakeStateCommand(Intake.IntakeState.SPITTING_HUMAN_PLAYER),
-//                                                        new OutttakeGoBackToIdleFromLowBasketCommand(),
-                                                        new DoesNothingCommand(),
-                                                        () -> robot.lift.liftState == Lift.LiftState.IDLE && robot.arm.clawState == Arm.ClawState.OPEN
-
-                                                ),
-
-                                                () -> robot.lift.liftState == Lift.LiftState.LOW_BASKET && robot.arm.clawState == Arm.ClawState.CLOSED
-                                        ),
-                                        () -> robot.lift.liftState != Lift.LiftState.LOW_BASKET && robot.arm.clawState == Arm.ClawState.CLOSED
+                                        new SetIntakeStateCommand(Intake.IntakeState.SPITTING_HUMAN_PLAYER),
+                                        new DoesNothingCommand(),
+                                        () -> robot.intake.intakeState != Intake.IntakeState.SPITTING_HUMAN_PLAYER
                                 )
+
                         )
 
                 );
@@ -154,8 +129,9 @@ public class TeleOpBlue_DEMO_profi extends CommandOpMode {
                                 new ConditionalCommand(
                                         new SetIntakeStateCommand(robot.intake.previousIntakeState),
                                         new DoesNothingCommand(),
-                                        () -> robot.lift.liftState == Lift.LiftState.IDLE && robot.arm.clawState == Arm.ClawState.OPEN
+                                        () -> robot.intake.intakeState == Intake.IntakeState.SPITTING_HUMAN_PLAYER
                                 )
+
                         )
                 );
 
@@ -191,57 +167,8 @@ public class TeleOpBlue_DEMO_profi extends CommandOpMode {
                 );
 
 
-        //HANG
-//        gamepadEx.getGamepadButton(GamepadKeys.Button.Y)//triunghi
-//                .whenPressed(
-//                        () -> CommandScheduler.getInstance().schedule(
-//                                new ConditionalCommand(
-//                                        new GoHangLevel2Position(),
-//                                        new ConditionalCommand(
-//                                                new SetLiftStateCommand(Lift.LiftState.IDLE),
-//                                                new DoesNothingCommand(),
-//                                                () -> robot.lift.liftState == Lift.LiftState.HANG && robot.extendo.extendoState == Extendo.ExtendoState.HANG
-//                                        ),
-//                                        () -> robot.lift.liftState != Lift.LiftState.HANG && robot.extendo.extendoState != Extendo.ExtendoState.HANG
-//                                )
-//                        )
-//                );
-//
-//
-//        gamepadEx.getGamepadButton(GamepadKeys.Button.X)//patrat
-//                .whenPressed(
-//                        () -> CommandScheduler.getInstance().schedule(
-//                                new ConditionalCommand(
-//                                        new TriggerHangCommand(),
-//                                        new ConditionalCommand(
-//                                                new SetSafetyStateCommand(Hang.SafetyState.TRIGGERED),
-//                                                new DoesNothingCommand(),
-//                                                () -> robot.hang.safetyState == Hang.SafetyState.IDLE && Globals.HANGING_LEVEL_2
-//                                        ),
-//                                        () -> robot.hang.hangState == Hang.HangState.IDLE && Globals.HANGING_LEVEL_2
-//                                )
-//                        )
-//                );
 
 
-
-
-
-        //LOW BASKET
-        gamepadEx.getGamepadButton(GamepadKeys.Button.A)//cross
-                .whenPressed(
-                        () -> CommandScheduler.getInstance().schedule(
-                                new ConditionalCommand(
-                                        new OuttakeGoLowBasketCommand(),
-                                        new ConditionalCommand(
-                                                new OutttakePutSampleLowBasketGoBackToIdle(),
-                                                new OutttakeGoBackToIdleFromLowBasketCommand(),
-                                                () -> robot.arm.clawState == Arm.ClawState.CLOSED
-                                        ),
-                                        () -> robot.lift.liftState != Lift.LiftState.LOW_BASKET
-                                )
-                        )
-                );
 
         // OPEN/CLOSE CLAW
         gamepadEx.getGamepadButton(GamepadKeys.Button.B)
@@ -256,29 +183,7 @@ public class TeleOpBlue_DEMO_profi extends CommandOpMode {
                 );
 
 
-//        gamepadEx.getGamepadButton(GamepadKeys.Button.RIGHT_STICK_BUTTON)
-//                .whenPressed(
-//                        () -> CommandScheduler.getInstance().schedule(
-//                                new ConditionalCommand(
-//                                        new SequentialCommandGroup(
-//                                                new SetSweeperStateCommand(Sweeper.SweeperState.OPEN),
-//                                                new WaitCommand(500),
-//                                                new SetSweeperStateCommand(Sweeper.SweeperState.CLOSED)
-//                                        ),
-//
-//                                        new DoesNothingCommand(),
-//                                        () -> robot.sweeper.sweeperState == Sweeper.SweeperState.CLOSED
-//                                )
-//                        )
-//                );
-//
-//
-//        gamepadEx.getGamepadButton(GamepadKeys.Button.BACK)
-//                .whenPressed(
-//                        () -> CommandScheduler.getInstance().schedule(
-//                                new InstantCommand(robot.arm::disablePinpoint)
-//                        )
-//                );
+
 
 
 
@@ -288,12 +193,18 @@ public class TeleOpBlue_DEMO_profi extends CommandOpMode {
     public void run(){
         CommandScheduler.getInstance().run();
 
+        robot.arm.loopTeleOp_Demo_kiddos();
         robot.intake.loopBlue_BTC();
         robot.loop();
+        robot.extendo.loop_Demo_profi(-gamepadEx.getRightY());
+        robot.lift.loop_Demo_profi();
 
 
 
         //applying expo function for mecanum
+        exponentialJoystickCoord_X_TURN = ((Math.pow(gamepad1.right_stick_x, 3) + liniarCoefTerm * gamepad1.right_stick_x) * contantTerm);
+        exponentialJoystickCoord_X_FORWARD = ((Math.pow(gamepad1.left_stick_x, 3) + liniarCoefTerm * gamepad1.left_stick_x) * contantTerm);
+        exponentialJoystickCoord_Y = ((Math.pow(gamepad1.left_stick_y, 3) + liniarCoefTerm * gamepad1.left_stick_y) * contantTerm);
 
         double turnSpeed = robot.extendo.extendoState == Extendo.ExtendoState.EXTENDING_MINIMUM ? -exponentialJoystickCoord_X_TURN/Globals.DECREASE_TURN_SPEED_CONSTANT :-exponentialJoystickCoord_X_TURN;
         PoseRR drive = new PoseRR(exponentialJoystickCoord_X_FORWARD, -exponentialJoystickCoord_Y, -turnSpeed);
@@ -317,7 +228,7 @@ public class TeleOpBlue_DEMO_profi extends CommandOpMode {
 
 //        telemetry.addData("AUTO_IN_TELEOP", AUTO_IN_TELEOP);
         telemetry.addData("SampleColor", robot.intake.intakedSampleColor);
-        telemetry.addData("e?", robot.intake.sampleState);
+        telemetry.addData("E sample?", robot.intake.sampleState);
 
 
 
@@ -335,14 +246,18 @@ public class TeleOpBlue_DEMO_profi extends CommandOpMode {
 //        telemetry.addData("AngleServoPosition", robot.brush.brushAngleServo.getPosition());
 //        telemetry.addData("Brush Angle", robot.brush.brushAngle);
 
+        telemetry.addData("Current Position EXTENDO", robot.extendo.extendoMotor.getCurrentPosition());
 //        telemetry.addData("LAST EXTENDO POS", Globals.lastExtendoPos);
 
+        telemetry.addData("Target Position EXTENDO", robot.extendo.getTargetPosition());
 //        telemetry.addData("Extendo State", robot.extendo.extendoState);
 //        telemetry.addData("Joystick Y", gamepadEx.gamepad.left_stick_y);
 //        telemetry.addData("Joystick Y MODIFIED", robot.extendo.getExponentialJoystickCoef());
 //        telemetry.addData("JoystickConstant", robot.extendo.getJoystickConstant());
 //        telemetry.addData("SHOULD VIBRATE", Globals.shouldVibrate);
 
+        telemetry.addData("Current Position LIFT", robot.lift.liftMotor.getCurrentPosition());
+        telemetry.addData("Target Position LIFT", robot.lift.liftMotor.getTargetPosition());
 //        telemetry.addData("LAST LIFT POS", Globals.lastLiftPos);
 
 //        telemetry.addData("Reset Lift?", robot.lift.gerResetLift());
@@ -395,6 +310,7 @@ public class TeleOpBlue_DEMO_profi extends CommandOpMode {
 //        telemetry.addData("current FRONT LEFT", robot.mecanumDriveTrain.getCurrentFrontLeft());
 //        telemetry.addData("current BACK RIGHT", robot.mecanumDriveTrain.getCurrenttBackRight());
 //        telemetry.addData("current BACK LEFT", robot.mecanumDriveTrain.getCurrenttBackLeft());
+
 
 
         telemetry.addData("DISABLED_COLOR_SENSOR", robot.intake.isDisabledColorSensor());

@@ -265,6 +265,14 @@ public class Extendo extends SubsystemBase {
 
         extendo_pid.setPID(p_extendo, i_extendo, d_extendo);
         double power = extendo_pid.calculate(currentPosition, targetMotionProfile);
+
+        if(power > 0.8){
+            power = 0.8;
+        }
+        else if(power < -0.8){
+            power = -0.8;
+        }
+
         extendoMotor.setPower(power);
 
 
